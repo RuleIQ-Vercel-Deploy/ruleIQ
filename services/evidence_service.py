@@ -9,15 +9,15 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session, joinedload
 
 from config.cache import get_cache_manager
-from database.evidence_item import EvidenceItem
 from database.business_profile import BusinessProfile
 from database.compliance_framework import ComplianceFramework
+from database.evidence_item import EvidenceItem
 from database.generated_policy import GeneratedPolicy
 from database.user import User
-from utils.input_validation import validate_evidence_update, ValidationError
 
 # Assuming the AI function is awaitable or wrapped to be non-blocking
 from services.ai.evidence_generator import generate_checklist_with_ai
+from utils.input_validation import ValidationError, validate_evidence_update
 
 
 class EvidenceService:
@@ -84,9 +84,7 @@ class EvidenceService:
         }
 
     @staticmethod
-    async def create_evidence(
-        user_id: UUID, evidence_data: Dict[str, Any]
-    ) -> Dict[str, Any]:
+    async def create_evidence(user_id: UUID, evidence_data: Dict[str, Any]) -> Dict[str, Any]:
         """Placeholder for creating evidence. Mocked in tests."""
         pass
 
@@ -141,30 +139,22 @@ class EvidenceService:
         pass
 
     @staticmethod
-    def identify_requirements(
-        framework_id: UUID, control_ids: List[str]
-    ) -> List[Dict[str, Any]]:
+    def identify_requirements(framework_id: UUID, control_ids: List[str]) -> List[Dict[str, Any]]:
         """Placeholder for identifying evidence requirements. Mocked in tests."""
         pass
 
     @staticmethod
-    def configure_automation(
-        evidence_id: UUID, automation_config: Dict[str, Any]
-    ) -> Dict[str, Any]:
+    def configure_automation(evidence_id: UUID, automation_config: Dict[str, Any]) -> Dict[str, Any]:
         """Placeholder for configuring automated evidence collection. Mocked in tests."""
         pass
 
     @staticmethod
-    def update_status(
-        evidence_id: UUID, new_status: str, reason: str
-    ) -> Dict[str, Any]:
+    def update_status(evidence_id: UUID, new_status: str, reason: str) -> Dict[str, Any]:
         """Placeholder for updating evidence status. Mocked in tests."""
         pass
 
     @staticmethod
-    def search_by_framework(
-        user_id: UUID, framework: str, search_filters: Dict[str, Any]
-    ) -> List[Dict[str, Any]]:
+    def search_by_framework(user_id: UUID, framework: str, search_filters: Dict[str, Any]) -> List[Dict[str, Any]]:
         """Placeholder for searching evidence by framework. Mocked in tests."""
         pass
 
@@ -174,9 +164,7 @@ class EvidenceService:
         pass
 
     @staticmethod
-    def bulk_update_status(
-        evidence_ids: List[str], new_status: str, reason: str, user_id: UUID
-    ) -> Dict[str, Any]:
+    def bulk_update_status(evidence_ids: List[str], new_status: str, reason: str, user_id: UUID) -> Dict[str, Any]:
         """Placeholder for bulk updating evidence status. Mocked in tests."""
         pass
 
@@ -194,10 +182,12 @@ class EvidenceService:
     ) -> List[EvidenceItem]:
         """Generate a comprehensive evidence checklist for a compliance framework asynchronously."""
         existing_items_stmt = select(EvidenceItem).where(
-            EvidenceItem.user_id == user.id, EvidenceItem.framework_id == framework_id,
+            EvidenceItem.user_id == user.id,
+            EvidenceItem.framework_id == framework_id,
         )
         existing_items_res = await EvidenceService._execute_query(
-            db, existing_items_stmt,
+            db,
+            existing_items_stmt,
         )
         existing_items = existing_items_res.scalars().all()
         if existing_items:
@@ -220,7 +210,8 @@ class EvidenceService:
         policy = None
         if policy_id:
             policy_stmt = select(GeneratedPolicy).where(
-                GeneratedPolicy.id == policy_id, GeneratedPolicy.user_id == user.id,
+                GeneratedPolicy.id == policy_id,
+                GeneratedPolicy.user_id == user.id,
             )
             policy_res = await EvidenceService._execute_query(db, policy_stmt)
             policy = policy_res.scalars().first()
@@ -372,7 +363,9 @@ class EvidenceService:
             return None, f"validation_error: {str(e)}"
 
         item, status = await EvidenceService.get_evidence_item_with_auth_check(
-            db, evidence_id, user.id,
+            db,
+            evidence_id,
+            user.id,
         )
         if status != "found":
             return None, status
@@ -399,9 +392,7 @@ class EvidenceService:
         return item, "updated"
 
     @staticmethod
-    async def delete_evidence_item(
-        db: Union[AsyncSession, Session], user: User, evidence_id: UUID
-    ) -> tuple[bool, str]:
+    async def delete_evidence_item(db: Union[AsyncSession, Session], user: User, evidence_id: UUID) -> tuple[bool, str]:
         """
         Delete an evidence item asynchronously.
         Returns (success, status) where status is:
@@ -410,7 +401,9 @@ class EvidenceService:
         - 'unauthorized': Evidence exists but user doesn't have access
         """
         item, status = await EvidenceService.get_evidence_item_with_auth_check(
-            db, evidence_id, user.id,
+            db,
+            evidence_id,
+            user.id,
         )
         if status != "found":
             return False, status
@@ -420,9 +413,7 @@ class EvidenceService:
         return True, "deleted"
 
     @staticmethod
-    async def get_evidence_summary(
-        db: Union[AsyncSession, Session], user: User
-    ) -> Dict[str, Any]:
+    async def get_evidence_summary(db: Union[AsyncSession, Session], user: User) -> Dict[str, Any]:
         """Get a summary of evidence status asynchronously."""
         stmt = select(EvidenceItem).where(EvidenceItem.user_id == user.id)
         result = await EvidenceService._execute_query(db, stmt)
@@ -440,9 +431,7 @@ class EvidenceService:
                 status_counts[item.status] += 1
 
         total_items = len(items)
-        completion_percentage = (
-            status_counts["approved"] / total_items * 100 if total_items > 0 else 0,
-        )
+        completion_percentage = (status_counts["approved"] / total_items * 100 if total_items > 0 else 0,)
 
         return {
             "total_items": total_items,
@@ -491,7 +480,11 @@ class EvidenceService:
         for evidence_id in evidence_ids:
             try:
                 item = await EvidenceService.update_evidence_status(
-                    db, user, evidence_id, status, notes,
+                    db,
+                    user,
+                    evidence_id,
+                    status,
+                    notes,
                 )
                 if item:
                     updated_items.append(item)
@@ -635,7 +628,8 @@ class EvidenceService:
         # Try to get from cache first
         cache = await get_cache_manager()
         cached_dashboard = await cache.get_evidence_dashboard(
-            str(user.id), str(framework_id),
+            str(user.id),
+            str(framework_id),
         )
         if cached_dashboard:
             return cached_dashboard
@@ -645,7 +639,10 @@ class EvidenceService:
             dashboard_data = {"message": "No evidence items found for this framework."}
             # Cache empty result for shorter time
             await cache.set_evidence_dashboard(
-                str(user.id), str(framework_id), dashboard_data, ttl=60,
+                str(user.id),
+                str(framework_id),
+                dashboard_data,
+                ttl=60,
             )
             return dashboard_data
 
@@ -661,9 +658,7 @@ class EvidenceService:
                 status_counts[item.status] += 1
 
         total_items = len(items)
-        completion_percentage = (
-            status_counts["approved"] / total_items * 100 if total_items > 0 else 0,
-        )
+        completion_percentage = (status_counts["approved"] / total_items * 100 if total_items > 0 else 0,)
 
         dashboard_data = {
             "total_items": total_items,
@@ -674,9 +669,7 @@ class EvidenceService:
                     "id": str(item.id),
                     "title": item.evidence_name,
                     "status": item.status,
-                    "updated_at": (
-                        item.updated_at.isoformat() if item.updated_at else None
-                    ),
+                    "updated_at": (item.updated_at.isoformat() if item.updated_at else None),
                 }
                 for item in sorted(items, key=lambda x: x.updated_at, reverse=True)[:5]
             ],
@@ -684,7 +677,10 @@ class EvidenceService:
 
         # Cache the dashboard data for 5 minutes
         await cache.set_evidence_dashboard(
-            str(user.id), str(framework_id), dashboard_data, ttl=300,
+            str(user.id),
+            str(framework_id),
+            dashboard_data,
+            ttl=300,
         )
 
         return dashboard_data
@@ -692,9 +688,7 @@ class EvidenceService:
     # Duplicate bulk_update_evidence_status removed - original exists at line 457
 
     @staticmethod
-    async def get_evidence_statistics(
-        db: Union[AsyncSession, Session], user_id: UUID
-    ) -> Dict[str, Any]:
+    async def get_evidence_statistics(db: Union[AsyncSession, Session], user_id: UUID) -> Dict[str, Any]:
         """Get evidence statistics for a user with caching."""
         # Try to get from cache first
         cache = await get_cache_manager()

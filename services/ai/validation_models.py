@@ -33,7 +33,7 @@ class PriorityLevel(str, Enum):
 
 
 class ImplementationEffort(str, Enum):
-#     MINIMAL = "minimal"  # Unused variable
+    #     MINIMAL = "minimal"  # Unused variable
     LOW = "low"
     MEDIUM = "medium"
     HIGH = "high"
@@ -41,11 +41,10 @@ class ImplementationEffort(str, Enum):
 
 
 class RiskLevel(str, Enum):
-#     LOW = "low"  # Unused variable
-#     MEDIUM = "medium"  # Unused variable
-#     HIGH = "high"  # Unused variable
-#     CRITICAL = "critical"  # Unused variable
-
+    #     LOW = "low"  # Unused variable
+    #     MEDIUM = "medium"  # Unused variable
+    #     HIGH = "high"  # Unused variable
+    #     CRITICAL = "critical"  # Unused variable
 
     """Maturity levels for compliance programs"""
     INITIAL = "initial"
@@ -56,29 +55,28 @@ class RiskLevel(str, Enum):
 
 
 class MaturityLevel(str, Enum):
-#     INITIAL = "initial"  # Unused variable
-#     DEVELOPING = "developing"  # Unused variable
-#     DEFINED = "defined"  # Unused variable
-#     MANAGED = "managed"  # Unused variable
-#     OPTIMIZED = "optimized"  # Unused variable
+    #     INITIAL = "initial"  # Unused variable
+    #     DEVELOPING = "developing"  # Unused variable
+    #     DEFINED = "defined"  # Unused variable
+    #     MANAGED = "managed"  # Unused variable
+    #     OPTIMIZED = "optimized"  # Unused variable
 
 
 class TrendDirection(str, Enum):
-#     IMPROVING = "improving"  # Unused variable
-#     STABLE = "stable"  # Unused variable
-#     DECLINING = "declining"  # Unused variable
+    #     IMPROVING = "improving"  # Unused variable
+    #     STABLE = "stable"  # Unused variable
+    #     DECLINING = "declining"  # Unused variable
 
 
 class InsightType(str, Enum):
-#     STRENGTH = "strength"  # Unused variable
-#     WEAKNESS = "weakness"  # Unused variable
-#     OPPORTUNITY = "opportunity"  # Unused variable
-#     THREAT = "threat"  # Unused variable
+    #     STRENGTH = "strength"  # Unused variable
+    #     WEAKNESS = "weakness"  # Unused variable
+    #     OPPORTUNITY = "opportunity"  # Unused variable
+    #     THREAT = "threat"  # Unused variable
 
-
-# =====================================================================
-# Core Validation Models
-# =====================================================================
+    # =====================================================================
+    # Core Validation Models
+    # =====================================================================
 
 
 class GapValidationModel(BaseModel):
@@ -484,7 +482,7 @@ class FollowUpQuestionValidationModel(BaseModel):
     )
 
     class Config:
-#         use_enum_values = True  # Unused variable
+        #         use_enum_values = True  # Unused variable
 
 
 class FollowUpValidationModel(BaseModel):

@@ -1,15 +1,19 @@
 """
 Enhanced JWT Middleware with HttpOnly Cookies and Security Best Practices
 """
+
+import asyncio
+import logging
 import os
 import secrets
-from typing import Optional, Dict, Any, Tuple
 from datetime import datetime, timedelta, timezone
+from typing import Any, Dict, Optional, Tuple
+
 import jwt
-from fastapi import Request, Response, HTTPException, status
+from fastapi import HTTPException, Request, Response, status
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.types import ASGIApp
-import logging
+
 from config.security_settings import get_security_settings
 from services.redis_circuit_breaker import get_redis_circuit_breaker
 
@@ -80,11 +84,7 @@ class JWTEnhancedMiddleware(BaseHTTPMiddleware):
             await self.app(scope, receive, send)
 
     def create_access_token(
-        self,
-        user_id: str,
-        email: str,
-        role: str = "user",
-        additional_claims: Optional[Dict[str, Any]] = None
+        self, user_id: str, email: str, role: str = "user", additional_claims: Optional[Dict[str, Any]] = None
     ) -> str:
         """Create JWT access token with security features"""
 
@@ -98,7 +98,7 @@ class JWTEnhancedMiddleware(BaseHTTPMiddleware):
             "type": "access",
             "iat": now,
             "exp": expire,
-            "nbf": now  # Not before
+            "nbf": now,  # Not before
         }
 
         # Add issuer and audience if enabled
@@ -113,9 +113,7 @@ class JWTEnhancedMiddleware(BaseHTTPMiddleware):
             if self.redis_breaker:
                 jti_key = f"jwt:jti:access:{payload['jti']}"
                 ttl = int(self.access_token_expire.total_seconds())
-                asyncio.create_task(
-                    self.redis_breaker.set(jti_key, user_id, ex=ttl)
-                )
+                asyncio.create_task(self.redis_breaker.set(jti_key, user_id, ex=ttl))
 
         # Add additional claims if provided
         if additional_claims:
@@ -123,12 +121,7 @@ class JWTEnhancedMiddleware(BaseHTTPMiddleware):
 
         return jwt.encode(payload, self.secret_key, algorithm=self.algorithm)
 
-    def create_refresh_token(
-        self,
-        user_id: str,
-        email: str,
-        family_id: Optional[str] = None
-    ) -> str:
+    def create_refresh_token(self, user_id: str, email: str, family_id: Optional[str] = None) -> str:
         """Create JWT refresh token with rotation support"""
 
         now = datetime.now(timezone.utc)
@@ -138,14 +131,7 @@ class JWTEnhancedMiddleware(BaseHTTPMiddleware):
         if not family_id and self.enable_refresh_rotation:
             family_id = secrets.token_urlsafe(16)
 
-        payload = {
-            "sub": user_id,
-            "email": email,
-            "type": "refresh",
-            "iat": now,
-            "exp": expire,
-            "nbf": now
-        }
+        payload = {"sub": user_id, "email": email, "type": "refresh", "iat": now, "exp": expire, "nbf": now}
 
         # Add family ID for rotation
         if family_id:
@@ -158,18 +144,11 @@ class JWTEnhancedMiddleware(BaseHTTPMiddleware):
             if self.redis_breaker:
                 jti_key = f"jwt:jti:refresh:{payload['jti']}"
                 ttl = int(self.refresh_token_expire.total_seconds())
-                asyncio.create_task(
-                    self.redis_breaker.set(jti_key, user_id, ex=ttl)
-                )
+                asyncio.create_task(self.redis_breaker.set(jti_key, user_id, ex=ttl))
 
         return jwt.encode(payload, self.secret_key, algorithm=self.algorithm)
 
-    def set_auth_cookies(
-        self,
-        response: Response,
-        access_token: str,
-        refresh_token: str
-    ) -> None:
+    def set_auth_cookies(self, response: Response, access_token: str, refresh_token: str) -> None:
         """Set JWT tokens in HttpOnly cookies"""
 
         if not self.use_httponly_cookies:
@@ -185,7 +164,7 @@ class JWTEnhancedMiddleware(BaseHTTPMiddleware):
             domain=self.cookie_domain,
             secure=self.cookie_secure,
             httponly=True,
-            samesite=self.cookie_samesite
+            samesite=self.cookie_samesite,
         )
 
         # Set refresh token cookie
@@ -198,29 +177,17 @@ class JWTEnhancedMiddleware(BaseHTTPMiddleware):
             domain=self.cookie_domain,
             secure=self.cookie_secure,
             httponly=True,
-            samesite=self.cookie_samesite
+            samesite=self.cookie_samesite,
         )
 
     def clear_auth_cookies(self, response: Response) -> None:
         """Clear authentication cookies"""
 
-        response.delete_cookie(
-            key="access_token",
-            path=self.cookie_path,
-            domain=self.cookie_domain
-        )
+        response.delete_cookie(key="access_token", path=self.cookie_path, domain=self.cookie_domain)
 
-        response.delete_cookie(
-            key="refresh_token",
-            path=self.cookie_path,
-            domain=self.cookie_domain
-        )
+        response.delete_cookie(key="refresh_token", path=self.cookie_path, domain=self.cookie_domain)
 
-    async def verify_token(
-        self,
-        token: str,
-        token_type: str = "access"
-    ) -> Dict[str, Any]:
+    async def verify_token(self, token: str, token_type: str = "access") -> Dict[str, Any]:
         """Verify JWT token with comprehensive validation"""
 
         try:
@@ -237,7 +204,7 @@ class JWTEnhancedMiddleware(BaseHTTPMiddleware):
                 algorithms=[self.algorithm],
                 options=options,
                 audience=self.audience if self.enable_audience_validation else None,
-                issuer=self.issuer if self.enable_audience_validation else None
+                issuer=self.issuer if self.enable_audience_validation else None,
             )
 
             # Verify token type
@@ -255,35 +222,19 @@ class JWTEnhancedMiddleware(BaseHTTPMiddleware):
             return payload
 
         except jwt.ExpiredSignatureError:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Token has expired"
-            )
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token has expired")
         except jwt.InvalidTokenError as e:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail=f"Invalid token: {str(e)}"
-            )
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=f"Invalid token: {str(e)}")
         except Exception as e:
             logger.error(f"Token verification error: {e}")
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Token verification failed"
-            )
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token verification failed")
 
-    async def refresh_access_token(
-        self,
-        refresh_token: str,
-        request: Request
-    ) -> Tuple[str, str]:
+    async def refresh_access_token(self, refresh_token: str, request: Request) -> Tuple[str, str]:
         """Refresh access token with rotation and rate limiting"""
 
         # Check rate limit
         if await self._check_refresh_rate_limit(request):
-            raise HTTPException(
-                status_code=status.HTTP_429_TOO_MANY_REQUESTS,
-                detail="Too many refresh attempts"
-            )
+            raise HTTPException(status_code=status.HTTP_429_TOO_MANY_REQUESTS, detail="Too many refresh attempts")
 
         # Verify refresh token
         payload = await self.verify_token(refresh_token, token_type="refresh")
@@ -297,21 +248,16 @@ class JWTEnhancedMiddleware(BaseHTTPMiddleware):
                     # Family has been compromised, revoke all tokens
                     logger.warning(f"Compromised token family detected: {payload['family_id']}")
                     raise HTTPException(
-                        status_code=status.HTTP_401_UNAUTHORIZED,
-                        detail="Token family has been revoked"
+                        status_code=status.HTTP_401_UNAUTHORIZED, detail="Token family has been revoked"
                     )
 
         # Create new tokens
         new_access = self.create_access_token(
-            user_id=payload["sub"],
-            email=payload["email"],
-            role=payload.get("role", "user")
+            user_id=payload["sub"], email=payload["email"], role=payload.get("role", "user")
         )
 
         new_refresh = self.create_refresh_token(
-            user_id=payload["sub"],
-            email=payload["email"],
-            family_id=payload.get("family_id")
+            user_id=payload["sub"], email=payload["email"], family_id=payload.get("family_id")
         )
 
         # Revoke old refresh token JTI
@@ -342,11 +288,7 @@ class JWTEnhancedMiddleware(BaseHTTPMiddleware):
                 pass
 
         # Increment count
-        await self.redis_breaker.set(
-            rate_key,
-            str(int(count) + 1 if count else 1),
-            ex=self.refresh_rate_window
-        )
+        await self.redis_breaker.set(rate_key, str(int(count) + 1 if count else 1), ex=self.refresh_rate_window)
 
         return False
 
@@ -382,15 +324,10 @@ class JWTEnhancedMiddleware(BaseHTTPMiddleware):
             return False
 
         family_key = f"jwt:family:{family_id}"
-        return await self.redis_breaker.set(
-            family_key,
-            "revoked",
-            ex=int(self.refresh_token_expire.total_seconds())
-        )
+        return await self.redis_breaker.set(family_key, "revoked", ex=int(self.refresh_token_expire.total_seconds()))
 
 
 # Import asyncio for async tasks
-import asyncio
 
 
 def create_jwt_enhanced_middleware(app: ASGIApp) -> JWTEnhancedMiddleware:

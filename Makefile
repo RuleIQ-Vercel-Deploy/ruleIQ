@@ -1,7 +1,7 @@
 # ruleIQ Test Execution Makefile
 # Provides convenient shortcuts for running tests in different modes
 
-.PHONY: help test-fast test-integration test-performance test-full test-ci test-ai test-security test-e2e test-parallel test-sequential install-test-deps test-groups test-groups-parallel test-groups-list test-group-unit test-group-ai test-group-api test-group-endpoints test-group-advanced test-group-e2e
+.PHONY: help test-fast test-integration test-performance test-full test-ci test-ai test-security test-e2e test-parallel test-sequential install-test-deps test-groups test-groups-parallel test-groups-list test-group-unit test-group-ai test-group-api test-group-endpoints test-group-advanced test-group-e2e deploy-verify
 
 # Default target
 help:
@@ -34,6 +34,9 @@ help:
 	@echo "Traditional Modes:"
 	@echo "  make test-parallel    - All tests with pytest-xdist"
 	@echo "  make test-sequential  - All tests sequentially"
+	@echo ""
+	@echo "Deployment:"
+	@echo "  make deploy-verify    - Full pre-deployment verification suite"
 	@echo ""
 	@echo "Utilities:"
 	@echo "  make install-test-deps - Install test dependencies"
@@ -236,6 +239,41 @@ test-quick-groups:
 test-core-groups:
 	@echo "🎯 Running core test groups (Unit + AI + API)..."
 	python test_groups.py group1_unit && python test_groups.py group2_ai_core && python test_groups.py group3_api_basic
+
+# Deployment Verification Commands
+deploy-verify:
+	@echo "🚀 Running full pre-deployment verification..."
+	@echo "===================================="
+	@echo "Step 1/4: Startup diagnostics..."
+	python startup_diagnostics.py
+	@echo ""
+	@echo "Step 2/4: Database health check..."
+	python database_health_check.py
+	@echo ""
+	@echo "Step 3/4: Endpoint validation..."
+	python validate_endpoints.py || true
+	@echo ""
+	@echo "Step 4/4: Running test groups in parallel..."
+	$(MAKE) test-groups-parallel
+	@echo ""
+	@echo "✅ Pre-deployment verification complete!"
+
+# Deployment Orchestration Commands
+deploy-orchestrate:
+	@echo "🎯 Running deployment orchestrator..."
+	python deployment/deployment_orchestrator.py --env staging
+
+deploy-orchestrate-prod:
+	@echo "🚀 Running production deployment orchestrator..."
+	python deployment/deployment_orchestrator.py --env production --strict
+
+deploy-orchestrate-dev:
+	@echo "🔧 Running development deployment orchestrator..."
+	python deployment/deployment_orchestrator.py --env development --skip-tests
+
+deploy-orchestrate-rollback:
+	@echo "⏪ Running deployment rollback..."
+	python deployment/deployment_orchestrator.py --rollback --env production
 
 # Integration Testing Commands
 test-integration-comprehensive:

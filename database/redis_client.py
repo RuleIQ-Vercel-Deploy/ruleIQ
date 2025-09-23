@@ -4,8 +4,10 @@ from __future__ import annotations
 Redis client for API key management
 """
 
-import redis.asyncio as redis
 from typing import Optional
+
+import redis.asyncio as redis
+
 from config.settings import settings
 
 _redis_client: Optional[redis.Redis] = None

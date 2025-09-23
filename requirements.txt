@@ -1,28 +1,52 @@
+# Core Web Framework
 fastapi==0.110.0
 uvicorn==0.27.0
 python-multipart==0.0.9
-pydantic==2.6.0
-pydantic-settings==2.1.0
+httpx==0.27.0
+
+# Data Validation & Settings
+# NOTE: Pydantic v2.9.2 is explicitly pinned. Some transitive dependencies may require
+# pydantic 2.6.0, but we override to 2.9.2 for compatibility with FastAPI 0.110.0
+# If you see pydantic version conflicts, use: pip install --force-reinstall pydantic==2.9.2
+pydantic==2.9.2
+pydantic-settings==2.5.2
+python-dotenv==1.0.1
+
+# Database
 sqlalchemy==2.0.27
 alembic==1.13.1
 psycopg2-binary==2.9.9
+redis[asyncio]==5.0.1
+
+# Authentication & Security
 python-jose[cryptography]==3.3.0  # Note: Consider migrating to PyJWT for better security
 passlib[bcrypt]==1.7.4
-python-dotenv==1.0.1
-httpx==0.27.0
 defusedxml==0.7.1  # For secure XML parsing (prevents XXE attacks)
-openai==1.12.0
+
+# AI & LLM
+# NOTE: LangChain packages may have their own pydantic dependencies
+# Ensure compatibility by installing in order: pydantic, then langchain packages
+openai==1.3.0
 langchain==0.3.13
 langchain-openai==0.2.14
 langchain-community==0.3.13
+
+# Vector Databases (Optional - consider removing for serverless)
+# NOTE: ChromaDB may introduce pydantic conflicts. Install with --no-deps if needed
 chromadb==0.4.22
 pinecone-client==3.0.3
+
+# Third-Party Services
 stripe==8.1.0
 sendgrid==6.11.0
+pusher==3.3.2
 boto3==1.34.34
+
+# Monitoring & Error Tracking
 sentry-sdk[fastapi]==1.40.3
 prometheus-client==0.20.0
 slowapi==0.1.9
-pusher==3.3.2
-redis[asyncio]==5.0.1
-httpx==0.27.0
+
+# Additional Dependencies
+aiosmtplib==2.0.2
+email-validator==2.1.0

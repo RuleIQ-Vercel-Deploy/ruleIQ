@@ -1,0 +1,73 @@
+# Codacy configuration file
+
+# Exclude patterns
+exclude_paths:
+  - 'tests/**'
+  - 'test_*.py'
+  - '*_test.py'
+  - '.venv/**'
+  - 'venv/**'
+  - 'node_modules/**'
+  - '__pycache__/**'
+  - '.pytest_cache/**'
+  - 'htmlcov/**'
+  - 'coverage/**'
+  - 'dist/**'
+  - 'build/**'
+  - '.next/**'
+  - 'migrations/**'
+  - '*.min.js'
+  - '*.min.css'
+
+# Engine configuration
+engines:
+  # Python linters
+  pylint:
+    enabled: true
+    python_version: 3
+    
+  flake8:
+    enabled: true
+    config:
+      max-line-length: 120
+      ignore: E402,W503,E203
+      
+  bandit:
+    enabled: true
+    config:
+      skips:
+        - B101  # assert_used - OK in test files
+      
+  mypy:
+    enabled: true
+    python_version: 3.11
+    
+  # JavaScript/TypeScript linters  
+  eslint:
+    enabled: true
+    
+  # Security
+  gosec:
+    enabled: false
+    
+  # Documentation
+  markdownlint:
+    enabled: true
+    
+# Languages
+languages:
+  python:
+    enabled: true
+  javascript:
+    enabled: true
+  typescript:
+    enabled: true
+  css:
+    enabled: true
+    
+# Coverage
+coverage:
+  enabled: true
+  exclude_paths:
+    - 'tests/**'
+    - 'test_*.py'

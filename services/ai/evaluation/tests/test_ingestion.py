@@ -2,25 +2,26 @@
 
 from __future__ import annotations
 
-from typing import Any
-import pytest
-from unittest.mock import Mock, patch
 import json
 from datetime import datetime
+from typing import Any
+from unittest.mock import Mock, patch
 
-from services.ai.evaluation.tools.ingestion import (
-    GoldenDatasetIngestion,
-    DocumentProcessor,
-    ChunkProcessor,
-    EmbeddingGenerator,
-    GraphIngestion,
-)
+import pytest
+
 from services.ai.evaluation.schemas.common import (
-    GoldenDoc,
-    GoldenChunk,
-    SourceMeta,
-    RegCitation,
     ExpectedOutcome,
+    GoldenChunk,
+    GoldenDoc,
+    RegCitation,
+    SourceMeta,
+)
+from services.ai.evaluation.tools.ingestion import (
+    ChunkProcessor,
+    DocumentProcessor,
+    EmbeddingGenerator,
+    GoldenDatasetIngestion,
+    GraphIngestion,
 )
 
 
@@ -48,9 +49,7 @@ class TestDocumentProcessor:
         }
 
         with patch("builtins.open", create=True) as mock_open:
-            mock_open.return_value.__enter__.return_value.read.return_value = (
-                json.dumps(test_data),
-            )
+            mock_open.return_value.__enter__.return_value.read.return_value = (json.dumps(test_data),)
 
             documents = processor.load_golden_dataset("test.json")
 
@@ -100,9 +99,7 @@ class TestChunkProcessor:
 
     def test_chunk_document_basic(self) -> Any:
         """Test basic document chunking."""
-        processor = ChunkProcessor(
-            chunk_size=100, overlap=10  # ~25 tokens  # ~2-3 tokens,
-        )
+        processor = ChunkProcessor(chunk_size=100, overlap=10)  # ~25 tokens  # ~2-3 tokens,
 
         # Create a document with enough content to chunk
         doc = GoldenDoc(
@@ -172,7 +169,9 @@ class TestChunkProcessor:
             ],
             expected_outcomes=[
                 ExpectedOutcome(
-                    outcome_id="out1", description="Test outcome", tags=["security"],
+                    outcome_id="out1",
+                    description="Test outcome",
+                    tags=["security"],
                 ),
             ],
         )
@@ -357,9 +356,7 @@ class TestGoldenDatasetIngestion:
     @patch("services.ai.evaluation.tools.ingestion.EmbeddingGenerator")
     @patch("services.ai.evaluation.tools.ingestion.ChunkProcessor")
     @patch("services.ai.evaluation.tools.ingestion.DocumentProcessor")
-    def test_complete_ingestion_pipeline(
-        self, mock_doc_proc, mock_chunk_proc, mock_embed_gen, mock_graph
-    ):
+    def test_complete_ingestion_pipeline(self, mock_doc_proc, mock_chunk_proc, mock_embed_gen, mock_graph):
         """Test complete ingestion from file to Neo4j."""
         # Setup mocks
         mock_doc_inst = Mock()

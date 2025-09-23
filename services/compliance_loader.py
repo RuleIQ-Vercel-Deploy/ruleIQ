@@ -5,15 +5,15 @@ Implements loading and management of UK-specific compliance frameworks
 following the Agent Operating Protocol and test specifications.
 """
 
-from typing import List, Dict, Any, Optional
+import logging
 from dataclasses import dataclass
 from datetime import datetime, timezone
-import logging
+from typing import Any, Dict, List, Optional
+
+from sqlalchemy.orm import Session
 
 from database.compliance_framework import ComplianceFramework
 from database.db_setup import get_db
-from sqlalchemy.orm import Session
-
 
 logger = logging.getLogger(__name__)
 
@@ -197,9 +197,7 @@ class UKComplianceLoader:
             ValueError: If framework not found
         """
         framework = (
-            self.db_session.query(ComplianceFramework)
-            .filter(ComplianceFramework.name == framework_name)
-            .first(),
+            self.db_session.query(ComplianceFramework).filter(ComplianceFramework.name == framework_name).first(),
         )
 
         if not framework:
@@ -217,7 +215,7 @@ class UKComplianceLoader:
 class GeographicValidator:
     """Validator for geographic scope of frameworks"""
 
-#     UK_REGIONS = {"UK", "England", "Scotland", "Wales", "Northern Ireland"}  # Unused variable
+    #     UK_REGIONS = {"UK", "England", "Scotland", "Wales", "Northern Ireland"}  # Unused variable
 
     def validate_uk_scope(self, geographic_scope: List[str]) -> bool:
         """

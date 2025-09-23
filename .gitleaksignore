@@ -1,0 +1,20 @@
+# Gitleaks ignore file
+# Format: hash:filepath:rule-id
+
+# Add any commit hashes here that should be ignored
+# Example: abc123def:path/to/file.py:generic-api-key
+
+# Ignore test files with example keys
+*:tests/**:generic-api-key
+*:test/**:generic-api-key
+*:**/*.test.*:generic-api-key
+*:**/*.spec.*:generic-api-key
+
+# Ignore environment examples
+*:.env.example:*
+*:.env.sample:*
+*:.env.test:*
+
+# Ignore CI/CD workflow files with test secrets
+*:.github/workflows/*.yml:generic-api-key
+*:.github/workflows/*.yaml:generic-api-key

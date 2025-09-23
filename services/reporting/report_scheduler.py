@@ -73,9 +73,7 @@ class ReportScheduler:
         """Retrieves all active report schedules."""
         try:
             res = await self.db.execute(
-                select(ReportSchedule)
-                .where(ReportSchedule.active)
-                .options(selectinload(ReportSchedule.owner)),
+                select(ReportSchedule).where(ReportSchedule.active).options(selectinload(ReportSchedule.owner)),
             )
             return res.scalars().all()
         except SQLAlchemyError as e:
@@ -92,9 +90,7 @@ class ReportScheduler:
         self.db.add(schedule)
         await self.db.commit()
 
-    async def update_schedule(
-        self, schedule_id: UUID, updates: Dict[str, Any]
-    ) -> ReportSchedule:
+    async def update_schedule(self, schedule_id: UUID, updates: Dict[str, Any]) -> ReportSchedule:
         """Updates an existing report schedule."""
         schedule = await self.get_schedule(schedule_id)
         try:

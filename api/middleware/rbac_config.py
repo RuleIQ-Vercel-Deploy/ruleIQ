@@ -7,8 +7,8 @@ Centralized configuration for role-based access control including
 route permissions, framework access rules, and security policies.
 """
 
-from typing import Dict, List, Set
 from enum import Enum
+from typing import Dict, List, Set
 
 
 class AccessLevel(Enum):

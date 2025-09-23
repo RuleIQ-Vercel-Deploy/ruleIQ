@@ -4,24 +4,24 @@ from __future__ import annotations
 Database models for enterprise integrations and evidence storage
 """
 
+import uuid
+from datetime import datetime
+
 from sqlalchemy import (
-    Column,
-    String,
     JSON,
-    DateTime,
-    Text,
     Boolean,
+    Column,
+    DateTime,
     ForeignKey,
     Index,
-    UniqueConstraint,
     Integer,
+    String,
+    Text,
+    UniqueConstraint,
     text,
 )
-from sqlalchemy.dialects.postgresql import JSONB
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import relationship
-from datetime import datetime
-import uuid
 
 from database.db_setup import Base
 
@@ -35,9 +35,7 @@ class Integration(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
-    provider = Column(
-        String(50), nullable=False
-    )  # aws, okta, google_workspace, microsoft_365
+    provider = Column(String(50), nullable=False)  # aws, okta, google_workspace, microsoft_365
     encrypted_credentials = Column(Text, nullable=False)  # AES-256 encrypted JSON
     health_status = Column(JSON, default={})
     is_active = Column(Boolean, default=True)
@@ -48,7 +46,9 @@ class Integration(Base):
 
     # Relationships
     evidence_collections = relationship(
-        "EvidenceCollection", back_populates="integration", cascade="all, delete-orphan",
+        "EvidenceCollection",
+        back_populates="integration",
+        cascade="all, delete-orphan",
     )
 
     # Indexes for performance
@@ -72,13 +72,13 @@ class EvidenceCollection(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     integration_id = Column(
-        UUID(as_uuid=True), ForeignKey("integrations.id"), nullable=False,
+        UUID(as_uuid=True),
+        ForeignKey("integrations.id"),
+        nullable=False,
     )
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
     framework_id = Column(String(50), nullable=False)  # soc2_type2, iso27001, etc.
-    status = Column(
-        String(20), nullable=False, default="pending"
-    )  # pending, running, completed, failed
+    status = Column(String(20), nullable=False, default="pending")  # pending, running, completed, failed
     progress_percentage = Column(Integer, default=0)
     evidence_types_requested = Column(JSON, default=[])
     evidence_types_completed = Column(JSON, default=[])
@@ -89,9 +89,7 @@ class EvidenceCollection(Base):
     current_activity = Column(String(200))
     errors = Column(JSON, default=[])
     business_profile = Column(JSON, default={})  # Business context for collection
-    collection_mode = Column(
-        String(20), default="immediate"
-    )  # immediate, scheduled, streaming
+    collection_mode = Column(String(20), default="immediate")  # immediate, scheduled, streaming
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
@@ -125,7 +123,9 @@ class IntegrationEvidenceItem(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     collection_id = Column(
-        UUID(as_uuid=True), ForeignKey("evidence_collections.id"), nullable=False,
+        UUID(as_uuid=True),
+        ForeignKey("evidence_collections.id"),
+        nullable=False,
     )
     evidence_type = Column(String(100), nullable=False)  # iam_policies, users, etc.
     source_system = Column(String(50), nullable=False)  # aws, okta, etc.
@@ -134,12 +134,8 @@ class IntegrationEvidenceItem(Base):
     evidence_data = Column(JSON, nullable=False)  # The actual evidence content
     compliance_controls = Column(JSONB, default=[])  # CC6.1, CC6.2, etc.
     quality_score = Column(JSON, default={})  # Quality assessment
-    data_classification = Column(
-        String(50), default="internal"
-    )  # public, internal, confidential, restricted
-    retention_policy = Column(
-        String(50), default="standard"
-    )  # How long to keep this evidence
+    data_classification = Column(String(50), default="internal")  # public, internal, confidential, restricted
+    retention_policy = Column(String(50), default="standard")  # How long to keep this evidence
     checksum = Column(String(64))  # SHA-256 hash for integrity verification
     collected_at = Column(DateTime, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
@@ -174,7 +170,9 @@ class IntegrationHealthLog(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     integration_id = Column(
-        UUID(as_uuid=True), ForeignKey("integrations.id"), nullable=False,
+        UUID(as_uuid=True),
+        ForeignKey("integrations.id"),
+        nullable=False,
     )
     status = Column(String(20), nullable=False)  # healthy, unhealthy, degraded
     response_time = Column(JSON)  # Response time metrics
@@ -205,12 +203,11 @@ class EvidenceAuditLog(Base):
     integration_id = Column(UUID(as_uuid=True), ForeignKey("integrations.id"))
     collection_id = Column(UUID(as_uuid=True), ForeignKey("evidence_collections.id"))
     evidence_item_id = Column(
-        UUID(as_uuid=True), ForeignKey("integration_evidence_items.id"),
+        UUID(as_uuid=True),
+        ForeignKey("integration_evidence_items.id"),
     )
     action = Column(String(50), nullable=False)  # create, read, update, delete, export
-    resource_type = Column(
-        String(50), nullable=False
-    )  # integration, collection, evidence
+    resource_type = Column(String(50), nullable=False)  # integration, collection, evidence
     resource_id = Column(String(100), nullable=False)
     details = Column(JSON)  # Additional action details
     ip_address = Column(String(45))  # IPv6 compatible

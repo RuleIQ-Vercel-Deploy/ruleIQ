@@ -316,6 +316,7 @@ class Settings(BaseSettings):
     monitoring_enabled: bool = Field(default=True, description='Enable monitoring')
     performance_monitoring_enabled: bool = Field(default=True, description='Enable performance monitoring')
     error_monitoring_enabled: bool = Field(default=True, description='Enable error monitoring')
+    database_monitoring_required: bool = Field(default=False, description='Whether database monitoring is required for startup (fails if initialization fails)')
 
     # Celery configuration
     celery_broker_url: str = Field(

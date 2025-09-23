@@ -74,7 +74,10 @@ async def generate_compliance_policy(
             raise NotFoundException("Compliance framework not found.")
 
         prompt = build_policy_generation_prompt(
-            profile, framework, policy_type, custom_requirements or [],
+            profile,
+            framework,
+            policy_type,
+            custom_requirements or [],
         )
 
         policy_content_str = await _generate_policy_with_protection(prompt)
@@ -110,31 +113,24 @@ async def generate_compliance_policy(
         return new_policy
 
     except (CircuitBreakerOpenException, RetryExhaustedError) as e:
-        raise IntegrationException(
-            "Policy generation service is currently unavailable or failing."
-        ) from e
+        raise IntegrationException("Policy generation service is currently unavailable or failing.") from e
     except json.JSONDecodeError as e:
-        raise BusinessLogicException(
-            "Failed to parse AI response for policy generation."
-        ) from e
+        raise BusinessLogicException("Failed to parse AI response for policy generation.") from e
     except SQLAlchemyError as e:
         await db.rollback()
         raise DatabaseException("Failed to save the generated policy.") from e
     except Exception as e:
         await db.rollback()
-        raise BusinessLogicException(
-            f"An unexpected error occurred during policy generation: {e}"
-        ) from e
+        raise BusinessLogicException(f"An unexpected error occurred during policy generation: {e}") from e
 
 
-async def get_policy_by_id(
-    db: AsyncSession, policy_id: UUID, user_id: UUID
-) -> GeneratedPolicy:
+async def get_policy_by_id(db: AsyncSession, policy_id: UUID, user_id: UUID) -> GeneratedPolicy:
     """Retrieves a policy by its ID, ensuring it belongs to the user."""
     try:
         res = await db.execute(
             select(GeneratedPolicy).where(
-                GeneratedPolicy.id == policy_id, GeneratedPolicy.user_id == user_id,
+                GeneratedPolicy.id == policy_id,
+                GeneratedPolicy.user_id == user_id,
             ),
         )
         policy = res.scalars().first()
@@ -155,9 +151,7 @@ async def get_user_policies(db: AsyncSession, user_id: UUID) -> List[GeneratedPo
         return policies
     except SQLAlchemyError as e:
         # Log the error e.g., logging.error(f"Database error fetching policies for user {user_id}: {e}")
-        raise DatabaseException(
-            f"Failed to retrieve policies for user {user_id}."
-        ) from e
+        raise DatabaseException(f"Failed to retrieve policies for user {user_id}.") from e
 
 
 async def regenerate_policy_section(
@@ -173,11 +167,7 @@ async def regenerate_policy_section(
     try:
         # Assuming content is a dict with a 'sections' list
         section_content = next(
-            (
-                s.get("content")
-                for s in policy.content.get("sections", [])
-                if s.get("title") == section_title
-            ),
+            (s.get("content") for s in policy.content.get("sections", []) if s.get("title") == section_title),
             "Section not found",
         )
 
@@ -211,9 +201,7 @@ async def regenerate_policy_section(
         return policy
 
     except (CircuitBreakerOpenException, RetryExhaustedError) as e:
-        raise IntegrationException(
-            "Policy regeneration service is currently unavailable."
-        ) from e
+        raise IntegrationException("Policy regeneration service is currently unavailable.") from e
     except SQLAlchemyError as e:
         await db.rollback()
         raise DatabaseException("Failed to save the regenerated policy section.") from e

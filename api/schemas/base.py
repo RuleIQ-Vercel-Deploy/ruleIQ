@@ -7,7 +7,7 @@ Common schemas and base classes used across the API.
 """
 
 from datetime import datetime
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Generic, Optional, TypeVar
 from uuid import UUID
 
 from pydantic import BaseModel, Field
@@ -20,8 +20,6 @@ class BaseSchema(BaseModel):
         from_attributes = True
         json_encoders = {datetime: lambda v: v.isoformat(), UUID: lambda v: str(v)}
 
-
-from typing import TypeVar, Generic
 
 T = TypeVar("T")
 
@@ -79,13 +77,18 @@ class PaginatedResponse(BaseResponse):
 
 
 class HealthCheckResponse(BaseSchema):
-    """Health check response with database monitoring"""
+    """Health check response with comprehensive monitoring"""
 
     status: str = Field(..., description="Service status (healthy, warning, degraded, error)")
     message: Optional[str] = Field(default=None, description="Status message")
     timestamp: Optional[str] = Field(default=None, description="Check timestamp")
     version: str = Field(default="1.0.0", description="API version")
     database: Optional[Dict[str, Any]] = Field(default=None, description="Database monitoring data")
+    cache: Optional[Dict[str, Any]] = Field(default=None, description="Cache health status")
+    neo4j: Optional[Dict[str, Any]] = Field(default=None, description="Neo4j health status")
+    monitoring: Optional[Dict[str, Any]] = Field(default=None, description="Monitoring service status")
+    services: Optional[Dict[str, Any]] = Field(default=None, description="Individual service statuses")
+    environment: Optional[str] = Field(default=None, description="Environment name")
 
 
 class APIInfoResponse(BaseSchema):

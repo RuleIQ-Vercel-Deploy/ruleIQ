@@ -44,7 +44,7 @@ class EvidenceCollector:
                 "description": f'Documentation supporting compliance with {obligation.get("framework", "standard")}',
                 "collected_at": datetime.now(timezone.utc).isoformat(),
                 "status": "collected",
-                "hash": hashlib.md5(f"{company_id}_{i}".encode()).hexdigest(),
+                "hash": hashlib.md5(f"{company_id}_{i}".encode(, usedforsecurity=False)).hexdigest(),
             }
             evidence.append(evidence_item)
 
@@ -59,7 +59,7 @@ class EvidenceCollector:
                     "collected_at": datetime.now(timezone.utc).isoformat(),
                     "status": "pending_review",
                     "hash": hashlib.md5(
-                        f"{company_id}_{framework}".encode()
+                        f"{company_id}_{framework}".encode(, usedforsecurity=False)
                     ).hexdigest(),
                 }
             )

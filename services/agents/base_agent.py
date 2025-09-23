@@ -1,8 +1,8 @@
 """Base agent class for all agent personas."""
 
 from abc import ABC, abstractmethod
-from typing import Any
 from datetime import datetime, timezone
+from typing import Any
 
 
 class BaseAgent(ABC):
@@ -22,12 +22,6 @@ class BaseAgent(ABC):
         pass
 
     @abstractmethod
-    async def suggest_action(
-        self,
-        action_type: str,
-        description: str,
-        rationale: str,
-        **kwargs
-    ) -> Any:
+    async def suggest_action(self, action_type: str, description: str, rationale: str, **kwargs) -> Any:
         """Suggest an action for approval."""
         pass

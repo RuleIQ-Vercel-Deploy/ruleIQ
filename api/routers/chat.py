@@ -9,12 +9,11 @@ from typing import List, Optional
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy import desc, select, func
+from sqlalchemy import desc, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
 
 from api.dependencies.auth import get_current_active_user
-from database.user import User
 from api.schemas.chat import (
     ComplianceAnalysisRequest,
     ComplianceAnalysisResponse,
@@ -31,6 +30,7 @@ from database.business_profile import BusinessProfile
 from database.chat_conversation import ChatConversation, ConversationStatus
 from database.chat_message import ChatMessage
 from database.db_setup import get_async_db, get_db
+from database.user import User
 from services.ai import ComplianceAssistant
 from services.iq_agent import IQComplianceAgent
 from services.neo4j_service import Neo4jGraphRAGService
@@ -268,9 +268,7 @@ async def list_conversations(
         # Get message counts and last message times
         conversation_summaries = []
         for conv in conversations:
-            message_count = (
-                db.query(ChatMessage).filter(ChatMessage.conversation_id == conv.id).count(),
-            )
+            message_count = (db.query(ChatMessage).filter(ChatMessage.conversation_id == conv.id).count(),)
 
             last_message = (
                 db.query(ChatMessage)
@@ -611,7 +609,8 @@ async def generate_evidence_collection_workflow(
     except Exception as e:
         logger.error(f"Error generating evidence collection workflow: {e}")
         raise HTTPException(
-            status_code=500, detail="Failed to generate evidence collection workflow",
+            status_code=500,
+            detail="Failed to generate evidence collection workflow",
         )
 
 
@@ -635,9 +634,7 @@ async def generate_customized_policy(
     """
     try:
         business_profile = (
-            db.query(BusinessProfile)
-            .filter(BusinessProfile.user_id == str(str(current_user.id)))
-            .first(),
+            db.query(BusinessProfile).filter(BusinessProfile.user_id == str(str(current_user.id))).first(),
         )
 
         if not business_profile:
@@ -704,7 +701,8 @@ async def get_smart_compliance_guidance(
 
         # Get gap analysis
         gap_analysis = await assistant.analyze_evidence_gap(
-            business_profile_id=business_profile.id, framework=framework,
+            business_profile_id=business_profile.id,
+            framework=framework,
         )
 
         # Combine into smart guidance
@@ -714,7 +712,8 @@ async def get_smart_compliance_guidance(
             "current_status": {
                 "completion_percentage": gap_analysis.get("completion_percentage", 0),
                 "maturity_level": recommendations.get("business_context", {}).get(
-                    "maturity_level", "Basic",
+                    "maturity_level",
+                    "Basic",
                 ),
                 "critical_gaps_count": len(gap_analysis.get("critical_gaps", [])),
             },
@@ -722,14 +721,10 @@ async def get_smart_compliance_guidance(
             "next_immediate_steps": recommendations.get("next_steps", []),
             "effort_estimation": recommendations.get("estimated_effort", {}),
             "quick_wins": [
-                rec
-                for rec in recommendations.get("recommendations", [])
-                if rec.get("effort_hours", 4) <= 2
+                rec for rec in recommendations.get("recommendations", []) if rec.get("effort_hours", 4) <= 2
             ][:3],
             "automation_opportunities": [
-                rec
-                for rec in recommendations.get("recommendations", [])
-                if rec.get("automation_possible", False)
+                rec for rec in recommendations.get("recommendations", []) if rec.get("automation_possible", False)
             ][:3],
             "generated_at": datetime.now(timezone.utc).isoformat(),
         }
@@ -741,8 +736,6 @@ async def get_smart_compliance_guidance(
     except Exception as e:
         logger.error(f"Error getting smart compliance guidance: {e}")
         raise HTTPException(status_code=500, detail="Failed to get smart compliance guidance")
-
-
 
 
 @router.delete("/cache/clear")
@@ -948,9 +941,7 @@ async def get_system_alerts(
 
 
 @router.post("/analytics/alerts/{alert_id}/resolve")
-async def resolve_system_alert(
-    alert_id: str, current_user: User = Depends(get_current_active_user)
-):
+async def resolve_system_alert(alert_id: str, current_user: User = Depends(get_current_active_user)):
     """
     Mark a system alert as resolved.
     """
@@ -994,9 +985,7 @@ async def create_smart_evidence_plan(
     """
     try:
         business_profile = (
-            db.query(BusinessProfile)
-            .filter(BusinessProfile.user_id == str(str(current_user.id)))
-            .first(),
+            db.query(BusinessProfile).filter(BusinessProfile.user_id == str(str(current_user.id))).first(),
         )
 
         if not business_profile:
@@ -1163,7 +1152,10 @@ async def update_evidence_task_status(
 
         collector = await get_smart_evidence_collector()
         success = await collector.update_task_status(
-            plan_id, task_id, task_status, completion_notes,
+            plan_id,
+            task_id,
+            task_status,
+            completion_notes,
         )
 
         if not success:
@@ -1182,8 +1174,6 @@ async def update_evidence_task_status(
     except Exception as e:
         logger.error(f"Error updating task status: {e}")
         raise HTTPException(status_code=500, detail="Failed to update task status")
-
-
 
 
 @router.post("/compliance-gap-analysis", summary="Analyze compliance gaps")
@@ -1323,9 +1313,7 @@ async def get_quality_metrics(current_user: User = Depends(get_current_active_us
 
         return {
             "overall_metrics": monitor.metrics,
-            "quality_thresholds": {
-                level.value: threshold for level, threshold in monitor.quality_thresholds.items()
-            },
+            "quality_thresholds": {level.value: threshold for level, threshold in monitor.quality_thresholds.items()},
             "total_assessments": len(monitor.quality_assessments),
             "total_feedback_items": len(monitor.feedback_history),
             "recent_trends": await monitor.get_quality_trends(7),  # Last 7 days
@@ -1432,10 +1420,12 @@ async def send_iq_message(
                     "timestamp": datetime.now(timezone.utc).isoformat(),
                     "iq_agent": True,
                     "graph_nodes_traversed": result.get("graph_context", {}).get(
-                        "nodes_traversed", 0,
+                        "nodes_traversed",
+                        0,
                     ),
                     "graph_relationships": result.get("graph_context", {}).get(
-                        "relationships_explored", 0,
+                        "relationships_explored",
+                        0,
                     ),
                     "evidence_found": len(result.get("evidence", [])),
                     "artifacts_generated": len(result.get("artifacts", [])),
@@ -1551,9 +1541,7 @@ async def get_iq_agent_status(
                     "graph_initialized": stats.get("nodes", 0) > 0,
                     "nodes_count": stats.get("nodes", 0),
                     "relationships_count": stats.get("relationships", 0),
-                    "message": (
-                        "IQ Agent operational" if _iq_agent else "IQ Agent not initialized",
-                    ),
+                    "message": ("IQ Agent operational" if _iq_agent else "IQ Agent not initialized",),
                 },
             )
         except Exception as e:

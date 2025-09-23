@@ -3,13 +3,15 @@ Security middleware for ruleIQ platform
 Implements OWASP security best practices
 """
 
+import hashlib
+import re
+import secrets
+from typing import Optional
+
 from fastapi import Request
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
-import re
-import hashlib
-import secrets
-from typing import Optional
+
 
 class SecurityMiddleware(BaseHTTPMiddleware):
     """Comprehensive security middleware"""
@@ -61,6 +63,7 @@ class SecurityMiddleware(BaseHTTPMiddleware):
 
         return True
 
+
 class AuthorizationMiddleware(BaseHTTPMiddleware):
     """Authorization middleware for resource access control"""
 
@@ -74,29 +77,23 @@ class AuthorizationMiddleware(BaseHTTPMiddleware):
         # Extract and validate JWT token
         auth_header = request.headers.get("Authorization")
         if not auth_header or not auth_header.startswith("Bearer "):
-            return JSONResponse(
-                status_code=401,
-                content={"detail": "Missing or invalid authorization header"}
-            )
+            return JSONResponse(status_code=401, content={"detail": "Missing or invalid authorization header"})
 
         # Token validation would go here
         # For now, pass through to next middleware
         return await call_next(request)
 
+
 def generate_secure_secret(length: int = 32) -> str:
     """Generate cryptographically secure secret"""
     return secrets.token_urlsafe(length)
+
 
 def hash_password(password: str, salt: Optional[str] = None) -> tuple[str, str]:
     """Hash password with salt"""
     if not salt:
         salt = secrets.token_hex(32)
 
-    password_hash = hashlib.pbkdf2_hmac(
-        'sha256',
-        password.encode('utf-8'),
-        salt.encode('utf-8'),
-        100000  # iterations
-    )
+    password_hash = hashlib.pbkdf2_hmac("sha256", password.encode("utf-8"), salt.encode("utf-8"), 100000)  # iterations
 
     return password_hash.hex(), salt

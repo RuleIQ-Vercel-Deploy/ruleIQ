@@ -1,0 +1,23 @@
+# Bandit configuration file for RuleIQ project
+# Format: YAML
+
+# Tests to skip
+skips:
+  - B101  # assert_used - OK in test files, we exclude them anyway
+
+# Paths to exclude from scanning  
+exclude:
+  - '/tests/'
+  - '/test/'
+  - '/**/test_*.py'
+  - '/**/tests/'
+  - '/**/*_test.py'
+  - '/venv/'
+  - '/.venv/'
+  - '/node_modules/'
+  - '/__pycache__/'
+  - '/.pytest_cache/'
+  - '/htmlcov/'
+  - '/coverage/'
+  - '/dist/'
+  - '/build/'

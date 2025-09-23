@@ -4,15 +4,16 @@ from __future__ import annotations
 
 from typing import Any
 from unittest.mock import Mock, patch
+
 from neo4j.exceptions import ServiceUnavailable
 
 # Import the module we'll create
 from services.ai.evaluation.infrastructure.neo4j_setup import (
     Neo4jConnection,
-    setup_neo4j_container,
-    wait_for_neo4j,
     create_vector_indexes,
     get_neo4j_driver,
+    setup_neo4j_container,
+    wait_for_neo4j,
 )
 
 
@@ -38,7 +39,8 @@ class TestNeo4jConnection:
 
         assert driver == mock_driver
         mock_graph_db.driver.assert_called_once_with(
-            "bolt://localhost:7687", auth=("neo4j", "please_change"),
+            "bolt://localhost:7687",
+            auth=("neo4j", "please_change"),
         )
 
     def test_get_driver_returns_existing(self) -> Any:
@@ -97,7 +99,8 @@ class TestNeo4jConnection:
 
         assert result == mock_result
         mock_session.run.assert_called_once_with(
-            "MATCH (n {name: $name}) RETURN n", params,
+            "MATCH (n {name: $name}) RETURN n",
+            params,
         )
 
 

@@ -1,14 +1,16 @@
 """Test Neo4j Community Edition Docker setup."""
-from typing import Any
 
 from __future__ import annotations
 
 import os
 import time
+from typing import Any
+
 import pytest
-import docker
 from neo4j import GraphDatabase
 from neo4j.exceptions import ServiceUnavailable
+
+import docker
 
 
 class TestNeo4jSetup:
@@ -64,7 +66,8 @@ class TestNeo4jSetup:
             for i in range(max_retries):
                 try:
                     driver = GraphDatabase.driver(
-                        "bolt://localhost:7687", auth=("neo4j", "please_change"),
+                        "bolt://localhost:7687",
+                        auth=("neo4j", "please_change"),
                     )
                     with driver.session() as session:
                         session.run("RETURN 1")
@@ -92,7 +95,8 @@ class TestNeo4jSetup:
     def test_neo4j_connection(self, neo4j_container: Any) -> Any:
         """Test connection to Neo4j."""
         driver = GraphDatabase.driver(
-            "bolt://localhost:7687", auth=("neo4j", "test_password123"),
+            "bolt://localhost:7687",
+            auth=("neo4j", "test_password123"),
         )
 
         with driver.session() as session:
@@ -105,7 +109,8 @@ class TestNeo4jSetup:
     def test_vector_index_support(self, neo4j_container: Any) -> Any:
         """Test that Neo4j supports VECTOR indexes."""
         driver = GraphDatabase.driver(
-            "bolt://localhost:7687", auth=("neo4j", "test_password123"),
+            "bolt://localhost:7687",
+            auth=("neo4j", "test_password123"),
         )
 
         with driver.session() as session:
@@ -150,7 +155,8 @@ class TestNeo4jSetup:
     def test_memory_configuration(self, neo4j_container: Any) -> Any:
         """Test Neo4j memory configuration."""
         driver = GraphDatabase.driver(
-            "bolt://localhost:7687", auth=("neo4j", "test_password123"),
+            "bolt://localhost:7687",
+            auth=("neo4j", "test_password123"),
         )
 
         with driver.session() as session:
@@ -171,10 +177,7 @@ class TestNeo4jSetup:
             config = {record["name"]: record["value"] for record in result}
 
             # Verify memory settings are applied
-            assert (
-                "server.memory.heap.initial_size" in config
-                or "dbms.memory.heap.initial_size" in config,
-            )
+            assert ("server.memory.heap.initial_size" in config or "dbms.memory.heap.initial_size" in config,)
 
         driver.close()
 

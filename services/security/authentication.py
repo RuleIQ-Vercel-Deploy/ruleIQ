@@ -5,17 +5,18 @@ Enhanced Authentication Service
 Implements MFA, password complexity, account lockout, and secure session management
 """
 
-import secrets
-import hashlib
 import base64
+import hashlib
+import re
+import secrets
 from datetime import datetime, timedelta, timezone
-from typing import Optional, Dict, Any, Tuple
-import pyotp
+from typing import Any, Dict, Optional, Tuple
+
 import bcrypt
 import jwt
+import pyotp
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
-import re
 
 from config.settings import settings
 from services.cache_service import CacheService
@@ -140,7 +141,9 @@ class AuthenticationService:
 
         # Store updated attempts with TTL
         await self.cache.set(
-            attempts_key, attempts, expire_seconds=self.LOCKOUT_DURATION_MINUTES * 60,
+            attempts_key,
+            attempts,
+            expire_seconds=self.LOCKOUT_DURATION_MINUTES * 60,
         )
 
         # Check if lockout needed
@@ -169,7 +172,8 @@ class AuthenticationService:
     def generate_totp_uri(self, secret: str, email: str) -> str:
         """Generate TOTP URI for QR code"""
         return pyotp.totp.TOTP(secret).provisioning_uri(
-            name=email, issuer_name="RuleIQ",
+            name=email,
+            issuer_name="RuleIQ",
         )
 
     def verify_totp(self, secret: str, code: str) -> bool:
@@ -202,9 +206,7 @@ class AuthenticationService:
         code_hash = hashlib.sha256(clean_code.encode()).hexdigest()
         return secrets.compare_digest(code_hash, hashed)
 
-    def create_access_token(
-        self, user_id: str, additional_claims: Optional[Dict[str, Any]] = None
-    ) -> str:
+    def create_access_token(self, user_id: str, additional_claims: Optional[Dict[str, Any]] = None) -> str:
         """Create JWT access token"""
         payload = {
             "sub": user_id,
@@ -234,7 +236,9 @@ class AuthenticationService:
         """Verify and decode JWT token"""
         try:
             payload = jwt.decode(
-                token, self.jwt_secret, algorithms=[self.jwt_algorithm],
+                token,
+                self.jwt_secret,
+                algorithms=[self.jwt_algorithm],
             )
 
             # Verify token type
@@ -245,7 +249,8 @@ class AuthenticationService:
 
         except jwt.ExpiredSignatureError:
             raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED, detail="Token has expired",
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Token has expired",
             )
         except jwt.InvalidTokenError as e:
             raise HTTPException(
@@ -253,9 +258,7 @@ class AuthenticationService:
                 detail=f"Invalid token: {str(e)}",
             )
 
-    async def create_session(
-        self, user_id: str, ip_address: str, user_agent: str
-    ) -> str:
+    async def create_session(self, user_id: str, ip_address: str, user_agent: str) -> str:
         """Create secure session"""
         session_id = secrets.token_urlsafe(32)
 
@@ -289,7 +292,9 @@ class AuthenticationService:
 
         # Refresh session TTL
         await self.cache.set(
-            session_key, session_data, expire_seconds=self.SESSION_TIMEOUT_MINUTES * 60,
+            session_key,
+            session_data,
+            expire_seconds=self.SESSION_TIMEOUT_MINUTES * 60,
         )
 
         return session_data
@@ -307,9 +312,7 @@ class AuthenticationService:
         # Simplified for now
         pass
 
-    async def enforce_concurrent_session_limit(
-        self, user_id: str, max_sessions: int = 3
-    ) -> None:
+    async def enforce_concurrent_session_limit(self, user_id: str, max_sessions: int = 3) -> None:
         """Enforce maximum concurrent sessions per user"""
         # Track active sessions per user
         sessions_key = f"user_sessions:{user_id}"
@@ -331,28 +334,16 @@ class AuthenticationService:
     def generate_pkce_challenge(self) -> Tuple[str, str]:
         """Generate PKCE code verifier and challenge"""
         # Generate code verifier
-        verifier = (
-            base64.urlsafe_b64encode(secrets.token_bytes(32))
-            .rstrip(b"=")
-            .decode("utf-8"),
-        )
+        verifier = (base64.urlsafe_b64encode(secrets.token_bytes(32)).rstrip(b"=").decode("utf-8"),)
 
         # Generate code challenge (SHA256)
-        challenge = (
-            base64.urlsafe_b64encode(hashlib.sha256(verifier.encode()).digest())
-            .rstrip(b"=")
-            .decode("utf-8"),
-        )
+        challenge = (base64.urlsafe_b64encode(hashlib.sha256(verifier.encode()).digest()).rstrip(b"=").decode("utf-8"),)
 
         return verifier, challenge
 
     def verify_pkce(self, verifier: str, challenge: str) -> bool:
         """Verify PKCE code verifier against challenge"""
-        expected = (
-            base64.urlsafe_b64encode(hashlib.sha256(verifier.encode()).digest())
-            .rstrip(b"=")
-            .decode("utf-8"),
-        )
+        expected = (base64.urlsafe_b64encode(hashlib.sha256(verifier.encode()).digest()).rstrip(b"=").decode("utf-8"),)
 
         return secrets.compare_digest(expected, challenge)
 

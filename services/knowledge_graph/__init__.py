@@ -4,11 +4,12 @@ Phase 5: Regulatory knowledge graph with memory management integration
 """
 
 from typing import Any, Dict, List, Optional
-from .graph_manager import GraphManager
-from .obligation_mapper import ObligationMapper
+
 from .evidence_linker import EvidenceLinker
+from .graph_manager import GraphManager
 from .memory_integration import MemoryIntegration
-from .models import GraphNode, GraphRelationship, GraphQuery
+from .models import GraphNode, GraphQuery, GraphRelationship
+from .obligation_mapper import ObligationMapper
 
 __all__ = [
     "GraphManager",

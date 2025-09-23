@@ -1,0 +1,42 @@
+{
+  "engines": {
+    "pylint": {
+      "enabled": true,
+      "pythonVersion": 3,
+      "paths": ["/home/omar/.local/bin/pylint"]
+    },
+    "flake8": {
+      "enabled": true,
+      "paths": ["/home/omar/.local/bin/flake8"]
+    },
+    "bandit": {
+      "enabled": true,
+      "paths": ["/home/omar/.local/bin/bandit"]
+    },
+    "mypy": {
+      "enabled": true,
+      "pythonVersion": 3,
+      "paths": ["/home/omar/.local/bin/mypy"]
+    },
+    "ruff": {
+      "enabled": true,
+      "paths": ["/home/omar/.local/bin/ruff"]
+    }
+  },
+  "exclude_paths": [
+    "tests/**",
+    "test_*.py",
+    "*_test.py",
+    ".venv/**",
+    "venv/**",
+    "node_modules/**",
+    "__pycache__/**",
+    ".pytest_cache/**",
+    "htmlcov/**",
+    "coverage/**",
+    "dist/**",
+    "build/**",
+    ".next/**",
+    "migrations/**"
+  ]
+}

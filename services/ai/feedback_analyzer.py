@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Any
+import statistics
 from collections import defaultdict
 from dataclasses import dataclass, field
-import statistics
+from datetime import datetime, timedelta
+from typing import Any, Dict, List, Optional
 
 from config.langsmith_feedback import FeedbackItem, FeedbackType
 
@@ -83,8 +83,7 @@ class FeedbackAnalyzer:
         ratings = [
             f.value
             for f in self.feedback_items
-            if f.feedback_type == FeedbackType.RATING
-            and isinstance(f.value, (int, float))
+            if f.feedback_type == FeedbackType.RATING and isinstance(f.value, (int, float))
         ]
 
         if not ratings:
@@ -122,24 +121,16 @@ class FeedbackAnalyzer:
             elif feedback.feedback_type == FeedbackType.COMMENT:
                 # Simple sentiment analysis based on keywords
                 comment = str(feedback.value).lower()
-                if any(
-                    word in comment
-                    for word in ["good", "great", "excellent", "love", "perfect"]
-                ):
+                if any(word in comment for word in ["good", "great", "excellent", "love", "perfect"]):
                     sentiment_counts["positive"] += 1
-                elif any(
-                    word in comment
-                    for word in ["bad", "poor", "terrible", "hate", "awful"]
-                ):
+                elif any(word in comment for word in ["bad", "poor", "terrible", "hate", "awful"]):
                     sentiment_counts["negative"] += 1
                 else:
                     sentiment_counts["neutral"] += 1
 
         return sentiment_counts
 
-    def aggregate_by_time_window(
-        self, window_hours: int = 24
-    ) -> List[AggregationResult]:
+    def aggregate_by_time_window(self, window_hours: int = 24) -> List[AggregationResult]:
         """Aggregate feedback by time windows.
 
         Args:
@@ -160,9 +151,7 @@ class FeedbackAnalyzer:
         current_window = []
 
         for feedback in sorted_feedback:
-            if feedback.timestamp < current_window_start + timedelta(
-                hours=window_hours
-            ):
+            if feedback.timestamp < current_window_start + timedelta(hours=window_hours):
                 current_window.append(feedback)
             else:
                 # Process current window
@@ -170,8 +159,7 @@ class FeedbackAnalyzer:
                     ratings = [
                         f.value
                         for f in current_window
-                        if f.feedback_type == FeedbackType.RATING
-                        and isinstance(f.value, (int, float))
+                        if f.feedback_type == FeedbackType.RATING and isinstance(f.value, (int, float))
                     ]
 
                     windows.append(
@@ -181,9 +169,7 @@ class FeedbackAnalyzer:
                             count=len(current_window),
                             metadata={
                                 "start": current_window_start.isoformat(),
-                                "end": (
-                                    current_window_start + timedelta(hours=window_hours)
-                                ).isoformat(),
+                                "end": (current_window_start + timedelta(hours=window_hours)).isoformat(),
                                 "feedback_types": self._count_feedback_types(
                                     current_window,
                                 ),
@@ -200,8 +186,7 @@ class FeedbackAnalyzer:
             ratings = [
                 f.value
                 for f in current_window
-                if f.feedback_type == FeedbackType.RATING
-                and isinstance(f.value, (int, float))
+                if f.feedback_type == FeedbackType.RATING and isinstance(f.value, (int, float))
             ]
 
             windows.append(
@@ -211,9 +196,7 @@ class FeedbackAnalyzer:
                     count=len(current_window),
                     metadata={
                         "start": current_window_start.isoformat(),
-                        "end": (
-                            current_window_start + timedelta(hours=window_hours)
-                        ).isoformat(),
+                        "end": (current_window_start + timedelta(hours=window_hours)).isoformat(),
                         "feedback_types": self._count_feedback_types(current_window),
                     },
                 ),
@@ -237,13 +220,10 @@ class FeedbackAnalyzer:
             ratings = [
                 f.value
                 for f in user_feedback
-                if f.feedback_type == FeedbackType.RATING
-                and isinstance(f.value, (int, float))
+                if f.feedback_type == FeedbackType.RATING and isinstance(f.value, (int, float))
             ]
 
-            corrections = [
-                f for f in user_feedback if f.feedback_type == FeedbackType.CORRECTION
-            ]
+            corrections = [f for f in user_feedback if f.feedback_type == FeedbackType.CORRECTION]
 
             # Calculate time span
             timestamps = [f.timestamp for f in user_feedback]
@@ -292,15 +272,11 @@ class FeedbackAnalyzer:
             "rating_count": rating_agg.count,
             "sentiment": sentiment_breakdown,
             "active_users": len([p for p in user_patterns if p.feedback_frequency > 1]),
-            "high_correction_users": len(
-                [p for p in user_patterns if p.correction_rate > 20]
-            ),
-            "feedback_types": self._count_feedback_types(self.feedback_items)
+            "high_correction_users": len([p for p in user_patterns if p.correction_rate > 20]),
+            "feedback_types": self._count_feedback_types(self.feedback_items),
         }
 
-    def _count_feedback_types(
-        self, feedback_items: List[FeedbackItem]
-    ) -> Dict[str, int]:
+    def _count_feedback_types(self, feedback_items: List[FeedbackItem]) -> Dict[str, int]:
         """Count feedback by type.
 
         Args:
@@ -328,13 +304,7 @@ class FeedbackAnalyzer:
         }
 
         # Check correction rate (>20% corrections)
-        corrections = len(
-            [
-                f
-                for f in self.feedback_items
-                if f.feedback_type == FeedbackType.CORRECTION
-            ]
-        )
+        corrections = len([f for f in self.feedback_items if f.feedback_type == FeedbackType.CORRECTION])
         if self.feedback_items:
             correction_rate = corrections / len(self.feedback_items)
             triggers["high_correction_rate"] = correction_rate > 0.2
@@ -376,27 +346,14 @@ class FeedbackAnalyzer:
         ratings = [
             f.value
             for f in self.feedback_items
-            if f.feedback_type == FeedbackType.RATING
-            and isinstance(f.value, (int, float))
+            if f.feedback_type == FeedbackType.RATING and isinstance(f.value, (int, float))
         ]
 
         # Count each type of feedback
         rating_distribution = {
             "rating": len(ratings),
-            "thumbs_up": len(
-                [
-                    f
-                    for f in self.feedback_items
-                    if f.feedback_type == FeedbackType.THUMBS_UP
-                ]
-            ),
-            "thumbs_down": len(
-                [
-                    f
-                    for f in self.feedback_items
-                    if f.feedback_type == FeedbackType.THUMBS_DOWN
-                ]
-            )
+            "thumbs_up": len([f for f in self.feedback_items if f.feedback_type == FeedbackType.THUMBS_UP]),
+            "thumbs_down": len([f for f in self.feedback_items if f.feedback_type == FeedbackType.THUMBS_DOWN]),
         }
 
         # Calculate sentiment score
@@ -456,9 +413,7 @@ class FeedbackAnalyzer:
         # Calculate rating trend
         rating_values = [w.value for w in windows if w.value > 0]
         if len(rating_values) >= 2:
-            rating_trend = (
-                "improving" if rating_values[-1] > rating_values[0] else "declining",
-            )
+            rating_trend = ("improving" if rating_values[-1] > rating_values[0] else "declining",)
             rating_change = rating_values[-1] - rating_values[0]
         else:
             rating_trend = None
@@ -483,11 +438,7 @@ class FeedbackAnalyzer:
                     sentiment_progression.append(0.5)
 
         if len(sentiment_progression) >= 2:
-            sentiment_trend = (
-                "improving"
-                if sentiment_progression[-1] > sentiment_progression[0]
-                else "declining",
-            )
+            sentiment_trend = ("improving" if sentiment_progression[-1] > sentiment_progression[0] else "declining",)
         else:
             sentiment_trend = None
 
@@ -553,15 +504,11 @@ class FeedbackAnalyzer:
                 user_segments["highly_engaged"].append(pattern.user_id)
 
             # Critics (low ratings or negative sentiment)
-            if pattern.dominant_sentiment == "negative" or (
-                pattern.average_rating and pattern.average_rating < 3
-            ):
+            if pattern.dominant_sentiment == "negative" or (pattern.average_rating and pattern.average_rating < 3):
                 user_segments["critics"].append(pattern.user_id)
 
             # Supporters (high ratings or positive sentiment)
-            if pattern.dominant_sentiment == "positive" or (
-                pattern.average_rating and pattern.average_rating >= 4
-            ):
+            if pattern.dominant_sentiment == "positive" or (pattern.average_rating and pattern.average_rating >= 4):
                 user_segments["supporters"].append(pattern.user_id)
 
             # Correctors (high correction rate)
@@ -575,10 +522,7 @@ class FeedbackAnalyzer:
         if self.feedback_items:
             timestamps = sorted([f.timestamp for f in self.feedback_items])
             if len(timestamps) > 1:
-                gaps = [
-                    (timestamps[i + 1] - timestamps[i]).total_seconds() / 3600
-                    for i in range(len(timestamps) - 1)
-                ]
+                gaps = [(timestamps[i + 1] - timestamps[i]).total_seconds() / 3600 for i in range(len(timestamps) - 1)]
                 avg_gap = statistics.mean(gaps)
                 if avg_gap < 1:  # Less than 1 hour average gap
                     behavioral_patterns.append("feedback_clustering")
@@ -587,8 +531,7 @@ class FeedbackAnalyzer:
         ratings = [
             f.value
             for f in self.feedback_items
-            if f.feedback_type == FeedbackType.RATING
-            and isinstance(f.value, (int, float))
+            if f.feedback_type == FeedbackType.RATING and isinstance(f.value, (int, float))
         ]
         if ratings:
             low_ratings = sum(1 for r in ratings if r <= 2)
@@ -598,13 +541,7 @@ class FeedbackAnalyzer:
                 behavioral_patterns.append("rating_polarization")
 
         # Pattern: Correction dominance
-        correction_count = len(
-            [
-                f
-                for f in self.feedback_items
-                if f.feedback_type == FeedbackType.CORRECTION
-            ]
-        )
+        correction_count = len([f for f in self.feedback_items if f.feedback_type == FeedbackType.CORRECTION])
         if self.feedback_items and correction_count / len(self.feedback_items) > 0.3:
             behavioral_patterns.append("correction_dominance")
 

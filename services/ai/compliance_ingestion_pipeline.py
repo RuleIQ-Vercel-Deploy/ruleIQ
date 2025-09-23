@@ -3,32 +3,33 @@ Enterprise-grade Compliance Data Ingestion Pipeline for Neo4j GraphRAG
 Handles ingestion of enhanced compliance manifests with full production safeguards
 """
 
-import json
 import asyncio
 import hashlib
-from typing import Dict, List, Any, Optional, Tuple, Set
-from pathlib import Path
-from datetime import datetime, timezone
-from dataclasses import dataclass, field
-from enum import Enum
+import json
 import logging
 import traceback
+from dataclasses import dataclass, field
+from datetime import datetime, timezone
+from enum import Enum
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Set, Tuple
 
+import numpy as np
 from neo4j import AsyncGraphDatabase, AsyncSession
 from neo4j.exceptions import Neo4jError, ServiceUnavailable, SessionExpired
-from pydantic import BaseModel, Field, validator, ValidationError
-import numpy as np
+from pydantic import BaseModel, Field, ValidationError, validator
 from tenacity import (
+    before_sleep_log,
     retry,
+    retry_if_exception_type,
     stop_after_attempt,
     wait_exponential,
-    retry_if_exception_type,
-    before_sleep_log,
 )
 
 # Production logging configuration
 logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
 )
 logger = logging.getLogger(__name__)
 
@@ -100,11 +101,7 @@ class IngestionMetrics:
             "end_time": self.end_time.isoformat() if self.end_time else None,
             "error_count": len(self.errors),
             "warning_count": len(self.warnings),
-            "data_quality_avg": (
-                np.mean(list(self.data_quality_scores.values()))
-                if self.data_quality_scores
-                else 0,
-            ),
+            "data_quality_avg": (np.mean(list(self.data_quality_scores.values())) if self.data_quality_scores else 0,),
         }
 
 
@@ -340,9 +337,7 @@ class Neo4jComplianceIngestion:
         wait=wait_exponential(multiplier=1, min=2, max=10),
         retry=retry_if_exception_type(Neo4jError),
     )
-    async def _ingest_regulation_batch(
-        self, session: AsyncSession, batch: List[Dict[str, Any]]
-    ) -> int:
+    async def _ingest_regulation_batch(self, session: AsyncSession, batch: List[Dict[str, Any]]) -> int:
         """
         Ingest a batch of regulations with transaction management
 
@@ -407,49 +402,49 @@ class Neo4jComplianceIngestion:
         SET r += item,
             r.last_ingested = datetime()
         WITH r, item
-        
+
         // Create industry relationships
-        FOREACH (industry IN 
-            CASE 
-                WHEN item.business_triggers IS NOT NULL 
-                AND item.business_triggers.industry IS NOT NULL 
-                THEN [item.business_triggers.industry] 
-                ELSE [] 
+        FOREACH (industry IN
+            CASE
+                WHEN item.business_triggers IS NOT NULL
+                AND item.business_triggers.industry IS NOT NULL
+                THEN [item.business_triggers.industry]
+                ELSE []
             END |
             MERGE (i:Industry {name: industry})
             MERGE (r)-[:APPLIES_TO]->(i),
         )
-        
+
         // Create jurisdiction relationships
-        FOREACH (jurisdiction IN 
-            CASE 
-                WHEN item.business_triggers IS NOT NULL 
-                AND item.business_triggers.jurisdiction IS NOT NULL 
-                THEN [item.business_triggers.jurisdiction] 
-                ELSE [] 
+        FOREACH (jurisdiction IN
+            CASE
+                WHEN item.business_triggers IS NOT NULL
+                AND item.business_triggers.jurisdiction IS NOT NULL
+                THEN [item.business_triggers.jurisdiction]
+                ELSE []
             END |
             MERGE (j:Jurisdiction {name: jurisdiction})
             MERGE (r)-[:GOVERNED_BY]->(j),
         )
-        
+
         // Create control relationships
-        FOREACH (control IN 
-            CASE 
-                WHEN item.suggested_controls IS NOT NULL 
-                THEN item.suggested_controls 
-                ELSE [] 
+        FOREACH (control IN
+            CASE
+                WHEN item.suggested_controls IS NOT NULL
+                THEN item.suggested_controls
+                ELSE []
             END |
             MERGE (c:Control {name: control})
             MERGE (r)-[:SUGGESTS_CONTROL]->(c),
         )
-        
+
         // Create tag relationships
         FOREACH (tag IN item.tags |
             MERGE (t:Tag {name: tag})
             MERGE (r)-[:TAGGED_WITH]->(t),
         )
-        
-        RETURN r.id as id, 
+
+        RETURN r.id as id,
                r.nodes_created as created,
                r.nodes_updated as updated
         """
@@ -467,9 +462,7 @@ class Neo4jComplianceIngestion:
                 self._processed_ids.add(record["id"])
 
             # Count relationships created (approximate)
-            self.metrics.relationships_created += (
-                len(validated_batch) * 3
-            )  # Avg relationships per node
+            self.metrics.relationships_created += len(validated_batch) * 3  # Avg relationships per node
 
             logger.info(f"Batch ingested: {success_count}/{len(batch)} items")
 
@@ -482,9 +475,7 @@ class Neo4jComplianceIngestion:
 
         return success_count
 
-    async def ingest_compliance_manifest(
-        self, manifest_path: Path, validate_only: bool = False
-    ) -> IngestionMetrics:
+    async def ingest_compliance_manifest(self, manifest_path: Path, validate_only: bool = False) -> IngestionMetrics:
         """
         Main ingestion entry point with full production safeguards
 
@@ -531,13 +522,14 @@ class Neo4jComplianceIngestion:
             # Process in batches for scalability
             async with self.driver.session(database=self.database) as session:
                 for i in range(0, len(items), self.batch_size):
-                    batch = items[i : i + self.batch_size]
+                    batch = items[i: i + self.batch_size]
 
                     # Use transaction for batch
                     async with session.begin_transaction() as tx:
                         try:
                             success_count = await self._ingest_regulation_batch(
-                                session, batch,
+                                session,
+                                batch,
                             )
                             await tx.commit()
                             self.metrics.successful_items += success_count
@@ -555,15 +547,14 @@ class Neo4jComplianceIngestion:
             # Retry failed items once
             if self._failed_ids:
                 logger.info(f"Retrying {len(self._failed_ids)} failed items")
-                retry_items = [
-                    item for item in items if item.get("id") in self._failed_ids
-                ]
+                retry_items = [item for item in items if item.get("id") in self._failed_ids]
 
                 async with self.driver.session(database=self.database) as session:
                     for item in retry_items:
                         try:
                             success = await self._ingest_regulation_batch(
-                                session, [item],
+                                session,
+                                [item],
                             )
                             if success:
                                 self.metrics.successful_items += 1
@@ -579,8 +570,7 @@ class Neo4jComplianceIngestion:
 
             # Write metrics to file for monitoring
             metrics_path = (
-                manifest_path.parent
-                / f"ingestion_metrics_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
+                manifest_path.parent / f"ingestion_metrics_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
             )
             with open(metrics_path, "w") as f:
                 json.dump(self.metrics.to_dict(), f, indent=2)
@@ -618,7 +608,8 @@ class Neo4jComplianceIngestion:
                 relationships_data = json.load(f)
 
             regulatory_relationships = relationships_data.get(
-                "regulatory_relationships", {},
+                "regulatory_relationships",
+                {},
             )
 
             # Cypher query for creating relationships
@@ -653,7 +644,8 @@ class Neo4jComplianceIngestion:
                             }
 
                             result = await session.run(
-                                relationship_query, relationships=[rel_data],
+                                relationship_query,
+                                relationships=[rel_data],
                             )
                             await result.consume()
                             metrics.relationships_created += 1
@@ -699,25 +691,25 @@ class Neo4jComplianceIngestion:
             SET e += action,
                 e.updated_at = datetime()
             WITH e, action
-            
+
             // Link to regulation
             MATCH (r:Regulation {id: action.regulation})
             MERGE (e)-[:ENFORCES]->(r)
-            
+
             // Create organization node
             MERGE (o:Organization {name: action.organization})
             MERGE (e)-[:AGAINST]->(o)
-            
+
             // Create regulator node
             MERGE (reg:Regulator {name: action.regulator})
             MERGE (reg)-[:ISSUED]->(e)
-            
+
             RETURN e.id as id
             """
 
             async with self.driver.session(database=self.database) as session:
                 for i in range(0, len(enforcement_actions), self.batch_size):
-                    batch = enforcement_actions[i : i + self.batch_size]
+                    batch = enforcement_actions[i: i + self.batch_size]
 
                     try:
                         result = await session.run(enforcement_query, actions=batch)
@@ -752,13 +744,13 @@ class Neo4jComplianceIngestion:
             "relationship_count": "MATCH ()-[r:RELATES_TO]->() RETURN count(r) as count",
             "industry_coverage": "MATCH (i:Industry) RETURN collect(i.name) as industries",
             "high_risk_regulations": """
-                MATCH (r:Regulation) 
-                WHERE r.base_risk_score >= 8 
+                MATCH (r:Regulation)
+                WHERE r.base_risk_score >= 8
                 RETURN count(r) as count
             """,
             "automation_ready": """
-                MATCH (r:Regulation) 
-                WHERE r.automation_potential >= 0.7 
+                MATCH (r:Regulation)
+                WHERE r.automation_potential >= 0.7
                 RETURN count(r) as count
             """,
         }
@@ -829,8 +821,8 @@ class IQComplianceIntegration:
             .*,
             controls: collect(DISTINCT c.name),
             related_regulations: collect(DISTINCT related.id),
-            applicability_score: 
-                CASE 
+            applicability_score:
+                CASE
                     WHEN r.business_triggers.industry = $industry THEN 1.0
                     ELSE 0.5
                 END * r.priority / 5.0
@@ -843,7 +835,8 @@ class IQComplianceIntegration:
             "industry": business_profile.get("industry", ""),
             "jurisdiction": business_profile.get("jurisdiction", "UK"),
             "handles_personal_data": business_profile.get(
-                "handles_personal_data", False,
+                "handles_personal_data",
+                False,
             ),
             "processes_payments": business_profile.get("processes_payments", False),
             "risk_threshold": risk_threshold,
@@ -855,9 +848,7 @@ class IQComplianceIntegration:
 
         return [record["regulation"] for record in regulations]
 
-    async def calculate_control_overlap(
-        self, regulation_ids: List[str]
-    ) -> Dict[str, Any]:
+    async def calculate_control_overlap(self, regulation_ids: List[str]) -> Dict[str, Any]:
         """
         Calculate control overlap between regulations
 
@@ -886,12 +877,10 @@ class IQComplianceIntegration:
 
         return {
             "overlapping_controls": [record["overlap"] for record in overlaps],
-            "deduplication_potential": len(overlaps) / max(len(regulation_ids), 1)
+            "deduplication_potential": len(overlaps) / max(len(regulation_ids), 1),
         }
 
-    async def get_enforcement_evidence(
-        self, regulation_id: str, limit: int = 3
-    ) -> List[Dict[str, Any]]:
+    async def get_enforcement_evidence(self, regulation_id: str, limit: int = 3) -> List[Dict[str, Any]]:
         """
         Get enforcement evidence for a regulation
 
@@ -922,6 +911,7 @@ class IQComplianceIntegration:
 if __name__ == "__main__":
     # Example usage for testing
     import os
+
     from dotenv import load_dotenv
 
     load_dotenv()

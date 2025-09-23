@@ -9,15 +9,16 @@ to the IQ agent from the Neo4j compliance knowledge graph. It provides:
 - Temporal awareness via Graphiti framework integration
 """
 
-import logging
-from typing import Dict, List, Any, Optional
-from datetime import datetime, timezone
-from dataclasses import dataclass
-from enum import Enum
 import hashlib
+import logging
+from dataclasses import dataclass
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, List, Optional
+
+from langchain_openai import OpenAIEmbeddings
 
 from services.neo4j_service import Neo4jGraphRAGService
-from langchain_openai import OpenAIEmbeddings
 
 logger = logging.getLogger(__name__)
 
@@ -146,7 +147,7 @@ Always return a ContextPack containing:
             ContextPack with retrieved compliance knowledge
         """
         # Generate query ID
-        query_id = hashlib.md5(f"{query}_{datetime.now(timezone.utc)}".encode()).hexdigest()[:12]
+        query_id = hashlib.md5(f"{query}_{datetime.now(timezone.utc)}".encode(), usedforsecurity=False).hexdigest()[:12]
 
         # Determine retrieval mode if not specified
         if mode is None:
@@ -187,10 +188,7 @@ Always return a ContextPack containing:
         query_lower = query.lower()
 
         # Temporal indicators
-        if any(
-            term in query_lower
-            for term in ["change", "update", "amend", "new", "2024", "2025", "recent"]
-        ):
+        if any(term in query_lower for term in ["change", "update", "amend", "new", "2024", "2025", "recent"]):
             return RetrievalMode.TEMPORAL
 
         # Global synthesis indicators
@@ -207,18 +205,13 @@ Always return a ContextPack containing:
             return RetrievalMode.GLOBAL
 
         # Specific entity indicators
-        if any(
-            term in query_lower
-            for term in ["article", "section", "requirement", "control for", "specific"]
-        ):
+        if any(term in query_lower for term in ["article", "section", "requirement", "control for", "specific"]):
             return RetrievalMode.LOCAL
 
         # Default to hybrid for ambiguous queries
         return RetrievalMode.HYBRID
 
-    async def _local_retrieval(
-        self, query: str, jurisdiction: Optional[str], max_nodes: int
-    ) -> Dict[str, Any]:
+    async def _local_retrieval(self, query: str, jurisdiction: Optional[str], max_nodes: int) -> Dict[str, Any]:
         """
         Local GraphRAG - retrieve specific entities and their immediate context
         """
@@ -320,9 +313,7 @@ Always return a ContextPack containing:
             "confidence": 0.9 if results else 0.1,
         }
 
-    async def _global_retrieval(
-        self, query: str, jurisdiction: Optional[str], max_nodes: int
-    ) -> Dict[str, Any]:
+    async def _global_retrieval(self, query: str, jurisdiction: Optional[str], max_nodes: int) -> Dict[str, Any]:
         """
         Global GraphRAG - cross-jurisdictional synthesis and pattern detection
         """
@@ -373,7 +364,8 @@ Always return a ContextPack containing:
                     patterns[domain]["jurisdictions"].add(reg.get("jurisdiction"))
                     patterns[domain]["regulations"].append(reg)
                     patterns[domain]["total_requirements"] += reg.get(
-                        "requirement_count", 0,
+                        "requirement_count",
+                        0,
                     )
 
                 nodes.append(
@@ -390,11 +382,9 @@ Always return a ContextPack containing:
         synthesis = {
             "patterns_detected": len(patterns),
             "jurisdictions_covered": (
-                list(set().union(*(p["jurisdictions"] for p in patterns.values())))
-                if patterns
-                else [],
+                list(set().union(*(p["jurisdictions"] for p in patterns.values()))) if patterns else [],
             ),
-            "domains": list(patterns.keys())
+            "domains": list(patterns.keys()),
         }
 
         return {
@@ -405,9 +395,7 @@ Always return a ContextPack containing:
             "confidence": min(0.8, len(patterns) * 0.2),
         }
 
-    async def _hybrid_retrieval(
-        self, query: str, jurisdiction: Optional[str], max_nodes: int
-    ) -> Dict[str, Any]:
+    async def _hybrid_retrieval(self, query: str, jurisdiction: Optional[str], max_nodes: int) -> Dict[str, Any]:
         """
         Hybrid retrieval - combines vector similarity with graph traversal
         """
@@ -468,9 +456,7 @@ Always return a ContextPack containing:
             "confidence": 0.75,
         }
 
-    async def _temporal_retrieval(
-        self, query: str, jurisdiction: Optional[str], max_nodes: int
-    ) -> Dict[str, Any]:
+    async def _temporal_retrieval(self, query: str, jurisdiction: Optional[str], max_nodes: int) -> Dict[str, Any]:
         """
         Temporal retrieval - track regulatory changes over time
         """
@@ -558,9 +544,7 @@ Always return a ContextPack containing:
             logger.error(f"Failed to generate embedding: {e}")
             return [0.0] * 1536  # Return zero vector as fallback
 
-    async def validate_coverage(
-        self, jurisdictions: List[str] = ["UK", "EU", "US"]
-    ) -> Dict[str, Any]:
+    async def validate_coverage(self, jurisdictions: List[str] = ["UK", "EU", "US"]) -> Dict[str, Any]:
         """
         Validate coverage of regulations across jurisdictions
         """

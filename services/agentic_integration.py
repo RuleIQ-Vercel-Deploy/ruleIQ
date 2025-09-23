@@ -3,15 +3,15 @@ Agentic Integration Service
 Combines RAG system with Pydantic AI agents for seamless Claude integration
 """
 
-import os
 import logging
-from typing import Dict, Any, Optional, List
+import os
 from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional
 
 from services.agentic_rag import AgenticRAGSystem
 from services.agents.pydantic_ai_framework import (
-    AgentOrchestrator,
     AgentContext,
+    AgentOrchestrator,
     ComplianceAgentResponse,
 )
 
@@ -40,15 +40,11 @@ class AgenticIntegrationService:
         self.active_sessions = {}
 
         # Configuration
-        self.auto_process_docs = (
-            os.getenv("AUTO_PROCESS_DOCS", "true").lower() == "true",
-        )
+        self.auto_process_docs = (os.getenv("AUTO_PROCESS_DOCS", "true").lower() == "true",)
 
         # Initialize fact-checker and self-critic system
         self.fact_checker = None
-        self.self_critic_enabled = (
-            os.getenv("ENABLE_RAG_SELF_CRITIC", "true").lower() == "true",
-        )
+        self.self_critic_enabled = (os.getenv("ENABLE_RAG_SELF_CRITIC", "true").lower() == "true",)
 
     async def initialize(self) -> None:
         """Initialize the service and process documentation if needed"""
@@ -65,15 +61,8 @@ class AgenticIntegrationService:
                 await self.rag_system.process_documentation_files()
                 logger.info("Documentation processing completed")
             else:
-                logger.info(f"Found {stats.get('total_chunks', 0)} documentation chunks and {stats.get('total_code_examples', 0)} code examples",
-                )
-
-            # Initialize fact-checker if enabled
-            if self.self_critic_enabled:
-                from .rag_fact_checker import RAGFactChecker
-
-                self.fact_checker = RAGFactChecker()
-                logger.info("RAG self-critic and fact-checker initialized")
+                logger.info(
+                     f"Found {stats.get('total_chunks',0)} documentation chunks and {stats.get('total_code_examples',0)} code examples",)# Initialize fact-checker if enabledif self.self_critic_enabled:from .rag_fact_checker import RAGFactCheckerself.fact_checker = RAGFactChecker()logger.info("RAG self-critic and fact-checker initialized")
 
             logger.info("Agentic Integration Service initialized successfully")
 
@@ -194,9 +183,7 @@ class AgenticIntegrationService:
                 "query_type": query_type,
             }
 
-    async def get_implementation_guidance(
-        self, topic: str, framework: str = "langgraph"
-    ) -> str:
+    async def get_implementation_guidance(self, topic: str, framework: str = "langgraph") -> str:
         """
         Get specific implementation guidance for LangGraph or Pydantic AI
 
@@ -225,9 +212,7 @@ class AgenticIntegrationService:
             logger.error(f"Error getting implementation guidance: {e}")
             return f"I apologize, but I couldn't retrieve guidance for {topic} in {framework}. Please check the documentation directly or try rephrasing your request."  # noqa: E501
 
-    async def find_code_examples(
-        self, task_description: str, framework: Optional[str] = None
-    ) -> Dict[str, Any]:
+    async def find_code_examples(self, task_description: str, framework: Optional[str] = None) -> Dict[str, Any]:
         """
         Find specific code examples for a task
 
@@ -328,7 +313,8 @@ class AgenticIntegrationService:
             if quick_check:
                 # Quick fact-check for real-time usage
                 is_reliable = await self.fact_checker.quick_fact_check(
-                    response_text=response_text, sources=sources,
+                    response_text=response_text,
+                    sources=sources,
                 )
 
                 return {
@@ -367,7 +353,7 @@ class AgenticIntegrationService:
                 "confidence": 0.5,
                 "fact_check_available": False,
                 "error": str(e),
-                "message": "Fact-checking failed, proceeding with caution"
+                "message": "Fact-checking failed, proceeding with caution",
             }
 
     async def query_documentation_with_validation(
@@ -394,7 +380,9 @@ class AgenticIntegrationService:
         try:
             # Get standard RAG response
             rag_result = await self.query_documentation(
-                query=query, source_filter=source_filter, query_type=query_type,
+                query=query,
+                source_filter=source_filter,
+                query_type=query_type,
             )
 
             # Add validation if enabled and fact-checker available
@@ -469,9 +457,7 @@ class AgenticIntegrationService:
 
         return context
 
-    async def _log_request(
-        self, request: str, response: ComplianceAgentResponse, context: AgentContext
-    ) -> None:
+    async def _log_request(self, request: str, response: ComplianceAgentResponse, context: AgentContext) -> None:
         """Log request for analytics and improvement"""
         try:
             # This could be expanded to log to database for analytics
@@ -522,14 +508,16 @@ class AgenticIntegrationService:
                     "enabled": self.self_critic_enabled,
                     "available": self.fact_checker is not None,
                     "capabilities": (
-                        {
-                            "quick_fact_check": True,
-                            "comprehensive_analysis": True,
-                            "self_criticism": True,
-                            "quality_scoring": True,
-                        }
-                        if self.fact_checker
-                        else {},
+                        (
+                            {
+                                "quick_fact_check": True,
+                                "comprehensive_analysis": True,
+                                "self_criticism": True,
+                                "quality_scoring": True,
+                            }
+                            if self.fact_checker
+                            else {}
+                        ),
                     ),
                 },
             }
