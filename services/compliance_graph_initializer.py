@@ -1,6 +1,4 @@
 """
-from __future__ import annotations
-
 Compliance Graph Initializer for IQ Agent GraphRAG System
 
 This module loads CCO (Chief Compliance Officer) playbook data into Neo4j
@@ -184,12 +182,18 @@ class ComplianceGraphInitializer:
         logger.info('Schema constraints and indexes created')
 
     async def _load_compliance_domains(self) ->int:
-        """Load compliance domains from CCO playbook"""
+        """
+        Load compliance domains from CCO playbook.
+
+        Returns:
+            int: Number of compliance domains created.
+        """
+        # The CCO playbook data is currently hardcoded in this method for demonstration purposes,
+        # but in a production environment, this data could be loaded from an external file, database, or API.
         domains = [ComplianceDomain(name='Anti-Money Laundering',
             description=
             'Prevention of money laundering and terrorist financing',
-            risk_level='high', regulatory_scope=['6AMLD', 'MLR2017', 'FATF'
-            ], business_impact='critical', oversight_body='FCA'),
+            risk_level='high', regulatory_scope=['6AMLD', 'MLR2017', 'FATF'], business_impact='critical', oversight_body='FCA'),
             ComplianceDomain(name='Data Protection', description=
             'Personal data protection and privacy compliance', risk_level=
             'high', regulatory_scope=['GDPR', 'DPA2018', 'PECR'],
