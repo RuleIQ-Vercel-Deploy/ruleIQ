@@ -24,17 +24,21 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy project files
 COPY . .
 
+# Copy and make start script executable
+COPY start.sh /app/start.sh
+RUN chmod +x /app/start.sh
+
 # Create non-root user
 RUN groupadd -r appuser && useradd -r -g appuser appuser
 RUN chown -R appuser:appuser /app
 USER appuser
 
-# Expose port
-EXPOSE 8000
+# Expose port (Cloud Run sets PORT environment variable)
+EXPOSE 8080
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:8000/health || exit 1
+    CMD curl -f http://localhost:${PORT:-8080}/health || exit 1
 
-# Run the application
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Run the application using start script
+CMD ["/app/start.sh"]
