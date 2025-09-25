@@ -67,7 +67,7 @@ if [ $? -eq 0 ]; then
     echo "🎉 Success! Your RuleIQ application can now connect to Neo4j AuraDB"
     echo ""
     echo "📝 Next steps:"
-    echo "   1. Run your application: doppler run -- python main.py"
+    echo "   1. Run your application: doppler run -- uvicorn api.main:app --host 0.0.0.0 --port 8000"
     echo "   2. The database is currently empty - ready for data"
     echo "   3. Monitor at: https://console.neo4j.io"
 else

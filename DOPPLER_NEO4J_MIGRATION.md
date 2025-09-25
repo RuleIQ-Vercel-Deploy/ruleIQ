@@ -84,7 +84,7 @@ doppler secrets set NEO4J_URI "neo4j+s://12e71bc4.databases.neo4j.io" --config p
 3. **Password Security**: Never commit the AuraDB password to git
 4. **Restart Services**: After updating Doppler secrets, restart your services:
    ```bash
-   doppler run -- python main.py
+   doppler run -- uvicorn api.main:app --host 0.0.0.0 --port 8000
    ```
 
 ## Rollback (if needed)

@@ -140,7 +140,7 @@ class Settings(BaseSettings):
     )
     version: str = Field(default='1.0.0', description='API version')
     host: str = Field(default='0.0.0.0', description='Host to bind')
-    port: int = Field(default=8000, description='Port to bind')
+    port: int = Field(default_factory=lambda: int(os.getenv('PORT', 8000)), description='Port to bind')
 
     @property
     def is_development(self) ->bool:
@@ -153,6 +153,11 @@ class Settings(BaseSettings):
     @property
     def is_testing(self) ->bool:
         return self.environment == Environment.TESTING or os.getenv('TESTING', '').lower() == 'true'
+
+    @property
+    def is_cloud_run(self) -> bool:
+        """Check if running in Google Cloud Run environment."""
+        return os.getenv('K_SERVICE') is not None or os.getenv('CLOUD_RUN_JOB') is not None
 
     # Database configuration
     database_url: str = Field(

@@ -296,7 +296,7 @@ The test runner automatically identifies:
 3. **Load Test Failures**
    ```bash
    # Start application before load tests
-   python main.py &
+   uvicorn api.main:app --host 0.0.0.0 --port 8000 &
    python tests/performance/run_performance_tests.py --load-tests
    ```
 

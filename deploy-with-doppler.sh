@@ -45,12 +45,12 @@ echo ""
 echo "🔍 Validating secrets in Doppler..."
 
 PROJECT="ruleiq"
-CONFIGS=("stg" "prd")
+CONFIGS=("staging" "production")
 REQUIRED_SECRETS=("VERCEL_TOKEN" "VERCEL_ORG_ID" "VERCEL_PROJECT_ID" "DATABASE_URL")
 
 for CONFIG in "${CONFIGS[@]}"; do
     echo "  Checking $CONFIG environment..."
-    CONFIG_NAME=$([ "$CONFIG" = "stg" ] && echo "staging/preview" || echo "production")
+    CONFIG_NAME=$([ "$CONFIG" = "staging" ] && echo "staging/preview" || echo "production")
 
     for SECRET in "${REQUIRED_SECRETS[@]}"; do
         if doppler secrets get "$SECRET" --plain --project="$PROJECT" --config="$CONFIG" >/dev/null 2>&1; then
@@ -74,11 +74,11 @@ echo "======================="
 echo ""
 
 # Try to get the service token for GitHub Actions
-SERVICE_TOKEN=$(doppler configs tokens list --project="$PROJECT" --config="prd" --json 2>/dev/null | jq -r '.[] | select(.name == "github-actions") | .token' || echo "")
+SERVICE_TOKEN=$(doppler configs tokens list --project="$PROJECT" --config="production" --json 2>/dev/null | jq -r '.[] | select(.name == "github-actions") | .token' || echo "")
 
 if [ -z "$SERVICE_TOKEN" ]; then
     echo "Creating new service token for GitHub Actions..."
-    SERVICE_TOKEN=$(doppler configs tokens create github-actions --project="$PROJECT" --config="prd" --plain 2>/dev/null || echo "")
+    SERVICE_TOKEN=$(doppler configs tokens create github-actions --project="$PROJECT" --config="production" --plain 2>/dev/null || echo "")
 fi
 
 if [ -n "$SERVICE_TOKEN" ]; then
@@ -128,11 +128,11 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
 
     # Test with preview config
     echo "Testing with preview environment..."
-    doppler run --project="$PROJECT" --config="stg" -- bash -c 'echo "✅ Can access Doppler secrets"'
+    doppler run --project="$PROJECT" --config="staging" -- bash -c 'echo "✅ Can access Doppler secrets"'
 
     # Pull Vercel environment
     echo "Pulling Vercel environment..."
-    doppler run --project="$PROJECT" --config="stg" -- vercel pull --yes --environment=preview
+    doppler run --project="$PROJECT" --config="staging" -- vercel pull --yes --environment=preview
 
     echo -e "${GREEN}✅ Local test successful!${NC}"
     echo "You can now trigger the GitHub Action for full deployment."

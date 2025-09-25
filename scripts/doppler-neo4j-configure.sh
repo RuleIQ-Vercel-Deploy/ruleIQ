@@ -101,7 +101,7 @@ if [ $? -eq 0 ]; then
     echo "   Project: $(doppler configure get project)"
     echo ""
     echo "📌 To run your application:"
-    echo "   doppler run -- python main.py"
+    echo "   doppler run -- uvicorn api.main:app --host 0.0.0.0 --port 8000"
     echo ""
     echo "📌 To view all Neo4j secrets:"
     echo "   doppler secrets get NEO4J_URI NEO4J_USERNAME NEO4J_DATABASE NEO4J_INSTANCE_ID"

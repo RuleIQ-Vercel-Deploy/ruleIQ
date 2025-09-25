@@ -133,7 +133,7 @@ async def main():
         print("\n🎉 Success! The golden compliance dataset is now loaded in Neo4j AuraDB")
         print("\n📝 Next steps:")
         print("   1. View the data at: https://console.neo4j.io")
-        print("   2. Run your application: doppler run -- python main.py")
+        print("   2. Run your application: doppler run -- uvicorn api.main:app --host 0.0.0.0 --port 8000")
         print("   3. The IQ Agent can now use this compliance knowledge graph")
     else:
         print("\n❌ Data loading failed. Please check the error messages above.")

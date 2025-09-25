@@ -18,23 +18,27 @@ RUN apt-get update && apt-get install -y \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
+# Upgrade pip, setuptools, and wheel for cache-busting and better dependency resolution
+RUN python -m pip install --upgrade pip setuptools wheel
+
+# Copy constraints file for dependency version control
+COPY constraints.txt .
+
 # Install Python dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Use optimized requirements for Cloud Run with constraints
+COPY requirements-cloudrun.txt requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt -c constraints.txt
 
 # Copy project files
 COPY . .
 
-# Make startup script executable
-RUN chmod +x start.sh
-
-# Don't switch to non-root user for now to avoid permission issues
-# RUN groupadd -r appuser && useradd -r -g appuser appuser
-# RUN chown -R appuser:appuser /app
-# USER appuser
+# Create non-root user for security
+RUN groupadd -r appuser && useradd -r -g appuser appuser
+RUN chown -R appuser:appuser /app
+USER appuser
 
 # Expose port
 EXPOSE 8080
 
-# Use the startup script
-CMD ["./start.sh"]
+# Run uvicorn directly for faster startup and better signal handling
+CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8080", "--workers", "1"]

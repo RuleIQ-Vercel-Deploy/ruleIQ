@@ -60,7 +60,7 @@ def main():
     print('=' * 60)
     if not check_server():
         print('❌ Server not running on http://localhost:8000')
-        print('Start with: source .venv/bin/activate && python main.py')
+        print('Start with: source .venv/bin/activate && uvicorn api.main:app --host 0.0.0.0 --port 8000')
         return 1
     print('✅ Server is running')
     endpoints_to_test = [('/api/users/me', 'Get current user'), (

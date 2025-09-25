@@ -1,3 +1,8 @@
+"""
+DEPRECATED: This file is kept for backward compatibility with existing tests.
+The production entrypoint is api.main:app
+To run the application, use: uvicorn api.main:app --host 0.0.0.0 --port 8080
+"""
 from __future__ import annotations
 from typing import Any, AsyncGenerator, Dict
 from contextlib import asynccontextmanager

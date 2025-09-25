@@ -13,8 +13,8 @@
 #
 # Examples:
 #   ./scripts/deploy/configure-doppler-secrets.sh          # Uses production config
-#   ./scripts/deploy/configure-doppler-secrets.sh stg      # Uses staging config
-#   ./scripts/deploy/configure-doppler-secrets.sh prd      # Uses prd config
+#   ./scripts/deploy/configure-doppler-secrets.sh staging  # Uses staging config
+#   ./scripts/deploy/configure-doppler-secrets.sh production # Uses production config
 
 set -e
 
@@ -32,7 +32,7 @@ NC='[0m' # No Color
 # Define project and config variables at top
 PROJECT="ruleiq"
 CONFIG_PROD="production"
-CONFIG_STG="stg"
+CONFIG_STG="staging"
 CONFIG="${1:-$CONFIG_PROD}"  # Allow config to be passed as first argument
 
 # Export for helper functions

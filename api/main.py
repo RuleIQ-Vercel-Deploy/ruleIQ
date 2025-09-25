@@ -241,6 +241,12 @@ async def api_health_detailed() ->Dict[str, Any]:
         'ai_services': ai_status, 'redis': 'not_configured'}}
 
 
+@app.get('/health')
+async def health_check_endpoint() ->Dict[str, Any]:
+    """Basic health check endpoint for Cloud Run"""
+    return {'status': 'healthy', 'timestamp': time.time(), 'version': '1.0.0'}
+
+
 @app.get('/health/ready')
 async def readiness_check() ->Dict[str, Any]:
     """Readiness check with database connectivity"""

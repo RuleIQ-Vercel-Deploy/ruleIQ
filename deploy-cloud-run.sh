@@ -82,8 +82,6 @@ check_and_create_secret() {
 # Check and create required secrets
 check_and_create_secret "DATABASE_URL" "${DATABASE_URL}"
 check_and_create_secret "JWT_SECRET_KEY" "${JWT_SECRET_KEY}"
-check_and_create_secret "GOOGLE_API_KEY" "${GOOGLE_API_KEY}"
-check_and_create_secret "GOOGLE_AI_API_KEY" "${GOOGLE_AI_API_KEY}"
 
 # Optional secrets
 if [ -n "${REDIS_URL}" ]; then
@@ -140,7 +138,7 @@ gcloud run deploy ${SERVICE_NAME} \
     --set-env-vars "PYTHONUNBUFFERED=1,PORT=8080,ENVIRONMENT=production" \
     --concurrency 80 \
     --cpu-throttling \
-    --update-secrets "DATABASE_URL=DATABASE_URL:latest,JWT_SECRET_KEY=JWT_SECRET_KEY:latest,GOOGLE_API_KEY=GOOGLE_API_KEY:latest,GOOGLE_AI_API_KEY=GOOGLE_AI_API_KEY:latest,REDIS_URL=REDIS_URL:latest" \
+    --update-secrets "DATABASE_URL=DATABASE_URL:latest,JWT_SECRET_KEY=JWT_SECRET_KEY:latest" \
     --project ${PROJECT_ID}
 
 # Get the service URL
@@ -157,6 +155,16 @@ print_status "Testing health endpoints..."
 
 # Wait for service to be ready
 sleep 10
+
+# Test basic health endpoint
+print_status "Testing basic health endpoint..."
+HEALTH_RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" ${SERVICE_URL}/health)
+
+if [ "${HEALTH_RESPONSE}" = "200" ]; then
+    print_status "✓ Basic health check passed"
+else
+    print_error "✗ Basic health check failed (HTTP ${HEALTH_RESPONSE})"
+fi
 
 # Test liveness endpoint
 print_status "Testing liveness endpoint..."

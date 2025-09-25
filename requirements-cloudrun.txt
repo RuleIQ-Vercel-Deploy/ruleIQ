@@ -1,0 +1,33 @@
+# Minimal requirements for Google Cloud Run deployment
+# This file contains only essential dependencies for running the API
+
+# Core FastAPI framework
+fastapi==0.110.0
+uvicorn==0.27.0
+
+# Data validation and settings
+pydantic==2.7.4
+pydantic-settings==2.4.0
+
+# Database connectivity
+sqlalchemy==2.0.27
+psycopg==3.1.18
+
+# Authentication and security
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+
+# Environment and configuration
+python-dotenv==1.0.1
+
+# HTTP client for external API calls
+httpx==0.27.0
+
+# Type hints compatibility (resolves all package conflicts)
+typing-extensions>=4.11,<5
+
+# Rate limiting
+slowapi==0.1.9
+
+# Logging
+python-json-logger==2.0.7

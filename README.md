@@ -201,7 +201,7 @@ pip install -r requirements.txt
 # Set up environment variables
 # 🔐 SECRETS MANAGEMENT (PRODUCTION-READY)
 # Option 1: Doppler (Recommended for production)
-doppler run -- python main.py    # All secrets auto-injected from Doppler
+doppler run -- uvicorn api.main:app --host 0.0.0.0 --port 8000    # All secrets auto-injected from Doppler
 
 # Option 2: Local development with .env
 cp .env.template .env
@@ -217,7 +217,10 @@ python database/init_db.py      # PostgreSQL schema
 python services/neo4j_service.py  # Neo4j knowledge graph
 
 # Start the backend server
-python main.py  # Runs on http://localhost:8000
+uvicorn api.main:app --host 0.0.0.0 --port 8000  # Runs on http://localhost:8000
+
+# Note: main.py is deprecated and retained only for legacy testing
+# Production and development should use api.main:app as the entrypoint
 ```
 
 #### Frontend Setup

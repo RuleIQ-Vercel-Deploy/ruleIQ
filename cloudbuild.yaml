@@ -51,7 +51,7 @@ steps:
       - '--set-env-vars'
       - 'PYTHONUNBUFFERED=1,PORT=8080,ENVIRONMENT=production'
       - '--set-secrets'
-      - 'DATABASE_URL=DATABASE_URL:latest,JWT_SECRET_KEY=JWT_SECRET_KEY:latest,GOOGLE_API_KEY=GOOGLE_API_KEY:latest,GOOGLE_AI_API_KEY=GOOGLE_AI_API_KEY:latest,REDIS_URL=REDIS_URL:latest'
+      - 'DATABASE_URL=DATABASE_URL:latest,JWT_SECRET_KEY=JWT_SECRET_KEY:latest'
 
 # Store images in Container Registry
 images:

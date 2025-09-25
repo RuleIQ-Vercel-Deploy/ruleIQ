@@ -97,7 +97,7 @@ if [ $? -eq 0 ]; then
     echo "✅ Setup complete! Your application is now configured to use AuraDB via Doppler."
     echo ""
     echo "📌 To run your application with Doppler:"
-    echo "   doppler run -- python main.py"
+    echo "   doppler run -- uvicorn api.main:app --host 0.0.0.0 --port 8000"
     echo ""
     echo "📌 To verify configuration:"
     echo "   doppler secrets get NEO4J_URI NEO4J_USERNAME NEO4J_DATABASE"

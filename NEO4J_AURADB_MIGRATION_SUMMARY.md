@@ -97,7 +97,7 @@ docker rm ruleiq-neo4j
 
 With Doppler (recommended):
 ```bash
-doppler run -- python main.py
+doppler run -- uvicorn api.main:app --host 0.0.0.0 --port 8000
 ```
 
 With local .env (if not using Doppler):
@@ -105,7 +105,7 @@ With local .env (if not using Doppler):
 # Copy .env.neo4j to .env and add password
 cp .env.neo4j .env
 # Edit .env and add your AuraDB password
-python main.py
+uvicorn api.main:app --host 0.0.0.0 --port 8000
 ```
 
 ## 🔄 Rollback (if needed)
