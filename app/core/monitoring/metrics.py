@@ -1,6 +1,9 @@
 """
 from __future__ import annotations
+import logging
 
+
+logger = logging.getLogger(__name__)
 Metrics collection and monitoring implementation.
 """
 import time

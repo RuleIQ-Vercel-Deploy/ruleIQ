@@ -14,6 +14,7 @@ from typing import Optional
 from unittest.mock import Mock, patch
 from uuid import uuid4
 import pytest
+import requests
 from services.ai.assistant import ComplianceAssistant
 from services.ai.exceptions import ModelUnavailableException
 

@@ -1,6 +1,9 @@
 """
 from __future__ import annotations
+import logging
 
+
+logger = logging.getLogger(__name__)
 AI Response Processing with Schema Validation
 
 This module provides structured response processing and validation for AI responses,

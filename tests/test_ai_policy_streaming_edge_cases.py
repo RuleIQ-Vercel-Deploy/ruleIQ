@@ -12,6 +12,7 @@ import json
 from unittest.mock import Mock, AsyncMock, patch, MagicMock
 from datetime import datetime, timedelta
 import time
+import requests
 from typing import AsyncGenerator
 from fastapi import HTTPException
 from api.schemas.ai_policy import PolicyGenerationRequest, PolicyType, BusinessContext, PolicyStreamingChunk

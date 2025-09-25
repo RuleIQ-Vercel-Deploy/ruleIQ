@@ -17,6 +17,7 @@ from enum import Enum
 from typing import Any, Dict, List, Optional, Tuple
 from config.logging_config import get_logger
 import contextlib
+import requests
 logger = get_logger(__name__)
 
 

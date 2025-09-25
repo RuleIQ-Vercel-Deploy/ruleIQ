@@ -10,12 +10,15 @@ import jwt
 from datetime import datetime, timedelta, timezone
 from unittest.mock import Mock, patch, AsyncMock
 import redis
+import logging
 
 from middleware.jwt_auth_v2 import JWTAuthMiddlewareV2
 from services.token_blacklist_service import TokenBlacklistService, get_blacklist_service
 from api.dependencies.auth import SECRET_KEY, ALGORITHM
 
 
+
+logger = logging.getLogger(__name__)
 class TestJWTValidation:
     """Test suite for JWT validation enhancements."""
 

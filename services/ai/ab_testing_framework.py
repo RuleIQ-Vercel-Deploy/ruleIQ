@@ -19,9 +19,12 @@ from typing import Any, Dict, List, Optional, Tuple, Union, Callable
 from uuid import uuid4
 from scipy import stats
 from scipy.stats import ttest_ind, chi2_contingency, mannwhitneyu
+import logging
 
 from config.logging_config import get_logger
 from .analytics_monitor import (
+
+logger = logging.getLogger(__name__)
     MetricType as AnalyticsMetricType,
     analytics_monitor as _analytics_monitor,
 )

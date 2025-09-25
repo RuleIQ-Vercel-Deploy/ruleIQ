@@ -17,6 +17,7 @@ import os
 import uuid
 from typing import Dict, List, Optional, Any, TypedDict, Annotated
 from enum import Enum
+import logging
 
 from langgraph.graph import StateGraph, add_messages, END
 from langgraph.checkpoint.memory import MemorySaver
@@ -30,6 +31,8 @@ from services.ai.assistant import ComplianceAssistant
 from services.ai.circuit_breaker import AICircuitBreaker
 from config.logging_config import get_logger
 
+
+logger = logging.getLogger(__name__)
 logger = get_logger(__name__)
 
 

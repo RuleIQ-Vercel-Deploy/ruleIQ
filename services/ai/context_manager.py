@@ -1,6 +1,9 @@
 """
 from __future__ import annotations
+import logging
 
+
+logger = logging.getLogger(__name__)
 Manages the retrieval of contextual information to inform the AI assistant's responses.
 """
 from datetime import datetime, timedelta, timezone

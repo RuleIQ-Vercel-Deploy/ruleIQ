@@ -1,6 +1,9 @@
 """
 from __future__ import annotations
+import logging
 
+
+logger = logging.getLogger(__name__)
 API endpoints for managing third-party integrations (Asynchronous & Secure).
 """
 from datetime import datetime, timezone

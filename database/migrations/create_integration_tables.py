@@ -1,6 +1,9 @@
 """
 from __future__ import annotations
+import logging
 
+
+logger = logging.getLogger(__name__)
 Manual migration script to create integration and evidence tables
 Run this script to create the required database tables for the integration system
 """

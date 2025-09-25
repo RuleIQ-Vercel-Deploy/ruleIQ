@@ -10,6 +10,7 @@ import asyncio
 import time
 from unittest.mock import patch
 import pytest
+import requests
 from api.middleware.ai_rate_limiter import AIRateLimiter, ai_analysis_limiter, ai_followup_limiter, ai_help_limiter, ai_recommendations_limiter, get_ai_rate_limit_stats
 
 from tests.test_constants import (

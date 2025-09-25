@@ -1,7 +1,10 @@
 """
 from __future__ import annotations
 import requests as http_requests
+import logging
 
+
+logger = logging.getLogger(__name__)
 # Constants
 MAX_ITEMS = 1000
 

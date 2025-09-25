@@ -3,6 +3,9 @@ Enhanced WebSocket authentication using headers instead of query parameters.
 
 This module provides secure WebSocket authentication that extracts JWT tokens
 from headers, following security best practices.
+import logging
+
+logger = logging.getLogger(__name__)
 """
 from typing import Optional
 from uuid import UUID

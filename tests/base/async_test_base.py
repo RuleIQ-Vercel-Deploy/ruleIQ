@@ -9,6 +9,7 @@ import pytest
 from typing import Any, Optional
 from unittest.mock import AsyncMock, MagicMock
 import contextlib
+import requests
 
 
 class AsyncTestBase:

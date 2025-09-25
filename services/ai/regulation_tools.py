@@ -1,6 +1,9 @@
 """
 from __future__ import annotations
+import logging
 
+
+logger = logging.getLogger(__name__)
 Industry Regulation Lookup Tools for Function Calling
 
 Implements tools for looking up industry regulations, compliance requirements,

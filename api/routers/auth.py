@@ -12,6 +12,9 @@ from api.dependencies.auth import ACCESS_TOKEN_EXPIRE_MINUTES, create_access_tok
 from api.middleware.rate_limiter import auth_rate_limit
 from api.schemas.models import Token, UserCreate, UserResponse
 from api.dependencies.security_validation import (
+import logging
+
+logger = logging.getLogger(__name__)
     validate_request
 )
 from api.utils.security_validation import SecurityValidator

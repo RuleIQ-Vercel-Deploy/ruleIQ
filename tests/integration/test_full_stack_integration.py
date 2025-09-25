@@ -8,6 +8,7 @@ from datetime import datetime
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi.testclient import TestClient
 import json
+import requests
 
 from main import app
 from database.db_setup import get_async_db

@@ -9,6 +9,7 @@ from datetime import datetime, timedelta, timezone
 from unittest.mock import patch
 
 import pytest
+import requests
 
 
 @pytest.mark.e2e

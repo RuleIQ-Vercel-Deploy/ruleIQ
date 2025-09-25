@@ -17,6 +17,7 @@ from pydantic import ValidationError
 from utils.input_validation import validate_evidence_update
 from api.utils.input_validation import sanitize_input, InputValidator
 import contextlib
+import requests
 
 # Enhanced dangerous pattern detection - categorized for contextual use
 DANGEROUS_PATTERNS_SQL = [

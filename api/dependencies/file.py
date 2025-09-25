@@ -11,7 +11,10 @@ from dataclasses import dataclass
 from enum import Enum
 from config.settings import get_settings
 from config.logging_config import get_logger
+import logging
 
+
+logger = logging.getLogger(__name__)
 # Constants
 CONFIDENCE_THRESHOLD = 0.8
 DEFAULT_RETRIES = 5

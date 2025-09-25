@@ -16,7 +16,10 @@ import argparse
 from pathlib import Path
 from typing import Dict, List
 from datetime import datetime
+import logging
 
+
+logger = logging.getLogger(__name__)
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 

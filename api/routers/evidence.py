@@ -5,6 +5,9 @@ from fastapi import APIRouter, Depends, HTTPException, Path, UploadFile
 from sqlalchemy.ext.asyncio import AsyncSession
 from api.dependencies.auth import get_current_active_user
 from api.dependencies.security_validation import (
+import logging
+
+logger = logging.getLogger(__name__)
     validate_request,
     validate_file_upload
 )

@@ -1,7 +1,10 @@
 """
 from __future__ import annotations
 import requests
+import logging
 
+
+logger = logging.getLogger(__name__)
 # Constants
 HTTP_OK = 200
 

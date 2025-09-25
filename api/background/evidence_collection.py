@@ -1,6 +1,9 @@
 """
 from __future__ import annotations
+import logging
 
+
+logger = logging.getLogger(__name__)
 Background tasks for evidence collection
 """
 from typing import Dict, List, Any

@@ -1,6 +1,9 @@
 """
 from __future__ import annotations
+import logging
 
+
+logger = logging.getLogger(__name__)
 # Constants
 HTTP_INTERNAL_SERVER_ERROR = 500
 HTTP_OK = 200

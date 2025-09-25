@@ -19,11 +19,14 @@ from datetime import datetime, timezone, timedelta
 from typing import Dict, Any, Optional
 from unittest.mock import Mock, patch, AsyncMock
 from uuid import uuid4
+import logging
 
 from fastapi import Request, HTTPException
 from fastapi.testclient import TestClient
 from sqlalchemy.ext.asyncio import AsyncSession
 
+
+logger = logging.getLogger(__name__)
 # Security components
 from middleware.jwt_auth import JWTAuthMiddleware, get_jwt_middleware
 from middleware.security_headers import SecurityHeadersMiddleware

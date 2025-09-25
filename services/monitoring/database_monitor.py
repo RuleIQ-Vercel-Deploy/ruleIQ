@@ -1,5 +1,6 @@
 """Database monitoring service for connection pool and session lifecycle tracking."""
 from __future__ import annotations
+import logging
 
 from dataclasses import asdict, dataclass
 from datetime import datetime, timedelta, timezone
@@ -8,6 +9,8 @@ from typing import Any, Dict, List, Optional
 from config.logging_config import get_logger
 from database.db_setup import get_engine_info
 
+
+logger = logging.getLogger(__name__)
 # Constants
 MAX_ITEMS = 1000
 

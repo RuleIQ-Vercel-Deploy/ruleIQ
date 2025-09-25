@@ -1,9 +1,4 @@
 """Add comprehensive CHECK constraints for data integrity
-import logging
-logger = logging.getLogger(__name__)
-
-
-from __future__ import annotations
 
 Revision ID: add_check_constraints_data_integrity
 Revises: 802adb6d1be8
@@ -11,8 +6,12 @@ Create Date: 2025-07-17 12:00:00.000000
 
 """
 
-from alembic import op
+from __future__ import annotations
+import logging
 import contextlib
+from alembic import op
+
+logger = logging.getLogger(__name__)
 
 
 # revision identifiers, used by Alembic.

@@ -1,6 +1,10 @@
 """
 from __future__ import annotations
+import logging
+import requests
 
+
+logger = logging.getLogger(__name__)
 # Constants
 DEFAULT_RETRIES = 5
 MAX_RETRIES = 3

@@ -1,6 +1,9 @@
 """
 from __future__ import annotations
+import logging
 
+
+logger = logging.getLogger(__name__)
 Test Suite for Phase 6: Security Hardening with TDD
 Comprehensive security tests for authentication, authorization, encryption, audit logging, and security headers
 """

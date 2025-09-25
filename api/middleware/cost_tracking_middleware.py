@@ -2,7 +2,10 @@
 from __future__ import annotations
 import requests as http_requests
 import json
+import logging
 
+
+logger = logging.getLogger(__name__)
 # Constants
 HTTP_INTERNAL_SERVER_ERROR = 500
 

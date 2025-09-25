@@ -1,5 +1,6 @@
 """Unit tests for the refactored GoldenDatasetIngestion class."""
 from __future__ import annotations
+import logging
 
 import unittest
 from unittest.mock import Mock, MagicMock, patch, mock_open
@@ -8,6 +9,8 @@ import json
 import numpy as np
 import sys
 
+
+logger = logging.getLogger(__name__)
 # Mock neo4j module for testing
 sys.modules['neo4j'] = MagicMock()
 

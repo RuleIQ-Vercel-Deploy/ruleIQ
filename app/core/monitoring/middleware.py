@@ -1,11 +1,15 @@
 """
 from __future__ import annotations
+import logging
 
+
+logger = logging.getLogger(__name__)
 Monitoring middleware for FastAPI applications.
 """
 
 import time
 import uuid
+import requests
 from typing import Callable
 from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware

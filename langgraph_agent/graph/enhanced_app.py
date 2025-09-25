@@ -1,6 +1,9 @@
 """
 from __future__ import annotations
+import logging
 
+
+logger = logging.getLogger(__name__)
 Enhanced LangGraph application with proper state management and error handling.
 
 Phase 1 Implementation: Graph application using enhanced state with reducers.

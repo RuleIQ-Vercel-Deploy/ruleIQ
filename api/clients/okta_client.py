@@ -2,7 +2,10 @@
 from __future__ import annotations
 import requests
 import json
+import logging
 
+
+logger = logging.getLogger(__name__)
 # Constants
 HTTP_OK = 200
 HTTP_UNAUTHORIZED = 401

@@ -10,6 +10,9 @@ from api.dependencies.auth import get_current_active_user
 from api.middleware.error_handler import error_handler_middleware
 from api.request_id_middleware import RequestIDMiddleware
 from api.routers import auth, chat, compliance, evidence, frameworks, freemium, policies, readiness, reports, security, uk_compliance, users
+import logging
+
+logger = logging.getLogger(__name__)
 # Temporarily disabled: assessments, business_profiles (Pydantic forward reference issue)
 # Temporarily disabled due to import errors: agentic_rag, ai_assessments, ai_cost_monitoring, ai_cost_websocket, ai_optimization, ai_policy, api_keys, dashboard, evidence_collection, feedback, foundation_evidence, google_auth, implementation, integrations, iq_agent, monitoring, payment, performance_monitoring, secrets_vault, test_utils, webhooks
 from api.routers.admin import admin_router

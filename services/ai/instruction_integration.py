@@ -1,6 +1,9 @@
 """
 from __future__ import annotations
+import logging
 
+
+logger = logging.getLogger(__name__)
 # Constants
 CONFIDENCE_THRESHOLD = 0.8
 DEFAULT_RETRIES = 5

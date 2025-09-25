@@ -10,6 +10,7 @@ streaming endpoints, circuit breaker integration, and model selection.
 import asyncio
 from unittest.mock import AsyncMock, Mock, patch
 import pytest
+import requests
 from fastapi.testclient import TestClient
 from httpx import AsyncClient
 from services.ai.assistant import ComplianceAssistant

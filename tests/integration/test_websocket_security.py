@@ -9,12 +9,15 @@ from websocket import create_connection, WebSocket
 from jose import jwt
 from datetime import datetime, timedelta
 from unittest.mock import patch, MagicMock
+import logging
 
 from main import app
 from api.dependencies.auth import SECRET_KEY, ALGORITHM
 from database.user import User
 
 
+
+logger = logging.getLogger(__name__)
 class TestWebSocketSecurity:
     """Test suite for WebSocket JWT authentication via headers."""
 

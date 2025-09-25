@@ -1,6 +1,9 @@
 """
 from __future__ import annotations
+import logging
 
+
+logger = logging.getLogger(__name__)
 Webhook Handler Router
 
 Handles incoming webhooks from external services with signature verification

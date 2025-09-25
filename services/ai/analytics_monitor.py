@@ -1,6 +1,9 @@
 """
 from __future__ import annotations
+import logging
 
+
+logger = logging.getLogger(__name__)
 Advanced AI Analytics and Monitoring System
 
 Comprehensive monitoring for AI usage, performance metrics, cost tracking,

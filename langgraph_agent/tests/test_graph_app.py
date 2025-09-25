@@ -6,8 +6,11 @@ Validates graph structure, node execution, and basic functionality.
 import pytest
 from unittest.mock import Mock, patch, AsyncMock
 from uuid import uuid4
+import logging
 
 from langgraph_agent.graph.app import (
+
+logger = logging.getLogger(__name__)
     router_node,
     compliance_analyzer_node,
     obligation_finder_node,

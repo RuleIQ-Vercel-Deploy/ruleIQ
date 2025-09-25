@@ -8,6 +8,9 @@ import time
 from uuid import uuid4
 from locust import HttpUser, SequentialTaskSet, between, events, task
 from locust.runners import MasterRunner
+import logging
+
+logger = logging.getLogger(__name__)
 SAMPLE_COMPANIES = ['TechCorp Solutions', 'DataFlow Systems',
     'SecureNet Ltd', 'InnovateTech', 'CloudFirst Inc', 'CyberShield Co',
     'MetaData Analytics', 'StreamlineTech']

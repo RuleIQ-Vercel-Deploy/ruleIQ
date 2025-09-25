@@ -2,6 +2,7 @@
 """Test Golden Dataset validators with security testing."""
 
 from __future__ import annotations
+import logging
 
 import pytest
 import time
@@ -10,6 +11,8 @@ from typing import Dict, Any
 from unittest.mock import Mock, patch
 
 from services.ai.evaluation.schemas import (
+
+logger = logging.getLogger(__name__)
     ComplianceScenario,
     EvidenceCase,
     RegulatoryQAPair,

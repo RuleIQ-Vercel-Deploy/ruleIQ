@@ -1,6 +1,9 @@
 """
 from __future__ import annotations
+import logging
 
+
+logger = logging.getLogger(__name__)
 AWS API client for collecting infrastructure and security evidence
 """
 import boto3

@@ -10,6 +10,7 @@ from datetime import datetime, timedelta
 from typing import Dict, Any
 import hashlib
 import secrets
+import requests
 
 
 @pytest.mark.integration

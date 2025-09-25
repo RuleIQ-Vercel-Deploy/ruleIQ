@@ -1,6 +1,9 @@
 """
 from __future__ import annotations
+import logging
 
+
+logger = logging.getLogger(__name__)
 Google Cached Content Integration
 
 Implements Google's native caching system for improved performance and cost reduction.

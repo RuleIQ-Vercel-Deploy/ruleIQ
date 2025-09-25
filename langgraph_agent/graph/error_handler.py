@@ -1,6 +1,9 @@
 """
 from __future__ import annotations
+import logging
 
+
+logger = logging.getLogger(__name__)
 Centralized error handling for LangGraph implementation.
 
 Phase 2 Implementation: Centralized error handling with retry strategies.

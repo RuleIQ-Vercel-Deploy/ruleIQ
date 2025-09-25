@@ -1,6 +1,9 @@
 """
 from __future__ import annotations
+import logging
 
+
+logger = logging.getLogger(__name__)
 FastAPI router for Freemium Assessment Strategy endpoints.
 
 Implements the email-gated AI assessment funnel with 5 core endpoints:

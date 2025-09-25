@@ -1,6 +1,9 @@
 """
 from __future__ import annotations
+import logging
 
+
+logger = logging.getLogger(__name__)
 Base integration class for all third-party integrations.
 This abstract class defines the contract that all specific
 integration implementations (like Google, AWS, etc.) must follow.

@@ -1,6 +1,9 @@
 """
 from __future__ import annotations
+import logging
 
+
+logger = logging.getLogger(__name__)
 Enhanced Redis-based token blacklist implementation with security features.
 
 This module provides comprehensive token blacklisting capabilities including:

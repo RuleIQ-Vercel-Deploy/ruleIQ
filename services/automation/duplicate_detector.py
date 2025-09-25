@@ -1,6 +1,9 @@
 """
 from __future__ import annotations
+import logging
 
+
+logger = logging.getLogger(__name__)
 Asynchronous service for detecting and handling duplicate evidence items.
 """
 import hashlib

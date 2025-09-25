@@ -1,7 +1,10 @@
 """
 from __future__ import annotations
 import requests
+import logging
 
+
+logger = logging.getLogger(__name__)
 # Constants
 CONFIDENCE_THRESHOLD = 0.8
 MAX_ITEMS = 1000

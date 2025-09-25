@@ -1,6 +1,9 @@
 """
 from __future__ import annotations
+import logging
 
+
+logger = logging.getLogger(__name__)
 Database service layer for integration management
 Handles all database operations for enterprise integrations
 """

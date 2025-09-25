@@ -1,7 +1,10 @@
 """
 from __future__ import annotations
 import requests
+import logging
 
+
+logger = logging.getLogger(__name__)
 The primary AI service that orchestrates the conversational flow, classifies user intent,
 and generates intelligent responses asynchronously.
 """

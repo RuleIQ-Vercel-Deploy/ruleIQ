@@ -1,6 +1,9 @@
 """
 from __future__ import annotations
+import logging
 
+
+logger = logging.getLogger(__name__)
 Database initialization script for ComplianceGPT (Asynchronous)
 
 This script creates all database tables and optionally populates them with default data.

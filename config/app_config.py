@@ -1,6 +1,9 @@
 """
 from __future__ import annotations
+import logging
 
+
+logger = logging.getLogger(__name__)
 Application configuration settings.
 
 This module loads critical configuration values from environment variables

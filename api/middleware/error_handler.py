@@ -1,6 +1,9 @@
 """
 from __future__ import annotations
+import logging
 
+
+logger = logging.getLogger(__name__)
 Error Handling Middleware for ComplianceGPT API
 
 This module provides a global error handler that catches exceptions and returns

@@ -8,11 +8,14 @@ import time
 from typing import Dict, Optional, Set
 from datetime import datetime, timedelta
 from collections import defaultdict
+import logging
 
 from fastapi import WebSocket, status
 from config.settings import settings
 from config.logging_config import get_logger
 
+
+logger = logging.getLogger(__name__)
 logger = get_logger(__name__)
 
 

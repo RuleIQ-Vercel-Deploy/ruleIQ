@@ -1,6 +1,9 @@
 """
 from __future__ import annotations
+import logging
 
+
+logger = logging.getLogger(__name__)
 Real-time AI Cost Monitoring WebSocket API
 
 Provides WebSocket endpoints for real-time cost monitoring, budget alerts,

@@ -1,6 +1,9 @@
 """
 from __future__ import annotations
+import logging
 
+
+logger = logging.getLogger(__name__)
 Base API client for all enterprise integrations
 """
 from abc import ABC, abstractmethod

@@ -11,9 +11,12 @@ from datetime import datetime, timedelta
 from decimal import Decimal
 from typing import Any, Callable, Dict, List, Optional
 from threading import Lock
+import logging
 
 from services.ai.circuit_breaker import AICircuitBreaker, CircuitBreakerConfig
 from services.ai.cost_management import (
+
+logger = logging.getLogger(__name__)
     AICostManager,
     CostTrackingService,
     BudgetAlertService,

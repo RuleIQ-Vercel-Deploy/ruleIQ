@@ -19,11 +19,14 @@ import uuid
 from uuid import UUID
 from datetime import datetime, timedelta, timezone
 from typing import Dict, List, Optional, Any
+import logging
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
 from database import (
+
+logger = logging.getLogger(__name__)
     AssessmentLead,
     FreemiumAssessmentSession,
     AIQuestionBank,

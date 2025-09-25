@@ -1,6 +1,9 @@
 """
 from __future__ import annotations
+import logging
 
+
+logger = logging.getLogger(__name__)
 AI Cost Management and Monitoring System
 
 Comprehensive cost tracking, budgeting, optimization, and reporting for AI services.
@@ -17,6 +20,7 @@ import time
 from redis.asyncio import Redis
 from config.logging_config import get_logger
 import redis
+import requests
 from config.settings import settings
 logger = get_logger(__name__)
 

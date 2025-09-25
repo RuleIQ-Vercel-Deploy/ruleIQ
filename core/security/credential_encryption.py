@@ -1,6 +1,9 @@
 """
 from __future__ import annotations
+import logging
 
+
+logger = logging.getLogger(__name__)
 Enterprise-grade credential encryption system for ruleIQ
 Implements AES-256 encryption with proper key derivation and security practices
 """
