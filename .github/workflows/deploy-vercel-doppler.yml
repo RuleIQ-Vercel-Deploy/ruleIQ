@@ -80,20 +80,20 @@ jobs:
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
         run: |
-          doppler run --project ${{ env.DOPPLER_PROJECT }} --config ${{ env.DOPPLER_CONFIG_PREVIEW }} -- vercel pull --yes --environment=preview --token=\$VERCEL_TOKEN
+          doppler run --project ${{ env.DOPPLER_PROJECT }} --config ${{ env.DOPPLER_CONFIG_PREVIEW }} -- sh -c 'vercel pull --yes --environment=preview --token="$VERCEL_TOKEN"'
 
       - name: Build Project with Doppler
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
         run: |
-          doppler run --project ${{ env.DOPPLER_PROJECT }} --config ${{ env.DOPPLER_CONFIG_PREVIEW }} -- vercel build --token=\$VERCEL_TOKEN
+          doppler run --project ${{ env.DOPPLER_PROJECT }} --config ${{ env.DOPPLER_CONFIG_PREVIEW }} -- sh -c 'vercel build --token="$VERCEL_TOKEN"'
 
       - name: Deploy Preview to Vercel with Doppler
         id: deploy
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
         run: |
-          DEPLOYMENT_URL=$(doppler run --project ${{ env.DOPPLER_PROJECT }} --config ${{ env.DOPPLER_CONFIG_PREVIEW }} -- vercel deploy --prebuilt --token=\$VERCEL_TOKEN | tail -n 1)
+          DEPLOYMENT_URL=$(doppler run --project ${{ env.DOPPLER_PROJECT }} --config ${{ env.DOPPLER_CONFIG_PREVIEW }} -- sh -c 'vercel deploy --prebuilt --token="$VERCEL_TOKEN"' | tail -n 1)
           echo "$DEPLOYMENT_URL" > deployment-url.txt
           echo "url=$DEPLOYMENT_URL" >> $GITHUB_OUTPUT
           echo "🚀 Preview deployed to: $DEPLOYMENT_URL"
@@ -199,7 +199,7 @@ jobs:
         run: |
           CONFIG="${{ steps.env-config.outputs.config }}"
           VERCEL_ENV="${{ steps.env-config.outputs.vercel_env }}"
-          doppler run --project ${{ env.DOPPLER_PROJECT }} --config $CONFIG -- vercel pull --yes --environment=$VERCEL_ENV --token=\$VERCEL_TOKEN
+          doppler run --project ${{ env.DOPPLER_PROJECT }} --config $CONFIG -- sh -c 'vercel pull --yes --environment='$VERCEL_ENV' --token="$VERCEL_TOKEN"'
 
       - name: Build Project with Doppler
         env:
@@ -207,7 +207,7 @@ jobs:
         run: |
           CONFIG="${{ steps.env-config.outputs.config }}"
           PROD_FLAG="${{ steps.env-config.outputs.prod_flag }}"
-          doppler run --project ${{ env.DOPPLER_PROJECT }} --config $CONFIG -- vercel build $PROD_FLAG --token=\$VERCEL_TOKEN
+          doppler run --project ${{ env.DOPPLER_PROJECT }} --config $CONFIG -- sh -c 'vercel build '$PROD_FLAG' --token="$VERCEL_TOKEN"'
 
       - name: Deploy to Vercel with Doppler
         id: deploy
@@ -216,7 +216,7 @@ jobs:
         run: |
           CONFIG="${{ steps.env-config.outputs.config }}"
           PROD_FLAG="${{ steps.env-config.outputs.prod_flag }}"
-          DEPLOYMENT_URL=$(doppler run --project ${{ env.DOPPLER_PROJECT }} --config $CONFIG -- vercel deploy --prebuilt $PROD_FLAG --token=\$VERCEL_TOKEN | tail -n 1)
+          DEPLOYMENT_URL=$(doppler run --project ${{ env.DOPPLER_PROJECT }} --config $CONFIG -- sh -c 'vercel deploy --prebuilt '$PROD_FLAG' --token="$VERCEL_TOKEN"' | tail -n 1)
           echo "$DEPLOYMENT_URL" > deployment-url.txt
           echo "url=$DEPLOYMENT_URL" >> $GITHUB_OUTPUT
           echo "🚀 Deployed to: $DEPLOYMENT_URL"
@@ -284,7 +284,7 @@ jobs:
           CONFIG="${{ steps.env-config.outputs.config }}"
 
           # Get list of production deployments
-          DEPLOYMENTS=$(doppler run --project ${{ env.DOPPLER_PROJECT }} --config $CONFIG -- vercel ls --prod --confirm --token=\$VERCEL_TOKEN 2>/dev/null || echo "")
+          DEPLOYMENTS=$(doppler run --project ${{ env.DOPPLER_PROJECT }} --config $CONFIG -- sh -c 'vercel ls --prod --confirm --token="$VERCEL_TOKEN"' 2>/dev/null || echo "")
 
           if [ -z "$DEPLOYMENTS" ]; then
             echo "❌ Unable to retrieve deployment history"
@@ -324,7 +324,7 @@ jobs:
           fi
 
           echo "🚀 Redeploying previous build to production..."
-          ROLLBACK_URL=$(doppler run --project ${{ env.DOPPLER_PROJECT }} --config $CONFIG -- vercel deploy "$PREV_URL" --prod --prebuilt --confirm --token=\$VERCEL_TOKEN 2>/dev/null | tail -n 1 || echo "")
+          ROLLBACK_URL=$(doppler run --project ${{ env.DOPPLER_PROJECT }} --config $CONFIG -- sh -c "vercel deploy '$PREV_URL' --prod --prebuilt --confirm --token=\"\$VERCEL_TOKEN\"" 2>/dev/null | tail -n 1 || echo "")
 
           if [ -z "$ROLLBACK_URL" ]; then
             echo "❌ Rollback failed - unable to redeploy previous version"
