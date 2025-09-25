@@ -71,22 +71,23 @@ jobs:
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
         run: |
-          doppler run --project ${{ env.DOPPLER_PROJECT }} --config ${{ env.DOPPLER_CONFIG_PREVIEW }} -- vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+          doppler run --project ${{ env.DOPPLER_PROJECT }} --config ${{ env.DOPPLER_CONFIG_PREVIEW }} -- vercel pull --yes --environment=preview
 
       - name: Build Project with Doppler
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
         run: |
-          doppler run --project ${{ env.DOPPLER_PROJECT }} --config ${{ env.DOPPLER_CONFIG_PREVIEW }} -- vercel build --token=${{ secrets.VERCEL_TOKEN }}
+          doppler run --project ${{ env.DOPPLER_PROJECT }} --config ${{ env.DOPPLER_CONFIG_PREVIEW }} -- vercel build
 
       - name: Deploy Preview to Vercel with Doppler
         id: deploy
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
         run: |
-          doppler run --project ${{ env.DOPPLER_PROJECT }} --config ${{ env.DOPPLER_CONFIG_PREVIEW }} -- vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }} > deployment-url.txt
-          echo "url=$(cat deployment-url.txt)" >> $GITHUB_OUTPUT
-          echo "🚀 Preview deployed to: $(cat deployment-url.txt)"
+          DEPLOYMENT_URL=$(doppler run --project ${{ env.DOPPLER_PROJECT }} --config ${{ env.DOPPLER_CONFIG_PREVIEW }} -- vercel deploy --prebuilt | tail -n 1)
+          echo "$DEPLOYMENT_URL" > deployment-url.txt
+          echo "url=$DEPLOYMENT_URL" >> $GITHUB_OUTPUT
+          echo "🚀 Preview deployed to: $DEPLOYMENT_URL"
 
       - name: Comment on PR
         uses: actions/github-script@v7
@@ -101,34 +102,41 @@ jobs:
               body: `🚀 Preview deployed to Vercel: ${url}`
             });
 
-  # Check if Doppler is configured
-  check-doppler:
-    runs-on: ubuntu-latest
-    outputs:
-      has-doppler: ${{ steps.check.outputs.has-doppler }}
-    steps:
-      - id: check
-        run: |
-          if [ -n "${{ secrets.DOPPLER_TOKEN }}" ]; then
-            echo "has-doppler=true" >> $GITHUB_OUTPUT
-            echo "✅ Doppler token is configured"
-          else
-            echo "has-doppler=false" >> $GITHUB_OUTPUT
-            echo "⚠️ Doppler token is not configured"
-          fi
-
-  # Deploy with Doppler when available
-  deploy-with-doppler:
-    needs: check-doppler
-    if: needs.check-doppler.outputs.has-doppler == 'true' && (github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch')
+  # Main deployment job (handles both push to main and manual dispatch)
+  deploy-production:
+    if: (github.ref == 'refs/heads/main' && github.event_name == 'push') || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.environment || 'production' }}
     steps:
+      - name: Validate Doppler token exists
+        run: |
+          if [ -z "${{ secrets.DOPPLER_TOKEN }}" ]; then
+            echo "❌ DOPPLER_TOKEN is not configured"
+            exit 1
+          fi
+          echo "✅ DOPPLER_TOKEN is configured"
+
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Install Doppler CLI
         uses: dopplerhq/cli-action@1ddcafdd40ad2dcb90261e8c88a6c93ad2f2f6d0  # v3.0.0 commit SHA
+
+      - name: Set Environment Config
+        id: env-config
+        run: |
+          ENV_NAME="${{ github.event.inputs.environment || 'production' }}"
+          if [ "$ENV_NAME" = "preview" ]; then
+            echo "config=${{ env.DOPPLER_CONFIG_PREVIEW }}" >> $GITHUB_OUTPUT
+            echo "is_prod=false" >> $GITHUB_OUTPUT
+            echo "prod_flag=" >> $GITHUB_OUTPUT
+            echo "vercel_env=preview" >> $GITHUB_OUTPUT
+          else
+            echo "config=${{ env.DOPPLER_CONFIG_PRODUCTION }}" >> $GITHUB_OUTPUT
+            echo "is_prod=true" >> $GITHUB_OUTPUT
+            echo "prod_flag=--prod" >> $GITHUB_OUTPUT
+            echo "vercel_env=production" >> $GITHUB_OUTPUT
+          fi
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -143,7 +151,7 @@ jobs:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
         run: |
           echo "🔍 Validating required secrets in Doppler..."
-          CONFIG=${{ github.event.inputs.environment == 'preview' && env.DOPPLER_CONFIG_PREVIEW || env.DOPPLER_CONFIG_PRODUCTION }}
+          CONFIG="${{ steps.env-config.outputs.config }}"
           doppler secrets get VERCEL_TOKEN --plain --project ${{ env.DOPPLER_PROJECT }} --config $CONFIG || (echo "❌ VERCEL_TOKEN not found in Doppler" && exit 1)
           doppler secrets get VERCEL_ORG_ID --plain --project ${{ env.DOPPLER_PROJECT }} --config $CONFIG || (echo "❌ VERCEL_ORG_ID not found in Doppler" && exit 1)
           doppler secrets get VERCEL_PROJECT_ID --plain --project ${{ env.DOPPLER_PROJECT }} --config $CONFIG || (echo "❌ VERCEL_PROJECT_ID not found in Doppler" && exit 1)
@@ -154,7 +162,7 @@ jobs:
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
         run: |
-          CONFIG=${{ github.event.inputs.environment == 'preview' && env.DOPPLER_CONFIG_PREVIEW || env.DOPPLER_CONFIG_PRODUCTION }}
+          CONFIG="${{ steps.env-config.outputs.config }}"
           doppler run --project ${{ env.DOPPLER_PROJECT }} --config $CONFIG -- python - <<'PY'
           import os, sys
           import psycopg
@@ -180,58 +188,210 @@ jobs:
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
         run: |
-          CONFIG=${{ github.event.inputs.environment == 'preview' && env.DOPPLER_CONFIG_PREVIEW || env.DOPPLER_CONFIG_PRODUCTION }}
-          doppler run --project ${{ env.DOPPLER_PROJECT }} --config $CONFIG -- vercel pull --yes --environment=${{ github.event.inputs.environment || 'production' }} --token=${{ secrets.VERCEL_TOKEN }}
+          CONFIG="${{ steps.env-config.outputs.config }}"
+          VERCEL_ENV="${{ steps.env-config.outputs.vercel_env }}"
+          doppler run --project ${{ env.DOPPLER_PROJECT }} --config $CONFIG -- vercel pull --yes --environment=$VERCEL_ENV
 
       - name: Build Project with Doppler
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
         run: |
-          CONFIG=${{ github.event.inputs.environment == 'preview' && env.DOPPLER_CONFIG_PREVIEW || env.DOPPLER_CONFIG_PRODUCTION }}
-          doppler run --project ${{ env.DOPPLER_PROJECT }} --config $CONFIG -- vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+          CONFIG="${{ steps.env-config.outputs.config }}"
+          PROD_FLAG="${{ steps.env-config.outputs.prod_flag }}"
+          doppler run --project ${{ env.DOPPLER_PROJECT }} --config $CONFIG -- vercel build $PROD_FLAG
 
       - name: Deploy to Vercel with Doppler
         id: deploy
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
         run: |
-          CONFIG=${{ github.event.inputs.environment == 'preview' && env.DOPPLER_CONFIG_PREVIEW || env.DOPPLER_CONFIG_PRODUCTION }}
-
-          if [ "${{ github.event.inputs.environment }}" == "preview" ]; then
-            doppler run --project ${{ env.DOPPLER_PROJECT }} --config $CONFIG -- vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }} > deployment-url.txt
-          else
-            doppler run --project ${{ env.DOPPLER_PROJECT }} --config $CONFIG -- vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }} > deployment-url.txt
-          fi
-
-          echo "url=$(cat deployment-url.txt)" >> $GITHUB_OUTPUT
-          echo "🚀 Deployed to: $(cat deployment-url.txt)"
+          CONFIG="${{ steps.env-config.outputs.config }}"
+          PROD_FLAG="${{ steps.env-config.outputs.prod_flag }}"
+          DEPLOYMENT_URL=$(doppler run --project ${{ env.DOPPLER_PROJECT }} --config $CONFIG -- vercel deploy --prebuilt $PROD_FLAG | tail -n 1)
+          echo "$DEPLOYMENT_URL" > deployment-url.txt
+          echo "url=$DEPLOYMENT_URL" >> $GITHUB_OUTPUT
+          echo "🚀 Deployed to: $DEPLOYMENT_URL"
 
       - name: Validate Deployment
-        continue-on-error: true
+        id: validate
+        continue-on-error: false
         run: |
           URL=$(cat deployment-url.txt)
           echo "🔍 Validating deployment at: $URL"
 
           # Wait for deployment to be ready
-          sleep 10
+          sleep 15
 
-          # Check endpoints (optional, non-blocking)
-          curl -f "$URL/health" && echo "✅ Health check passed" || echo "⚠️ Health endpoint not found"
-          curl -f "$URL/ready" && echo "✅ Readiness check passed" || echo "⚠️ Ready endpoint not found"
+          # Track validation results
+          VALIDATION_FAILED=0
+
+          # Check endpoints
+          echo "Checking /health endpoint..."
+          if curl -f -s -o /dev/null -w "%{http_code}" "$URL/health" | grep -q "^2"; then
+            echo "✅ Health check passed"
+          else
+            echo "❌ Health check failed"
+            VALIDATION_FAILED=1
+          fi
+
+          echo "Checking /ready endpoint..."
+          if curl -f -s -o /dev/null -w "%{http_code}" "$URL/ready" | grep -q "^2"; then
+            echo "✅ Readiness check passed"
+          else
+            echo "⚠️ Ready endpoint not found (non-blocking)"
+          fi
+
+          echo "Checking /api/v1/health/detailed endpoint..."
+          if curl -f -s -o /dev/null -w "%{http_code}" "$URL/api/v1/health/detailed" | grep -q "^2"; then
+            echo "✅ Detailed health check passed"
+          else
+            echo "⚠️ Detailed health endpoint not found (non-blocking)"
+          fi
+
+          echo "Checking /docs endpoint..."
+          if curl -f -s -o /dev/null -w "%{http_code}" "$URL/docs" | grep -q "^2\|^3"; then
+            echo "✅ Documentation endpoint accessible"
+          else
+            echo "⚠️ Documentation endpoint not found (non-blocking)"
+          fi
+
+          # Exit with error if critical validations failed
+          if [ $VALIDATION_FAILED -eq 1 ]; then
+            echo "❌ Critical validation checks failed"
+            echo "validation_failed=true" >> $GITHUB_OUTPUT
+            exit 1
+          else
+            echo "✅ All critical validation checks passed"
+            echo "validation_failed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Get Previous Production Deployment
+        if: failure() && steps.validate.outputs.validation_failed == 'true' && steps.env-config.outputs.is_prod == 'true'
+        id: get-previous
+        env:
+          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
+        run: |
+          echo "🔍 Getting previous production deployment for rollback..."
+          CONFIG="${{ steps.env-config.outputs.config }}"
+          
+          # Get list of production deployments
+          DEPLOYMENTS=$(doppler run --project ${{ env.DOPPLER_PROJECT }} --config $CONFIG -- vercel ls --prod --confirm 2>/dev/null || echo "")
+          
+          if [ -z "$DEPLOYMENTS" ]; then
+            echo "❌ Unable to retrieve deployment history"
+            echo "deployment_url=" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+          
+          # Parse to get the second deployment (first is current, second is previous)
+          # Vercel ls format: <url> <state> <time>
+          PREV_DEPLOYMENT=$(echo "$DEPLOYMENTS" | awk 'NR==3 {print $1}')
+          
+          if [ -z "$PREV_DEPLOYMENT" ]; then
+            echo "❌ No previous deployment found for rollback"
+            echo "deployment_url=" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+          
+          echo "✅ Found previous deployment: $PREV_DEPLOYMENT"
+          echo "deployment_url=$PREV_DEPLOYMENT" >> $GITHUB_OUTPUT
+
+      - name: Rollback Production Deployment
+        if: failure() && steps.validate.outputs.validation_failed == 'true' && steps.env-config.outputs.is_prod == 'true' && steps.get-previous.outputs.deployment_url != ''
+        id: rollback
+        env:
+          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
+        run: |
+          echo "🔄 Initiating production rollback to previous deployment..."
+          CONFIG="${{ steps.env-config.outputs.config }}"
+          PREV_URL="${{ steps.get-previous.outputs.deployment_url }}"
+          
+          # Extract deployment ID from URL (format: https://<project>-<id>.vercel.app)
+          DEPLOYMENT_ID=$(echo "$PREV_URL" | sed -E 's/https:\/\/[^-]+-([^.]+)\.vercel\.app/\1/')
+          
+          if [ -z "$DEPLOYMENT_ID" ]; then
+            echo "❌ Unable to parse deployment ID from: $PREV_URL"
+            exit 1
+          fi
+          
+          echo "🚀 Redeploying previous build to production..."
+          ROLLBACK_URL=$(doppler run --project ${{ env.DOPPLER_PROJECT }} --config $CONFIG -- vercel deploy "$PREV_URL" --prod --prebuilt --confirm 2>/dev/null | tail -n 1 || echo "")
+          
+          if [ -z "$ROLLBACK_URL" ]; then
+            echo "❌ Rollback failed - unable to redeploy previous version"
+            echo "rollback_success=false" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+          
+          echo "✅ Successfully rolled back to: $ROLLBACK_URL"
+          echo "rollback_url=$ROLLBACK_URL" >> $GITHUB_OUTPUT
+          echo "rollback_success=true" >> $GITHUB_OUTPUT
+          
+          # Verify the rollback deployment
+          sleep 10
+          if curl -f -s -o /dev/null -w "%{http_code}" "$ROLLBACK_URL/health" | grep -q "^2"; then
+            echo "✅ Rollback deployment health check passed"
+          else
+            echo "⚠️ Rollback deployment health check failed - manual intervention required"
+          fi
+
+      - name: Rollback Preview Deployment
+        if: failure() && steps.validate.outputs.validation_failed == 'true' && steps.env-config.outputs.is_prod == 'false'
+        run: |
+          echo "⚠️ Preview deployment failed validation"
+          echo "ℹ️ Preview deployments are ephemeral - no rollback needed"
+          echo "❌ Marking job as failed due to validation errors"
+          exit 1
 
       - name: Create Deployment Record
+        if: always()
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const url = '${{ steps.deploy.outputs.url }}';
+            const deployUrl = '${{ steps.deploy.outputs.url }}';
+            const validationFailed = '${{ steps.validate.outputs.validation_failed }}' === 'true';
+            const rollbackSuccess = '${{ steps.rollback.outputs.rollback_success }}' === 'true';
+            const rollbackUrl = '${{ steps.rollback.outputs.rollback_url }}';
+            const previousUrl = '${{ steps.get-previous.outputs.deployment_url }}';
+            const environment = '${{ github.event.inputs.environment || 'production' }}';
+            const isProduction = '${{ steps.env-config.outputs.is_prod }}' === 'true';
+
+            let description;
+            let state;
+            let environmentUrl;
+
+            if (validationFailed) {
+              if (isProduction && rollbackSuccess) {
+                description = `Deployment failed validation - rolled back to ${previousUrl}`;
+                state = 'failure';
+                environmentUrl = rollbackUrl;
+              } else if (isProduction && previousUrl) {
+                description = 'Deployment failed validation - rollback failed, manual intervention required';
+                state = 'error';
+                environmentUrl = undefined;
+              } else if (!isProduction) {
+                description = 'Preview deployment failed validation';
+                state = 'failure';
+                environmentUrl = undefined;
+              } else {
+                description = 'Deployment failed validation - no previous deployment to rollback';
+                state = 'error';
+                environmentUrl = undefined;
+              }
+            } else {
+              description = 'Successfully deployed via Doppler';
+              state = 'success';
+              environmentUrl = deployUrl;
+            }
+
             const deployment = await github.rest.repos.createDeployment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               ref: context.sha,
-              environment: '${{ github.event.inputs.environment || 'production' }}',
-              description: 'Deployed via Doppler',
-              production_environment: '${{ github.event.inputs.environment || 'production' }}' === 'production',
+              environment: environment,
+              description: description,
+              production_environment: isProduction,
               required_contexts: []
             });
 
@@ -239,104 +399,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               deployment_id: deployment.data.id,
-              state: 'success',
-              environment_url: url,
-              description: 'Deployed to Vercel with Doppler'
+              state: state,
+              environment_url: environmentUrl,
+              description: description
             });
-
-  # Manual deployment job (requires DOPPLER_TOKEN)
-  manual-deploy:
-    if: github.event_name == 'workflow_dispatch'
-    runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.environment }}
-    steps:
-      - name: Validate Doppler token exists
-        run: |
-          if [ -z "${{ secrets.DOPPLER_TOKEN }}" ]; then
-            echo "❌ DOPPLER_TOKEN is not configured for manual deployments"
-            exit 1
-          fi
-          echo "✅ DOPPLER_TOKEN is configured"
-
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Install Doppler CLI
-        uses: dopplerhq/cli-action@1ddcafdd40ad2dcb90261e8c88a6c93ad2f2f6d0  # v3.0.0 commit SHA
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Install psycopg
-        run: pip install psycopg
-
-      - name: Test Database Connection with Doppler
-        env:
-          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
-        run: |
-          CONFIG=${{ github.event.inputs.environment == 'preview' && env.DOPPLER_CONFIG_PREVIEW || env.DOPPLER_CONFIG_PRODUCTION }}
-          doppler run --project ${{ env.DOPPLER_PROJECT }} --config $CONFIG -- python - <<'PY'
-          import os, sys
-          import psycopg
-
-          db_url = os.environ['DATABASE_URL']
-          if db_url.startswith('postgresql+'):
-              db_url = db_url.split('+', 1)[0] + '://' + db_url.split('://', 1)[1]
-
-          try:
-              conn = psycopg.connect(db_url, connect_timeout=10)
-              conn.close()
-              print('✅ Neon DB connection successful')
-              sys.exit(0)
-          except Exception as e:
-              print(f'❌ Neon DB connection failed: {e}')
-              sys.exit(1)
-          PY
-
-      - name: Install Vercel CLI
-        run: npm install -g vercel@latest
-
-      - name: Pull Vercel Environment with Doppler
-        env:
-          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
-        run: |
-          CONFIG=${{ github.event.inputs.environment == 'preview' && env.DOPPLER_CONFIG_PREVIEW || env.DOPPLER_CONFIG_PRODUCTION }}
-          doppler run --project ${{ env.DOPPLER_PROJECT }} --config $CONFIG -- vercel pull --yes --environment=${{ github.event.inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}
-
-      - name: Build Project with Doppler
-        env:
-          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
-        run: |
-          CONFIG=${{ github.event.inputs.environment == 'preview' && env.DOPPLER_CONFIG_PREVIEW || env.DOPPLER_CONFIG_PRODUCTION }}
-          doppler run --project ${{ env.DOPPLER_PROJECT }} --config $CONFIG -- vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
-
-      - name: Deploy to Vercel with Doppler
-        id: deploy
-        env:
-          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
-        run: |
-          CONFIG=${{ github.event.inputs.environment == 'preview' && env.DOPPLER_CONFIG_PREVIEW || env.DOPPLER_CONFIG_PRODUCTION }}
-
-          if [ "${{ github.event.inputs.environment }}" == "preview" ]; then
-            doppler run --project ${{ env.DOPPLER_PROJECT }} --config $CONFIG -- vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }} > deployment-url.txt
-          else
-            doppler run --project ${{ env.DOPPLER_PROJECT }} --config $CONFIG -- vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }} > deployment-url.txt
-          fi
-
-          echo "url=$(cat deployment-url.txt)" >> $GITHUB_OUTPUT
-          echo "🚀 Deployed to: $(cat deployment-url.txt)"
-
-      - name: Validate Deployment
-        continue-on-error: true
-        run: |
-          URL=$(cat deployment-url.txt)
-          echo "🔍 Validating deployment at: $URL"
-
-          # Wait for deployment to be ready
-          sleep 10
-
-          # Check endpoints (optional, non-blocking)
-          curl -f "$URL/health" && echo "✅ Health check passed" || echo "⚠️ Health endpoint not found"
-          curl -f "$URL/ready" && echo "✅ Readiness check passed" || echo "⚠️ Ready endpoint not found"
