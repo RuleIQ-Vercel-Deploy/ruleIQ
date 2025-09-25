@@ -1,41 +1,138 @@
-.venv/
-venv/
-__pycache__/
-*.pyc
+# Version Control
 .git/
 .github/
-tests/
-archive/
-node_modules/
-frontend/
-docker/
+.gitignore
+
+# Python Virtual Environments
+.venv/
+venv/
+env/
+ENV/
+.Python
+
+# Python Cache and Compiled Files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
 .mypy_cache/
 .ruff_cache/
-.scannerwork/
-.secrets/
-.serena/
-.superdesign/
-.traycer/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Dependencies - only include what's installed via requirements.txt
+# Exclude large ML/data science packages if not needed
+**/*tensorflow*
+**/*torch*
+**/*numpy*
+**/*pandas*
+**/*scipy*
+**/*sklearn*
+
+# Testing
+tests/
+test/
+.benchmarks/
+pytest.ini
+.coverage*
+*.log
+
+# Documentation
+docs/
+*.md
+README*
+LICENSE*
+CHANGELOG*
+!vercel.json
+
+# Development Files
+.env*
+.editorconfig
+.eslintrc*
+.prettierrc*
+*.sql
+*.sqlite
+*.db
+.DS_Store
+*.swp
+*.swo
+*~
+
+# IDEs
+.vscode/
+.idea/
 .cursor/
-logs/
-uploads/
+
+# Frontend/Static Files
+frontend/
+node_modules/
+static/
+public/
+dist/
+build/
+
+# Docker
+docker/
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# CI/CD
+.circleci/
+.travis.yml
+.gitlab-ci.yml
+azure-pipelines.yml
+bitbucket-pipelines.yml
+.scannerwork/
+sonar-project.properties
+.sonarcloud.properties
+
+# Scripts and Tools
+scripts/
+Makefile
+.flake8
+.ruff.toml
+.yamllint
+ruff.toml
+pyproject.toml
+poetry.lock
+.cursorignore
+
+# Data and Large Files
 data/
+uploads/
+logs/
+archive/
+*.csv
+*.xlsx
+*.xls
+*.zip
+*.tar
+*.gz
+*.rar
+*.7z
+*.bz2
+
+# Other Project Directories
 postman/
 monitoring/
 deployment/
-docker-compose*.yml
-Dockerfile*
-*.md
-*.txt
-*.html
-*.json
-!requirements.txt
-!vercel.json
-.env*
-.coverage*
-pytest.ini
-ruff.toml
-Makefile
-sonarcloud/
-scripts/
+migrations/
+alembic/
+notebooks/
+*.ipynb
+.claude/
+.serena/
+.superdesign/
+.traycer/
+.secrets/
 visualization-backend/
+
+# Keep only essentials
+!requirements.txt
+!api/
+!core/
+!models/
+!services/
+!utils/
