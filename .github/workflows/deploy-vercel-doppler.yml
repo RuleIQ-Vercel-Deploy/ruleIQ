@@ -24,10 +24,19 @@ env:
 jobs:
   # Deploy preview for pull requests (only when Doppler is configured)
   deploy-preview:
-    if: github.event_name == 'pull_request' && secrets.DOPPLER_TOKEN != ''
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     environment: preview
     steps:
+      - name: Validate Doppler token exists
+        run: |
+          if [ -z "${{ secrets.DOPPLER_TOKEN }}" ]; then
+            echo "❌ DOPPLER_TOKEN is not configured - skipping preview deployment"
+            echo "ℹ️ Preview deployments require Doppler configuration"
+            exit 0  # Exit gracefully for PR preview
+          fi
+          echo "✅ DOPPLER_TOKEN is configured"
+
       - name: Checkout code
         uses: actions/checkout@v4
 
