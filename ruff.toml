@@ -10,15 +10,16 @@ select = [
     "ANN", # Type annotations
     "ARG", # Unused arguments
     "PLR", # Pylint refactor
-    "S",   # Security
+    "S",   # Security - CRITICAL for security compliance
     "PT",  # pytest-specific rules
+    "B",   # Bugbear - catches common bugs
+    "SIM", # simplify - suggests simpler code
 ]
 
+# Security-focused configuration with minimal ignores
 ignore = [
     # Only ignore specific non-critical rules
     "ANN201", # Missing return type annotation for public function
-    "ANN001", # Missing type function argument
-    "ANN003", # Missing type kwargs
     "ANN202", # Missing return type annotation for private function
     "ANN401", # Any type allowed in validation utilities
     "ARG002", # Unused method argument
@@ -27,12 +28,15 @@ ignore = [
     "PLR0912", # Too many branches
     "PLR0915", # Too many statements
     "PLR0911", # Too many return statements
-    "S311",  # Non-cryptographic random usage
-    "S603",  # Subprocess without shell
-    "S105",  # Hardcoded password
-    "S106",  # Hardcoded password func arg
-    "S110",  # Try except pass
+    "S311",  # Non-cryptographic random usage (review case-by-case)
+    "S603",  # Subprocess without shell (acceptable with validation)
+    # S110 (Try-except-pass) removed to enforce proper error handling for security
     "S101",  # Assert (primarily in test files)
+    # NOTE: S105 and S106 (hardcoded passwords) are now ENABLED
+    # NOTE: S324 (insecure hash) is now ENABLED to catch MD5 usage
+    # NOTE: B301 (pickle usage) is ENABLED to prevent insecure serialization
+    # NOTE: B303 (MD5/SHA1 usage) is ENABLED as additional protection
+    # NOTE: S112 (try-except-continue) is ENABLED to catch bare except clauses
 ]
 
 # Directories to exclude
@@ -52,6 +56,7 @@ exclude = [
 ]
 
 [lint.per-file-ignores]
+# Test files have different requirements
 "tests/*" = [
     "SIM117", "B011",  # Existing ignores
     "ANN",     # Type annotations not required in tests
@@ -68,9 +73,20 @@ exclude = [
     "E402",    # Module import not at top of file (common in tests)
     "F821",    # Undefined name (fixtures)
     "S113",    # Request without timeout (acceptable in tests)
-    "S324",    # Hashlib insecure hash (acceptable in tests)
+    # NOTE: S324 (insecure hash) is NO LONGER ignored in tests
+    "S105", "S106",  # Hardcoded test credentials acceptable in tests
 ]
 "*/__init__.py" = ["F401"]  # Allow unused imports in __init__.py
+
+# Security-critical files need stricter rules
+"api/routers/*.py" = []  # No security ignores for API endpoints
+"api/dependencies/*.py" = []  # No security ignores for dependencies
+"services/auth*.py" = []  # No security ignores for auth services
+"services/security*.py" = []  # No security ignores for security services
+"api/utils/security*.py" = ["ANN401"]  # Allow Any type in security validators
+
+# Caching-specific security rules
+"services/caching/*.py" = []  # No security ignores for caching services - they handle sensitive data
 
 [lint.isort]
 known-first-party = ["api", "database", "services", "config", "core"]

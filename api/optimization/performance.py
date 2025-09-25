@@ -140,7 +140,8 @@ class ResponseCacheMiddleware(BaseHTTPMiddleware):
         ]
 
         key_str = ":".join(key_parts)
-        return f"api_cache:{hashlib.md5(key_str.encode()).hexdigest()}"
+        # Use SHA-256 instead of MD5 for security compliance, truncated for cache key optimization
+        return f"api_cache:{hashlib.sha256(key_str.encode()).hexdigest()[:32]}"
 
     def _get_cached_response(self, cache_key: str) -> Optional[Dict]:
         """Get cached response from Redis."""
@@ -358,7 +359,8 @@ def cache_response(ttl: int = 300):
         async def wrapper(*args, **kwargs):
             # Generate cache key
             cache_key = f"func_cache:{func.__name__}:{str(args)}:{str(kwargs)}"
-            cache_key = hashlib.md5(cache_key.encode()).hexdigest()
+            # Use SHA-256 instead of MD5 for security compliance, truncated for cache key optimization
+            cache_key = hashlib.sha256(cache_key.encode()).hexdigest()[:32]
 
             # Try to get from cache
             optimizer = get_api_optimizer()

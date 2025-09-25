@@ -178,7 +178,8 @@ class EvaluationPipeline:
     def _get_cache_key(self, task: EvaluationTask) ->str:
         """Generate cache key for task."""
         key_data = f'{task.task_type}:{task.dataset_id}:{sorted(task.metrics)}'
-        return hashlib.md5(key_data.encode()).hexdigest()
+        # Use SHA-256 instead of MD5 for security compliance, truncated for cache key compatibility
+        return hashlib.sha256(key_data.encode()).hexdigest()[:32]
 
     def clear_cache(self) ->None:
         """Clear result cache."""

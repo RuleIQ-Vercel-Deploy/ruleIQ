@@ -1,4 +1,7 @@
 """
+Google Workspace API Client for compliance evidence collection.
+Follows the foundation architecture pattern for enterprise API integrations.
+"""
 from __future__ import annotations
 
 # Constants
@@ -6,11 +9,15 @@ CONFIDENCE_THRESHOLD = 0.8
 DEFAULT_RETRIES = 5
 HALF_RATIO = 0.5
 MAX_RETRIES = 3
-
-
-Google Workspace API Client for compliance evidence collection.
-Follows the foundation architecture pattern for enterprise API integrations.
-"""
+LOW_SUSPENSION_THRESHOLD = 0.05
+MEDIUM_SUSPENSION_THRESHOLD = 0.1
+HIGH_ACTIVITY_THRESHOLD = 50
+MEDIUM_ACTIVITY_THRESHOLD = 10
+RECENT_DAYS_THRESHOLD = 3
+MAX_USERS_RESULT = 500
+MAX_GROUPS_RESULT = 200
+MAX_ACTIVITIES_RESULT = 1000
+AUDIT_DAYS_LOOKBACK = 7
 import logging
 from datetime import datetime, timedelta, timezone
 from typing import Dict, List, Optional, Tuple, Any
@@ -28,24 +35,24 @@ except ImportError:
 
     class Credentials:
 
-        def __init__(self, *args, **kwargs) ->None:
+        def __init__(self, *args: Any, **kwargs: Any) -> None:
             self.expired = False
             self.refresh_token = None
             self.valid = True
             self.token = 'mock_token'
 
         @classmethod
-        def from_authorized_user_info(cls, info, scopes) ->'Credentials':
+        def from_authorized_user_info(cls, info: Dict[str, Any], scopes: List[str]) -> 'Credentials':
             return cls()
 
-        def refresh(self, request) ->None:
+        def refresh(self, request: Any) -> None:
             pass
 
 
     class Request:
         pass
 
-    def build(*args, **kwargs) ->Any:
+    def build(*args: Any, **kwargs: Any) -> Any:
         return MockGoogleService()
 
 
@@ -55,19 +62,19 @@ except ImportError:
 
     class MockGoogleService:
 
-        def activities(self) ->Any:
+        def activities(self) -> Any:
             return self
 
-        def users(self) ->Any:
+        def users(self) -> Any:
             return self
 
-        def groups(self) ->Any:
+        def groups(self) -> Any:
             return self
 
-        def list(self, **kwargs) ->Any:
+        def list(self, **kwargs: Any) -> Any:
             return self
 
-        def execute(self) ->Dict[str, Any]:
+        def execute(self) -> Dict[str, Any]:
             return {'items': []}
 logger = logging.getLogger(__name__)
 
@@ -94,9 +101,9 @@ class GoogleWorkspaceAPIClient(BaseAPIClient):
         'https://www.googleapis.com/auth/admin.directory.domain.readonly',
         'https://www.googleapis.com/auth/admin.security.readonly']
 
-    def __init__(self, credentials: APICredentials) ->None:
+    def __init__(self, credentials: APICredentials) -> None:
         super().__init__(credentials)
-        self.service_cache = {}
+        self.service_cache: Dict[str, Any] = {}
         self.credentials_obj: Optional[Credentials] = None
 
     def get_base_url(self) ->str:
@@ -148,7 +155,7 @@ class GoogleWorkspaceAPIClient(BaseAPIClient):
             logger.error('Google Workspace connection test failed: %s' % e)
             return False, str(e)
 
-    def _get_service(self, service_name: str, version: str):
+    def _get_service(self, service_name: str, version: str) -> Any:
         """Get cached Google API service."""
         key = f'{service_name}_{version}'
         if key not in self.service_cache:
@@ -166,7 +173,7 @@ class GoogleWorkspaceAPIClient(BaseAPIClient):
                 raise Exception('Authentication failed')
             service = self._get_service('admin', 'directory_v1')
             users_result = service.users().list(customer='my_customer',
-                maxResults=500).execute()
+                maxResults=MAX_USERS_RESULT).execute()
             users = users_result.get('users', [])
             total_users = len(users)
             mfa_enabled = sum(1 for user in users if user.get(
@@ -180,11 +187,20 @@ class GoogleWorkspaceAPIClient(BaseAPIClient):
                 'suspended_users': suspended_users, 'mfa_enabled_users':
                 mfa_enabled, 'mfa_compliance_rate': mfa_enabled /
                 total_users * 100 if total_users > 0 else 0}}
-            return CollectionResult(evidence_type='user_directory',
-                source_system='google_workspace', resource_id='users',
-                resource_name='Google Workspace Users', data=evidence_data,
-                quality=quality_score, compliance_controls=['CC6.1',
-                'CC6.2', 'CC6.7'], collected_at=datetime.now(timezone.utc))
+            return CollectionResult(
+                success=True,
+                evidence_items=[self.create_evidence_item(
+                    evidence_type='user_directory',
+                    resource_id='users',
+                    resource_name='Google Workspace Users',
+                    data=evidence_data,
+                    compliance_controls=['CC6.1', 'CC6.2', 'CC6.7'],
+                    quality_score=quality_score,
+                    metadata={'source_system': 'google_workspace'}
+                )],
+                quality_score=quality_score,
+                total_collected=total_users,
+                collection_metadata={'evidence_type': 'user_directory'})
         except Exception as e:
             logger.error('Failed to collect users evidence: %s' % e)
             raise
@@ -196,7 +212,7 @@ class GoogleWorkspaceAPIClient(BaseAPIClient):
                 raise Exception('Authentication failed')
             service = self._get_service('admin', 'directory_v1')
             groups_result = service.groups().list(customer='my_customer',
-                maxResults=200).execute()
+                maxResults=MAX_GROUPS_RESULT).execute()
             groups = groups_result.get('groups', [])
             group_memberships = {}
             for group in groups:
@@ -216,11 +232,20 @@ class GoogleWorkspaceAPIClient(BaseAPIClient):
                 'security_groups': len([g for g in groups if 'security' in
                 g.get('name', '').lower()]), 'distribution_groups': len([g for
                 g in groups if 'distribution' in g.get('name', '').lower()])}}
-            return CollectionResult(evidence_type='access_groups',
-                source_system='google_workspace', resource_id='groups',
-                resource_name='Google Workspace Groups', data=evidence_data,
-                quality=quality_score, compliance_controls=['CC6.1',
-                'CC6.2', 'CC6.3'], collected_at=datetime.now(timezone.utc))
+            return CollectionResult(
+                success=True,
+                evidence_items=[self.create_evidence_item(
+                    evidence_type='access_groups',
+                    resource_id='groups',
+                    resource_name='Google Workspace Groups',
+                    data=evidence_data,
+                    compliance_controls=['CC6.1', 'CC6.2', 'CC6.3'],
+                    quality_score=quality_score,
+                    metadata={'source_system': 'google_workspace'}
+                )],
+                quality_score=quality_score,
+                total_collected=len(groups),
+                collection_metadata={'evidence_type': 'access_groups'})
         except Exception as e:
             logger.error('Failed to collect groups evidence: %s' % e)
             raise
@@ -231,25 +256,33 @@ class GoogleWorkspaceAPIClient(BaseAPIClient):
             if not await self.authenticate():
                 raise Exception('Authentication failed')
             service = self._get_service('admin', 'reports_v1')
-            start_time = (datetime.now(timezone.utc) - timedelta(days=7)
+            start_time = (datetime.now(timezone.utc) - timedelta(days=AUDIT_DAYS_LOOKBACK)
                 ).strftime('%Y-%m-%dT%H:%M:%S.%fZ')
             activities_result = service.activities().list(userKey='all',
-                applicationName='admin', startTime=start_time, maxResults=1000
+                applicationName='admin', startTime=start_time, maxResults=MAX_ACTIVITIES_RESULT
                 ).execute()
             activities = activities_result.get('items', [])
             quality_score = self._calculate_logs_quality(activities)
             evidence_data = {'activities': activities, 'summary': {
                 'total_events': len(activities), 'date_range':
-                f'Last 7 days from {start_time}', 'unique_users': len(set(
+                f'Last {AUDIT_DAYS_LOOKBACK} days from {start_time}', 'unique_users': len(set(
                 act.get('actor', {}).get('email', '') for act in activities
                 )), 'event_types': list(set(event.get('name', '') for act in
                 activities for event in act.get('events', [])))}}
-            return CollectionResult(evidence_type='admin_activity_logs',
-                source_system='google_workspace', resource_id='admin_logs',
-                resource_name='Google Workspace Admin Logs', data=
-                evidence_data, quality=quality_score, compliance_controls=[
-                'CC7.1', 'CC7.2', 'CC7.3'], collected_at=datetime.now(
-                timezone.utc))
+            return CollectionResult(
+                success=True,
+                evidence_items=[self.create_evidence_item(
+                    evidence_type='admin_activity_logs',
+                    resource_id='admin_logs',
+                    resource_name='Google Workspace Admin Logs',
+                    data=evidence_data,
+                    compliance_controls=['CC7.1', 'CC7.2', 'CC7.3'],
+                    quality_score=quality_score,
+                    metadata={'source_system': 'google_workspace'}
+                )],
+                quality_score=quality_score,
+                total_collected=len(activities),
+                collection_metadata={'evidence_type': 'admin_activity_logs'})
         except Exception as e:
             logger.error('Failed to collect admin logs evidence: %s' % e)
             raise
@@ -260,10 +293,10 @@ class GoogleWorkspaceAPIClient(BaseAPIClient):
             if not await self.authenticate():
                 raise Exception('Authentication failed')
             service = self._get_service('admin', 'reports_v1')
-            start_time = (datetime.now(timezone.utc) - timedelta(days=7)
+            start_time = (datetime.now(timezone.utc) - timedelta(days=AUDIT_DAYS_LOOKBACK)
                 ).strftime('%Y-%m-%dT%H:%M:%S.%fZ')
             activities_result = service.activities().list(userKey='all',
-                applicationName='login', startTime=start_time, maxResults=1000
+                applicationName='login', startTime=start_time, maxResults=MAX_ACTIVITIES_RESULT
                 ).execute()
             activities = activities_result.get('items', [])
             quality_score = self._calculate_logs_quality(activities)
@@ -281,12 +314,20 @@ class GoogleWorkspaceAPIClient(BaseAPIClient):
                 'date_range': f'Last 7 days from {start_time}',
                 'unique_users': len(set(act.get('actor', {}).get('email',
                 '') for act in activities))}}
-            return CollectionResult(evidence_type='user_access_logs',
-                source_system='google_workspace', resource_id='login_logs',
-                resource_name='Google Workspace Login Logs', data=
-                evidence_data, quality=quality_score, compliance_controls=[
-                'CC6.1', 'CC6.2', 'CC7.2'], collected_at=datetime.now(
-                timezone.utc))
+            return CollectionResult(
+                success=True,
+                evidence_items=[self.create_evidence_item(
+                    evidence_type='user_access_logs',
+                    resource_id='login_logs',
+                    resource_name='Google Workspace Login Logs',
+                    data=evidence_data,
+                    compliance_controls=['CC6.1', 'CC6.2', 'CC7.2'],
+                    quality_score=quality_score,
+                    metadata={'source_system': 'google_workspace'}
+                )],
+                quality_score=quality_score,
+                total_collected=len(activities),
+                collection_metadata={'evidence_type': 'user_access_logs'})
         except Exception as e:
             logger.error('Failed to collect login logs evidence: %s' % e)
             raise
@@ -306,31 +347,40 @@ class GoogleWorkspaceAPIClient(BaseAPIClient):
                 'domainName'] for d in domains if d.get('isPrimary')), None
                 ), 'verified_domains': len([d for d in domains if d.get(
                 'verified')])}}
-            return CollectionResult(evidence_type='domain_configuration',
-                source_system='google_workspace', resource_id='domains',
-                resource_name='Google Workspace Domains', data=
-                evidence_data, quality=quality_score, compliance_controls=[
-                'CC6.1', 'CC6.6'], collected_at=datetime.now(timezone.utc))
+            return CollectionResult(
+                success=True,
+                evidence_items=[self.create_evidence_item(
+                    evidence_type='domain_configuration',
+                    resource_id='domains',
+                    resource_name='Google Workspace Domains',
+                    data=evidence_data,
+                    compliance_controls=['CC6.1', 'CC6.6'],
+                    quality_score=quality_score,
+                    metadata={'source_system': 'google_workspace'}
+                )],
+                quality_score=quality_score,
+                total_collected=len(domains),
+                collection_metadata={'evidence_type': 'domain_configuration'})
         except Exception as e:
             logger.error('Failed to collect domain evidence: %s' % e)
             raise
 
     def _calculate_users_quality(self, total_users: int, mfa_enabled: int,
-        suspended: int) ->EvidenceQuality:
+        suspended: int) -> EvidenceQuality:
         """Calculate quality score for users evidence."""
         if total_users == 0:
             return EvidenceQuality.LOW
         mfa_rate = mfa_enabled / total_users
         suspension_rate = suspended / total_users
-        if mfa_rate > CONFIDENCE_THRESHOLD and suspension_rate < 0.05:
+        if mfa_rate > CONFIDENCE_THRESHOLD and suspension_rate < LOW_SUSPENSION_THRESHOLD:
             return EvidenceQuality.HIGH
-        elif mfa_rate > HALF_RATIO and suspension_rate < 0.1:
+        elif mfa_rate > HALF_RATIO and suspension_rate < MEDIUM_SUSPENSION_THRESHOLD:
             return EvidenceQuality.MEDIUM
         else:
             return EvidenceQuality.LOW
 
-    def _calculate_groups_quality(self, groups: List[Dict], memberships: Dict
-        ) ->EvidenceQuality:
+    def _calculate_groups_quality(self, groups: List[Dict[str, Any]], memberships: Dict[str, Any]
+        ) -> EvidenceQuality:
         """Calculate quality score for groups evidence."""
         if not groups:
             return EvidenceQuality.LOW
@@ -345,22 +395,22 @@ class GoogleWorkspaceAPIClient(BaseAPIClient):
         else:
             return EvidenceQuality.LOW
 
-    def _calculate_logs_quality(self, activities: List[Dict]
-        ) ->EvidenceQuality:
+    def _calculate_logs_quality(self, activities: List[Dict[str, Any]]
+        ) -> EvidenceQuality:
         """Calculate quality score for log evidence."""
         if not activities:
             return EvidenceQuality.LOW
         recent_events = sum(1 for act in activities if (datetime.now(
             timezone.utc) - datetime.fromisoformat(act.get('id', {}).get(
             'time', '').replace('Z', '+00:00'))).days < MAX_RETRIES)
-        if recent_events > 50:
+        if recent_events > HIGH_ACTIVITY_THRESHOLD:
             return EvidenceQuality.HIGH
-        elif recent_events > 10:
+        elif recent_events > MEDIUM_ACTIVITY_THRESHOLD:
             return EvidenceQuality.MEDIUM
         else:
             return EvidenceQuality.LOW
 
-    def _calculate_domain_quality(self, domains: List[Dict]) ->EvidenceQuality:
+    def _calculate_domain_quality(self, domains: List[Dict[str, Any]]) -> EvidenceQuality:
         """Calculate quality score for domain evidence."""
         if not domains:
             return EvidenceQuality.LOW

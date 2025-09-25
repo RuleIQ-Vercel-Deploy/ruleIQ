@@ -9,11 +9,13 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.dependencies.auth import get_current_active_user, require_auth
 from api.dependencies.database import get_async_db
+
+# Import models needed for this router
 from api.schemas.models import (
     AssessmentQuestion,
-    AssessmentResponseUpdate,
+    AssessmentResponseUpdate, 
     AssessmentSessionCreate,
-    AssessmentSessionResponse,
+    AssessmentSessionResponse
 )
 from database.user import User
 from services.assessment_service import AssessmentService

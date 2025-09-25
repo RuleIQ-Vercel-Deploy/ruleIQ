@@ -11,6 +11,15 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from api.dependencies.auth import get_current_active_user
+from api.dependencies.security_validation import (
+    SecurityDependencies,
+    validate_request,
+    validate_integration_request,
+    validate_query_params,
+    validate_json_body
+)
+from api.utils.security_validation import SecurityValidator
+from api.utils.input_validation import InputValidator
 from database.user import User
 from api.integrations.base.base_integration import BaseIntegration, IntegrationConfig, IntegrationStatus
 from config.logging_config import get_logger
@@ -64,12 +73,12 @@ AVAILABLE_PROVIDERS = {'google_workspace': {'name': 'Google Workspace'},
     'microsoft_365': {'name': 'Microsoft 365'}}
 
 
-@router.post('/connect', response_model=IntegrationResponse, summary=
-    'Connect or Update Integration')
+@router.post('/connect', response_model=IntegrationResponse, summary='Connect or Update Integration', dependencies=[Depends(validate_request)])
 async def connect_integration(payload: IntegrationCredentials, current_user:
     User=Depends(get_current_active_user), db: AsyncSession=Depends(
     get_async_db)) ->Any:
-    provider = payload.provider.lower()
+    # Sanitize provider name
+    provider = SecurityValidator.validate_no_dangerous_content(payload.provider, "provider").lower()
     if provider not in AVAILABLE_PROVIDERS:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail
             =f"Provider '{provider}' not supported.")
@@ -132,7 +141,7 @@ async def connect_integration(payload: IntegrationCredentials, current_user:
 
 
 @router.delete('/{provider}', summary='Disconnect integration', status_code
-    =status.HTTP_204_NO_CONTENT)
+    =status.HTTP_204_NO_CONTENT, dependencies=[Depends(validate_request)])
 async def disconnect_integration(provider: str, current_user: User=Depends(
     get_current_active_user), db: AsyncSession=Depends(get_async_db)) ->None:
     provider_key = provider.lower()
@@ -161,7 +170,7 @@ async def disconnect_integration(provider: str, current_user: User=Depends(
 
 
 @router.get('/{provider}/status', response_model=IntegrationResponse,
-    summary='Get integration status')
+    summary='Get integration status', dependencies=[Depends(validate_request)])
 async def get_integration_status(provider: str, current_user: User=Depends(
     get_current_active_user), db: AsyncSession=Depends(get_async_db)) ->Any:
     provider_key = provider.lower()
@@ -187,7 +196,7 @@ async def get_integration_status(provider: str, current_user: User=Depends(
             )
 
 
-@router.get('/', summary='List all available integrations')
+@router.get('/', summary='List all available integrations', dependencies=[Depends(validate_request)])
 async def list_integrations(current_user: User=Depends(
     get_current_active_user), db: AsyncSession=Depends(get_async_db)) ->Dict[
     str, Any]:
@@ -198,7 +207,7 @@ async def list_integrations(current_user: User=Depends(
         'configured_count': 0}
 
 
-@router.get('/connected', summary='Get connected integrations')
+@router.get('/connected', summary='Get connected integrations', dependencies=[Depends(validate_request)])
 async def get_connected_integrations(current_user: User=Depends(
     get_current_active_user), db: AsyncSession=Depends(get_async_db)) ->Dict[
     str, Any]:
@@ -206,7 +215,7 @@ async def get_connected_integrations(current_user: User=Depends(
     return {'connected_integrations': [], 'total': 0}
 
 
-@router.post('/{integrationId}/test', summary='Test integration connection')
+@router.post('/{integrationId}/test', summary='Test integration connection', dependencies=[Depends(validate_request)])
 async def test_integration(integrationId: str, current_user: User=Depends(
     get_current_active_user), db: AsyncSession=Depends(get_async_db)) ->Dict[
     str, Any]:
@@ -216,7 +225,7 @@ async def test_integration(integrationId: str, current_user: User=Depends(
         utc).isoformat()}
 
 
-@router.get('/{integrationId}/sync-history', summary='Get sync history')
+@router.get('/{integrationId}/sync-history', summary='Get sync history', dependencies=[Depends(validate_request)])
 async def get_sync_history(integrationId: str, current_user: User=Depends(
     get_current_active_user), db: AsyncSession=Depends(get_async_db)) ->Dict[
     str, Any]:
@@ -228,19 +237,28 @@ async def get_sync_history(integrationId: str, current_user: User=Depends(
         ], 'total_syncs': 2}
 
 
-@router.post('/{integrationId}/webhooks', summary='Configure webhooks')
-async def configure_webhooks(integrationId: str, webhook_config: dict,
+@router.post('/{integrationId}/webhooks', summary='Configure webhooks', dependencies=[Depends(validate_request)])
+async def configure_webhooks(integrationId: str, webhook_config: Dict = Depends(validate_integration_request),
     current_user: User=Depends(get_current_active_user), db: AsyncSession=
     Depends(get_async_db)) ->Dict[str, Any]:
     """Configure webhooks for an integration."""
     webhook_url = webhook_config.get('url', '')
+    if webhook_url:
+        # Validate webhook URL
+        try:
+            webhook_url = InputValidator.validate_url(webhook_url)
+        except Exception as e:
+            raise HTTPException(status_code=400, detail=f"Invalid webhook URL: {str(e)}")
+
     events = webhook_config.get('events', [])
+    # Sanitize event names
+    sanitized_events = [InputValidator.sanitize_string(e, max_length=100) for e in events if isinstance(e, str)]
     return {'integration_id': integrationId, 'webhook_url': webhook_url,
-        'events': events, 'status': 'configured', 'message':
+        'events': sanitized_events, 'status': 'configured', 'message':
         'Webhook configured successfully'}
 
 
-@router.get('/{integrationId}/logs', summary='Get integration logs')
+@router.get('/{integrationId}/logs', summary='Get integration logs', dependencies=[Depends(validate_request)])
 async def get_integration_logs(integrationId: str, current_user: User=
     Depends(get_current_active_user), db: AsyncSession=Depends(get_async_db)
     ) ->Dict[str, Any]:
@@ -252,8 +270,8 @@ async def get_integration_logs(integrationId: str, current_user: User=
         'Sync started', 'details': {}}], 'total_logs': 2}
 
 
-@router.post('/oauth/callback', summary='Handle OAuth callback')
-async def oauth_callback(callback_data: dict, current_user: User=Depends(
+@router.post('/oauth/callback', summary='Handle OAuth callback', dependencies=[Depends(validate_request)])
+async def oauth_callback(callback_data: Dict = Depends(validate_integration_request), current_user: User=Depends(
     get_current_active_user), db: AsyncSession=Depends(get_async_db)) ->Dict[
     str, Any]:
     """Handle OAuth callback from integration providers."""

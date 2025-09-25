@@ -157,12 +157,12 @@ class Settings(BaseSettings):
     # Database configuration
     database_url: str = Field(
         default_factory=lambda: (
-            os.getenv('TEST_DATABASE_URL', 'postgresql://postgres:postgres@localhost:5433/compliance_test')
+            os.getenv('TEST_DATABASE_URL')
             if os.getenv('TESTING', '').lower() == 'true'
             else get_secret_or_env(
                 SecretKeys.DATABASE_URL if SECRETS_VAULT_AVAILABLE else 'database_url',
                 'DATABASE_URL'
-            ) or 'postgresql://localhost/ruleiq'
+            ) or ''
         ),
         description='Primary database URL'
     )
@@ -184,12 +184,12 @@ class Settings(BaseSettings):
     # Redis configuration
     redis_url: str = Field(
         default_factory=lambda: (
-            os.getenv('REDIS_URL', 'redis://localhost:6380/0')
+            os.getenv('REDIS_URL')
             if os.getenv('TESTING', '').lower() == 'true'
             else get_secret_or_env(
                 SecretKeys.REDIS_URL if SECRETS_VAULT_AVAILABLE else 'redis_url',
                 'REDIS_URL'
-            ) or 'redis://localhost:6379/0'
+            ) or ''
         ),
         description='Redis URL for caching'
     )
@@ -200,12 +200,12 @@ class Settings(BaseSettings):
     # JWT configuration
     jwt_secret_key: str = Field(
         default_factory=lambda: (
-            'test-secret-key-for-testing-only-with-minimum-32-characters'
+            os.getenv('JWT_SECRET_KEY', '')
             if os.getenv('TESTING', '').lower() == 'true'
             else get_secret_or_env(
                 SecretKeys.JWT_SECRET if SECRETS_VAULT_AVAILABLE else 'jwt_secret',
                 'JWT_SECRET_KEY'
-            ) or 'insecure-dev-key-change-in-production-minimum-32-chars'
+            ) or ''
         ),
         description='JWT secret key'
     )
@@ -215,22 +215,16 @@ class Settings(BaseSettings):
 
     # Google OAuth configuration
     google_client_id: Optional[str] = Field(
-        default_factory=lambda: (
-            'test-google-client-id' if os.getenv('TESTING', '').lower() == 'true'
-            else get_secret_or_env(
-                SecretKeys.GOOGLE_CLIENT_ID if SECRETS_VAULT_AVAILABLE else 'google_client_id',
-                'GOOGLE_CLIENT_ID'
-            )
+        default_factory=lambda: get_secret_or_env(
+            SecretKeys.GOOGLE_CLIENT_ID if SECRETS_VAULT_AVAILABLE else 'google_client_id',
+            'GOOGLE_CLIENT_ID'
         ),
         description='Google OAuth client ID'
     )
     google_client_secret: Optional[str] = Field(
-        default_factory=lambda: (
-            'test-google-client-secret' if os.getenv('TESTING', '').lower() == 'true'
-            else get_secret_or_env(
-                SecretKeys.GOOGLE_CLIENT_SECRET if SECRETS_VAULT_AVAILABLE else 'google_client_secret',
-                'GOOGLE_CLIENT_SECRET'
-            )
+        default_factory=lambda: get_secret_or_env(
+            SecretKeys.GOOGLE_CLIENT_SECRET if SECRETS_VAULT_AVAILABLE else 'google_client_secret',
+            'GOOGLE_CLIENT_SECRET'
         ),
         description='Google OAuth client secret'
     )
@@ -238,13 +232,10 @@ class Settings(BaseSettings):
 
     # Google AI configuration
     google_api_key: str = Field(
-        default_factory=lambda: (
-            'test-google-api-key' if os.getenv('TESTING', '').lower() == 'true'
-            else get_secret_or_env(
-                SecretKeys.GOOGLE_AI_API_KEY if SECRETS_VAULT_AVAILABLE else 'google_ai_api_key',
-                'GOOGLE_AI_API_KEY'
-            ) or 'placeholder-change-in-production'
-        ),
+        default_factory=lambda: get_secret_or_env(
+            SecretKeys.GOOGLE_AI_API_KEY if SECRETS_VAULT_AVAILABLE else 'google_ai_api_key',
+            'GOOGLE_AI_API_KEY'
+        ) or '',
         description='Google AI API key'
     )
     gemini_model: str = Field(default='gemini-1.5-flash', description='Gemini model')
@@ -316,6 +307,12 @@ class Settings(BaseSettings):
     monitoring_enabled: bool = Field(default=True, description='Enable monitoring')
     performance_monitoring_enabled: bool = Field(default=True, description='Enable performance monitoring')
     error_monitoring_enabled: bool = Field(default=True, description='Enable error monitoring')
+
+    # Cache configuration
+    cache_migration_on_startup: bool = Field(
+        default=False,
+        description='Invalidate MD5-based caches on startup (one-time migration)'
+    )
 
     # Celery configuration
     celery_broker_url: str = Field(
@@ -413,10 +410,12 @@ class Settings(BaseSettings):
     def validate_database_url(cls, v: str) ->str:
         """Validate database URL format"""
         if not v or not v.startswith(('postgresql://', 'postgresql+asyncpg://', 'sqlite:///')):
-            # In testing, provide a default
             if os.getenv('TESTING', '').lower() == 'true':
-                return 'postgresql://postgres:postgres@localhost:5433/compliance_test'
-            raise ValueError('Database URL must start with postgresql:// or sqlite:///')
+                # In testing, use environment variable or fail
+                test_url = os.getenv('TEST_DATABASE_URL', '')
+                if test_url:
+                    return test_url
+            raise ValueError('Database URL must be provided and start with postgresql:// or sqlite:///')
         return v
 
     @field_validator('redis_url')
@@ -424,10 +423,12 @@ class Settings(BaseSettings):
     def validate_redis_url(cls, v: str) ->str:
         """Validate Redis URL format"""
         if not v or not v.startswith('redis://'):
-            # In testing, provide a default
             if os.getenv('TESTING', '').lower() == 'true':
-                return 'redis://localhost:6380/0'
-            raise ValueError('Redis URL must start with redis://')
+                # In testing, use environment variable or fail
+                test_url = os.getenv('REDIS_URL', '')
+                if test_url:
+                    return test_url
+            raise ValueError('Redis URL must be provided and start with redis://')
         return v
 
     @field_validator('jwt_secret_key')
@@ -435,21 +436,18 @@ class Settings(BaseSettings):
     def validate_jwt_secret(cls, v: str) ->str:
         """Validate JWT secret key strength"""
         if not v or len(v) < 32:
-            # In testing, provide a default
-            if os.getenv('TESTING', '').lower() == 'true':
-                return 'test-secret-key-for-testing-only-with-minimum-32-characters'
-            raise ValueError('JWT secret key must be at least 32 characters long')
+            raise ValueError('JWT secret key must be at least 32 characters long and provided via environment')
         return v
 
     @field_validator('google_api_key')
     @classmethod
     def validate_google_api_key(cls, v: str) ->str:
         """Validate Google API key format"""
-        if v and not v.startswith(('AIza', 'test-')):
+        if v and not v.startswith('AIza'):
             logger.warning(
                 "Google API key may not be in the correct format (should start with 'AIza')"
             )
-        return v or 'test-google-api-key'
+        return v or ''
 
     @field_validator('max_file_size_mb')
     @classmethod

@@ -4,6 +4,15 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, File, HTTPException, Path, UploadFile
 from sqlalchemy.ext.asyncio import AsyncSession
 from api.dependencies.auth import get_current_active_user
+from api.dependencies.security_validation import (
+    SecurityDependencies,
+    validate_request,
+    validate_file_upload,
+    validate_json_body,
+    validate_query_params
+)
+from api.utils.security_validation import SecurityValidator
+from api.utils.input_validation import InputValidator
 from database.user import User
 from api.schemas.evidence_classification import BulkClassificationRequest, BulkClassificationResponse, ClassificationStatsResponse, ControlMappingRequest, ControlMappingResponse, EvidenceClassificationRequest, EvidenceClassificationResponse
 from api.schemas.models import EvidenceAutomationResponse, EvidenceBulkUpdate, EvidenceBulkUpdateResponse, EvidenceCreate, EvidenceDashboardResponse, EvidenceRequirementsResponse, EvidenceResponse, EvidenceSearchResponse, EvidenceStatisticsResponse, EvidenceUpdate, EvidenceValidationResult
@@ -27,7 +36,7 @@ logger = get_logger(__name__)
 router = APIRouter()
 
 
-@router.post('/', status_code=201, response_model=EvidenceResponse)
+@router.post('/', status_code=201, response_model=EvidenceResponse, dependencies=[Depends(validate_request)])
 async def create_new_evidence(evidence_data: EvidenceCreate, db:
     AsyncSession=Depends(get_async_db), current_user: User=Depends(
     get_current_active_user)) ->Any:
@@ -49,7 +58,7 @@ async def create_new_evidence(evidence_data: EvidenceCreate, db:
     return EvidenceService._convert_evidence_item_to_response(evidence)
 
 
-@router.get('/')
+@router.get('/', dependencies=[Depends(validate_request)])
 async def list_evidence(framework_id: Optional[UUID]=None, evidence_type:
     Optional[str]=None, status: Optional[str]=None, page: int=1, page_size:
     int=20, sort_by: Optional[str]=None, sort_order: Optional[str]='asc',
@@ -72,7 +81,7 @@ async def list_evidence(framework_id: Optional[UUID]=None, evidence_type:
         return results
 
 
-@router.get('/stats', response_model=EvidenceStatisticsResponse)
+@router.get('/stats', response_model=EvidenceStatisticsResponse, dependencies=[Depends(validate_request)])
 async def get_evidence_statistics(db: AsyncSession=Depends(get_async_db),
     current_user: User=Depends(get_current_active_user)) ->Any:
     """Get evidence statistics for the current user."""
@@ -81,13 +90,17 @@ async def get_evidence_statistics(db: AsyncSession=Depends(get_async_db),
     return stats
 
 
-@router.get('/search', response_model=EvidenceSearchResponse)
+@router.get('/search', response_model=EvidenceSearchResponse, dependencies=[Depends(validate_request)])
 async def search_evidence_items(q: Optional[str]=None, evidence_type:
     Optional[str]=None, status: Optional[str]=None, framework: Optional[str
     ]=None, page: int=1, page_size: int=20, db: AsyncSession=Depends(
     get_async_db), current_user: User=Depends(get_current_active_user)) ->Dict[
     str, Any]:
     """Search evidence items with various filters."""
+    # Sanitize search query
+    if q:
+        q = SecurityValidator.validate_no_dangerous_content(q, "search query")
+    
     evidence_items = await EvidenceService.list_all_evidence_items(db=db,
         user=current_user, evidence_type=evidence_type, status=status)
     start_idx = (page - 1) * page_size
@@ -103,7 +116,7 @@ async def search_evidence_items(q: Optional[str]=None, evidence_type:
         'page': page, 'page_size': page_size}
 
 
-@router.post('/validate', response_model=EvidenceValidationResult)
+@router.post('/validate', response_model=EvidenceValidationResult, dependencies=[Depends(validate_request)])
 async def validate_evidence_quality(evidence_data: dict, db: AsyncSession=
     Depends(get_async_db), current_user: User=Depends(get_current_active_user)
     ) ->Dict[str, Any]:
@@ -115,7 +128,7 @@ async def validate_evidence_quality(evidence_data: dict, db: AsyncSession=
 
 
 @router.get('/requirements/{framework_id}', response_model=
-    EvidenceRequirementsResponse)
+    EvidenceRequirementsResponse, dependencies=[Depends(validate_request)])
 async def get_evidence_requirements(framework_id: UUID, db: AsyncSession=
     Depends(get_async_db), current_user: User=Depends(get_current_active_user)
     ) ->Dict[str, Any]:
@@ -130,7 +143,7 @@ async def get_evidence_requirements(framework_id: UUID, db: AsyncSession=
     return {'requirements': requirements}
 
 
-@router.post('/requirements', response_model=EvidenceRequirementsResponse)
+@router.post('/requirements', response_model=EvidenceRequirementsResponse, dependencies=[Depends(validate_request)])
 async def identify_evidence_requirements(request_data: dict, db:
     AsyncSession=Depends(get_async_db), current_user: User=Depends(
     get_current_active_user)) ->Dict[str, Any]:
@@ -146,7 +159,7 @@ async def identify_evidence_requirements(request_data: dict, db:
     return {'requirements': requirements}
 
 
-@router.get('/{id}', response_model=EvidenceResponse)
+@router.get('/{id}', response_model=EvidenceResponse, dependencies=[Depends(validate_request)])
 async def get_evidence_details(evidence_id: UUID, db: AsyncSession=Depends(
     get_async_db), current_user: User=Depends(get_current_active_user)) ->Any:
     """Retrieve the details of a specific evidence item."""
@@ -161,7 +174,7 @@ async def get_evidence_details(evidence_id: UUID, db: AsyncSession=Depends(
     return EvidenceService._convert_evidence_item_to_response(evidence)
 
 
-@router.put('/{id}', response_model=EvidenceResponse)
+@router.put('/{id}', response_model=EvidenceResponse, dependencies=[Depends(validate_request)])
 async def update_evidence_item(evidence_id: UUID, evidence_update:
     EvidenceUpdate, db: AsyncSession=Depends(get_async_db), current_user:
     User=Depends(get_current_active_user)) ->Any:
@@ -180,7 +193,7 @@ async def update_evidence_item(evidence_id: UUID, evidence_update:
     return EvidenceService._convert_evidence_item_to_response(evidence)
 
 
-@router.patch('/{id}', response_model=EvidenceResponse)
+@router.patch('/{id}', response_model=EvidenceResponse, dependencies=[Depends(validate_request)])
 async def update_evidence_status(evidence_id: UUID, evidence_update:
     EvidenceUpdate, db: AsyncSession=Depends(get_async_db), current_user:
     User=Depends(get_current_active_user)) ->Any:
@@ -199,7 +212,7 @@ async def update_evidence_status(evidence_id: UUID, evidence_update:
     return EvidenceService._convert_evidence_item_to_response(evidence)
 
 
-@router.delete('/{evidence_id}', status_code=204)
+@router.delete('/{evidence_id}', status_code=204, dependencies=[Depends(validate_request)])
 async def delete_evidence_item(evidence_id: UUID, db: AsyncSession=Depends(
     get_async_db), current_user: User=Depends(get_current_active_user)):
     """Delete an evidence item."""
@@ -212,7 +225,7 @@ async def delete_evidence_item(evidence_id: UUID, db: AsyncSession=Depends(
         raise HTTPException(status_code=HTTP_FORBIDDEN, detail='Access denied')
 
 
-@router.post('/bulk-update', response_model=EvidenceBulkUpdateResponse)
+@router.post('/bulk-update', response_model=EvidenceBulkUpdateResponse, dependencies=[Depends(validate_request)])
 async def bulk_update_evidence_status(bulk_update: EvidenceBulkUpdate, db:
     AsyncSession=Depends(get_async_db), current_user: User=Depends(
     get_current_active_user)) ->Any:
@@ -226,7 +239,7 @@ async def bulk_update_evidence_status(bulk_update: EvidenceBulkUpdate, db:
         None)
 
 
-@router.post('/{id}/automation', response_model=EvidenceAutomationResponse)
+@router.post('/{id}/automation', response_model=EvidenceAutomationResponse, dependencies=[Depends(validate_request)])
 async def configure_evidence_automation(evidence_id: UUID,
     automation_config: dict, db: AsyncSession=Depends(get_async_db),
     current_user: User=Depends(get_current_active_user)) ->Dict[str, Any]:
@@ -245,7 +258,7 @@ async def configure_evidence_automation(evidence_id: UUID,
 
 @router.post('/{id}/upload', response_model=EvidenceResponse)
 async def upload_evidence_file_route(evidence_id: UUID, file: UploadFile=
-    File(...), db: AsyncSession=Depends(get_async_db), current_user: User=
+    Depends(validate_file_upload), db: AsyncSession=Depends(get_async_db), current_user: User=
     Depends(get_current_active_user)) ->Dict[str, Any]:
     """Upload a file and link it to an evidence item with enhanced security validation."""
     from api.dependencies.file import EnhancedFileValidator
@@ -295,7 +308,7 @@ async def upload_evidence_file_route(evidence_id: UUID, file: UploadFile=
 
 
 @router.get('/dashboard/{framework_id}', response_model=
-    EvidenceDashboardResponse)
+    EvidenceDashboardResponse, dependencies=[Depends(validate_request)])
 async def get_evidence_dashboard(framework_id: UUID, db: AsyncSession=
     Depends(get_async_db), current_user: User=Depends(get_current_active_user)
     ) ->Any:
@@ -305,7 +318,7 @@ async def get_evidence_dashboard(framework_id: UUID, db: AsyncSession=
     return dashboard_data
 
 
-@router.post('/{id}/classify', response_model=EvidenceClassificationResponse)
+@router.post('/{id}/classify', response_model=EvidenceClassificationResponse, dependencies=[Depends(validate_request)])
 async def classify_evidence_with_ai(evidence_id: UUID, request:
     EvidenceClassificationRequest, db: AsyncSession=Depends(get_async_db),
     current_user: User=Depends(get_current_active_user)) ->Any:
@@ -351,7 +364,7 @@ async def classify_evidence_with_ai(evidence_id: UUID, request:
             'Classification failed')
 
 
-@router.post('/classify/bulk', response_model=BulkClassificationResponse)
+@router.post('/classify/bulk', response_model=BulkClassificationResponse, dependencies=[Depends(validate_request)])
 async def bulk_classify_evidence(request: BulkClassificationRequest, db:
     AsyncSession=Depends(get_async_db), current_user: User=Depends(
     get_current_active_user)) ->Any:
@@ -419,7 +432,7 @@ async def bulk_classify_evidence(request: BulkClassificationRequest, db:
             'Bulk classification failed')
 
 
-@router.post('/{id}/control-mapping', response_model=ControlMappingResponse)
+@router.post('/{id}/control-mapping', response_model=ControlMappingResponse, dependencies=[Depends(validate_request)])
 async def get_control_mapping_suggestions(evidence_id: UUID, request:
     ControlMappingRequest, db: AsyncSession=Depends(get_async_db),
     current_user: User=Depends(get_current_active_user)) ->Any:
@@ -470,7 +483,7 @@ async def get_control_mapping_suggestions(evidence_id: UUID, request:
             'Control mapping failed')
 
 
-@router.get('/classification/stats', response_model=ClassificationStatsResponse
+@router.get('/classification/stats', response_model=ClassificationStatsResponse, dependencies=[Depends(validate_request)]
     )
 async def get_classification_statistics(db: AsyncSession=Depends(
     get_async_db), current_user: User=Depends(get_current_active_user)) ->Any:
@@ -528,7 +541,7 @@ async def get_classification_statistics(db: AsyncSession=Depends(
             'Failed to get classification statistics')
 
 
-@router.get('/{id}/quality-analysis', response_model=QualityAnalysisResponse)
+@router.get('/{id}/quality-analysis', response_model=QualityAnalysisResponse, dependencies=[Depends(validate_request)])
 async def get_evidence_quality_analysis(evidence_id: UUID, db: AsyncSession
     =Depends(get_async_db), current_user: User=Depends(get_current_active_user)
     ) ->Any:
@@ -581,7 +594,7 @@ async def get_evidence_quality_analysis(evidence_id: UUID, db: AsyncSession
             'Quality analysis failed')
 
 
-@router.get('/{id}/quality', response_model=QualityAnalysisResponse)
+@router.get('/{id}/quality', response_model=QualityAnalysisResponse, dependencies=[Depends(validate_request)])
 async def get_evidence_quality(id: UUID=Path(..., alias='id'), db:
     AsyncSession=Depends(get_async_db), current_user: User=Depends(
     get_current_active_user)) ->Any:
@@ -591,7 +604,7 @@ async def get_evidence_quality(id: UUID=Path(..., alias='id'), db:
 
 
 @router.post('/{id}/duplicate-detection', response_model=
-    DuplicateDetectionResponse)
+    DuplicateDetectionResponse, dependencies=[Depends(validate_request)])
 async def detect_evidence_duplicates(evidence_id: UUID, request:
     DuplicateDetectionRequest, db: AsyncSession=Depends(get_async_db),
     current_user: User=Depends(get_current_active_user)) ->Any:
@@ -629,7 +642,7 @@ async def detect_evidence_duplicates(evidence_id: UUID, request:
 
 
 @router.post('/duplicate-detection/batch', response_model=
-    BatchDuplicateDetectionResponse)
+    BatchDuplicateDetectionResponse, dependencies=[Depends(validate_request)])
 async def batch_duplicate_detection(request: BatchDuplicateDetectionRequest,
     db: AsyncSession=Depends(get_async_db), current_user: User=Depends(
     get_current_active_user)) ->Any:
@@ -664,7 +677,7 @@ async def batch_duplicate_detection(request: BatchDuplicateDetectionRequest,
             'Batch duplicate detection failed')
 
 
-@router.get('/quality/benchmark', response_model=QualityBenchmarkResponse)
+@router.get('/quality/benchmark', response_model=QualityBenchmarkResponse, dependencies=[Depends(validate_request)])
 async def get_quality_benchmark(request: QualityBenchmarkRequest=Depends(),
     db: AsyncSession=Depends(get_async_db), current_user: User=Depends(
     get_current_active_user)) ->Any:
@@ -724,7 +737,7 @@ async def get_quality_benchmark(request: QualityBenchmarkRequest=Depends(),
             'Quality benchmarking failed')
 
 
-@router.get('/quality/trends', response_model=QualityTrendResponse)
+@router.get('/quality/trends', response_model=QualityTrendResponse, dependencies=[Depends(validate_request)])
 async def get_quality_trends(request: QualityTrendRequest=Depends(), db:
     AsyncSession=Depends(get_async_db), current_user: User=Depends(
     get_current_active_user)) ->Any:

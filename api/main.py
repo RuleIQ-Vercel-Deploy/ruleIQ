@@ -1,18 +1,21 @@
 """
+Main FastAPI application for ruleIQ API
+Production-ready FastAPI application with comprehensive configuration
+"""
+
 from __future__ import annotations
 
 # Constants
 HTTP_SERVICE_UNAVAILABLE = 503
-
-
-Main FastAPI application for ruleIQ API
-Production-ready FastAPI application with comprehensive configuration
-"""
+# Standard library imports
 import logging
 import os
 import time
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator, Dict, Any
+
+# Third-party imports
+import uvicorn
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
@@ -20,13 +23,44 @@ from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from fastapi.responses import JSONResponse
 from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
-import uvicorn
-from api.routers import ai_assessments, ai_cost_monitoring, ai_cost_websocket, ai_optimization, ai_policy, assessments, auth, business_profiles, chat, compliance, evidence, evidence_collection, foundation_evidence, frameworks, freemium, implementation, integrations, iq_agent, monitoring, policies, readiness, rbac_auth, reports, security, uk_compliance, users
+
+# Local application imports
+from api.routers import (
+    ai_assessments,
+    ai_cost_monitoring,
+    ai_cost_websocket,
+    ai_optimization,
+    ai_policy,
+    assessments,
+    auth,
+    business_profiles,
+    chat,
+    compliance,
+    evidence,
+    evidence_collection,
+    foundation_evidence,
+    frameworks,
+    freemium,
+    implementation,
+    integrations,
+    iq_agent,
+    monitoring,
+    policies,
+    readiness,
+    rbac_auth,
+    reports,
+    security,
+    uk_compliance,
+    users,
+)
 from api.routers.admin import data_access, user_management, token_management
 from api.middleware.error_handler import error_handler_middleware
 from api.middleware.rate_limiter import rate_limit_middleware
 from api.middleware.security_headers import security_headers_middleware
-from database import test_async_database_connection, cleanup_db_connections, get_db, _AsyncSessionLocal as AsyncSessionLocal
+from database import (
+    test_async_database_connection, cleanup_db_connections,
+    get_db, _AsyncSessionLocal as AsyncSessionLocal
+)
 from config.settings import settings
 from monitoring.sentry import init_sentry
 from config.ai_config import ai_config
@@ -42,13 +76,11 @@ async def lifespan(app: FastAPI) ->AsyncGenerator[None, None]:
     """
     Application lifespan context manager for startup/shutdown events
     """
+    app.state.start_time = time.time()
     logger.info('--- Lifespan Startup: Initiated ---')
     logger.info('--- Lifespan Startup: Validating Configuration... ---')
     validate_configuration()
     logger.info('--- Lifespan Startup: Configuration Validated ---')
-    logger.info('--- Lifespan Startup: Initializing Sentry... ---')
-    init_sentry()
-    logger.info('--- Lifespan Startup: Sentry Initialized ---')
     logger.info(
         '--- Lifespan Startup: Verifying Database Connection (Async)... ---')
     if not await test_async_database_connection():
@@ -80,7 +112,7 @@ app = FastAPI(title='ruleIQ API', description=
 app.add_middleware(CORSMiddleware, allow_origins=settings.cors_origins,
     allow_credentials=True, allow_methods=['GET', 'POST', 'PUT', 'DELETE',
     'OPTIONS', 'PATCH'], allow_headers=['*'], expose_headers=[
-    'X-Total-Count', 'X-Rate-Limit-Remaining'])
+    'X-Total-Count', 'X-RateLimit-Limit', 'X-RateLimit-Remaining', 'X-RateLimit-Reset'])
 app.add_middleware(TrustedHostMiddleware, allowed_hosts=['*'])
 app.add_middleware(GZipMiddleware, minimum_size=1000)
 configure_from_settings(app)
@@ -137,12 +169,9 @@ app.include_router(rbac_auth.router, prefix='/api/v1/rbac', tags=['rbac',
     'authentication'])
 app.include_router(uk_compliance.router, prefix='/api/v1/uk-compliance',
     tags=['compliance', 'uk'])
-app.include_router(user_management.router, prefix='/api/v1/admin', tags=[
-    'admin', 'user-management'])
-app.include_router(data_access.router, prefix='/api/v1/admin', tags=[
-    'admin', 'data-access'])
-app.include_router(token_management.router, prefix='/api/v1/admin', tags=[
-    'admin', 'token-management'])
+app.include_router(user_management.router)
+app.include_router(data_access.router)
+app.include_router(token_management.router)
 
 
 @app.exception_handler(HTTPException)
@@ -243,12 +272,6 @@ async def root() ->Dict[str, Any]:
         '/health'}
 
 
-@app.on_event('startup')
-async def startup_event() ->None:
-    """Set application start time"""
-    app.state.start_time = time.time()
-
-
 @app.get('/debug/config')
 async def debug_config() ->Dict[str, Any]:
     """Diagnostic endpoint - remove in production"""
@@ -275,5 +298,5 @@ def validate_configuration() ->None:
 
 if __name__ == '__main__':
     uvicorn.run('api.main:app', host=str(settings.host), port=int(settings.
-        port), reload=bool(settings.debug), log_level=str(settings.
-        log_level).lower(), workers=1 if settings.debug else 4)
+        port), reload=bool(settings.debug), log_level=settings.
+        log_level.value.lower(), workers=1 if settings.debug else 4)

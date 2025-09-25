@@ -102,7 +102,8 @@ class EnhancedFeatureFlagService:
         Used for percentage rollout determination
         """
         combined = f"{flag_name}:{user_id}"
-        hash_obj = hashlib.md5(combined.encode())
+        # Use SHA-256 instead of MD5 for security compliance in feature flag user assignment
+        hash_obj = hashlib.sha256(combined.encode())
         return int(hash_obj.hexdigest(), 16) % 100
 
     async def get_flag_from_db(self, flag_name: str) -> Optional[FeatureFlagModel]:

@@ -107,25 +107,14 @@ def health_check():
     return checks
 
 
-@app.get("/ready")
-def readiness_check():
-    """Readiness check endpoint for detailed service status."""
-    import time
-    start_time = time.time()
+$1
 
-    db_status = "connected" if test_database_connection() else "unavailable"
 
-    checks = {
-        "ready": db_status == "connected",
-        "database": db_status,
-        "environment": "vercel" if os.getenv("VERCEL") else "local",
-        "response_time_ms": round((time.time() - start_time) * 1000, 2)
-    }
-
-    # Return appropriate status code
-    status_code = 200 if checks["ready"] else 503
-    from fastapi.responses import JSONResponse
-    return JSONResponse(content=checks, status_code=status_code)
+@app.get("/api/v1/health/database")
+def database_health():
+    from database.serverless_db import test_database_connection
+    ok = test_database_connection()
+    return {"database": "connected" if ok else "unavailable"}
 
 
 # Vercel expects 'app' as the handler

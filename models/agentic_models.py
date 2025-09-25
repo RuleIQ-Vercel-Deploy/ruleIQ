@@ -5,12 +5,13 @@ from uuid import uuid4
 
 from sqlalchemy import (
     Column, String, Boolean, Integer, Text, ForeignKey, Float,
-    DECIMAL, CheckConstraint, TIMESTAMP
+    DECIMAL, CheckConstraint, TIMESTAMP, Index
 )
 from sqlalchemy.dialects.postgresql import UUID, JSONB, ARRAY, INET
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
+
 
 Base = declarative_base()
 
@@ -110,6 +111,33 @@ class AgentSession(Base):
             "ended_at": self.ended_at.isoformat() if self.ended_at else None,
             "metadata": self.session_metadata
         }
+class SessionContext(Base):
+    """Agent session context."""
+    __tablename__ = "session_contexts"
+
+    context_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4)
+    session_id = Column(UUID(as_uuid=True), ForeignKey("agent_sessions.session_id", ondelete="CASCADE"), nullable=False)
+    user_id = Column(UUID(as_uuid=True), ForeignKey("users.user_id", ondelete="SET NULL"))
+    current_task = Column(Text)
+    context_data = Column(JSONB, nullable=False, default=dict)
+    created_at = Column(TIMESTAMP(timezone=True), server_default=func.current_timestamp())
+    updated_at = Column(TIMESTAMP(timezone=True), server_default=func.current_timestamp(), onupdate=func.current_timestamp())
+
+    # Relationships
+    session = relationship("AgentSession", backref="contexts")
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert model to dictionary."""
+        return {
+            "context_id": str(self.context_id),
+            "session_id": str(self.session_id),
+            "user_id": str(self.user_id) if self.user_id else None,
+            "current_task": self.current_task,
+            "context_data": self.context_data,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None
+        }
+
 
 
 class AgentDecision(Base):
@@ -272,6 +300,36 @@ class ConversationHistory(Base):
             "model_used": self.model_used
         }
 
+
+class AgentState(Base):
+    """Agent state persistence."""
+    __tablename__ = "agent_states"
+
+    state_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4)
+    agent_id = Column(UUID(as_uuid=True), ForeignKey("agents.agent_id", ondelete="CASCADE"), nullable=False)
+    state_data = Column(JSONB, nullable=False)
+    version = Column(Integer, default=1, nullable=False)
+    created_at = Column(TIMESTAMP(timezone=True), server_default=func.current_timestamp())
+    updated_at = Column(TIMESTAMP(timezone=True), server_default=func.current_timestamp(), onupdate=func.current_timestamp())
+
+    # Relationships
+    agent = relationship("Agent", backref="states")
+
+    # Indexes
+    __table_args__ = (
+        Index('idx_agent_state_agent_version', 'agent_id', 'version'),
+    )
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert model to dictionary."""
+        return {
+            "state_id": str(self.state_id),
+            "agent_id": str(self.agent_id),
+            "state_data": self.state_data,
+            "version": self.version,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None
+        }
 
 class AgentAuditLog(Base):
     """Audit log for agent actions."""

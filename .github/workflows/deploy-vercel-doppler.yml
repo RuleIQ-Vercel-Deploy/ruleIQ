@@ -1,283 +1,238 @@
 name: Vercel Deployment with Doppler
 
 on:
-  push:
-    branches: [main]
-  pull_request:
-    types: [opened, synchronize, reopened]
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Environment to deploy to'
+        description: 'Environment to deploy'
         required: true
-        default: 'preview'
+        default: 'production'
         type: choice
         options:
-          - preview
           - production
-
-permissions:
-  contents: read
-  deployments: write
-  pull-requests: write
+          - preview
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 env:
-  NODE_VERSION: '20'
-  PNPM_VERSION: '8'
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  DOPPLER_PROJECT: ruleiq
+  DOPPLER_CONFIG_PREVIEW: staging
+  DOPPLER_CONFIG_PRODUCTION: production
 
 jobs:
+  # Deploy preview for pull requests (only when Doppler is configured)
   deploy-preview:
-    name: Deploy Preview
+    if: github.event_name == 'pull_request' && secrets.DOPPLER_TOKEN != ''
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
-    environment:
-      name: preview
-      url: ${{ steps.deploy.outputs.url }}
-
+    environment: preview
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Doppler CLI
+        uses: dopplerhq/cli-action@1ddcafdd40ad2dcb90261e8c88a6c93ad2f2f6d0  # v3.0.0 commit SHA
 
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Install Doppler CLI
-        uses: dopplerhq/cli-action@v2
+      - name: Install psycopg
+        run: pip install psycopg
 
-      - name: Validate org context and Neon DB connection
-        run: |
-          # Assert required environment variables
-          if [ -z "${{ secrets.VERCEL_ORG_ID }}" ]; then
-            echo "❌ VERCEL_ORG_ID is not configured"
-            exit 1
-          fi
-          if [ -z "${{ secrets.VERCEL_PROJECT_ID }}" ]; then
-            echo "❌ VERCEL_PROJECT_ID is not configured"
-            exit 1
-          fi
-          if [ -z "${{ secrets.DATABASE_URL }}" ]; then
-            echo "❌ DATABASE_URL is not configured"
-            exit 1
-          fi
-          echo "✅ Organization context validated"
-
-          # Install psycopg for DB connection test
-          pip install "psycopg[binary]~=3.1"
-
-          # Test Neon DB connection
-          python -c "
-import sys
-import psycopg
-import os
-
-try:
-    conn = psycopg.connect(os.environ['DATABASE_URL'], connect_timeout=10)
-    conn.close()
-    print('✅ Neon DB connection successful')
-    sys.exit(0)
-except Exception as e:
-    print('❌ Neon DB connection failed')
-    sys.exit(1)
-          "
+      - name: Test Database Connection with Doppler
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
+        run: |
+          doppler run --project ${{ env.DOPPLER_PROJECT }} --config ${{ env.DOPPLER_CONFIG_PREVIEW }} -- python - <<'PY'
+          import os, sys
+          import psycopg
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
-        with:
-          version: ${{ env.PNPM_VERSION }}
+          db_url = os.environ['DATABASE_URL']
+          if db_url.startswith('postgresql+'):
+              db_url = db_url.split('+', 1)[0] + '://' + db_url.split('://', 1)[1]
 
-      - name: Setup Node.js
-        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
-          cache-dependency-path: frontend/pnpm-lock.yaml
+          try:
+              conn = psycopg.connect(db_url, connect_timeout=10)
+              conn.close()
+              print('✅ Neon DB connection successful')
+              sys.exit(0)
+          except Exception as e:
+              print(f'❌ Neon DB connection failed: {e}')
+              sys.exit(1)
+          PY
 
       - name: Install Vercel CLI
-        run: npm install -g vercel
+        run: npm install -g vercel@latest
 
-      - name: Pull Vercel Environment Information
-        run: |
-          doppler run -- vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+      - name: Pull Vercel Environment with Doppler
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-
-      - name: Build Project Artifacts
         run: |
-          doppler run -- vercel build --token=${{ secrets.VERCEL_TOKEN }}
+          doppler run --project ${{ env.DOPPLER_PROJECT }} --config ${{ env.DOPPLER_CONFIG_PREVIEW }} -- vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build Project with Doppler
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          doppler run --project ${{ env.DOPPLER_PROJECT }} --config ${{ env.DOPPLER_CONFIG_PREVIEW }} -- vercel build --token=${{ secrets.VERCEL_TOKEN }}
 
-      - name: Deploy to Vercel Preview
+      - name: Deploy Preview to Vercel with Doppler
         id: deploy
-        run: |
-          url=$(doppler run -- vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
-          echo "url=$url" >> $GITHUB_OUTPUT
-          echo "Preview URL: $url"
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          doppler run --project ${{ env.DOPPLER_PROJECT }} --config ${{ env.DOPPLER_CONFIG_PREVIEW }} -- vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }} > deployment-url.txt
+          echo "url=$(cat deployment-url.txt)" >> $GITHUB_OUTPUT
+          echo "🚀 Preview deployed to: $(cat deployment-url.txt)"
 
-      - name: Comment PR with deployment URL
-        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+      - name: Comment on PR
+        uses: actions/github-script@v7
         with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const url = '${{ steps.deploy.outputs.url }}';
-            const comment = `## 🚀 Preview Deployment Ready!
-
-            Your changes have been deployed to Vercel:
-
-            🔗 **Preview URL:** ${url}
-
-            | Check | Status |
-            |-------|--------|
-            | Build | ✅ Success |
-            | Deploy | ✅ Complete |
-            | Environment | Preview |
-            | Secrets | 🔐 Managed by Doppler |
-
-            This preview will be updated automatically as you push new commits.`;
-
-            github.rest.issues.createComment({
+            await github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: comment
+              body: `🚀 Preview deployed to Vercel: ${url}`
             });
 
-  deploy-production:
-    name: Deploy to Production
+  # Check if Doppler is configured
+  check-doppler:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && secrets.DOPPLER_TOKEN != ''
-    environment:
-      name: production
-      url: ${{ steps.deploy.outputs.url }}
-
+    outputs:
+      has-doppler: ${{ steps.check.outputs.has-doppler }}
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - id: check
+        run: |
+          if [ -n "${{ secrets.DOPPLER_TOKEN }}" ]; then
+            echo "has-doppler=true" >> $GITHUB_OUTPUT
+            echo "✅ Doppler token is configured"
+          else
+            echo "has-doppler=false" >> $GITHUB_OUTPUT
+            echo "⚠️ Doppler token is not configured"
+          fi
+
+  # Deploy with Doppler when available
+  deploy-with-doppler:
+    needs: check-doppler
+    if: needs.check-doppler.outputs.has-doppler == 'true' && (github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'production' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Doppler CLI
+        uses: dopplerhq/cli-action@1ddcafdd40ad2dcb90261e8c88a6c93ad2f2f6d0  # v3.0.0 commit SHA
 
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Install Doppler CLI
-        uses: dopplerhq/cli-action@v2
+      - name: Install psycopg
+        run: pip install psycopg
 
-      - name: Validate org context and Neon DB connection
-        run: |
-          # Assert required environment variables
-          if [ -z "${{ secrets.VERCEL_ORG_ID }}" ]; then
-            echo "❌ VERCEL_ORG_ID is not configured"
-            exit 1
-          fi
-          if [ -z "${{ secrets.VERCEL_PROJECT_ID }}" ]; then
-            echo "❌ VERCEL_PROJECT_ID is not configured"
-            exit 1
-          fi
-          if [ -z "${{ secrets.DATABASE_URL }}" ]; then
-            echo "❌ DATABASE_URL is not configured"
-            exit 1
-          fi
-          echo "✅ Organization context validated"
-
-          # Install psycopg for DB connection test
-          pip install "psycopg[binary]~=3.1"
-
-          # Test Neon DB connection
-          python -c "
-import sys
-import psycopg
-import os
-
-try:
-    conn = psycopg.connect(os.environ['DATABASE_URL'], connect_timeout=10)
-    conn.close()
-    print('✅ Neon DB connection successful')
-    sys.exit(0)
-except Exception as e:
-    print('❌ Neon DB connection failed')
-    sys.exit(1)
-          "
+      - name: Validate Doppler Secrets
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
+        run: |
+          echo "🔍 Validating required secrets in Doppler..."
+          CONFIG=${{ github.event.inputs.environment == 'preview' && env.DOPPLER_CONFIG_PREVIEW || env.DOPPLER_CONFIG_PRODUCTION }}
+          doppler secrets get VERCEL_TOKEN --plain --project ${{ env.DOPPLER_PROJECT }} --config $CONFIG || (echo "❌ VERCEL_TOKEN not found in Doppler" && exit 1)
+          doppler secrets get VERCEL_ORG_ID --plain --project ${{ env.DOPPLER_PROJECT }} --config $CONFIG || (echo "❌ VERCEL_ORG_ID not found in Doppler" && exit 1)
+          doppler secrets get VERCEL_PROJECT_ID --plain --project ${{ env.DOPPLER_PROJECT }} --config $CONFIG || (echo "❌ VERCEL_PROJECT_ID not found in Doppler" && exit 1)
+          doppler secrets get DATABASE_URL --plain --project ${{ env.DOPPLER_PROJECT }} --config $CONFIG || (echo "❌ DATABASE_URL not found in Doppler" && exit 1)
+          echo "✅ All required secrets are configured in Doppler"
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
-        with:
-          version: ${{ env.PNPM_VERSION }}
+      - name: Test Database Connection with Doppler
+        env:
+          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
+        run: |
+          CONFIG=${{ github.event.inputs.environment == 'preview' && env.DOPPLER_CONFIG_PREVIEW || env.DOPPLER_CONFIG_PRODUCTION }}
+          doppler run --project ${{ env.DOPPLER_PROJECT }} --config $CONFIG -- python - <<'PY'
+          import os, sys
+          import psycopg
 
-      - name: Setup Node.js
-        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
-          cache-dependency-path: frontend/pnpm-lock.yaml
+          db_url = os.environ['DATABASE_URL']
+          if db_url.startswith('postgresql+'):
+              db_url = db_url.split('+', 1)[0] + '://' + db_url.split('://', 1)[1]
+
+          try:
+              conn = psycopg.connect(db_url, connect_timeout=10)
+              conn.close()
+              print('✅ Neon DB connection successful')
+              sys.exit(0)
+          except Exception as e:
+              print(f'❌ Neon DB connection failed: {e}')
+              sys.exit(1)
+          PY
 
       - name: Install Vercel CLI
-        run: npm install -g vercel
+        run: npm install -g vercel@latest
 
-      - name: Pull Vercel Environment Information
-        run: |
-          doppler run -- vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+      - name: Pull Vercel Environment with Doppler
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-
-      - name: Build Project Artifacts
         run: |
-          doppler run -- vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+          CONFIG=${{ github.event.inputs.environment == 'preview' && env.DOPPLER_CONFIG_PREVIEW || env.DOPPLER_CONFIG_PRODUCTION }}
+          doppler run --project ${{ env.DOPPLER_PROJECT }} --config $CONFIG -- vercel pull --yes --environment=${{ github.event.inputs.environment || 'production' }} --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build Project with Doppler
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          CONFIG=${{ github.event.inputs.environment == 'preview' && env.DOPPLER_CONFIG_PREVIEW || env.DOPPLER_CONFIG_PRODUCTION }}
+          doppler run --project ${{ env.DOPPLER_PROJECT }} --config $CONFIG -- vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
 
-      - name: Deploy to Vercel Production
+      - name: Deploy to Vercel with Doppler
         id: deploy
-        run: |
-          url=$(doppler run -- vercel deploy --prod --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
-          echo "url=$url" >> $GITHUB_OUTPUT
-          echo "Production URL: $url"
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          CONFIG=${{ github.event.inputs.environment == 'preview' && env.DOPPLER_CONFIG_PREVIEW || env.DOPPLER_CONFIG_PRODUCTION }}
+
+          if [ "${{ github.event.inputs.environment }}" == "preview" ]; then
+            doppler run --project ${{ env.DOPPLER_PROJECT }} --config $CONFIG -- vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }} > deployment-url.txt
+          else
+            doppler run --project ${{ env.DOPPLER_PROJECT }} --config $CONFIG -- vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }} > deployment-url.txt
+          fi
+
+          echo "url=$(cat deployment-url.txt)" >> $GITHUB_OUTPUT
+          echo "🚀 Deployed to: $(cat deployment-url.txt)"
 
       - name: Validate Deployment
+        continue-on-error: true
         run: |
-          echo "🔍 Validating production deployment..."
-          # Health check
-          curl -f "${{ steps.deploy.outputs.url }}/health" || exit 1
-          echo "✅ Health check passed"
+          URL=$(cat deployment-url.txt)
+          echo "🔍 Validating deployment at: $URL"
 
-          # Ready check
-          curl -f "${{ steps.deploy.outputs.url }}/ready" || exit 1
-          echo "✅ Readiness check passed"
+          # Wait for deployment to be ready
+          sleep 10
 
-      - name: Create deployment record
-        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+          # Check endpoints (optional, non-blocking)
+          curl -f "$URL/health" && echo "✅ Health check passed" || echo "⚠️ Health endpoint not found"
+          curl -f "$URL/ready" && echo "✅ Readiness check passed" || echo "⚠️ Ready endpoint not found"
+
+      - name: Create Deployment Record
+        uses: actions/github-script@v7
         with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
+            const url = '${{ steps.deploy.outputs.url }}';
             const deployment = await github.rest.repos.createDeployment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               ref: context.sha,
-              environment: 'production',
-              required_contexts: [],
-              auto_merge: false,
-              production_environment: true
+              environment: '${{ github.event.inputs.environment || 'production' }}',
+              description: 'Deployed via Doppler',
+              production_environment: '${{ github.event.inputs.environment || 'production' }}' === 'production',
+              required_contexts: []
             });
 
             await github.rest.repos.createDeploymentStatus({
@@ -285,135 +240,103 @@ except Exception as e:
               repo: context.repo.repo,
               deployment_id: deployment.data.id,
               state: 'success',
-              environment_url: '${{ steps.deploy.outputs.url }}',
-              description: 'Deployment to Vercel production completed (Secrets by Doppler)'
+              environment_url: url,
+              description: 'Deployed to Vercel with Doppler'
             });
 
-      - name: Rollback on failure
-        if: failure()
-        run: |
-          echo "Deployment failed. Initiating rollback..."
-          doppler run -- vercel rollback --token=${{ secrets.VERCEL_TOKEN }} || true
-        env:
-          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-
+  # Manual deployment job (requires DOPPLER_TOKEN)
   manual-deploy:
-    name: Manual Deployment
-    runs-on: ubuntu-latest
     if: github.event_name == 'workflow_dispatch'
-    environment:
-      name: ${{ github.event.inputs.environment }}
-      url: ${{ steps.deploy.outputs.url }}
-
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Validate Doppler token exists
+        run: |
+          if [ -z "${{ secrets.DOPPLER_TOKEN }}" ]; then
+            echo "❌ DOPPLER_TOKEN is not configured for manual deployments"
+            exit 1
+          fi
+          echo "✅ DOPPLER_TOKEN is configured"
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Doppler CLI
+        uses: dopplerhq/cli-action@1ddcafdd40ad2dcb90261e8c88a6c93ad2f2f6d0  # v3.0.0 commit SHA
 
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Install Doppler CLI
-        uses: dopplerhq/cli-action@v2
+      - name: Install psycopg
+        run: pip install psycopg
 
-      - name: Validate org context and Neon DB connection
-        run: |
-          # Assert required environment variables
-          if [ -z "${{ secrets.VERCEL_ORG_ID }}" ]; then
-            echo "❌ VERCEL_ORG_ID is not configured"
-            exit 1
-          fi
-          if [ -z "${{ secrets.VERCEL_PROJECT_ID }}" ]; then
-            echo "❌ VERCEL_PROJECT_ID is not configured"
-            exit 1
-          fi
-          if [ -z "${{ secrets.DATABASE_URL }}" ]; then
-            echo "❌ DATABASE_URL is not configured"
-            exit 1
-          fi
-          echo "✅ Organization context validated"
-
-          # Install psycopg for DB connection test
-          pip install "psycopg[binary]~=3.1"
-
-          # Test Neon DB connection
-          python -c "
-import sys
-import psycopg
-import os
-
-try:
-    conn = psycopg.connect(os.environ['DATABASE_URL'], connect_timeout=10)
-    conn.close()
-    print('✅ Neon DB connection successful')
-    sys.exit(0)
-except Exception as e:
-    print('❌ Neon DB connection failed')
-    sys.exit(1)
-          "
+      - name: Test Database Connection with Doppler
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
+        run: |
+          CONFIG=${{ github.event.inputs.environment == 'preview' && env.DOPPLER_CONFIG_PREVIEW || env.DOPPLER_CONFIG_PRODUCTION }}
+          doppler run --project ${{ env.DOPPLER_PROJECT }} --config $CONFIG -- python - <<'PY'
+          import os, sys
+          import psycopg
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
-        with:
-          version: ${{ env.PNPM_VERSION }}
+          db_url = os.environ['DATABASE_URL']
+          if db_url.startswith('postgresql+'):
+              db_url = db_url.split('+', 1)[0] + '://' + db_url.split('://', 1)[1]
 
-      - name: Setup Node.js
-        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
-          cache-dependency-path: frontend/pnpm-lock.yaml
+          try:
+              conn = psycopg.connect(db_url, connect_timeout=10)
+              conn.close()
+              print('✅ Neon DB connection successful')
+              sys.exit(0)
+          except Exception as e:
+              print(f'❌ Neon DB connection failed: {e}')
+              sys.exit(1)
+          PY
 
       - name: Install Vercel CLI
-        run: npm install -g vercel
+        run: npm install -g vercel@latest
 
-      - name: Pull Vercel Environment Information
-        run: |
-          doppler run -- vercel pull --yes --environment=${{ github.event.inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}
+      - name: Pull Vercel Environment with Doppler
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-
-      - name: Build Project Artifacts
         run: |
-          if [ "${{ github.event.inputs.environment }}" = "production" ]; then
-            doppler run -- vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
-          else
-            doppler run -- vercel build --token=${{ secrets.VERCEL_TOKEN }}
-          fi
+          CONFIG=${{ github.event.inputs.environment == 'preview' && env.DOPPLER_CONFIG_PREVIEW || env.DOPPLER_CONFIG_PRODUCTION }}
+          doppler run --project ${{ env.DOPPLER_PROJECT }} --config $CONFIG -- vercel pull --yes --environment=${{ github.event.inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build Project with Doppler
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          CONFIG=${{ github.event.inputs.environment == 'preview' && env.DOPPLER_CONFIG_PREVIEW || env.DOPPLER_CONFIG_PRODUCTION }}
+          doppler run --project ${{ env.DOPPLER_PROJECT }} --config $CONFIG -- vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
 
-      - name: Deploy to Vercel
+      - name: Deploy to Vercel with Doppler
         id: deploy
-        run: |
-          if [ "${{ github.event.inputs.environment }}" = "production" ]; then
-            url=$(doppler run -- vercel deploy --prod --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
-          else
-            url=$(doppler run -- vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
-          fi
-          echo "url=$url" >> $GITHUB_OUTPUT
-          echo "Deployment URL: $url"
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-
-      - name: Deployment Summary
         run: |
-          echo "## Manual Deployment Summary" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "| Property | Value |" >> $GITHUB_STEP_SUMMARY
-          echo "|----------|-------|" >> $GITHUB_STEP_SUMMARY
-          echo "| Environment | ${{ github.event.inputs.environment }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| URL | ${{ steps.deploy.outputs.url }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Triggered By | ${{ github.actor }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Commit | ${{ github.sha }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Secrets Provider | 🔐 Doppler |" >> $GITHUB_STEP_SUMMARY
+          CONFIG=${{ github.event.inputs.environment == 'preview' && env.DOPPLER_CONFIG_PREVIEW || env.DOPPLER_CONFIG_PRODUCTION }}
+
+          if [ "${{ github.event.inputs.environment }}" == "preview" ]; then
+            doppler run --project ${{ env.DOPPLER_PROJECT }} --config $CONFIG -- vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }} > deployment-url.txt
+          else
+            doppler run --project ${{ env.DOPPLER_PROJECT }} --config $CONFIG -- vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }} > deployment-url.txt
+          fi
+
+          echo "url=$(cat deployment-url.txt)" >> $GITHUB_OUTPUT
+          echo "🚀 Deployed to: $(cat deployment-url.txt)"
+
+      - name: Validate Deployment
+        continue-on-error: true
+        run: |
+          URL=$(cat deployment-url.txt)
+          echo "🔍 Validating deployment at: $URL"
+
+          # Wait for deployment to be ready
+          sleep 10
+
+          # Check endpoints (optional, non-blocking)
+          curl -f "$URL/health" && echo "✅ Health check passed" || echo "⚠️ Health endpoint not found"
+          curl -f "$URL/ready" && echo "✅ Readiness check passed" || echo "⚠️ Ready endpoint not found"

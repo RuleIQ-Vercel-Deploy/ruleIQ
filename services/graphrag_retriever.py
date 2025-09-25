@@ -146,7 +146,8 @@ Always return a ContextPack containing:
             ContextPack with retrieved compliance knowledge
         """
         # Generate query ID
-        query_id = hashlib.md5(f"{query}_{datetime.now(timezone.utc)}".encode()).hexdigest()[:12]
+        # Use SHA-256 instead of MD5 for security compliance, truncated for query ID compatibility
+        query_id = hashlib.sha256(f"{query}_{datetime.now(timezone.utc)}".encode()).hexdigest()[:12]
 
         # Determine retrieval mode if not specified
         if mode is None:

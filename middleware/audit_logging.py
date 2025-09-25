@@ -237,7 +237,8 @@ class AuditLoggingMiddleware(BaseHTTPMiddleware):
         method = request.method
 
         hash_input = f"{timestamp}{path}{method}"
-        return hashlib.md5(hash_input.encode()).hexdigest()[:16]
+        # Use SHA-256 instead of MD5 for security compliance, truncated for audit ID compatibility
+        return hashlib.sha256(hash_input.encode()).hexdigest()[:16]
 
     def _get_safe_headers(self, headers: Dict) -> Dict:
         """Get headers with sensitive values redacted."""
@@ -391,3 +392,23 @@ def setup_audit_logging(app):
     app.add_middleware(AuditLoggingMiddleware, audit_logger=audit_logger)
     logger.info("Audit logging middleware configured")
     return audit_logger
+
+# Create a module-level audit logger instance
+audit_logger = AuditLogger()
+
+# Helper function for compatibility with security validation
+async def log_security_event(
+    request: Request,
+    event_type: str,
+    details: Optional[Dict[str, Any]] = None
+) -> None:
+    """
+    Helper function for logging security events.
+    Provides compatibility with security validation module.
+    """
+    await audit_logger.log_event(
+        event_type=event_type,
+        details=details,
+        ip_address=request.client.host if request.client else None,
+        user_agent=request.headers.get("user-agent", "")
+    )

@@ -1,0 +1,27 @@
+{
+  "timestamp": "2025-09-25T04:24:55.096843",
+  "environment": "preview",
+  "organization": "RuleIQ-Vercel-Deploy",
+  "repository": "ruleIQ",
+  "status": "completed",
+  "steps": [
+    {
+      "status": "success",
+      "message": "On main branch"
+    },
+    {
+      "status": "success",
+      "message": "Connected to organization repository"
+    }
+  ],
+  "metrics": {},
+  "errors": [
+    "Failed to push: \nTo https://github.com/RuleIQ-Vercel-Deploy/ruleIQ.git\n ! [rejected]            main -> main (non-fast-forward)\nerror: failed to push some refs to 'https://github.com/RuleIQ-Vercel-Deploy/ruleIQ.git'\nhint: Updates were rejected because the tip of your current branch is behind\nhint: its remote counterpart. If you want to integrate the remote changes,\nhint: use 'git pull' before pushing again.\nhint: See the 'Note about fast-forwards' in 'git push --help' for details.\n",
+    "Deployment failed"
+  ],
+  "warnings": [
+    "You have uncommitted changes"
+  ],
+  "end_time": "2025-09-25T04:24:56.120581",
+  "duration_seconds": 1.023738
+}

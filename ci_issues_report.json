@@ -1,0 +1,54 @@
+{
+  "total_issues": 4,
+  "by_severity": {
+    "error": 4,
+    "warning": 0,
+    "info": 0
+  },
+  "by_type": {
+    "missing_file": 4
+  },
+  "auto_fixable": 0,
+  "issues": [
+    {
+      "workflow": "frontend.yml",
+      "job": "unit-tests",
+      "step": "Coverage summary",
+      "type": "missing_file",
+      "severity": "error",
+      "description": "Referenced file does not exist: coverage/coverage-summary.json",
+      "fix_suggestion": "Create the missing file: coverage/coverage-summary.json",
+      "auto_fixable": false
+    },
+    {
+      "workflow": "frontend.yml",
+      "job": "lighthouse-audit",
+      "step": "Run Lighthouse CI",
+      "type": "missing_file",
+      "severity": "error",
+      "description": "Referenced file does not exist: lighthouserc.js",
+      "fix_suggestion": "Create the missing file: lighthouserc.js",
+      "auto_fixable": false
+    },
+    {
+      "workflow": "dependencies.yml",
+      "job": "javascript-dependencies",
+      "step": "Audit dependencies",
+      "type": "missing_file",
+      "severity": "error",
+      "description": "Referenced file does not exist: npm-audit.json');",
+      "fix_suggestion": "Create the missing file: npm-audit.json');",
+      "auto_fixable": false
+    },
+    {
+      "workflow": "dependencies.yml",
+      "job": "javascript-dependencies",
+      "step": "License compliance check",
+      "type": "missing_file",
+      "severity": "error",
+      "description": "Referenced file does not exist: licenses.json');",
+      "fix_suggestion": "Create the missing file: licenses.json');",
+      "auto_fixable": false
+    }
+  ]
+}

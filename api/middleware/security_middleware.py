@@ -1,6 +1,6 @@
 """
 from __future__ import annotations
-import requests
+import requests as http_requests
 
 # Constants
 MAX_ITEMS = 1000
@@ -117,7 +117,7 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
                 body = await request.body()
                 if len(body) > MAX_ITEMS:
                     body = body[:1000] + b'...'
-            except (requests.RequestException, KeyError, IndexError):
+            except (http_requests.RequestException, KeyError, IndexError):
                 body = b'<could not read body>'
         logger.info('Request details', extra={'request_id': request_id,
             'user_id': str(user_id) if user_id else None, 'method': request

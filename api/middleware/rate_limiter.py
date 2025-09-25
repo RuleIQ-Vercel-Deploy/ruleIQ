@@ -45,7 +45,7 @@ strict_test_limiter = RateLimiter(requests_per_minute=4)
 
 async def rate_limit_middleware(request: Request, call_next) -> Any:
     """General rate limiting middleware"""
-    if request.url.path in ['/docs', '/redoc', '/openapi.json'] or settings.is_testing:
+    if request.url.path in ['/docs', '/redoc', '/openapi.json', '/api/v1/docs', '/api/v1/redoc', '/api/v1/openapi.json'] or settings.is_testing:
         return await call_next(request)
     client_ip = request.client.host if request.client else 'unknown'
     if client_ip in ['127.0.0.1', '::1', 'localhost'] and settings.is_testing:
@@ -63,7 +63,7 @@ async def rate_limit_middleware(request: Request, call_next) -> Any:
 def auth_rate_limit() -> Any:
     """Dependency for auth endpoint rate limiting"""
 
-    async def check_limit(request: Request) -> None:
+    async def check_limit(request: "Request") -> None:
         if settings.is_testing:
             return
         client_ip = request.client.host if request.client else 'unknown'
@@ -80,7 +80,7 @@ def rate_limit(requests_per_minute: int=60) -> Any:
     """Create a custom rate limit dependency with specified limit."""
     custom_limiter = RateLimiter(requests_per_minute=requests_per_minute)
 
-    async def check_custom_limit(request: Request) -> None:
+    async def check_custom_limit(request: "Request") -> None:
         if settings.is_testing and requests_per_minute > 10:
             return
         client_ip = request.client.host if request.client else 'unknown'
@@ -105,7 +105,7 @@ class RateLimited:
         self.requests_per_minute = requests
         self.limiter = RateLimiter(requests_per_minute=requests)
 
-    async def __call__(self, request: Request) -> None:
+    async def __call__(self, request) -> None:
         """FastAPI dependency that checks rate limits"""
         if settings.is_testing and self.requests_per_minute > 10:
             return

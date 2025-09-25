@@ -14,6 +14,13 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
 
 from api.dependencies.auth import get_current_active_user
+from api.dependencies.security_validation import (
+    SecurityDependencies,
+    validate_request,
+    validate_json_body,
+    validate_query_params
+)
+from api.utils.security_validation import SecurityValidator
 from database.user import User
 from api.schemas.chat import (
     ComplianceAnalysisRequest,
@@ -41,7 +48,7 @@ logger = logging.getLogger(__name__)
 router = APIRouter(tags=["Chat Assistant"])
 
 
-@router.post("/conversations", response_model=dict)
+@router.post("/conversations", response_model=dict, dependencies=[Depends(validate_request)])
 async def create_conversation(
     request: CreateConversationRequest,
     db: AsyncSession = Depends(get_async_db),
@@ -50,6 +57,12 @@ async def create_conversation(
     """Create a new chat conversation with optimized database queries."""
     try:
         from sqlalchemy import func, select
+        
+        # Sanitize input fields
+        if request.title:
+            request.title = SecurityValidator.validate_no_dangerous_content(request.title, "title")
+        if request.initial_message:
+            request.initial_message = SecurityValidator.validate_no_dangerous_content(request.initial_message, "message")
 
         # Optimized: Single query to get both business profile and conversation count
         user_id_str = str(current_user.id)
@@ -233,7 +246,7 @@ async def create_conversation(
         raise HTTPException(status_code=500, detail="Failed to create conversation")
 
 
-@router.get("/conversations", response_model=ConversationListResponse)
+@router.get("/conversations", response_model=ConversationListResponse, dependencies=[Depends(validate_request)])
 async def list_conversations(
     page: int = Query(1, ge=1),
     per_page: int = Query(20, ge=1, le=100),
@@ -302,7 +315,7 @@ async def list_conversations(
         raise HTTPException(status_code=500, detail="Failed to list conversations")
 
 
-@router.get("/conversations/{conversation_id}", response_model=ConversationResponse)
+@router.get("/conversations/{conversation_id}", response_model=ConversationResponse, dependencies=[Depends(validate_request)])
 async def get_conversation(
     conversation_id: UUID,
     db: Session = Depends(get_db),
@@ -345,7 +358,7 @@ async def get_conversation(
         raise HTTPException(status_code=500, detail="Failed to get conversation")
 
 
-@router.post("/conversations/{conversation_id}/messages", response_model=MessageResponse)
+@router.post("/conversations/{conversation_id}/messages", response_model=MessageResponse, dependencies=[Depends(validate_request)])
 async def send_message(
     conversation_id: UUID,
     request: SendMessageRequest,
@@ -355,6 +368,9 @@ async def send_message(
     """Send a message in a conversation."""
     try:
         from sqlalchemy import desc, select
+        
+        # Sanitize message content
+        request.message = SecurityValidator.validate_no_dangerous_content(request.message, "message")
 
         # Verify conversation exists and belongs to user
         conv_stmt = select(ChatConversation).where(
@@ -435,7 +451,7 @@ async def send_message(
         raise HTTPException(status_code=500, detail="Failed to send message")
 
 
-@router.delete("/conversations/{conversation_id}")
+@router.delete("/conversations/{conversation_id}", dependencies=[Depends(validate_request)])
 async def delete_conversation(
     conversation_id: UUID,
     db: Session = Depends(get_db),
@@ -468,7 +484,7 @@ async def delete_conversation(
         raise HTTPException(status_code=500, detail="Failed to delete conversation")
 
 
-@router.post("/evidence-recommendations", response_model=List[EvidenceRecommendationResponse])
+@router.post("/evidence-recommendations", response_model=List[EvidenceRecommendationResponse], dependencies=[Depends(validate_request)])
 async def get_evidence_recommendations(
     request: EvidenceRecommendationRequest,
     db: AsyncSession = Depends(get_async_db),
@@ -500,7 +516,7 @@ async def get_evidence_recommendations(
         raise HTTPException(status_code=500, detail="Failed to get recommendations")
 
 
-@router.post("/compliance-analysis", response_model=ComplianceAnalysisResponse)
+@router.post("/compliance-analysis", response_model=ComplianceAnalysisResponse, dependencies=[Depends(validate_request)])
 async def analyze_compliance_gap(
     request: ComplianceAnalysisRequest,
     db: AsyncSession = Depends(get_async_db),
@@ -533,7 +549,7 @@ async def analyze_compliance_gap(
         raise HTTPException(status_code=500, detail="Failed to analyze compliance gap")
 
 
-@router.post("/context-aware-recommendations")
+@router.post("/context-aware-recommendations", dependencies=[Depends(validate_request)])
 async def get_context_aware_recommendations(
     framework: str = Query(..., min_length=1, description="Framework to get recommendations for"),
     context_type: str = Query(default="comprehensive", description="Type of context analysis"),
@@ -549,6 +565,10 @@ async def get_context_aware_recommendations(
     - Risk assessment
     """
     try:
+        # Sanitize query parameters
+        framework = SecurityValidator.validate_no_dangerous_content(framework, "framework")
+        context_type = SecurityValidator.validate_no_dangerous_content(context_type, "context_type")
+
         # Use async query for business profile
         stmt = select(BusinessProfile).where(BusinessProfile.user_id == str(str(current_user.id)))
         result = await db.execute(stmt)
@@ -574,7 +594,7 @@ async def get_context_aware_recommendations(
         raise HTTPException(status_code=500, detail="Failed to get context-aware recommendations")
 
 
-@router.post("/evidence-collection-workflow")
+@router.post("/evidence-collection-workflow", dependencies=[Depends(validate_request)])
 async def generate_evidence_collection_workflow(
     framework: str = Query(..., min_length=1, description="Framework for workflow generation"),
     control_id: Optional[str] = Query(None, description="Specific control ID (optional)"),
@@ -587,6 +607,12 @@ async def generate_evidence_collection_workflow(
     tailored to specific frameworks, controls, and business contexts.
     """
     try:
+        # Sanitize query parameters
+        framework = SecurityValidator.validate_no_dangerous_content(framework, "framework")
+        workflow_type = SecurityValidator.validate_no_dangerous_content(workflow_type, "workflow_type")
+        if control_id:
+            control_id = SecurityValidator.validate_no_dangerous_content(control_id, "control_id")
+
         # Use async query for business profile
         stmt = select(BusinessProfile).where(BusinessProfile.user_id == str(str(current_user.id)))
         result = await db.execute(stmt)
@@ -634,6 +660,13 @@ async def generate_customized_policy(
     - Regulatory requirements
     """
     try:
+        # Sanitize query parameters
+        framework = SecurityValidator.validate_no_dangerous_content(framework, "framework")
+        policy_type = SecurityValidator.validate_no_dangerous_content(policy_type, "policy_type")
+        tone = SecurityValidator.validate_no_dangerous_content(tone, "tone")
+        detail_level = SecurityValidator.validate_no_dangerous_content(detail_level, "detail_level")
+        geographic_scope = SecurityValidator.validate_no_dangerous_content(geographic_scope, "geographic_scope")
+
         business_profile = (
             db.query(BusinessProfile)
             .filter(BusinessProfile.user_id == str(str(current_user.id)))
@@ -669,7 +702,7 @@ async def generate_customized_policy(
         raise HTTPException(status_code=500, detail="Failed to generate customized policy")
 
 
-@router.get("/smart-guidance/{framework}")
+@router.get("/smart-guidance/{framework}", dependencies=[Depends(validate_request)])
 async def get_smart_compliance_guidance(
     framework: str,
     guidance_type: str = Query(default="getting_started", description="Type of guidance needed"),
@@ -684,6 +717,10 @@ async def get_smart_compliance_guidance(
     - Best practices
     """
     try:
+        # Sanitize path and query parameters
+        framework = SecurityValidator.validate_no_dangerous_content(framework, "framework")
+        guidance_type = SecurityValidator.validate_no_dangerous_content(guidance_type, "guidance_type")
+
         # Use async query for business profile
         stmt = select(BusinessProfile).where(BusinessProfile.user_id == str(str(current_user.id)))
         result = await db.execute(stmt)
@@ -745,7 +782,7 @@ async def get_smart_compliance_guidance(
 
 
 
-@router.delete("/cache/clear")
+@router.delete("/cache/clear", dependencies=[Depends(validate_request)])
 async def clear_ai_cache(
     pattern: str = Query(default="*", description="Cache pattern to clear"),
     current_user: User = Depends(get_current_active_user),
@@ -771,7 +808,7 @@ async def clear_ai_cache(
         raise HTTPException(status_code=500, detail="Failed to clear cache")
 
 
-@router.get("/performance/metrics")
+@router.get("/performance/metrics", dependencies=[Depends(validate_request)])
 async def get_ai_performance_metrics(
     current_user: User = Depends(get_current_active_user),
 ):
@@ -806,7 +843,7 @@ async def get_ai_performance_metrics(
         raise HTTPException(status_code=500, detail="Failed to get performance metrics")
 
 
-@router.post("/performance/optimize")
+@router.post("/performance/optimize", dependencies=[Depends(validate_request)])
 async def optimize_ai_performance(
     enable_batching: bool = Query(default=True, description="Enable request batching"),
     enable_compression: bool = Query(default=True, description="Enable prompt compression"),
@@ -846,7 +883,7 @@ async def optimize_ai_performance(
         raise HTTPException(status_code=500, detail="Failed to update performance settings")
 
 
-@router.get("/analytics/dashboard")
+@router.get("/analytics/dashboard", dependencies=[Depends(validate_request)])
 async def get_analytics_dashboard(
     current_user: User = Depends(get_current_active_user),
 ):
@@ -871,7 +908,7 @@ async def get_analytics_dashboard(
         raise HTTPException(status_code=500, detail="Failed to get analytics dashboard")
 
 
-@router.get("/analytics/usage")
+@router.get("/analytics/usage", dependencies=[Depends(validate_request)])
 async def get_usage_analytics(
     days: int = Query(default=7, description="Number of days to analyze"),
     current_user: User = Depends(get_current_active_user),
@@ -896,7 +933,7 @@ async def get_usage_analytics(
         raise HTTPException(status_code=500, detail="Failed to get usage analytics")
 
 
-@router.get("/analytics/cost")
+@router.get("/analytics/cost", dependencies=[Depends(validate_request)])
 async def get_cost_analytics(
     days: int = Query(default=30, description="Number of days to analyze"),
     current_user: User = Depends(get_current_active_user),
@@ -921,7 +958,7 @@ async def get_cost_analytics(
         raise HTTPException(status_code=500, detail="Failed to get cost analytics")
 
 
-@router.get("/analytics/alerts")
+@router.get("/analytics/alerts", dependencies=[Depends(validate_request)])
 async def get_system_alerts(
     resolved: Optional[bool] = Query(default=None, description="Filter by resolution status"),
     current_user: User = Depends(get_current_active_user),
@@ -947,7 +984,7 @@ async def get_system_alerts(
         raise HTTPException(status_code=500, detail="Failed to get system alerts")
 
 
-@router.post("/analytics/alerts/{alert_id}/resolve")
+@router.post("/analytics/alerts/{alert_id}/resolve", dependencies=[Depends(validate_request)])
 async def resolve_system_alert(
     alert_id: str, current_user: User = Depends(get_current_active_user)
 ):
@@ -976,7 +1013,7 @@ async def resolve_system_alert(
         raise HTTPException(status_code=500, detail="Failed to resolve alert")
 
 
-@router.post("/smart-evidence/create-plan")
+@router.post("/smart-evidence/create-plan", dependencies=[Depends(validate_request)])
 async def create_smart_evidence_plan(
     framework: str = Query(..., description="Compliance framework"),
     target_weeks: int = Query(default=12, description="Target completion weeks"),
@@ -993,6 +1030,9 @@ async def create_smart_evidence_plan(
     - Business context-aware planning
     """
     try:
+        # Sanitize query parameters
+        framework = SecurityValidator.validate_no_dangerous_content(framework, "framework")
+
         business_profile = (
             db.query(BusinessProfile)
             .filter(BusinessProfile.user_id == str(str(current_user.id)))
@@ -1052,7 +1092,7 @@ async def create_smart_evidence_plan(
         raise HTTPException(status_code=500, detail="Failed to create smart evidence plan")
 
 
-@router.get("/smart-evidence/plan/{id}")
+@router.get("/smart-evidence/plan/{id}", dependencies=[Depends(validate_request)])
 async def get_smart_evidence_plan(id: str, current_user: User = Depends(get_current_active_user)):
     """
     Get details of a smart evidence collection plan.
@@ -1098,7 +1138,7 @@ async def get_smart_evidence_plan(id: str, current_user: User = Depends(get_curr
         raise HTTPException(status_code=500, detail="Failed to get smart evidence plan")
 
 
-@router.get("/smart-evidence/next-tasks/{id}")
+@router.get("/smart-evidence/next-tasks/{id}", dependencies=[Depends(validate_request)])
 async def get_next_priority_tasks(
     id: str,
     limit: int = Query(default=5, description="Number of tasks to return"),
@@ -1138,7 +1178,7 @@ async def get_next_priority_tasks(
         raise HTTPException(status_code=500, detail="Failed to get next priority tasks")
 
 
-@router.post("/smart-evidence/update-task/{plan_id}/{task_id}")
+@router.post("/smart-evidence/update-task/{plan_id}/{task_id}", dependencies=[Depends(validate_request)])
 async def update_evidence_task_status(
     plan_id: str,
     task_id: str,
@@ -1186,13 +1226,16 @@ async def update_evidence_task_status(
 
 
 
-@router.post("/compliance-gap-analysis", summary="Analyze compliance gaps")
+@router.post("/compliance-gap-analysis", summary="Analyze compliance gaps", dependencies=[Depends(validate_request)])
 async def compliance_gap_analysis(
     framework: str,
     current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_async_db),
 ):
     """Perform AI-powered compliance gap analysis for a specific framework."""
+    # Sanitize framework parameter
+    framework = SecurityValidator.validate_no_dangerous_content(framework, "framework")
+
     # Placeholder implementation
     return {
         "framework": framework,
@@ -1230,13 +1273,16 @@ async def compliance_gap_analysis(
     }
 
 
-@router.get("/smart-compliance-guidance", summary="Get smart compliance guidance")
+@router.get("/smart-compliance-guidance", summary="Get smart compliance guidance", dependencies=[Depends(validate_request)])
 async def get_smart_compliance_guidance_endpoint(
     framework: str = Query(..., description="Framework to get guidance for"),
     current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_async_db),
 ):
     """Get intelligent compliance guidance tailored to your business."""
+    # Sanitize framework parameter
+    framework = SecurityValidator.validate_no_dangerous_content(framework, "framework")
+
     # Placeholder implementation
     return {
         "framework": framework,
@@ -1291,7 +1337,7 @@ async def get_smart_compliance_guidance_endpoint(
     }
 
 
-@router.delete("/cache/clear", summary="Clear AI cache")
+@router.delete("/cache/clear", summary="Clear AI cache", dependencies=[Depends(validate_request)])
 async def clear_cache_with_pattern(
     pattern: str = Query(..., description="Cache pattern to clear"),
     current_user: User = Depends(get_current_active_user),
@@ -1311,7 +1357,7 @@ async def clear_cache_with_pattern(
     }
 
 
-@router.get("/quality/metrics")
+@router.get("/quality/metrics", dependencies=[Depends(validate_request)])
 async def get_quality_metrics(current_user: User = Depends(get_current_active_user)):
     """
     Get comprehensive quality metrics and performance indicators.
@@ -1364,7 +1410,7 @@ async def get_iq_agent_for_chat(db: AsyncSession) -> IQComplianceAgent:
     return _iq_agent
 
 
-@router.post("/iq-chat/{conversation_id}/messages", response_model=MessageResponse)
+@router.post("/iq-chat/{conversation_id}/messages", response_model=MessageResponse, dependencies=[Depends(validate_request)])
 async def send_iq_message(
     conversation_id: UUID,
     request: SendMessageRequest,
@@ -1525,7 +1571,7 @@ async def send_iq_message(
         raise HTTPException(status_code=500, detail="Failed to send message")
 
 
-@router.get("/iq-agent/status")
+@router.get("/iq-agent/status", dependencies=[Depends(validate_request)])
 async def get_iq_agent_status(
     current_user: User = Depends(get_current_active_user),
 ):

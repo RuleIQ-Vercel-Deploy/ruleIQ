@@ -1,6 +1,6 @@
 """
 from __future__ import annotations
-import requests
+import requests as http_requests
 import json
 
 # Constants
@@ -74,7 +74,7 @@ class CostTrackingMiddleware(BaseHTTPMiddleware):
         except HTTPException as e:
             await self._track_failed_request(request, e, start_time)
             raise
-        except requests.RequestException as e:
+        except http_requests.RequestException as e:
             await self._track_error_request(request, e, start_time)
             logger.error('Unexpected error in cost tracking middleware: %s' %
                 str(e))
@@ -102,7 +102,7 @@ class CostTrackingMiddleware(BaseHTTPMiddleware):
             if auth_header and auth_header.startswith('Bearer '):
                 return 'jwt_user'
             return None
-        except requests.RequestException as e:
+        except http_requests.RequestException as e:
             logger.warning('Failed to extract user ID: %s' % str(e))
             return None
 
@@ -156,7 +156,7 @@ class CostTrackingMiddleware(BaseHTTPMiddleware):
                         user_id, total_cost))
         except HTTPException:
             raise
-        except requests.RequestException as e:
+        except http_requests.RequestException as e:
             logger.error('Failed to check user budget limits: %s' % str(e))
 
     async def _track_successful_request(self, request: Request, response:
@@ -183,7 +183,7 @@ class CostTrackingMiddleware(BaseHTTPMiddleware):
                 request.state.cost_result = result
                 logger.debug('Tracked successful request %s: $%s' % (
                     tracking_info['request_id'], result['cost_usd']))
-        except (requests.RequestException, KeyError, IndexError) as e:
+        except (http_requests.RequestException, KeyError, IndexError) as e:
             logger.error('Failed to track successful request: %s' % str(e))
 
     async def _track_failed_request(self, request: Request, error:
@@ -209,7 +209,7 @@ class CostTrackingMiddleware(BaseHTTPMiddleware):
                         'error_type': 'http_exception', 'status_code':
                         error.status_code, 'error_detail': str(error.detail
                         ), 'middleware': 'cost_tracking'})
-        except (requests.RequestException, KeyError, IndexError) as e:
+        except (http_requests.RequestException, KeyError, IndexError) as e:
             logger.error('Failed to track failed request: %s' % str(e))
 
     async def _track_error_request(self, request: Request, error: Exception,
@@ -221,7 +221,7 @@ class CostTrackingMiddleware(BaseHTTPMiddleware):
             logger.error(
                 'Unexpected error in request %s: %s (response_time: %sms)' %
                 (tracking_info['request_id'], str(error), response_time))
-        except (requests.RequestException, KeyError, IndexError) as e:
+        except (http_requests.RequestException, KeyError, IndexError) as e:
             logger.error('Failed to track error request: %s' % str(e))
 
     async def _extract_token_usage(self, request: Request, response: Response
@@ -233,7 +233,7 @@ class CostTrackingMiddleware(BaseHTTPMiddleware):
                 if 'application/json' in content_type:
                     return self._mock_token_usage(request)
             return None
-        except (json.JSONDecodeError, requests.RequestException) as e:
+        except (json.JSONDecodeError, http_requests.RequestException) as e:
             logger.warning('Failed to extract token usage: %s' % str(e))
             return None
 
@@ -264,7 +264,7 @@ class CostTrackingMiddleware(BaseHTTPMiddleware):
         try:
             return {'model_name': 'gemini-1.5-flash', 'input_tokens': 500,
                 'output_tokens': 0}
-        except requests.RequestException:
+        except http_requests.RequestException:
             return None
 
     def _add_cost_headers(self, response: Response, request: Request) ->None:
@@ -280,7 +280,7 @@ class CostTrackingMiddleware(BaseHTTPMiddleware):
                 if hasattr(request.state, 'cost_tracking'
                     ) and request.state.cost_tracking.get('user_id'):
                     response.headers['X-Budget-Remaining'] = '50.00'
-        except (requests.RequestException, KeyError, IndexError) as e:
+        except (http_requests.RequestException, KeyError, IndexError) as e:
             logger.warning('Failed to add cost headers: %s' % str(e))
 
 

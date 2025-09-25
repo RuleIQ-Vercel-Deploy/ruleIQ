@@ -6,11 +6,20 @@ import json
 # Constants
 HTTP_OK = 200
 HTTP_UNAUTHORIZED = 401
-
 DEFAULT_TIMEOUT = 30
 
+# Pagination and Limits
 DEFAULT_LIMIT = 100
 MAX_RECORDS = 10000
+MAX_USERS_PER_PAGE = 500
+
+# Quality Score Thresholds  
+MFA_PENALTY = 0.3
+OLD_SESSION_PENALTY = 0.2
+INACTIVE_USER_PENALTY = 0.4
+HIGH_MFA_THRESHOLD = 0.9
+MEDIUM_MFA_THRESHOLD = 0.7
+SESSION_AGE_THRESHOLD_DAYS = 90
 
 
 Okta API client for identity and access management evidence collection

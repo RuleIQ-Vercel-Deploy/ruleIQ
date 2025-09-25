@@ -11,7 +11,8 @@ from sqlalchemy.exc import SQLAlchemyError
 import logging
 from enum import Enum
 
-from models.agentic_models import Agent, AgentSession, TrustLevel
+from models.agentic_models import Agent, AgentSession
+from services.agents.trust_algorithm import TrustLevel
 
 logger = logging.getLogger(__name__)
 

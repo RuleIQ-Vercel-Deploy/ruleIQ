@@ -6,11 +6,18 @@ from datetime import datetime
 from uuid import UUID, uuid4
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.security import OAuth2PasswordRequestForm
-from pydantic import BaseModel
+from pydantic import BaseModel, ValidationError
 from sqlalchemy.orm import Session
 from api.dependencies.auth import ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token, create_refresh_token, get_password_hash, oauth2_scheme, verify_password
 from api.middleware.rate_limiter import auth_rate_limit
 from api.schemas.models import Token, UserCreate, UserResponse
+from api.dependencies.security_validation import (
+    SecurityDependencies,
+    validate_json_body,
+    validate_request
+)
+from api.utils.security_validation import SecurityValidator, handle_validation_error
+from utils.input_validation import InputValidator, ValidationError as InputValidationError
 from database.db_setup import get_db
 from database.user import User
 from database.rbac import Role
@@ -35,8 +42,24 @@ class RegisterResponse(BaseModel):
 
 
 @router.post('/register', response_model=RegisterResponse, status_code=
-    status.HTTP_201_CREATED, dependencies=[Depends(auth_rate_limit())])
+    status.HTTP_201_CREATED, dependencies=[Depends(auth_rate_limit()), Depends(validate_request)])
 async def register(user: UserCreate, db: Session=Depends(get_db)) ->Any:
+    # Validate email format and content
+    try:
+        validated_email = InputValidator.validate_email(user.email)
+        user.email = SecurityValidator.validate_no_dangerous_content(validated_email, "email")
+    except (InputValidationError, HTTPException) as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                          detail=f"Invalid email: {str(e)}")
+
+    # Validate password strength and content
+    try:
+        InputValidator.validate_password(user.password)
+        SecurityValidator.validate_no_dangerous_content(user.password, "password")
+    except (InputValidationError, HTTPException) as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                          detail=f"Invalid password: {str(e)}")
+
     db_user = db.query(User).filter(User.email == user.email).first()
     if db_user:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=
@@ -76,12 +99,28 @@ async def register(user: UserCreate, db: Session=Depends(get_db)) ->Any:
 
 
 @router.post('/token', response_model=Token, dependencies=[Depends(
-    auth_rate_limit())])
+    auth_rate_limit()), Depends(validate_request)])
 async def login_for_access_token(request: Request, form_data:
     OAuth2PasswordRequestForm=Depends(), db: Session=Depends(get_db)) ->Dict[
     str, Any]:
+    # Validate and sanitize login credentials
+    try:
+        # Validate email (username field contains email)
+        validated_email = InputValidator.validate_email(form_data.username)
+        form_data.username = SecurityValidator.validate_no_dangerous_content(validated_email, "email")
+
+        # Validate password doesn't contain dangerous patterns
+        SecurityValidator.validate_no_dangerous_content(form_data.password, "password")
+    except (InputValidationError, HTTPException) as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                          detail="Invalid login credentials")
+
     ip_address = request.client.host if request.client else 'unknown'
     user_agent = request.headers.get('user-agent', 'unknown')
+
+    # Sanitize user agent to prevent injection
+    user_agent = SecurityValidator.validate_no_dangerous_content(user_agent, "user_agent")
+
     user = db.query(User).filter(User.email == form_data.username).first()
     if not user:
         logger.warning(
@@ -121,12 +160,28 @@ async def login_for_access_token(request: Request, form_data:
 
 
 @router.post('/login', response_model=Token, dependencies=[Depends(
-    auth_rate_limit())])
+    auth_rate_limit()), Depends(validate_request)])
 async def login(request: Request, login_data: LoginRequest, db: Session=
     Depends(get_db)) ->Dict[str, Any]:
     """Login endpoint - accepts JSON data for compatibility with tests"""
+    # Validate and sanitize login data
+    try:
+        # Validate email format and content
+        validated_email = InputValidator.validate_email(login_data.email)
+        login_data.email = SecurityValidator.validate_no_dangerous_content(validated_email, "email")
+
+        # Validate password doesn't contain dangerous patterns
+        SecurityValidator.validate_no_dangerous_content(login_data.password, "password")
+    except (InputValidationError, HTTPException) as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                          detail="Invalid login credentials")
+
     ip_address = request.client.host if request.client else 'unknown'
     user_agent = request.headers.get('user-agent', 'unknown')
+
+    # Sanitize user agent to prevent injection
+    user_agent = SecurityValidator.validate_no_dangerous_content(user_agent, "user_agent")
+
     user = db.query(User).filter(User.email == login_data.email).first()
     if not user:
         logger.warning(

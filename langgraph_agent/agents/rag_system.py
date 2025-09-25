@@ -501,7 +501,8 @@ class RAGSystem:
 
     async def _get_embedding(self, text: str) -> List[float]:
         """Get embedding for text with caching."""
-        text_hash = hashlib.md5(text.encode()).hexdigest()
+        # Use SHA-256 instead of MD5 for security compliance, truncated for cache key compatibility
+        text_hash = hashlib.sha256(text.encode()).hexdigest()[:16]
         if text_hash in self.embedding_cache:
             return self.embedding_cache[text_hash]
         embedding = await asyncio.to_thread(self.embeddings.embed_query, text)
@@ -529,7 +530,8 @@ class RAGSystem:
     def _generate_cache_key(self, *args) -> str:
         """Generate cache key for query results."""
         key_string = str(args)
-        return hashlib.md5(key_string.encode()).hexdigest()
+        # Use SHA-256 instead of MD5 for security compliance, truncated for cache key compatibility
+        return hashlib.sha256(key_string.encode()).hexdigest()[:16]
 
     async def get_document_by_id(self, document_id: str) -> Optional[DocumentMetadata]:
         """Get document metadata by ID."""

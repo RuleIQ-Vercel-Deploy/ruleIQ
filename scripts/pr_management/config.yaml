@@ -1,0 +1,255 @@
+# PR Management Configuration
+# This file configures the behavior of the PR management system
+
+# GitHub Repository Configuration
+repository:
+  owner: "OmarA1-Bakri"
+  name: "ruleIQ"
+  default_branch: "main"
+
+# PR Categories and Rules
+pr_categories:
+  dependabot:
+    auto_merge: true
+    required_checks:
+      - "ci"
+      - "security"
+      - "tests"
+    max_major_version_bumps: 0
+    allow_dev_dependencies: true
+    batch_size: 5
+    wait_for_checks_timeout: 1800  # 30 minutes
+    merge_method: "squash"
+    priority_packages:
+      - "security"
+      - "eslint"
+      - "pytest"
+      - "fastapi"
+      - "@types"
+    blocked_packages: []
+    require_all_checks_pass: true
+
+  security:
+    priority: "critical"
+    required_reviews: 1
+    auto_merge: false
+    merge_method: "merge"
+    required_checks:
+      - "Security Checks"
+      - "Aikido Security"
+      - "CodeQL Analysis"
+    severity_thresholds:
+      critical: "immediate"
+      high: "24_hours"
+      medium: "48_hours"
+      low: "1_week"
+
+  feature:
+    required_reviews: 2
+    max_file_changes: 100
+    auto_merge: false
+    merge_method: "merge"
+    required_checks:
+      - "Comprehensive Testing"
+      - "CodeQL Analysis"
+      - "Vercel Preview"
+    size_limits:
+      additions: 5000
+      deletions: 3000
+      files: 100
+
+  bugfix:
+    required_reviews: 1
+    auto_merge: false
+    merge_method: "squash"
+    required_checks:
+      - "tests"
+      - "ci"
+
+# CI/CD Configuration
+ci_checks:
+  required:
+    - "CodeQL Analysis"
+    - "Security Checks"
+    - "Comprehensive Testing"
+    - "Aikido Security"
+    - "Vercel Preview"
+
+  optional:
+    - "SonarCloud"
+    - "Performance Tests"
+    - "E2E Tests"
+
+  timeout_minutes: 30
+  retry_failed: true
+  max_retries: 2
+
+# Merge Strategies
+merge_strategies:
+  dependabot: "squash"
+  security: "merge"
+  feature: "merge"
+  bugfix: "squash"
+  documentation: "squash"
+  other: "squash"
+
+# Decision Matrix Weights
+decision_weights:
+  ci_passing: 30
+  security_priority: 25
+  no_conflicts: 20
+  has_tests: 15
+  size_appropriate: 10
+
+# Branch Management
+branch_management:
+  protected_branches:
+    - "main"
+    - "master"
+    - "develop"
+    - "staging"
+    - "production"
+
+  cleanup_merged: true
+  cleanup_stale_days: 60
+  prune_remote_refs: true
+
+# Notification Settings
+notifications:
+  enabled: false
+  slack_webhook: null
+  email_recipients: []
+  github_teams: []
+
+  triggers:
+    - "merge_failure"
+    - "security_critical"
+    - "ci_failure"
+    - "manual_review_required"
+
+# Processing Limits
+processing_limits:
+  max_prs_per_run: 20
+  max_dependabot_merges: 5
+  max_auto_merges: 10
+  max_retries_per_pr: 3
+
+# Security Settings
+security:
+  block_on_vulnerabilities: true
+  severity_levels:
+    - "critical"
+    - "high"
+    - "medium"
+    - "low"
+    - "info"
+
+  required_security_tools:
+    - "aikido"
+    - "codeql"
+    - "bandit"
+
+  auto_approve_patches: false
+
+# Dry Run Settings
+dry_run:
+  enabled: true  # Set to false for production use
+  log_level: "INFO"
+  save_reports: true
+  simulate_merges: true
+
+# Advanced Settings
+advanced:
+  use_github_cli: true
+  use_api_tokens: true
+  parallel_processing: false
+  cache_ttl_seconds: 300
+  rate_limit_buffer: 100
+
+  # PR-specific overrides
+  pr_overrides:
+    "122":  # PR #122 specific settings
+      manual_review: true
+      staged_merge: true
+      require_approvals: 3
+
+    "93":  # Copilot security fix
+      priority: "high"
+      auto_merge: false
+
+# Reporting
+reporting:
+  generate_markdown: true
+  generate_json: true
+  generate_html: false
+
+  output_dir: "./reports"
+
+  include_sections:
+    - "summary"
+    - "recommendations"
+    - "actions_taken"
+    - "failures"
+    - "metrics"
+
+# Orchestration Settings
+orchestration:
+  phases:
+    - name: "analysis"
+      enabled: true
+      timeout: 300
+
+    - name: "ci_check"
+      enabled: true
+      timeout: 600
+
+    - name: "security_prs"
+      enabled: true
+      priority: 1
+
+    - name: "dependabot_prs"
+      enabled: true
+      priority: 2
+
+    - name: "feature_prs"
+      enabled: true
+      priority: 3
+
+    - name: "decision_making"
+      enabled: true
+      priority: 4
+
+    - name: "branch_cleanup"
+      enabled: true
+      priority: 5
+
+# Known Issues (PRs to handle specially)
+known_issues:
+  pr_104:
+    type: "security"
+    source: "aikido"
+    action: "manual_review"
+    reason: "Aikido security fix - requires careful validation"
+
+  pr_105:
+    type: "security"
+    source: "aikido"
+    action: "manual_review"
+    reason: "Aikido security fix - requires careful validation"
+
+  pr_106:
+    type: "security"
+    source: "aikido"
+    action: "manual_review"
+    reason: "Aikido security fix - requires careful validation"
+
+  pr_122:
+    type: "feature"
+    action: "staged_merge"
+    reason: "Massive PR with 54,851 additions across 357 files"
+
+  pr_93:
+    type: "security"
+    source: "copilot"
+    action: "manual_review"
+    reason: "Copilot autofix for CodeQL alert"

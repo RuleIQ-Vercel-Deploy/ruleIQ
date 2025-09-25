@@ -1,7 +1,7 @@
 # ruleIQ Test Execution Makefile
 # Provides convenient shortcuts for running tests in different modes
 
-.PHONY: help test-fast test-integration test-performance test-full test-ci test-ai test-security test-e2e test-parallel test-sequential install-test-deps test-groups test-groups-parallel test-groups-list test-group-unit test-group-ai test-group-api test-group-endpoints test-group-advanced test-group-e2e
+.PHONY: help test-fast test-integration test-performance test-full test-ci test-ai test-security test-e2e test-parallel test-sequential install-test-deps test-groups test-groups-parallel test-groups-list test-group-unit test-group-ai test-group-api test-group-endpoints test-group-advanced test-group-e2e validate-fastapi
 
 # Default target
 help:
@@ -39,10 +39,16 @@ help:
 	@echo "  make install-test-deps - Install test dependencies"
 	@echo "  make list-test-modes   - List all available test modes"
 	@echo "  make test-info         - Show system info for test optimization"
+	@echo "  make validate-fastapi  - Validate FastAPI app configuration"
 
 # Install test dependencies
 install-test-deps:
 	pip install pytest-xdist pytest-parallel pytest-benchmark pytest-timeout pytest-asyncio
+
+# Validate FastAPI application configuration
+validate-fastapi:
+	@echo "🔍 Validating FastAPI application configuration..."
+	@python3 -m scripts.validate_fastapi_app
 
 # Chunked test execution modes
 test-fast:

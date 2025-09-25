@@ -8,12 +8,39 @@ from botocore.exceptions import ClientError, NoCredentialsError, BotoCoreError
 from typing import Dict, List, Any, Optional
 import json
 from datetime import datetime, timedelta, timezone
-from .base_api_client import BaseAPIClient, APICredentials, EvidenceItem, BaseEvidenceCollector, APIException, AuthType
+from .base_api_client import (
+    BaseAPIClient, APICredentials, EvidenceItem,
+    BaseEvidenceCollector, APIException, AuthType
+)
+from config.logging_config import get_logger
+
+# Network Ports
 SSH_PORT = 22
 RDP_PORT = 3389
-from config.logging_config import get_logger
-logger = get_logger(__name__)
+
+# Time Constants
 KEY_AGE_THRESHOLD_DAYS = 90
+DEFAULT_SESSION_DURATION = 3600
+MAX_POLICY_RESULTS = 100
+MAX_USERS_PER_PAGE = 500
+
+# Quality Score Penalties
+MFA_PENALTY = 0.3
+OLD_KEY_PENALTY = 0.2
+WILDCARD_ACTION_PENALTY = 0.3
+WILDCARD_RESOURCE_PENALTY = 0.4
+
+# Pagination and Result Limits
+MAX_POLICY_RESULTS = 100
+MAX_USERS_PER_PAGE = 500
+
+# Quality Score Thresholds
+MFA_PENALTY = 0.3
+OLD_KEY_PENALTY = 0.2
+WILDCARD_ACTION_PENALTY = 0.3
+WILDCARD_RESOURCE_PENALTY = 0.4
+
+logger = get_logger(__name__)
 
 
 class AWSAPIException(APIException):
@@ -80,7 +107,7 @@ class AWSAPIClient(BaseAPIClient):
             return await self.authenticate()
         return True
 
-    def get_evidence_collector(self, evidence_type: str) ->Optional[Any]:
+    def get_evidence_collector(self, evidence_type: str) -> Optional[BaseEvidenceCollector]:
         """Get AWS evidence collector for specific evidence type"""
         if not self.aws_session:
             return None
@@ -131,7 +158,7 @@ class AWSAPIClient(BaseAPIClient):
 class AWSIAMEvidenceCollector(BaseEvidenceCollector):
     """Collect IAM-related evidence from AWS"""
 
-    async def collect(self, **kwargs) ->List[EvidenceItem]:
+    async def collect(self, **kwargs: Any) -> List[EvidenceItem]:
         """Collect IAM policies, users, roles, and access patterns"""
         evidence = []
         try:
@@ -157,20 +184,23 @@ class AWSIAMEvidenceCollector(BaseEvidenceCollector):
                             'DefaultVersionId'])
                         entities = iam_client.list_entities_for_policy(
                             PolicyArn=policy['Arn'])
-                        evidence_item = self.create_evidence_item(evidence_type
-                            ='iam_policy', resource_id=policy['Arn'],
-                            resource_name=policy['PolicyName'], data={
-                            'policy_name': policy['PolicyName'],
-                            'policy_id': policy['PolicyId'], 'arn': policy[
-                            'Arn'], 'path': policy['Path'],
-                            'policy_document': policy_version[
-                            'PolicyVersion']['Document'],
-                            'default_version_id': policy['DefaultVersionId'
-                            ], 'attachment_count': policy['AttachmentCount'
-                            ], 'permissions_boundary_usage_count': policy.
-                            get('PermissionsBoundaryUsageCount', 0),
-                            'is_attachable': policy['IsAttachable'],
-                            'description': policy.get('Description', ''),
+                        evidence_item = self.create_evidence_item(
+                            evidence_type='iam_policy',
+                            resource_id=policy['Arn'],
+                            resource_name=policy['PolicyName'],
+                            data={
+                                'policy_name': policy['PolicyName'],
+                                'policy_id': policy['PolicyId'],
+                                'arn': policy['Arn'],
+                                'path': policy['Path'],
+                                'policy_document': policy_version['PolicyVersion']['Document'],
+                                'default_version_id': policy['DefaultVersionId'],
+                                'attachment_count': policy['AttachmentCount'],
+                                'permissions_boundary_usage_count': policy.get(
+                                    'PermissionsBoundaryUsageCount', 0
+                                ),
+                                'is_attachable': policy['IsAttachable'],
+                                'description': policy.get('Description', ''),
                             'create_date': policy['CreateDate'].isoformat(),
                             'update_date': policy['UpdateDate'].isoformat(),
                             'attached_users': [user['UserName'] for user in
@@ -273,7 +303,7 @@ class AWSIAMEvidenceCollector(BaseEvidenceCollector):
                             'AssumeRolePolicyDocument'], 'description':
                             role.get('Description', ''),
                             'max_session_duration': role.get(
-                            'MaxSessionDuration', 3600), 'create_date':
+                            'MaxSessionDuration', DEFAULT_SESSION_DURATION), 'create_date':
                             role['CreateDate'].isoformat(), 'last_used':
                             role.get('RoleLastUsed', {}).get('LastUsedDate',
                             '').isoformat() if role.get('RoleLastUsed', {})
@@ -296,8 +326,7 @@ class AWSIAMEvidenceCollector(BaseEvidenceCollector):
             self.logger.error('Error collecting IAM roles: %s' % e)
         return evidence
 
-    def _calculate_policy_quality_score(self, policy: Dict, policy_document:
-        Any) ->float:
+    def _calculate_policy_quality_score(self, policy: Dict[str, Any], policy_document: Any) -> float:
         """Calculate quality score for IAM policy"""
         score = 1.0
         if not policy.get('Description'):
@@ -312,33 +341,32 @@ class AWSIAMEvidenceCollector(BaseEvidenceCollector):
                     if isinstance(actions, str):
                         actions = [actions]
                     if '*' in actions:
-                        score -= 0.3
+                        score -= WILDCARD_ACTION_PENALTY
                     resources = statement.get('Resource', [])
                     if isinstance(resources, str):
                         resources = [resources]
                     if '*' in resources and '*' in actions:
-                        score -= 0.4
+                        score -= WILDCARD_RESOURCE_PENALTY
         return max(0.0, score)
 
-    def _calculate_user_quality_score(self, user: Dict, mfa_devices: List,
-        access_keys: List) ->float:
+    def _calculate_user_quality_score(self, user: Dict[str, Any], mfa_devices: List[Dict[str, Any]], access_keys: List[Dict[str, Any]]) -> float:
         """Calculate quality score for IAM user"""
         score = 1.0
         if not mfa_devices:
-            score -= 0.3
+            score -= MFA_PENALTY
         for key in access_keys:
             key_age = (datetime.now(timezone.utc) - key['CreateDate'].
                 replace(tzinfo=None)).days
             if key_age > KEY_AGE_THRESHOLD_DAYS:
-                score -= 0.2
+                score -= OLD_KEY_PENALTY
         if user.get('PasswordLastUsed'):
             last_used = user['PasswordLastUsed'].replace(tzinfo=None)
             days_since_login = (datetime.now(timezone.utc) - last_used).days
             if days_since_login > KEY_AGE_THRESHOLD_DAYS:
-                score -= 0.2
+                score -= OLD_KEY_PENALTY
         return max(0.0, score)
 
-    def _calculate_role_quality_score(self, role: Dict) ->float:
+    def _calculate_role_quality_score(self, role: Dict[str, Any]) -> float:
         """Calculate quality score for IAM role"""
         score = 1.0
         if not role.get('Description'):
@@ -359,8 +387,7 @@ class AWSIAMEvidenceCollector(BaseEvidenceCollector):
 class AWSCloudTrailCollector(BaseEvidenceCollector):
     """Collect CloudTrail audit logs for compliance evidence"""
 
-    async def collect(self, start_time: datetime=None, event_types: List[
-        str]=None, **kwargs) ->List[EvidenceItem]:
+    async def collect(self, start_time: Optional[datetime] = None, event_types: Optional[List[str]] = None, **kwargs: Any) -> List[EvidenceItem]:
         """Collect CloudTrail events for audit evidence"""
         if not start_time:
             start_time = datetime.now(timezone.utc) - timedelta(days=7)
@@ -386,7 +413,7 @@ class AWSCloudTrailCollector(BaseEvidenceCollector):
                 try:
                     response = cloudtrail.lookup_events(LookupAttributes=[
                         lookup_attr], StartTime=start_time, EndTime=
-                        datetime.now(timezone.utc), MaxItems=100)
+                        datetime.now(timezone.utc), MaxItems=MAX_POLICY_RESULTS)
                     for event in response['Events']:
                         event_detail = json.loads(event.get(
                             'CloudTrailEvent', '{}'))
@@ -425,7 +452,7 @@ class AWSCloudTrailCollector(BaseEvidenceCollector):
                 )
         return evidence
 
-    def _calculate_log_quality_score(self, event_detail: Dict) ->float:
+    def _calculate_log_quality_score(self, event_detail: Dict[str, Any]) -> float:
         """Calculate quality score for audit log entry"""
         score = 1.0
         required_fields = ['userIdentity', 'sourceIPAddress', 'eventTime',
@@ -442,7 +469,7 @@ class AWSCloudTrailCollector(BaseEvidenceCollector):
 class AWSSecurityGroupCollector(BaseEvidenceCollector):
     """Collect Security Group configurations for network security evidence"""
 
-    async def collect(self, **kwargs) ->List[EvidenceItem]:
+    async def collect(self, **kwargs: Any) -> List[EvidenceItem]:
         """Collect security group configurations"""
         evidence = []
         try:
@@ -480,7 +507,7 @@ class AWSSecurityGroupCollector(BaseEvidenceCollector):
                 f'Failed to collect security group evidence: {e}')
         return evidence
 
-    def _calculate_security_group_quality_score(self, sg: Dict) ->float:
+    def _calculate_security_group_quality_score(self, sg: Dict[str, Any]) -> float:
         """Calculate quality score for security group"""
         score = 1.0
         for rule in sg.get('IpPermissions', []):
@@ -490,7 +517,7 @@ class AWSSecurityGroupCollector(BaseEvidenceCollector):
                         ) == RDP_PORT:
                         score -= 0.5
                     else:
-                        score -= 0.2
+                        score -= OLD_KEY_PENALTY
         if not sg.get('Description') or sg['Description'] == sg['GroupName']:
             score -= 0.1
         return max(0.0, score)
@@ -498,41 +525,41 @@ class AWSSecurityGroupCollector(BaseEvidenceCollector):
 
 class AWSVPCCollector(BaseEvidenceCollector):
 
-    async def collect(self, **kwargs) ->List[EvidenceItem]:
+    async def collect(self, **kwargs: Any) -> List[EvidenceItem]:
         return []
 
 
 class AWSConfigCollector(BaseEvidenceCollector):
 
-    async def collect(self, **kwargs) ->List[EvidenceItem]:
+    async def collect(self, **kwargs: Any) -> List[EvidenceItem]:
         return []
 
 
 class AWSGuardDutyCollector(BaseEvidenceCollector):
 
-    async def collect(self, **kwargs) ->List[EvidenceItem]:
+    async def collect(self, **kwargs: Any) -> List[EvidenceItem]:
         return []
 
 
 class AWSInspectorCollector(BaseEvidenceCollector):
 
-    async def collect(self, **kwargs) ->List[EvidenceItem]:
+    async def collect(self, **kwargs: Any) -> List[EvidenceItem]:
         return []
 
 
 class AWSComplianceCollector(BaseEvidenceCollector):
 
-    async def collect(self, **kwargs) ->List[EvidenceItem]:
+    async def collect(self, **kwargs: Any) -> List[EvidenceItem]:
         return []
 
 
 class AWSS3Collector(BaseEvidenceCollector):
 
-    async def collect(self, **kwargs) ->List[EvidenceItem]:
+    async def collect(self, **kwargs: Any) -> List[EvidenceItem]:
         return []
 
 
 class AWSEC2Collector(BaseEvidenceCollector):
 
-    async def collect(self, **kwargs) ->List[EvidenceItem]:
+    async def collect(self, **kwargs: Any) -> List[EvidenceItem]:
         return []

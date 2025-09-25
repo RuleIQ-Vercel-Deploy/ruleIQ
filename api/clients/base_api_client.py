@@ -4,7 +4,10 @@ from __future__ import annotations
 Base API client for all enterprise integrations
 """
 from abc import ABC, abstractmethod
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any, Optional, Type, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .base_api_client import BaseEvidenceCollector
 from dataclasses import dataclass, field
 import asyncio
 import aiohttp
@@ -13,11 +16,21 @@ import hashlib
 from datetime import datetime, timezone
 from enum import Enum
 from config.logging_config import get_logger
+
+# HTTP Status Codes
 HTTP_BAD_REQUEST = 400
 HTTP_UNAUTHORIZED = 401
 HTTP_TOO_MANY_REQUESTS = 429
 HTTP_INTERNAL_ERROR = 500
+
+# Time Constants
 HOUR_IN_SECONDS = 3600
+
+# Request Constants
+DEFAULT_TIMEOUT = 30
+DEFAULT_RETRY_ATTEMPTS = 3
+CLIENT_TIMEOUT = 60
+REQUEST_ID_LENGTH = 12
 logger = get_logger(__name__)
 
 
@@ -47,8 +60,8 @@ class APIRequest:
     params: Optional[Dict[str, Any]] = None
     headers: Optional[Dict[str, str]] = None
     body: Optional[Any] = None
-    timeout: int = 30
-    retry_attempts: int = 3
+    timeout: int = DEFAULT_TIMEOUT
+    retry_attempts: int = DEFAULT_RETRY_ATTEMPTS
 
 
 @dataclass
@@ -154,7 +167,7 @@ class BaseAPIClient(ABC):
         pass
 
     @abstractmethod
-    def get_evidence_collector(self, evidence_type: str) ->None:
+    def get_evidence_collector(self, evidence_type: str) -> Optional["BaseEvidenceCollector"]:
         """Get evidence collector for specific evidence type"""
         pass
 
@@ -216,20 +229,24 @@ class BaseAPIClient(ABC):
     async def _execute_request(self, request: APIRequest) ->APIResponse:
         """Execute HTTP request with full error handling"""
         if not self.session:
-            timeout = aiohttp.ClientTimeout(total=60)
+            timeout = aiohttp.ClientTimeout(total=CLIENT_TIMEOUT)
             self.session = aiohttp.ClientSession(timeout=timeout)
         start_time = time.time()
         request_id = self._generate_request_id(request)
         try:
             headers = await self._prepare_headers(request.headers or {})
-            logger.debug('Making %s request to %s: %s' % (request.method,
-                self.provider_name, request.endpoint))
-            url = (f'{self.base_url}{request.endpoint}' if self.base_url else
-                request.endpoint)
-            async with self.session.request(method=request.method, url=url,
-                params=request.params, headers=headers, json=request.body if
-                request.method not in ['GET', 'DELETE'] else None, timeout=
-                aiohttp.ClientTimeout(total=request.timeout)) as response:
+            logger.debug('Making %s request to %s: %s' % (
+                request.method, self.provider_name, request.endpoint))
+            url = (f'{self.base_url}{request.endpoint}'
+                   if self.base_url else request.endpoint)
+            async with self.session.request(
+                method=request.method,
+                url=url,
+                params=request.params,
+                headers=headers,
+                json=request.body if request.method not in ['GET', 'DELETE'] else None,
+                timeout=aiohttp.ClientTimeout(total=request.timeout)
+            ) as response:
                 response_time = time.time() - start_time
                 if response.status == HTTP_TOO_MANY_REQUESTS:
                     raise APIRateLimitException(
@@ -240,23 +257,28 @@ class BaseAPIClient(ABC):
                         f'Authentication failed for {self.provider_name}')
                 elif response.status >= HTTP_INTERNAL_ERROR:
                     raise APIConnectionException(
-                        f'Server error from {self.provider_name}: {response.status}',
-                        )
+                        f'Server error from {self.provider_name}: {response.status}'
+                    )
                 elif response.status >= HTTP_BAD_REQUEST:
                     error_text = await response.text()
                     raise APIException(
-                        f'Client error from {self.provider_name}: {response.status} - {error_text}',
-                        )
+                        f'Client error from {self.provider_name}: '
+                        f'{response.status} - {error_text}'
+                    )
                 response_data = await self._parse_response(response)
-                logger.debug('Successful %s request to %s: %s' % (request.
-                    method, self.provider_name, response.status))
-                return APIResponse(status_code=response.status, data=
-                    response_data, headers=dict(response.headers),
-                    response_time=response_time, request_id=request_id)
+                logger.debug('Successful %s request to %s: %s' % (
+                    request.method, self.provider_name, response.status))
+                return APIResponse(
+                    status_code=response.status,
+                    data=response_data,
+                    headers=dict(response.headers),
+                    response_time=response_time,
+                    request_id=request_id
+                )
         except asyncio.TimeoutError:
             raise APITimeoutException(
-                f'Request to {self.provider_name} timed out after {request.timeout}s',
-                )
+                f'Request to {self.provider_name} timed out after {request.timeout}s'
+            )
         except aiohttp.ClientError as e:
             raise APIConnectionException(
                 f'Connection error to {self.provider_name}: {str(e)}')
@@ -279,8 +301,8 @@ class BaseAPIClient(ABC):
         else:
             return await response.read()
 
-    async def _prepare_headers(self, additional_headers: Dict[str, str]=None
-        ) ->Dict[str, str]:
+    async def _prepare_headers(self, additional_headers: Optional[Dict[str, str]] = None
+        ) -> Dict[str, str]:
         """Prepare headers with authentication - to be implemented by subclasses"""
         headers = {'User-Agent': 'ruleIQ-compliance-collector/1.0',
             'Accept': 'application/json', 'Content-Type': 'application/json'}
@@ -288,12 +310,12 @@ class BaseAPIClient(ABC):
             headers.update(additional_headers)
         return headers
 
-    def _generate_request_id(self, request: APIRequest) ->str:
+    def _generate_request_id(self, request: APIRequest) -> str:
         """Generate unique request ID for tracking"""
         request_data = f'{request.method}:{request.endpoint}:{time.time()}'
-        return hashlib.sha256(request_data.encode()).hexdigest()[:12]
+        return hashlib.sha256(request_data.encode()).hexdigest()[:REQUEST_ID_LENGTH]
 
-    async def collect_evidence(self, evidence_type: str, **kwargs) ->List[
+    async def collect_evidence(self, evidence_type: str, **kwargs: Any) -> List[
         EvidenceItem]:
         """Collect specific evidence type from this API"""
         evidence_collector = self.get_evidence_collector(evidence_type)
@@ -332,29 +354,38 @@ class BaseAPIClient(ABC):
             await self.session.close()
             self.session = None
 
-    async def __aenter__(self) ->'BaseAPIClient':
+    async def __aenter__(self) -> 'BaseAPIClient':
         return self
 
-    async def __aexit__(self, exc_type, exc_val, exc_tb) ->None:
+    async def __aexit__(self,
+                       exc_type: Optional[Type[BaseException]],
+                       exc_val: Optional[BaseException],
+                       exc_tb: Optional[Any]) -> None:
         await self.close()
 
 
 class BaseEvidenceCollector(ABC):
     """Base class for evidence collectors"""
 
-    def __init__(self, api_client) ->None:
+    def __init__(self, api_client: 'BaseAPIClient') -> None:
         self.api_client = api_client
         self.logger = get_logger(f'{self.__class__.__name__}')
 
     @abstractmethod
-    async def collect(self, **kwargs) ->List[EvidenceItem]:
+    async def collect(self, **kwargs: Any) -> List[EvidenceItem]:
         """Collect evidence items"""
         pass
 
-    def create_evidence_item(self, evidence_type: str, resource_id: str,
-        resource_name: str, data: Dict[str, Any], compliance_controls: List
-        [str], quality_score: float=1.0, metadata: Dict[str, Any]=None
-        ) ->EvidenceItem:
+    def create_evidence_item(
+        self,
+        evidence_type: str,
+        resource_id: str,
+        resource_name: str,
+        data: Dict[str, Any],
+        compliance_controls: List[str],
+        quality_score: float = 1.0,
+        metadata: Optional[Dict[str, Any]] = None
+    ) -> EvidenceItem:
         """Helper method to create evidence items"""
         return EvidenceItem(evidence_type=evidence_type, resource_id=
             resource_id, resource_name=resource_name, data=data,

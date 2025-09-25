@@ -486,7 +486,8 @@ Policy content to be customized.""")
             customization_level, 'org_name': request.business_context.
             organization_name, 'industry': request.business_context.industry}
         key_string = json.dumps(key_data, sort_keys=True)
-        return hashlib.md5(key_string.encode()).hexdigest()
+        # Use SHA-256 instead of MD5 for security compliance in policy caching
+        return hashlib.sha256(key_string.encode()).hexdigest()[:32]
 
     def refine_policy(self, original_policy: str, feedback: List[str],
         framework: ComplianceFramework) ->PolicyRefinementResponse:

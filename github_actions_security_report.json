@@ -1,0 +1,645 @@
+[
+  {
+    "file": ".github/workflows/ci.yml",
+    "issues": [],
+    "warnings": [],
+    "passed": [
+      {
+        "line": 55,
+        "type": "pinned_action",
+        "message": "Action 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' is properly pinned"
+      },
+      {
+        "line": 58,
+        "type": "pinned_action",
+        "message": "Action 'actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b' is properly pinned"
+      },
+      {
+        "line": 63,
+        "type": "pinned_action",
+        "message": "Action 'actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57' is properly pinned"
+      },
+      {
+        "line": 97,
+        "type": "pinned_action",
+        "message": "Action 'codecov/codecov-action@b9fd7d16f6d7d1b5d2bec1a2887e65ceed900238' is properly pinned"
+      },
+      {
+        "line": 111,
+        "type": "pinned_action",
+        "message": "Action 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' is properly pinned"
+      },
+      {
+        "line": 114,
+        "type": "pinned_action",
+        "message": "Action 'pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2' is properly pinned"
+      },
+      {
+        "line": 119,
+        "type": "pinned_action",
+        "message": "Action 'actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af' is properly pinned"
+      },
+      {
+        "line": 126,
+        "type": "pinned_action",
+        "message": "Action 'actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57' is properly pinned"
+      },
+      {
+        "line": 182,
+        "type": "pinned_action",
+        "message": "Action 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' is properly pinned"
+      },
+      {
+        "line": 185,
+        "type": "pinned_action",
+        "message": "Action 'actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b' is properly pinned"
+      },
+      {
+        "line": 225,
+        "type": "pinned_action",
+        "message": "Action 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' is properly pinned"
+      },
+      {
+        "line": 228,
+        "type": "pinned_action",
+        "message": "Action 'docker/setup-buildx-action@6524bf65af31da8d45b59e8c27de4bd072b392f5' is properly pinned"
+      },
+      {
+        "line": 231,
+        "type": "pinned_action",
+        "message": "Action 'docker/build-push-action@ca052bb54ab0790a636c9b5f226502c73d547a25' is properly pinned"
+      },
+      {
+        "line": 241,
+        "type": "pinned_action",
+        "message": "Action 'docker/build-push-action@ca052bb54ab0790a636c9b5f226502c73d547a25' is properly pinned"
+      },
+      {
+        "line": 259,
+        "type": "pinned_action",
+        "message": "Action 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' is properly pinned"
+      },
+      {
+        "line": 262,
+        "type": "pinned_action",
+        "message": "Action 'actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b' is properly pinned"
+      },
+      {
+        "type": "has_permissions",
+        "message": "Workflow has permissions section defined"
+      }
+    ]
+  },
+  {
+    "file": ".github/workflows/codeql.yml",
+    "issues": [],
+    "warnings": [],
+    "passed": [
+      {
+        "line": 62,
+        "type": "pinned_action",
+        "message": "Action 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' is properly pinned"
+      },
+      {
+        "line": 72,
+        "type": "pinned_action",
+        "message": "Action 'github/codeql-action/init@9278e421667d5d90a2839487a482448c4ec7df4d' is properly pinned"
+      },
+      {
+        "line": 100,
+        "type": "pinned_action",
+        "message": "Action 'github/codeql-action/analyze@9278e421667d5d90a2839487a482448c4ec7df4d' is properly pinned"
+      },
+      {
+        "type": "has_permissions",
+        "message": "Workflow has permissions section defined"
+      }
+    ]
+  },
+  {
+    "file": ".github/workflows/dependencies.yml",
+    "issues": [],
+    "warnings": [
+      {
+        "type": "workflow_level_write_permissions",
+        "message": "Consider moving write permissions (contents, pull-requests, security-events) to job level for better isolation",
+        "severity": "LOW"
+      }
+    ],
+    "passed": [
+      {
+        "line": 26,
+        "type": "pinned_action",
+        "message": "Action 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' is properly pinned"
+      },
+      {
+        "line": 29,
+        "type": "pinned_action",
+        "message": "Action 'actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b' is properly pinned"
+      },
+      {
+        "line": 110,
+        "type": "pinned_action",
+        "message": "Action 'actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b' is properly pinned"
+      },
+      {
+        "line": 124,
+        "type": "pinned_action",
+        "message": "Action 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' is properly pinned"
+      },
+      {
+        "line": 127,
+        "type": "pinned_action",
+        "message": "Action 'pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2' is properly pinned"
+      },
+      {
+        "line": 132,
+        "type": "pinned_action",
+        "message": "Action 'actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af' is properly pinned"
+      },
+      {
+        "line": 206,
+        "type": "pinned_action",
+        "message": "Action 'actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b' is properly pinned"
+      },
+      {
+        "line": 219,
+        "type": "pinned_action",
+        "message": "Action 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' is properly pinned"
+      },
+      {
+        "line": 249,
+        "type": "pinned_action",
+        "message": "Action 'actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16' is properly pinned"
+      },
+      {
+        "line": 268,
+        "type": "pinned_action",
+        "message": "Action 'actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea' is properly pinned"
+      },
+      {
+        "type": "has_permissions",
+        "message": "Workflow has permissions section defined"
+      },
+      {
+        "type": "uses_secrets",
+        "message": "Properly using GitHub secrets for sensitive data"
+      }
+    ]
+  },
+  {
+    "file": ".github/workflows/deploy-vercel.yml",
+    "issues": [],
+    "warnings": [
+      {
+        "type": "workflow_level_write_permissions",
+        "message": "Consider moving write permissions (deployments, pull-requests) to job level for better isolation",
+        "severity": "LOW"
+      }
+    ],
+    "passed": [
+      {
+        "line": 38,
+        "type": "pinned_action",
+        "message": "Action 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' is properly pinned"
+      },
+      {
+        "line": 41,
+        "type": "pinned_action",
+        "message": "Action 'pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2' is properly pinned"
+      },
+      {
+        "line": 46,
+        "type": "pinned_action",
+        "message": "Action 'actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af' is properly pinned"
+      },
+      {
+        "line": 80,
+        "type": "pinned_action",
+        "message": "Action 'actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea' is properly pinned"
+      },
+      {
+        "line": 114,
+        "type": "pinned_action",
+        "message": "Action 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' is properly pinned"
+      },
+      {
+        "line": 117,
+        "type": "pinned_action",
+        "message": "Action 'pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2' is properly pinned"
+      },
+      {
+        "line": 122,
+        "type": "pinned_action",
+        "message": "Action 'actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af' is properly pinned"
+      },
+      {
+        "line": 156,
+        "type": "pinned_action",
+        "message": "Action 'actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea' is properly pinned"
+      },
+      {
+        "line": 196,
+        "type": "pinned_action",
+        "message": "Action 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' is properly pinned"
+      },
+      {
+        "line": 199,
+        "type": "pinned_action",
+        "message": "Action 'pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2' is properly pinned"
+      },
+      {
+        "line": 204,
+        "type": "pinned_action",
+        "message": "Action 'actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af' is properly pinned"
+      },
+      {
+        "type": "has_permissions",
+        "message": "Workflow has permissions section defined"
+      },
+      {
+        "type": "uses_secrets",
+        "message": "Properly using GitHub secrets for sensitive data"
+      }
+    ]
+  },
+  {
+    "file": ".github/workflows/frontend.yml",
+    "issues": [],
+    "warnings": [],
+    "passed": [
+      {
+        "line": 33,
+        "type": "pinned_action",
+        "message": "Action 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' is properly pinned"
+      },
+      {
+        "line": 36,
+        "type": "pinned_action",
+        "message": "Action 'pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2' is properly pinned"
+      },
+      {
+        "line": 41,
+        "type": "pinned_action",
+        "message": "Action 'actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af' is properly pinned"
+      },
+      {
+        "line": 52,
+        "type": "pinned_action",
+        "message": "Action 'actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57' is properly pinned"
+      },
+      {
+        "line": 81,
+        "type": "pinned_action",
+        "message": "Action 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' is properly pinned"
+      },
+      {
+        "line": 84,
+        "type": "pinned_action",
+        "message": "Action 'pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2' is properly pinned"
+      },
+      {
+        "line": 89,
+        "type": "pinned_action",
+        "message": "Action 'actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af' is properly pinned"
+      },
+      {
+        "line": 103,
+        "type": "pinned_action",
+        "message": "Action 'actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b' is properly pinned"
+      },
+      {
+        "line": 123,
+        "type": "pinned_action",
+        "message": "Action 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' is properly pinned"
+      },
+      {
+        "line": 126,
+        "type": "pinned_action",
+        "message": "Action 'pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2' is properly pinned"
+      },
+      {
+        "line": 131,
+        "type": "pinned_action",
+        "message": "Action 'actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af' is properly pinned"
+      },
+      {
+        "line": 159,
+        "type": "pinned_action",
+        "message": "Action 'actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b' is properly pinned"
+      },
+      {
+        "line": 170,
+        "type": "pinned_action",
+        "message": "Action 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' is properly pinned"
+      },
+      {
+        "line": 173,
+        "type": "pinned_action",
+        "message": "Action 'pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2' is properly pinned"
+      },
+      {
+        "line": 178,
+        "type": "pinned_action",
+        "message": "Action 'actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af' is properly pinned"
+      },
+      {
+        "line": 201,
+        "type": "pinned_action",
+        "message": "Action 'actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b' is properly pinned"
+      },
+      {
+        "line": 217,
+        "type": "pinned_action",
+        "message": "Action 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' is properly pinned"
+      },
+      {
+        "line": 220,
+        "type": "pinned_action",
+        "message": "Action 'pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2' is properly pinned"
+      },
+      {
+        "line": 225,
+        "type": "pinned_action",
+        "message": "Action 'actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af' is properly pinned"
+      },
+      {
+        "line": 247,
+        "type": "pinned_action",
+        "message": "Action 'actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b' is properly pinned"
+      },
+      {
+        "line": 255,
+        "type": "pinned_action",
+        "message": "Action 'actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea' is properly pinned"
+      },
+      {
+        "line": 287,
+        "type": "pinned_action",
+        "message": "Action 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' is properly pinned"
+      },
+      {
+        "line": 290,
+        "type": "pinned_action",
+        "message": "Action 'pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2' is properly pinned"
+      },
+      {
+        "line": 295,
+        "type": "pinned_action",
+        "message": "Action 'actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af' is properly pinned"
+      },
+      {
+        "line": 315,
+        "type": "pinned_action",
+        "message": "Action 'actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b' is properly pinned"
+      },
+      {
+        "type": "has_permissions",
+        "message": "Workflow has permissions section defined"
+      }
+    ]
+  },
+  {
+    "file": ".github/workflows/security.yml",
+    "issues": [],
+    "warnings": [
+      {
+        "type": "workflow_level_write_permissions",
+        "message": "Consider moving write permissions (security-events) to job level for better isolation",
+        "severity": "LOW"
+      }
+    ],
+    "passed": [
+      {
+        "line": 28,
+        "type": "pinned_action",
+        "message": "Action 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' is properly pinned"
+      },
+      {
+        "line": 31,
+        "type": "pinned_action",
+        "message": "Action 'github/codeql-action/init@9278e421667d5d90a2839487a482448c4ec7df4d' is properly pinned"
+      },
+      {
+        "line": 37,
+        "type": "pinned_action",
+        "message": "Action 'github/codeql-action/autobuild@9278e421667d5d90a2839487a482448c4ec7df4d' is properly pinned"
+      },
+      {
+        "line": 40,
+        "type": "pinned_action",
+        "message": "Action 'github/codeql-action/analyze@9278e421667d5d90a2839487a482448c4ec7df4d' is properly pinned"
+      },
+      {
+        "line": 73,
+        "type": "pinned_action",
+        "message": "Action 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' is properly pinned"
+      },
+      {
+        "line": 76,
+        "type": "pinned_action",
+        "message": "Action 'actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b' is properly pinned"
+      },
+      {
+        "line": 81,
+        "type": "pinned_action",
+        "message": "Action 'actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57' is properly pinned"
+      },
+      {
+        "line": 118,
+        "type": "pinned_action",
+        "message": "Action 'actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b' is properly pinned"
+      },
+      {
+        "line": 135,
+        "type": "pinned_action",
+        "message": "Action 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' is properly pinned"
+      },
+      {
+        "line": 138,
+        "type": "pinned_action",
+        "message": "Action 'pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2' is properly pinned"
+      },
+      {
+        "line": 143,
+        "type": "pinned_action",
+        "message": "Action 'actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af' is properly pinned"
+      },
+      {
+        "line": 159,
+        "type": "pinned_action",
+        "message": "Action 'actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b' is properly pinned"
+      },
+      {
+        "line": 169,
+        "type": "pinned_action",
+        "message": "Action 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' is properly pinned"
+      },
+      {
+        "line": 174,
+        "type": "pinned_action",
+        "message": "Action 'gitleaks/gitleaks-action@83373cf2f8c4db6e24b41c1a9b086bb9619e9cd3' is properly pinned"
+      },
+      {
+        "line": 183,
+        "type": "pinned_action",
+        "message": "Action 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' is properly pinned"
+      },
+      {
+        "line": 186,
+        "type": "pinned_action",
+        "message": "Action 'dependency-check/Dependency-Check_Action@3102a65fd5f36d0000297576acc56a475b0de98d' is properly pinned"
+      },
+      {
+        "line": 200,
+        "type": "pinned_action",
+        "message": "Action 'actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b' is properly pinned"
+      },
+      {
+        "line": 211,
+        "type": "pinned_action",
+        "message": "Action 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' is properly pinned"
+      },
+      {
+        "line": 216,
+        "type": "pinned_action",
+        "message": "Action 'SonarSource/sonarcloud-github-action@02ef91109b2d589e757aefcfb2854c2783fd7b19' is properly pinned"
+      },
+      {
+        "type": "has_permissions",
+        "message": "Workflow has permissions section defined"
+      },
+      {
+        "type": "uses_secrets",
+        "message": "Properly using GitHub secrets for sensitive data"
+      }
+    ]
+  },
+  {
+    "file": ".github/workflows/test.yml",
+    "issues": [],
+    "warnings": [
+      {
+        "type": "workflow_level_write_permissions",
+        "message": "Consider moving write permissions (checks, pull-requests) to job level for better isolation",
+        "severity": "LOW"
+      }
+    ],
+    "passed": [
+      {
+        "line": 60,
+        "type": "pinned_action",
+        "message": "Action 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' is properly pinned"
+      },
+      {
+        "line": 63,
+        "type": "pinned_action",
+        "message": "Action 'actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b' is properly pinned"
+      },
+      {
+        "line": 68,
+        "type": "pinned_action",
+        "message": "Action 'actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57' is properly pinned"
+      },
+      {
+        "line": 100,
+        "type": "pinned_action",
+        "message": "Action 'actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b' is properly pinned"
+      },
+      {
+        "line": 150,
+        "type": "pinned_action",
+        "message": "Action 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' is properly pinned"
+      },
+      {
+        "line": 153,
+        "type": "pinned_action",
+        "message": "Action 'actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b' is properly pinned"
+      },
+      {
+        "line": 175,
+        "type": "pinned_action",
+        "message": "Action 'actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b' is properly pinned"
+      },
+      {
+        "line": 193,
+        "type": "pinned_action",
+        "message": "Action 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' is properly pinned"
+      },
+      {
+        "line": 196,
+        "type": "pinned_action",
+        "message": "Action 'pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2' is properly pinned"
+      },
+      {
+        "line": 201,
+        "type": "pinned_action",
+        "message": "Action 'actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af' is properly pinned"
+      },
+      {
+        "line": 219,
+        "type": "pinned_action",
+        "message": "Action 'actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b' is properly pinned"
+      },
+      {
+        "line": 254,
+        "type": "pinned_action",
+        "message": "Action 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' is properly pinned"
+      },
+      {
+        "line": 257,
+        "type": "pinned_action",
+        "message": "Action 'actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b' is properly pinned"
+      },
+      {
+        "line": 262,
+        "type": "pinned_action",
+        "message": "Action 'pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2' is properly pinned"
+      },
+      {
+        "line": 267,
+        "type": "pinned_action",
+        "message": "Action 'actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af' is properly pinned"
+      },
+      {
+        "line": 310,
+        "type": "pinned_action",
+        "message": "Action 'actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b' is properly pinned"
+      },
+      {
+        "line": 348,
+        "type": "pinned_action",
+        "message": "Action 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' is properly pinned"
+      },
+      {
+        "line": 351,
+        "type": "pinned_action",
+        "message": "Action 'actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b' is properly pinned"
+      },
+      {
+        "line": 382,
+        "type": "pinned_action",
+        "message": "Action 'actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b' is properly pinned"
+      },
+      {
+        "line": 396,
+        "type": "pinned_action",
+        "message": "Action 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' is properly pinned"
+      },
+      {
+        "line": 399,
+        "type": "pinned_action",
+        "message": "Action 'actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16' is properly pinned"
+      },
+      {
+        "line": 413,
+        "type": "pinned_action",
+        "message": "Action 'actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea' is properly pinned"
+      },
+      {
+        "type": "has_permissions",
+        "message": "Workflow has permissions section defined"
+      }
+    ]
+  }
+]

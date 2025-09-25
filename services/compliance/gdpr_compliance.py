@@ -232,7 +232,8 @@ class GDPRComplianceManager:
         """Anonymize email address."""
         parts = email.split('@')
         if len(parts) == 2:
-            anonymized = f"user_{hashlib.md5(email.encode()).hexdigest()[:8]}@{parts[1]}"
+            # Use SHA-256 instead of MD5 for security compliance in GDPR anonymization
+            anonymized = f"user_{hashlib.sha256(email.encode()).hexdigest()[:8]}@{parts[1]}"
             return anonymized
         return "anonymous@example.com"
 
@@ -249,7 +250,8 @@ class GDPRComplianceManager:
 
     def _anonymize_name(self, name: str) -> str:
         """Anonymize name."""
-        return f"User_{hashlib.md5(name.encode()).hexdigest()[:8]}"
+        # Use SHA-256 instead of MD5 for security compliance in GDPR anonymization
+        return f"User_{hashlib.sha256(name.encode()).hexdigest()[:8]}"
 
     def _anonymize_address(self, address: str) -> str:
         """Anonymize address."""
@@ -258,22 +260,26 @@ class GDPRComplianceManager:
     def _generate_consent_id(self) -> str:
         """Generate unique consent ID."""
         timestamp = datetime.utcnow().timestamp()
-        return f"consent_{hashlib.md5(str(timestamp).encode()).hexdigest()[:16]}"
+        # Use SHA-256 instead of MD5 for security compliance in GDPR consent tracking
+        return f"consent_{hashlib.sha256(str(timestamp).encode()).hexdigest()[:16]}"
 
     def _generate_export_id(self) -> str:
         """Generate unique export ID."""
         timestamp = datetime.utcnow().timestamp()
-        return f"export_{hashlib.md5(str(timestamp).encode()).hexdigest()[:16]}"
+        # Use SHA-256 instead of MD5 for security compliance in GDPR export tracking
+        return f"export_{hashlib.sha256(str(timestamp).encode()).hexdigest()[:16]}"
 
     def _generate_deletion_id(self) -> str:
         """Generate unique deletion ID."""
         timestamp = datetime.utcnow().timestamp()
-        return f"deletion_{hashlib.md5(str(timestamp).encode()).hexdigest()[:16]}"
+        # Use SHA-256 instead of MD5 for security compliance in GDPR deletion tracking
+        return f"deletion_{hashlib.sha256(str(timestamp).encode()).hexdigest()[:16]}"
 
     def _generate_check_id(self) -> str:
         """Generate unique check ID."""
         timestamp = datetime.utcnow().timestamp()
-        return f"check_{hashlib.md5(str(timestamp).encode()).hexdigest()[:16]}"
+        # Use SHA-256 instead of MD5 for security compliance in GDPR compliance checking
+        return f"check_{hashlib.sha256(str(timestamp).encode()).hexdigest()[:16]}"
 
     async def _store_consent(self, consent: Dict[str, Any]):
         """Store consent record in database."""

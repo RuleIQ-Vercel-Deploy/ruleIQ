@@ -1,22 +1,31 @@
 """
+Microsoft 365/Azure AD API Client for compliance evidence collection.
+Follows the foundation architecture pattern for enterprise API integrations.
+"""
 from __future__ import annotations
 import requests
 import json
 
 # Constants
 HTTP_OK = 200
-
 DEFAULT_TIMEOUT = 30
 
+# Time Constants
+DEFAULT_SESSION_DURATION = 3600
+
+# Threshold Constants
 CONFIDENCE_THRESHOLD = 0.8
 DEFAULT_LIMIT = 100
 HALF_RATIO = 0.5
 HIGH_CONFIDENCE_THRESHOLD = 0.95
-
-
-Microsoft 365/Azure AD API Client for compliance evidence collection.
-Follows the foundation architecture pattern for enterprise API integrations.
-"""
+HIGH_MFA_THRESHOLD = 0.9
+MEDIUM_MFA_THRESHOLD = 0.7
+HIGH_COMPLIANCE_THRESHOLD = 0.8
+MEDIUM_COMPLIANCE_THRESHOLD = 0.5
+ACTIVITY_THRESHOLD = 0.6
+LOW_ACTIVITY_PENALTY = 0.3
+MEDIUM_SECURITY_THRESHOLD = 0.3
+LOG_VOLUME_THRESHOLD = 50
 import logging
 from datetime import datetime, timedelta, timezone
 from typing import Dict, List, Optional, Tuple
@@ -95,7 +104,7 @@ class MicrosoftGraphAPIClient(BaseAPIClient):
                     if response.status == HTTP_OK:
                         token_data = await response.json()
                         self.access_token = token_data['access_token']
-                        expires_in = token_data.get('expires_in', 3600)
+                        expires_in = token_data.get('expires_in', DEFAULT_SESSION_DURATION)
                         self.token_expires_at = datetime.now(timezone.utc
                             ) + timedelta(seconds=expires_in)
                         logger.info('Microsoft Graph access token refreshed')
@@ -124,7 +133,7 @@ class MicrosoftGraphAPIClient(BaseAPIClient):
                     if response.status == HTTP_OK:
                         token_data = await response.json()
                         self.access_token = token_data['access_token']
-                        expires_in = token_data.get('expires_in', 3600)
+                        expires_in = token_data.get('expires_in', DEFAULT_SESSION_DURATION)
                         self.token_expires_at = datetime.now(timezone.utc
                             ) + timedelta(seconds=expires_in)
                         logger.info('Microsoft Graph access token obtained')
@@ -200,11 +209,20 @@ class MicrosoftGraphAPIClient(BaseAPIClient):
                 'users_with_recent_signin': users_with_recent_signin,
                 'activity_rate': users_with_recent_signin / total_users *
                 100 if total_users > 0 else 0}}
-            return CollectionResult(evidence_type='user_directory',
-                source_system='microsoft_365', resource_id='users',
-                resource_name='Azure AD Users', data=evidence_data, quality
-                =quality_score, compliance_controls=['CC6.1', 'CC6.2',
-                'CC6.7'], collected_at=datetime.now(timezone.utc))
+            return CollectionResult(
+                success=True,
+                evidence_items=[self.create_evidence_item(
+                    evidence_type='user_directory',
+                    resource_id='users',
+                    resource_name='Azure AD Users',
+                    data=evidence_data,
+                    compliance_controls=['CC6.1', 'CC6.2', 'CC6.7'],
+                    quality_score=quality_score,
+                    metadata={'source_system': 'microsoft_365'}
+                )],
+                quality_score=quality_score,
+                total_collected=total_users,
+                collection_metadata={'evidence_type': 'user_directory'})
         except (requests.RequestException, KeyError, IndexError) as e:
             logger.error('Failed to collect users evidence: %s' % e)
             raise
@@ -228,11 +246,20 @@ class MicrosoftGraphAPIClient(BaseAPIClient):
                 'distribution_groups': len([g for g in groups if g.get(
                 'mailEnabled', False)]), 'security_group_ratio': len(
                 security_groups) / len(groups) * 100 if groups else 0}}
-            return CollectionResult(evidence_type='access_groups',
-                source_system='microsoft_365', resource_id='groups',
-                resource_name='Azure AD Groups', data=evidence_data,
-                quality=quality_score, compliance_controls=['CC6.1',
-                'CC6.2', 'CC6.3'], collected_at=datetime.now(timezone.utc))
+            return CollectionResult(
+                success=True,
+                evidence_items=[self.create_evidence_item(
+                    evidence_type='access_groups',
+                    resource_id='groups',
+                    resource_name='Azure AD Groups',
+                    data=evidence_data,
+                    compliance_controls=['CC6.1', 'CC6.2', 'CC6.3'],
+                    quality_score=quality_score,
+                    metadata={'source_system': 'microsoft_365'}
+                )],
+                quality_score=quality_score,
+                total_collected=len(groups),
+                collection_metadata={'evidence_type': 'access_groups'})
         except (requests.RequestException, KeyError, IndexError) as e:
             logger.error('Failed to collect groups evidence: %s' % e)
             raise
@@ -260,11 +287,20 @@ class MicrosoftGraphAPIClient(BaseAPIClient):
                 service_principals if sp.get('accountEnabled', False)]),
                 'multi_tenant_apps': len([app for app in applications if
                 app.get('signInAudience') == 'AzureADMultipleOrgs'])}}
-            return CollectionResult(evidence_type='applications',
-                source_system='microsoft_365', resource_id='applications',
-                resource_name='Azure AD Applications', data=evidence_data,
-                quality=quality_score, compliance_controls=['CC6.1',
-                'CC6.2', 'CC6.8'], collected_at=datetime.now(timezone.utc))
+            return CollectionResult(
+                success=True,
+                evidence_items=[self.create_evidence_item(
+                    evidence_type='applications',
+                    resource_id='applications',
+                    resource_name='Azure AD Applications',
+                    data=evidence_data,
+                    compliance_controls=['CC6.1', 'CC6.2', 'CC6.8'],
+                    quality_score=quality_score,
+                    metadata={'source_system': 'microsoft_365'}
+                )],
+                quality_score=quality_score,
+                total_collected=len(applications),
+                collection_metadata={'evidence_type': 'applications'})
         except (requests.RequestException, KeyError, IndexError) as e:
             logger.error('Failed to collect applications evidence: %s' % e)
             raise
@@ -296,11 +332,20 @@ class MicrosoftGraphAPIClient(BaseAPIClient):
                 0, 'unique_users': len(set(s.get('userPrincipalName', '') for
                 s in sign_ins)), 'unique_apps': len(set(s.get(
                 'appDisplayName', '') for s in sign_ins))}}
-            return CollectionResult(evidence_type='user_access_logs',
-                source_system='microsoft_365', resource_id='signin_logs',
-                resource_name='Azure AD Sign-in Logs', data=evidence_data,
-                quality=quality_score, compliance_controls=['CC6.1',
-                'CC6.2', 'CC7.2'], collected_at=datetime.now(timezone.utc))
+            return CollectionResult(
+                success=True,
+                evidence_items=[self.create_evidence_item(
+                    evidence_type='user_access_logs',
+                    resource_id='signin_logs',
+                    resource_name='Azure AD Sign-in Logs',
+                    data=evidence_data,
+                    compliance_controls=['CC6.1', 'CC6.2', 'CC7.2'],
+                    quality_score=quality_score,
+                    metadata={'source_system': 'microsoft_365'}
+                )],
+                quality_score=quality_score,
+                total_collected=len(sign_ins),
+                collection_metadata={'evidence_type': 'user_access_logs'})
         except (requests.RequestException, KeyError, IndexError) as e:
             logger.error('Failed to collect sign-in logs evidence: %s' % e)
             raise
@@ -331,11 +376,20 @@ class MicrosoftGraphAPIClient(BaseAPIClient):
                 ('user', {}).get('userPrincipalName', '') for log in
                 audit_logs)), 'activity_types': list(set(log.get(
                 'activityDisplayName', '') for log in audit_logs))}}
-            return CollectionResult(evidence_type='admin_activity_logs',
-                source_system='microsoft_365', resource_id='audit_logs',
-                resource_name='Azure AD Audit Logs', data=evidence_data,
-                quality=quality_score, compliance_controls=['CC7.1',
-                'CC7.2', 'CC7.3'], collected_at=datetime.now(timezone.utc))
+            return CollectionResult(
+                success=True,
+                evidence_items=[self.create_evidence_item(
+                    evidence_type='admin_activity_logs',
+                    resource_id='audit_logs',
+                    resource_name='Azure AD Audit Logs',
+                    data=evidence_data,
+                    compliance_controls=['CC7.1', 'CC7.2', 'CC7.3'],
+                    quality_score=quality_score,
+                    metadata={'source_system': 'microsoft_365'}
+                )],
+                quality_score=quality_score,
+                total_collected=len(audit_logs),
+                collection_metadata={'evidence_type': 'admin_activity_logs'})
         except (requests.RequestException, KeyError, IndexError) as e:
             logger.error('Failed to collect audit logs evidence: %s' % e)
             raise
@@ -358,12 +412,20 @@ class MicrosoftGraphAPIClient(BaseAPIClient):
                 [])), 'created_datetime': organization.get(
                 'createdDateTime'), 'security_defaults_enabled':
                 organization.get('securityDefaultsEnabled', False)}}
-            return CollectionResult(evidence_type=
-                'organization_configuration', source_system='microsoft_365',
-                resource_id='organization', resource_name=
-                'Azure AD Organization', data=evidence_data, quality=
-                quality_score, compliance_controls=['CC6.1', 'CC6.6'],
-                collected_at=datetime.now(timezone.utc))
+            return CollectionResult(
+                success=True,
+                evidence_items=[self.create_evidence_item(
+                    evidence_type='organization_configuration',
+                    resource_id='organization',
+                    resource_name='Azure AD Organization',
+                    data=evidence_data,
+                    compliance_controls=['CC6.1', 'CC6.6'],
+                    quality_score=quality_score,
+                    metadata={'source_system': 'microsoft_365'}
+                )],
+                quality_score=quality_score,
+                total_collected=1,
+                collection_metadata={'evidence_type': 'organization_configuration'})
         except (requests.RequestException, KeyError, IndexError) as e:
             logger.error('Failed to collect organization evidence: %s' % e)
             raise
@@ -375,7 +437,7 @@ class MicrosoftGraphAPIClient(BaseAPIClient):
             return EvidenceQuality.LOW
         enabled_rate = enabled / total
         activity_rate = active / total
-        if enabled_rate > 0.9 and activity_rate > 0.7:
+        if enabled_rate > HIGH_MFA_THRESHOLD and activity_rate > MEDIUM_MFA_THRESHOLD:
             return EvidenceQuality.HIGH
         elif enabled_rate > CONFIDENCE_THRESHOLD and activity_rate > HALF_RATIO:
             return EvidenceQuality.MEDIUM
@@ -388,9 +450,9 @@ class MicrosoftGraphAPIClient(BaseAPIClient):
         if not groups:
             return EvidenceQuality.LOW
         security_ratio = len(security_groups) / len(groups)
-        if security_ratio > 0.6:
+        if security_ratio > ACTIVITY_THRESHOLD:
             return EvidenceQuality.HIGH
-        elif security_ratio > 0.3:
+        elif security_ratio > MEDIUM_SECURITY_THRESHOLD:
             return EvidenceQuality.MEDIUM
         else:
             return EvidenceQuality.LOW
@@ -421,7 +483,7 @@ class MicrosoftGraphAPIClient(BaseAPIClient):
         if (success_rate > HIGH_CONFIDENCE_THRESHOLD and log_volume >
             DEFAULT_LIMIT):
             return EvidenceQuality.HIGH
-        elif success_rate > 0.9 and log_volume > 50:
+        elif success_rate > HIGH_MFA_THRESHOLD and log_volume > LOG_VOLUME_THRESHOLD:
             return EvidenceQuality.MEDIUM
         else:
             return EvidenceQuality.LOW

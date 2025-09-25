@@ -36,15 +36,33 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, None]:
     except Exception as e:
         logger.warning(f'Failed to initialize default frameworks: {e}')
     from config.cache import get_cache_manager
-    await get_cache_manager()
+    cache_manager = await get_cache_manager()
     logger.info('Cache manager initialized.')
-    # TODO: Fix TrustLevel import issue in agentic models
-    # from services.agentic_integration import initialize_agentic_service
-    # try:
-    #     await initialize_agentic_service()
-    #     logger.info('Agentic RAG service initialized.')
-    # except Exception as e:
-    #     logger.warning(f'Failed to initialize agentic RAG service: {e}')
+
+    # One-time cache migration from MD5 to SHA-256
+    if settings.cache_migration_on_startup:
+        try:
+            from scripts.security_hash_migration import CacheMigrationManager
+            from redis.asyncio import Redis
+
+            # Create Redis client using cache manager's connection
+            redis_client = cache_manager._redis  # Access the Redis client from cache manager
+
+            # Create migration manager and invalidate old caches
+            migration_manager = CacheMigrationManager(redis_client)
+            result = await migration_manager.invalidate_md5_caches()
+
+            logger.info(f'Cache migration completed: {result}')
+            logger.info('Consider disabling cache_migration_on_startup after successful migration.')
+        except Exception as e:
+            logger.warning(f'Cache migration failed (non-critical): {e}')
+    # Initialize agentic service
+    from services.agentic_integration import initialize_agentic_service
+    try:
+        await initialize_agentic_service()
+        logger.info('Agentic RAG service initialized.')
+    except Exception as e:
+        logger.warning(f'Failed to initialize agentic RAG service: {e}')
     from monitoring.database_monitor import get_database_monitor
     import asyncio
     try:
@@ -94,9 +112,9 @@ from api.middleware.rate_limiter import rate_limit_middleware
 app.middleware('http')(rate_limit_middleware)
 
 # Add JWT Authentication Middleware v2 (SEC-001 compliance)
-# TODO: Fix JWT middleware parameter issue - temporarily disabled for testing
-# from middleware.jwt_auth_v2 import JWTAuthMiddlewareV2
-# app.add_middleware(JWTAuthMiddlewareV2)
+# JWT middleware v2 enabled
+from middleware.jwt_auth_v2 import JWTAuthMiddlewareV2
+app.add_middleware(JWTAuthMiddlewareV2())
 
 # Add Comprehensive Audit Logging Middleware
 from middleware.audit_logging import setup_audit_logging

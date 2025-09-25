@@ -1,254 +1,232 @@
-name: Vercel Deployment
+# This workflow serves as a fallback when Doppler is not configured
+# For production deployments with enterprise-grade secrets management,
+# configure DOPPLER_TOKEN in GitHub secrets to use deploy-vercel-doppler.yml instead
+
+name: Deploy to Vercel (Standard)
 
 on:
   push:
     branches: [main]
   pull_request:
-    types: [opened, synchronize, reopened]
+    branches: [main]
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Environment to deploy to'
+        description: 'Environment to deploy'
         required: true
-        default: 'preview'
+        default: 'production'
         type: choice
         options:
-          - preview
           - production
-
-permissions:
-  contents: read
-  deployments: write
-  pull-requests: write
+          - preview
 
 env:
-  NODE_VERSION: '20'
-  PNPM_VERSION: '8'
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
 jobs:
+  # Deploy preview for pull requests (only when Doppler is NOT configured)
   deploy-preview:
-    name: Deploy Preview
+    if: github.event_name == 'pull_request' && secrets.DOPPLER_TOKEN == ''
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
-    environment:
-      name: preview
-      url: ${{ steps.deploy.outputs.url }}
-    
+    environment: preview
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
-          version: ${{ env.PNPM_VERSION }}
+          python-version: '3.11'
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
-          cache-dependency-path: frontend/pnpm-lock.yaml
+      - name: Install psycopg
+        run: pip install psycopg
+
+      - name: Test Neon Database Connectivity
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          python - <<'PY'
+          import os, sys
+          import psycopg
+
+          db_url = os.environ['DATABASE_URL']
+          if db_url.startswith('postgresql+'):
+              db_url = db_url.split('+', 1)[0] + '://' + db_url.split('://', 1)[1]
+
+          try:
+              conn = psycopg.connect(db_url, connect_timeout=10)
+              conn.close()
+              print('✅ Neon DB connection successful')
+              sys.exit(0)
+          except Exception as e:
+              print(f'❌ Neon DB connection failed: {e}')
+              sys.exit(1)
+          PY
 
       - name: Install Vercel CLI
-        run: npm install -g vercel
+        run: npm install -g vercel@latest
 
       - name: Pull Vercel Environment Information
-        run: |
-          vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Build Project Artifacts
-        run: |
-          vercel build --token=${{ secrets.VERCEL_TOKEN }}
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
 
-      - name: Deploy to Vercel Preview
+      - name: Deploy Preview to Vercel
         id: deploy
         run: |
-          url=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
-          echo "url=$url" >> $GITHUB_OUTPUT
-          echo "Preview URL: $url"
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }} > deployment-url.txt
+          echo "url=$(cat deployment-url.txt)" >> $GITHUB_OUTPUT
+          echo "🚀 Preview deployed to: $(cat deployment-url.txt)"
 
-      - name: Comment PR with deployment URL
+      - name: Comment on PR
         uses: actions/github-script@v7
         with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const url = '${{ steps.deploy.outputs.url }}';
-            const comment = `## 🚀 Preview Deployment Ready!
-            
-            Your changes have been deployed to Vercel:
-            
-            🔗 **Preview URL:** ${url}
-            
-            | Check | Status |
-            |-------|--------|
-            | Build | ✅ Success |
-            | Deploy | ✅ Complete |
-            | Environment | Preview |
-            
-            This preview will be updated automatically as you push new commits.`;
-            
-            github.rest.issues.createComment({
+            await github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: comment
+              body: `🚀 Preview deployed to Vercel: ${url}`
             });
 
-  deploy-production:
-    name: Deploy to Production
+  # Check if Doppler is configured
+  check-doppler:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    environment:
-      name: production
-      url: ${{ steps.deploy.outputs.url }}
-    
+    outputs:
+      has-doppler: ${{ steps.check.outputs.has-doppler }}
+    steps:
+      - id: check
+        run: |
+          if [ -n "${{ secrets.DOPPLER_TOKEN }}" ]; then
+            echo "has-doppler=true" >> $GITHUB_OUTPUT
+            echo "⚠️ Doppler is configured - this workflow will be skipped"
+            echo "ℹ️ The deploy-vercel-doppler.yml workflow will handle deployment"
+          else
+            echo "has-doppler=false" >> $GITHUB_OUTPUT
+            echo "ℹ️ Doppler not configured - proceeding with standard deployment"
+          fi
+
+  deploy:
+    name: Deploy to Vercel (Standard)
+    needs: check-doppler
+    # Only run if Doppler is NOT configured
+    if: needs.check-doppler.outputs.has-doppler == 'false' && (github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'production' }}
+
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: ${{ env.PNPM_VERSION }}
+      - name: Verify Vercel Configuration
+        run: |
+          if [ -z "${{ secrets.VERCEL_ORG_ID }}" ]; then
+            echo "Error: VERCEL_ORG_ID secret is not set"
+            exit 1
+          fi
+          if [ -z "${{ secrets.VERCEL_PROJECT_ID }}" ]; then
+            echo "Error: VERCEL_PROJECT_ID secret is not set"
+            exit 1
+          fi
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
-          cache-dependency-path: frontend/pnpm-lock.yaml
+          python-version: '3.11'
+
+      - name: Install psycopg2
+        run: pip install psycopg2-binary
+
+      - name: Test Neon Database Connectivity
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          python - <<'PY'
+          import sys
+          import os
+          import psycopg2
+          from urllib.parse import urlparse
+
+          try:
+              db_url = os.environ.get('DATABASE_URL')
+              if not db_url:
+                  print('Error: DATABASE_URL is not set')
+                  sys.exit(1)
+
+              # Parse connection details
+              url = urlparse(db_url)
+              conn = psycopg2.connect(
+                  host=url.hostname,
+                  port=url.port or 5432,
+                  database=url.path[1:],
+                  user=url.username,
+                  password=url.password,
+                  sslmode='require',
+                  connect_timeout=10
+              )
+              conn.close()
+              print('✅ Successfully connected to Neon database')
+          except Exception as e:
+              print(f'❌ Failed to connect to database: {e}')
+              sys.exit(1)
+          PY
 
       - name: Install Vercel CLI
-        run: npm install -g vercel
+        run: npm install -g vercel@latest
 
       - name: Pull Vercel Environment Information
-        run: |
-          vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: vercel pull --yes --environment=${{ github.event.inputs.environment || 'production' }} --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Build Project Artifacts
-        run: |
-          vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
 
-      - name: Deploy to Vercel Production
+      - name: Deploy to Vercel
         id: deploy
         run: |
-          url=$(vercel deploy --prod --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
-          echo "url=$url" >> $GITHUB_OUTPUT
-          echo "Production URL: $url"
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          if [ "${{ github.event.inputs.environment }}" == "preview" ]; then
+            vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }} > deployment-url.txt
+          else
+            vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }} > deployment-url.txt
+          fi
+          echo "url=$(cat deployment-url.txt)" >> $GITHUB_OUTPUT
 
-      - name: Create deployment record
+      - name: Comment on PR
+        if: github.event_name == 'pull_request'
         uses: actions/github-script@v7
         with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
+            const url = '${{ steps.deploy.outputs.url }}';
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `🚀 Deployed to Vercel: ${url}`
+            });
+
+      - name: Create deployment status
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const url = '${{ steps.deploy.outputs.url }}';
             const deployment = await github.rest.repos.createDeployment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               ref: context.sha,
-              environment: 'production',
-              required_contexts: [],
-              auto_merge: false,
-              production_environment: true
+              environment: '${{ github.event.inputs.environment || 'production' }}',
+              description: 'Deployed to Vercel',
+              production_environment: '${{ github.event.inputs.environment || 'production' }}' === 'production',
+              required_contexts: []
             });
-            
+
             await github.rest.repos.createDeploymentStatus({
               owner: context.repo.owner,
               repo: context.repo.repo,
               deployment_id: deployment.data.id,
               state: 'success',
-              environment_url: '${{ steps.deploy.outputs.url }}',
-              description: 'Deployment to Vercel production completed'
+              environment_url: url,
+              description: 'Deployed to Vercel'
             });
-
-      - name: Rollback on failure
-        if: failure()
-        run: |
-          echo "Deployment failed. Initiating rollback..."
-          vercel rollback --token=${{ secrets.VERCEL_TOKEN }} || true
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-
-  manual-deploy:
-    name: Manual Deployment
-    runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch'
-    environment:
-      name: ${{ github.event.inputs.environment }}
-      url: ${{ steps.deploy.outputs.url }}
-    
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: ${{ env.PNPM_VERSION }}
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
-          cache-dependency-path: frontend/pnpm-lock.yaml
-
-      - name: Install Vercel CLI
-        run: npm install -g vercel
-
-      - name: Pull Vercel Environment Information
-        run: |
-          vercel pull --yes --environment=${{ github.event.inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-
-      - name: Build Project Artifacts
-        run: |
-          if [ "${{ github.event.inputs.environment }}" = "production" ]; then
-            vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
-          else
-            vercel build --token=${{ secrets.VERCEL_TOKEN }}
-          fi
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-
-      - name: Deploy to Vercel
-        id: deploy
-        run: |
-          if [ "${{ github.event.inputs.environment }}" = "production" ]; then
-            url=$(vercel deploy --prod --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
-          else
-            url=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
-          fi
-          echo "url=$url" >> $GITHUB_OUTPUT
-          echo "Deployment URL: $url"
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-
-      - name: Deployment Summary
-        run: |
-          echo "## Manual Deployment Summary" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "| Property | Value |" >> $GITHUB_STEP_SUMMARY
-          echo "|----------|-------|" >> $GITHUB_STEP_SUMMARY
-          echo "| Environment | ${{ github.event.inputs.environment }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| URL | ${{ steps.deploy.outputs.url }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Triggered By | ${{ github.actor }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Commit | ${{ github.sha }} |" >> $GITHUB_STEP_SUMMARY

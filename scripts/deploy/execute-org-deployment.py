@@ -38,6 +38,7 @@ class DeploymentExecutor:
         self.deployment_url = None
         self.vercel_cli_available = False
         self.deployment_method = None
+        self.doppler_available = False  # Track Doppler availability
         self.report = {
             "timestamp": self.start_time.isoformat(),
             "environment": environment,
@@ -47,7 +48,8 @@ class DeploymentExecutor:
             "steps": [],
             "metrics": {},
             "errors": [],
-            "warnings": []
+            "warnings": [],
+            "doppler_enabled": False  # Track if Doppler was used
         }
 
     def print_header(self, message: str):
@@ -160,11 +162,35 @@ class DeploymentExecutor:
             self.vercel_cli_available = False
             checks.append(True)  # Not critical
 
+        # Check Doppler integration
+        self.print_progress("Checking Doppler integration")
+        doppler_token = os.environ.get('DOPPLER_TOKEN')
+        if doppler_token:
+            print(f" {Colors.GREEN}[CONFIGURED]{Colors.NC}")
+            self.print_success("Doppler is configured for secrets management")
+            self.doppler_available = True
+            self.report["doppler_enabled"] = True
+            checks.append(True)
+        else:
+            print(f" {Colors.YELLOW}[NOT CONFIGURED]{Colors.NC}")
+            self.print_info("Doppler not configured - will use standard secrets")
+            self.print_info("Run scripts/deploy/configure-doppler-secrets.sh to enable Doppler")
+            self.doppler_available = False
+            checks.append(True)  # Not critical
+
         return all(checks)
 
     def trigger_github_actions_deployment(self) -> bool:
         """Trigger deployment via GitHub Actions"""
         self.print_header("TRIGGERING GITHUB ACTIONS DEPLOYMENT")
+
+        # Inform about which workflow will be used
+        if self.doppler_available:
+            self.print_info("Using Doppler-integrated workflow (deploy-vercel-doppler.yml)")
+            self.print_success("Secrets will be managed through Doppler")
+        else:
+            self.print_info("Using standard workflow (deploy-vercel.yml)")
+            self.print_info("Consider configuring Doppler for enterprise-grade secrets management")
 
         # Push to remote
         self.print_progress("Pushing to organization repository")
@@ -182,6 +208,7 @@ class DeploymentExecutor:
 
             self.report["deployment_method"] = "github_actions"
             self.report["monitoring_url"] = actions_url
+            self.report["workflow_used"] = "deploy-vercel-doppler.yml" if self.doppler_available else "deploy-vercel.yml"
             self.deployment_method = "github"
 
             return True

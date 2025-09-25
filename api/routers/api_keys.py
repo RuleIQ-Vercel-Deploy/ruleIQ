@@ -1,8 +1,5 @@
-"""
+"""API Router for API Key Management"""
 from __future__ import annotations
-
-API Router for API Key Management
-"""
 from datetime import datetime, timezone
 from typing import List, Optional, Dict, Any
 from fastapi import APIRouter, Depends, HTTPException, status, Header, Request

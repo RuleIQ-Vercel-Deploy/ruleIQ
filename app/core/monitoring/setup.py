@@ -43,9 +43,12 @@ def setup_monitoring(app: FastAPI, environment: str='development', sentry_dsn: O
         collector = get_metrics_collector()
         logger.info(f'Metrics collector initialized with {len(collector.metrics)} default metrics')
     if enable_health_checks or enable_metrics:
-        from app.api.monitoring import router as monitoring_router
-        app.include_router(monitoring_router, prefix='/monitoring', tags=['monitoring'])
-        logger.info('Monitoring endpoints registered')
+        try:
+            from api.routers.monitoring import router as monitoring_router
+            app.include_router(monitoring_router, prefix='/monitoring', tags=['monitoring'])
+            logger.info('Monitoring endpoints registered')
+        except ImportError:
+            logger.warning('Monitoring router not found, skipping monitoring endpoints registration')
     logger.info('Monitoring setup completed successfully')
 
     @app.on_event('startup')

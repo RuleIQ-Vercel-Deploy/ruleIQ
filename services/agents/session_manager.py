@@ -13,7 +13,8 @@ import json
 import asyncio
 from enum import Enum
 
-from models.agentic_models import AgentSession, SessionContext, TrustLevel
+from models.agentic_models import AgentSession, SessionContext
+from services.agents.trust_algorithm import TrustLevel
 
 logger = logging.getLogger(__name__)
 
