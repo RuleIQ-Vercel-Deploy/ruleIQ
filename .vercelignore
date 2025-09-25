@@ -1,3 +1,13 @@
+# CRITICAL: Exclude huge directories
+archive/
+frontend/
+node_modules/
+data/
+htmlcov/
+coverage/
+uploads/
+logs/
+
 # Version Control
 .git/
 .github/
@@ -141,10 +151,21 @@ notebooks/
 .secrets/
 visualization-backend/
 
-# Keep only essentials
+# Coverage and test results
+coverage.xml
+api_ruff_results.json
+*.coverage
+.coverage.*
+htmlcov/
+
+# Keep only essentials for API
 !requirements.txt
-!api/
-!core/
-!models/
-!services/
-!utils/
+!api/**
+!core/**
+!models/**
+!services/**
+!utils/**
+!config/**
+!database/**
+!app/**
+!middleware/**

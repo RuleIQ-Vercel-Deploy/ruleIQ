@@ -76,6 +76,23 @@ jobs:
       - name: Install Vercel CLI
         run: npm install -g vercel@latest
 
+      - name: Clean repository for deployment
+        run: |
+          # Remove all Python cache files
+          find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
+          find . -name "*.pyc" -delete 2>/dev/null || true
+          find . -name "*.pyo" -delete 2>/dev/null || true
+          find . -name ".pytest_cache" -exec rm -rf {} + 2>/dev/null || true
+
+          # Remove coverage and test artifacts
+          rm -rf htmlcov/ .coverage coverage.xml 2>/dev/null || true
+          rm -rf .mypy_cache/ .ruff_cache/ 2>/dev/null || true
+
+          # Remove any .env files
+          find . -name ".env*" -delete 2>/dev/null || true
+
+          echo "✅ Repository cleaned for deployment"
+
       - name: Pull Vercel Environment with Doppler
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
@@ -186,6 +203,23 @@ jobs:
 
       - name: Install Vercel CLI
         run: npm install -g vercel@latest
+
+      - name: Clean repository for deployment
+        run: |
+          # Remove all Python cache files
+          find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
+          find . -name "*.pyc" -delete 2>/dev/null || true
+          find . -name "*.pyo" -delete 2>/dev/null || true
+          find . -name ".pytest_cache" -exec rm -rf {} + 2>/dev/null || true
+
+          # Remove coverage and test artifacts
+          rm -rf htmlcov/ .coverage coverage.xml 2>/dev/null || true
+          rm -rf .mypy_cache/ .ruff_cache/ 2>/dev/null || true
+
+          # Remove any .env files
+          find . -name ".env*" -delete 2>/dev/null || true
+
+          echo "✅ Repository cleaned for deployment"
 
       - name: Pull Vercel Environment with Doppler
         env:
