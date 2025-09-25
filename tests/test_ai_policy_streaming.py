@@ -629,7 +629,7 @@ class TestPolicyStreamingPerformance:
             tracemalloc.start()
 
             chunk_count = 0
-            async for chunk in policy_generator.generate_policy_stream(
+            async for _chunk in policy_generator.generate_policy_stream(
                 sample_request, sample_framework
             ):
                 chunk_count += 1

@@ -27,7 +27,7 @@ class JWTEnhancedMiddleware(BaseHTTPMiddleware):
     - Audience and issuer validation
     """
 
-    def __init__(self, app: ASGIApp, **kwargs):
+    def __init__(self, app: ASGIApp, **kwargs) -> None:
         super().__init__(app)
         self.security_settings = get_security_settings()
         self.jwt_config = self.security_settings.jwt

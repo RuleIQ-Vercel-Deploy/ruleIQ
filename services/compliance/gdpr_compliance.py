@@ -39,7 +39,7 @@ class DataCategory(Enum):
 class GDPRComplianceManager:
     """Main GDPR compliance handler."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.retention_periods = {
             DataCategory.BASIC: 365 * 3,  # 3 years
             DataCategory.CONTACT: 365 * 3,
@@ -397,7 +397,7 @@ class GDPRComplianceManager:
 class ConsentValidator:
     """Validate consent for data processing operations."""
 
-    def __init__(self, gdpr_manager: GDPRComplianceManager):
+    def __init__(self, gdpr_manager: GDPRComplianceManager) -> None:
         self.gdpr_manager = gdpr_manager
 
     async def validate_processing(

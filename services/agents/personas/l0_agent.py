@@ -49,7 +49,7 @@ class L0Suggestion:
 class BaseL0Agent(BaseAgent):
     """
     Base Trust Level 0 Agent
-    
+
     Operates in full observation mode with all actions requiring
     explicit user approval. Provides detailed rationale for suggestions
     and maintains complete audit trail.
@@ -90,7 +90,7 @@ class BaseL0Agent(BaseAgent):
         name: str,
         persona_type: str,
         config: Optional[Dict[str, Any]] = None
-    ):
+    ) -> None:
         """Initialize L0 Agent with approval and audit systems"""
         super().__init__(
             agent_id=agent_id,
@@ -124,13 +124,13 @@ class BaseL0Agent(BaseAgent):
     ) -> L0Suggestion:
         """
         Generate a suggestion for user approval
-        
+
         Args:
             action_type: Type of action being suggested
             description: Human-readable description
             context: Current context for the action
             code: Optional code to be executed if approved
-        
+
         Returns:
             L0Suggestion object with risk assessment
         """
@@ -181,12 +181,12 @@ class BaseL0Agent(BaseAgent):
     ) -> ApprovalState:
         """
         Request user approval for a suggestion
-        
+
         Args:
             suggestion: The suggestion to approve
             user_id: ID of the user to request approval from
             timeout: Optional custom timeout
-        
+
         Returns:
             ApprovalState indicating the result
         """
@@ -244,11 +244,11 @@ class BaseL0Agent(BaseAgent):
     ) -> Dict[str, Any]:
         """
         Execute an approved suggestion with rollback capability
-        
+
         Args:
             suggestion: The approved suggestion to execute
             dry_run: If True, simulate execution without side effects
-        
+
         Returns:
             Execution result with rollback information
         """

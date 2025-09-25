@@ -10,18 +10,17 @@ import os
 import subprocess
 import sys
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List
 
 import psycopg2
 import redis
-import yaml
 from dotenv import load_dotenv
 
 
 class PreDeploymentChecker:
     """Pre-deployment validation for ruleIQ application."""
 
-    def __init__(self, environment: str = "staging"):
+    def __init__(self, environment: str = "staging") -> None:
         """Initialize pre-deployment checker.
 
         Args:
@@ -290,7 +289,7 @@ class PreDeploymentChecker:
         }
 
         if missing_files or missing_dirs:
-            self.log(f"Missing files/directories found", "error")
+            self.log("Missing files/directories found", "error")
             return False
 
         self.log("File structure validated", "success")

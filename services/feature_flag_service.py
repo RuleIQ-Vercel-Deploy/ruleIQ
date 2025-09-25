@@ -63,7 +63,7 @@ class EnhancedFeatureFlagService:
         redis_client: Optional[Redis] = None,
         db_session: Optional[Session] = None,
         config: Optional[BaseConfig] = None
-    ):
+    ) -> None:
         """Initialize the feature flag service"""
         self.config = config or BaseConfig()
 
@@ -467,9 +467,8 @@ def feature_flag(
                 service = EnhancedFeatureFlagService()
 
                 user_id = kwargs.get('user_id')
-                if not user_id and args:
-                    if hasattr(args[0], 'user_id'):
-                        user_id = args[0].user_id
+                if not user_id and args and hasattr(args[0], 'user_id'):
+                    user_id = args[0].user_id
 
                 environment = kwargs.get('environment', 'production')
 

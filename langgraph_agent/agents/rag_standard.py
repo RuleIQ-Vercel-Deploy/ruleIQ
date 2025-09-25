@@ -30,7 +30,7 @@ logger = logging.getLogger(__name__)
 class StandardizedRAG:
     """Simplified RAG system using LangChain components."""
 
-    def __init__(self, company_id: UUID, collection_name: Optional[str] = None):
+    def __init__(self, company_id: UUID, collection_name: Optional[str] = None) -> None:
         """
         Initialize with standard components.
 
@@ -221,7 +221,7 @@ class StandardizedRAG:
         """
         try:
             # Test retrieval with simple query
-            test_docs = self.vector_store.similarity_search("test", k=1)
+            self.vector_store.similarity_search("test", k=1)
 
             # Get document count if available
             doc_count = "unknown"

@@ -17,7 +17,7 @@ from database.repositories.base import BaseRepository
 class AgentRepository(BaseRepository[Agent]):
     """Repository for Agent model operations."""
 
-    def __init__(self, session: Session):
+    def __init__(self, session: Session) -> None:
         super().__init__(Agent, session)
 
     def get_by_persona_type(self, persona_type: str) -> List[Agent]:
@@ -25,14 +25,14 @@ class AgentRepository(BaseRepository[Agent]):
         return self.session.query(Agent).filter(
             and_(
                 Agent.persona_type == persona_type,
-                Agent.is_active == True
+                Agent.is_active
             )
         ).all()
 
     def get_active_agents(self) -> List[Agent]:
         """Get all active agents."""
         return self.session.query(Agent).filter(
-            Agent.is_active == True
+            Agent.is_active
         ).all()
 
     def update_capabilities(self, agent_id: UUID, capabilities: Dict[str, Any]) -> Optional[Agent]:
@@ -49,7 +49,7 @@ class AgentRepository(BaseRepository[Agent]):
 class AgentSessionRepository(BaseRepository[AgentSession]):
     """Repository for AgentSession model operations."""
 
-    def __init__(self, session: Session):
+    def __init__(self, session: Session) -> None:
         super().__init__(AgentSession, session)
 
     def get_active_sessions(self, user_id: Optional[UUID] = None) -> List[AgentSession]:
@@ -91,7 +91,7 @@ class AgentSessionRepository(BaseRepository[AgentSession]):
 class AgentDecisionRepository(BaseRepository[AgentDecision]):
     """Repository for AgentDecision model operations."""
 
-    def __init__(self, session: Session):
+    def __init__(self, session: Session) -> None:
         super().__init__(AgentDecision, session)
 
     def get_session_decisions(self, session_id: UUID) -> List[AgentDecision]:
@@ -125,7 +125,7 @@ class AgentDecisionRepository(BaseRepository[AgentDecision]):
 class TrustMetricRepository(BaseRepository[TrustMetric]):
     """Repository for TrustMetric model operations."""
 
-    def __init__(self, session: Session):
+    def __init__(self, session: Session) -> None:
         super().__init__(TrustMetric, session)
 
     def get_session_metrics(self, session_id: UUID) -> List[TrustMetric]:
@@ -168,7 +168,7 @@ class TrustMetricRepository(BaseRepository[TrustMetric]):
 class AgentKnowledgeRepository(BaseRepository[AgentKnowledge]):
     """Repository for AgentKnowledge model operations."""
 
-    def __init__(self, session: Session):
+    def __init__(self, session: Session) -> None:
         super().__init__(AgentKnowledge, session)
 
     def get_agent_knowledge(self, agent_id: UUID, domain: Optional[str] = None) -> List[AgentKnowledge]:
@@ -214,7 +214,7 @@ class AgentKnowledgeRepository(BaseRepository[AgentKnowledge]):
 class ConversationHistoryRepository(BaseRepository[ConversationHistory]):
     """Repository for ConversationHistory model operations."""
 
-    def __init__(self, session: Session):
+    def __init__(self, session: Session) -> None:
         super().__init__(ConversationHistory, session)
 
     def get_session_conversation(self, session_id: UUID, limit: int = 100) -> List[ConversationHistory]:
@@ -265,7 +265,7 @@ class ConversationHistoryRepository(BaseRepository[ConversationHistory]):
 class AgentAuditLogRepository(BaseRepository[AgentAuditLog]):
     """Repository for AgentAuditLog model operations."""
 
-    def __init__(self, session: Session):
+    def __init__(self, session: Session) -> None:
         super().__init__(AgentAuditLog, session)
 
     def get_agent_audit_logs(self, agent_id: UUID, risk_level: Optional[str] = None) -> List[AgentAuditLog]:

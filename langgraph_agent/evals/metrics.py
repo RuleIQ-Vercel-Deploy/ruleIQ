@@ -56,7 +56,7 @@ class LatencyMetrics:
 class RecallAtKEvaluator:
     """Evaluates recall@k for compliance recommendation systems."""
 
-    def __init__(self, k_values: List[int] = None):
+    def __init__(self, k_values: List[int] = None) -> None:
         self.k_values = k_values or [1, 3, 5, 10]
 
     def evaluate(
@@ -203,7 +203,7 @@ class CitationExactnessEvaluator:
 class LinkPrecisionEvaluator:
     """Evaluates precision of legal/regulatory links in responses."""
 
-    def __init__(self, valid_domains: List[str] = None):
+    def __init__(self, valid_domains: List[str] = None) -> None:
         """
         Initialize with valid regulatory domains.
 
@@ -281,7 +281,7 @@ class LinkPrecisionEvaluator:
 class CounselFPREvaluator:
     """Evaluates False Positive Rate for legal counsel recommendations."""
 
-    def __init__(self, counsel_triggers: List[str] = None):
+    def __init__(self, counsel_triggers: List[str] = None) -> None:
         """
         Initialize with phrases that should trigger counsel recommendations.
 
@@ -398,7 +398,7 @@ class CounselFPREvaluator:
 class LatencyEvaluator:
     """Evaluates agent response latency and SLO compliance."""
 
-    def __init__(self, slo_p95_ms: float = 2500):
+    def __init__(self, slo_p95_ms: float = 2500) -> None:
         """
         Initialize with SLO threshold.
 
@@ -471,7 +471,7 @@ class LatencyEvaluator:
 class AgentPerformanceEvaluator:
     """Evaluates overall agent performance including success rates and error handling."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.interaction_results: List[Dict[str, Any]] = []
 
     def add_interaction_result(
@@ -595,7 +595,7 @@ class AgentPerformanceEvaluator:
 class ComprehensiveEvaluator:
     """Comprehensive evaluator that orchestrates all evaluation metrics."""
 
-    def __init__(self, slo_p95_ms: float = 2500):
+    def __init__(self, slo_p95_ms: float = 2500) -> None:
         """
         Initialize comprehensive evaluator.
 

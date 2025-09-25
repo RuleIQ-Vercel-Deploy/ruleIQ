@@ -107,9 +107,6 @@ def health_check():
     return checks
 
 
-$1
-
-
 @app.get("/api/v1/health/database")
 def database_health():
     from database.serverless_db import test_database_connection

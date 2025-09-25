@@ -95,7 +95,7 @@ class CollectionResult:
 class EvidenceCache:
     """In-memory evidence cache with TTL"""
 
-    def __init__(self, default_ttl_seconds: int=3600):
+    def __init__(self, default_ttl_seconds: int=3600) -> None:
         self._cache: Dict[str, Tuple[Any, datetime]] = {}
         self._default_ttl = timedelta(seconds=default_ttl_seconds)
         self._hit_count = 0
@@ -154,7 +154,7 @@ class EvidenceOrchestratorV2:
     Next-generation evidence orchestrator with advanced capabilities
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._sources: Dict[str, EvidenceSource] = {}
         self._cache = EvidenceCache()
         self._concurrency_limit = 5

@@ -33,7 +33,7 @@ class EnhancedComplianceGraph:
     Enhanced compliance graph with proper state management.
     """
 
-    def __init__(self, checkpointer: Optional[Any]=None):
+    def __init__(self, checkpointer: Optional[Any]=None) -> None:
         """
         Initialize the enhanced compliance graph.
 

@@ -28,7 +28,7 @@ class AgentStatus(Enum):
 class OrchestratorService:
     """Main orchestrator service for agent management."""
 
-    def __init__(self, db_session: Session):
+    def __init__(self, db_session: Session) -> None:
         """Initialize orchestrator with database session."""
         self.db = db_session
         self.agent_registry: Dict[UUID, Agent] = {}

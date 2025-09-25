@@ -11,7 +11,6 @@ import logging
 from typing import Any, Optional, Dict, Union
 from datetime import timedelta
 from services.kv_adapter import get_cache, CacheAdapter
-from config.settings import settings
 logger = logging.getLogger(__name__)
 
 
@@ -26,7 +25,7 @@ class CacheService:
     - Connection pooling and health monitoring
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._cache_adapter: Optional[CacheAdapter] = None
         self._cache_available = None
         self._memory_cache: Dict[str, Dict[str, Any]] = {}
@@ -199,7 +198,7 @@ class CacheService:
                 else:
                     await cache_adapter.flushdb()
             if pattern:
-                keys_to_delete = [key for key in self._memory_cache.keys() if
+                keys_to_delete = [key for key in self._memory_cache if
                     pattern.replace('*', '') in key]
                 for key in keys_to_delete:
                     del self._memory_cache[key]

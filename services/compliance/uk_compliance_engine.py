@@ -80,7 +80,7 @@ class UKComplianceManifest:
     Manages all UK regulatory requirements with 108 obligations
     """
 
-    def __init__(self, manifest_path: Optional[str] = None):
+    def __init__(self, manifest_path: Optional[str] = None) -> None:
         self.manifest_path = (
             manifest_path or "data/manifests/uk_compliance_manifest.json",
         )
@@ -108,7 +108,7 @@ class UKComplianceManifest:
                             self._index_obligation(obligation, reg_id)
 
             elif "components" in regulation:  # FCA structure
-                for comp_id, component in regulation["components"].items():
+                for _comp_id, component in regulation["components"].items():
                     for obligation in component.get("obligations", []):
                         self._index_obligation(obligation, reg_id)
 
@@ -222,7 +222,7 @@ class UKComplianceAssessmentEngine:
     Uses IQ agent capabilities with production prompts
     """
 
-    def __init__(self, manifest: UKComplianceManifest):
+    def __init__(self, manifest: UKComplianceManifest) -> None:
         self.manifest = manifest
         self.assessment_prompts = self._load_assessment_prompts()
 
@@ -233,38 +233,38 @@ class UKComplianceAssessmentEngine:
                 input_variables=["organization", "regulation", "context"],
                 template="""
                 You are an expert UK compliance officer conducting a risk assessment.
-                
+
                 Organization: {organization}
                 Regulation: {regulation}
                 Context: {context}
-                
+
                 Conduct a comprehensive risk assessment following UK regulatory standards:
-                
+
                 1. INHERENT RISK ANALYSIS
                 - Identify risks based on business activities
                 - Consider UK-specific regulatory requirements
                 - Evaluate sector-specific risks
-                
+
                 2. CONTROL EFFECTIVENESS
                 - Assess existing controls against UK standards
                 - Identify control gaps
                 - Rate control maturity (1-5 scale)
-                
+
                 3. RESIDUAL RISK CALCULATION
                 - Calculate post-control risk levels
                 - Use UK regulatory risk matrices
                 - Consider enforcement trends
-                
+
                 4. RECOMMENDATIONS
                 - Priority remediation actions
                 - Quick wins vs strategic initiatives
                 - Resource requirements
-                
+
                 5. UK-SPECIFIC CONSIDERATIONS
                 - ICO guidance alignment
                 - FCA expectations
                 - Recent enforcement actions
-                
+
                 Output as structured JSON with risk scores and actionable recommendations.
                 """,
             ),
@@ -272,41 +272,41 @@ class UKComplianceAssessmentEngine:
                 input_variables=["current_state", "requirements", "regulation"],
                 template="""
                 Perform a detailed gap analysis for UK {regulation} compliance.
-                
+
                 Current State: {current_state}
                 Requirements: {requirements}
-                
+
                 Analysis Framework:
-                
+
                 1. REQUIREMENT MAPPING
                 - Map each UK regulatory requirement
                 - Identify implementation status
                 - Document evidence available
-                
+
                 2. GAP IDENTIFICATION
                 - Controls not implemented
                 - Partially implemented controls
                 - Documentation gaps
                 - Process gaps
-                
+
                 3. PRIORITIZATION
                 - Critical gaps (immediate risk)
                 - High priority (regulatory focus areas)
                 - Medium priority (best practices)
                 - Low priority (enhancements)
-                
+
                 4. REMEDIATION ROADMAP
                 - Quick fixes (< 1 month)
                 - Short-term (1-3 months)
                 - Medium-term (3-6 months)
                 - Long-term (6+ months)
-                
+
                 5. RESOURCE REQUIREMENTS
                 - People (roles, skills)
                 - Process (new/updated)
                 - Technology (tools, systems)
                 - Budget estimates
-                
+
                 Provide detailed gap analysis with actionable remediation plan.
                 """,
             ),
@@ -314,40 +314,40 @@ class UKComplianceAssessmentEngine:
                 input_variables=["control", "requirement", "evidence"],
                 template="""
                 Evaluate control effectiveness for UK regulatory compliance.
-                
+
                 Control: {control}
                 Requirement: {requirement}
                 Evidence: {evidence}
-                
+
                 Assessment Criteria:
-                
+
                 1. DESIGN EFFECTIVENESS
                 - Does control address the requirement?
                 - UK regulatory alignment
                 - Industry best practices
-                
+
                 2. OPERATIONAL EFFECTIVENESS
                 - Implementation quality
                 - Consistency of application
                 - Evidence of operation
-                
+
                 3. TESTING RESULTS
                 - Test methodology
                 - Sample selection
                 - Findings and exceptions
-                
+
                 4. MATURITY RATING
                 Level 1: Initial/Ad-hoc
                 Level 2: Developing
                 Level 3: Defined
                 Level 4: Managed
                 Level 5: Optimized
-                
+
                 5. IMPROVEMENT RECOMMENDATIONS
                 - Immediate fixes
                 - Enhancement opportunities
                 - Automation potential
-                
+
                 Rate effectiveness and provide improvement roadmap.
                 """,
             ),
@@ -355,49 +355,49 @@ class UKComplianceAssessmentEngine:
                 input_variables=["assessment_results", "period", "organization"],
                 template="""
                 Create executive board report for UK compliance status.
-                
+
                 Organization: {organization}
                 Period: {period}
                 Results: {assessment_results}
-                
+
                 BOARD REPORT STRUCTURE:
-                
+
                 1. EXECUTIVE SUMMARY
                 - Overall compliance score
                 - Key achievements
                 - Critical issues
                 - Required decisions
-                
+
                 2. UK REGULATORY LANDSCAPE
                 - Recent regulatory changes
                 - Upcoming requirements
                 - Enforcement trends
                 - Peer comparisons
-                
+
                 3. COMPLIANCE STATUS
                 - By regulation (GDPR, FCA, MLR, etc.)
                 - Traffic light status
                 - Trend analysis
                 - Benchmarking
-                
+
                 4. KEY RISKS & ISSUES
                 - Critical findings
                 - Potential penalties
                 - Reputational risks
                 - Remediation status
-                
+
                 5. STRATEGIC INITIATIVES
                 - Compliance program enhancements
                 - Technology investments
                 - Resource requirements
                 - ROI analysis
-                
+
                 6. RECOMMENDATIONS
                 - Board actions required
                 - Policy approvals needed
                 - Resource allocations
                 - Strategic decisions
-                
+
                 Format for board presentation with clear visuals and metrics.
                 """,
             ),

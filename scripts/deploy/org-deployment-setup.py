@@ -5,12 +5,10 @@ Verifies and configures organization-level deployment infrastructure
 """
 
 import json
-import os
 import subprocess
 import sys
-import time
 from pathlib import Path
-from typing import Dict, List, Tuple, Optional
+from typing import Tuple
 from datetime import datetime
 
 class Colors:
@@ -25,7 +23,7 @@ class Colors:
     BOLD = '\033[1m'
 
 class OrganizationDeploymentSetup:
-    def __init__(self):
+    def __init__(self) -> None:
         self.org_name = "RuleIQ-Vercel-Deploy"
         self.repo_name = "ruleIQ"
         self.org_repo_url = f"https://github.com/{self.org_name}/{self.repo_name}.git"
@@ -279,9 +277,9 @@ class OrganizationDeploymentSetup:
 
         print(f"\n{Colors.BOLD}Option B: Manual GitHub Actions{Colors.NC}")
         print(f"  1. Go to: {Colors.BLUE}https://github.com/{self.org_name}/{self.repo_name}/actions{Colors.NC}")
-        print(f"  2. Select 'Vercel Deployment' workflow")
-        print(f"  3. Click 'Run workflow'")
-        print(f"  4. Select 'production' environment")
+        print("  2. Select 'Vercel Deployment' workflow")
+        print("  3. Click 'Run workflow'")
+        print("  4. Select 'production' environment")
 
         print(f"\n{Colors.BOLD}Option C: Vercel CLI Direct{Colors.NC}")
         print(f"  {Colors.CYAN}vercel link{Colors.NC}  # Link to organization")
@@ -302,14 +300,14 @@ class OrganizationDeploymentSetup:
         print(f"  • Repository access: {Colors.BLUE}https://github.com/{self.org_name}/{self.repo_name}/settings/access{Colors.NC}")
 
         print(f"\n{Colors.BOLD}Vercel Organization Access:{Colors.NC}")
-        print(f"  • Team settings in Vercel dashboard")
-        print(f"  • Project-specific permissions")
-        print(f"  • Environment variable access controls")
+        print("  • Team settings in Vercel dashboard")
+        print("  • Project-specific permissions")
+        print("  • Environment variable access controls")
 
         print(f"\n{Colors.BOLD}Neon Database Access:{Colors.NC}")
-        print(f"  • Database user management")
-        print(f"  • Branch-based access controls")
-        print(f"  • Read/write permissions per user")
+        print("  • Database user management")
+        print("  • Branch-based access controls")
+        print("  • Read/write permissions per user")
 
         self.report["checks"]["team_access"] = "documented"
 
@@ -395,9 +393,9 @@ echo "✅ Validation complete"
         if all_passed:
             print(f"{Colors.GREEN}{Colors.BOLD}✅ READY FOR ORGANIZATION DEPLOYMENT!{Colors.NC}")
             print(f"\n{Colors.YELLOW}Next Steps:{Colors.NC}")
-            print(f"1. Configure GitHub Actions secrets")
-            print(f"2. Link Vercel project to organization")
-            print(f"3. Push to main branch to deploy")
+            print("1. Configure GitHub Actions secrets")
+            print("2. Link Vercel project to organization")
+            print("3. Push to main branch to deploy")
         else:
             print(f"{Colors.YELLOW}{Colors.BOLD}⚠️  SOME CHECKS REQUIRE ATTENTION{Colors.NC}")
             print(f"\n{Colors.YELLOW}Recommendations:{Colors.NC}")

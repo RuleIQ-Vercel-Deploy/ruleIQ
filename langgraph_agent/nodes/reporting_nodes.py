@@ -179,18 +179,18 @@ async def distribute_report_node(
 
         body = f"""
         Dear Compliance Team,
-        
+
         Please find attached the latest compliance report for company {company_id}.
-        
+
         Report Details:
         - Type: {state.get('report_data', {}).get('report_type')}
         - Generated: {state.get('report_data', {}).get('generated_at')}
         - Format: {state.get('report_data', {}).get('format')}
-        
+
         Compliance Summary:
         - Score: {state.get('compliance_data', {}).get('check_results', {}).get('compliance_score', 'N/A')}%
         - Risk Level: {state.get('compliance_data', {}).get('risk_assessment', {}).get('level', 'N/A')}
-        
+
         Best regards,
         Compliance Monitoring System
         """
@@ -423,11 +423,11 @@ async def generate_pdf_report(report_data: Dict[str, Any]) -> bytes:
     pdf_content = f"""
     {report_data.get('title', 'Compliance Report')}
     {'=' * 50}
-    
+
     Generated: {report_data.get('generated_at')}
-    
+
     {report_data.get('summary', '')}
-    
+
     Details:
     {json.dumps(report_data.get('details', {}), indent=2)}
     """

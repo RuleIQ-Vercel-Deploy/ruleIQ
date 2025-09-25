@@ -197,7 +197,7 @@ APP_INFO = Info(
 class MetricsCollector:
     """Central metrics collection and management."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.start_time = time.time()
         self._update_app_info()
 

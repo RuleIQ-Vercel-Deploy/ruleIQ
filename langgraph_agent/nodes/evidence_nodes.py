@@ -31,7 +31,7 @@ class EvidenceCollectionNode:
     using Neon database for state persistence.
     """
 
-    def __init__(self, processor=None, duplicate_detector=None):
+    def __init__(self, processor=None, duplicate_detector=None) -> None:
         """Initialize evidence collection node with optional dependencies.
 
         Args:
@@ -90,10 +90,7 @@ class EvidenceCollectionNode:
                             state['processing_status'] = 'skipped'
                             state['messages'].append(SystemMessage(content='Evidence skipped: duplicate detected'))
                         return state if not return_evidence_only else {'status': 'duplicate'}
-                    if self.processor:
-                        processor = self.processor
-                    else:
-                        processor = EvidenceProcessor(db)
+                    processor = self.processor or EvidenceProcessor(db)
                     new_evidence = EvidenceItem(user_id=user_id, business_profile_id=business_profile_id, framework_id=evidence_data.get('framework_id', user_id), evidence_name=evidence_data.get('evidence_name', 'Evidence Item'), evidence_type=evidence_data.get('evidence_type', 'Document'), control_reference=evidence_data.get('control_reference', 'N/A'), description=evidence_data.get('description', ''), automation_source=evidence_data.get('source', integration_id), ai_metadata=evidence_data.get('raw_data', {}), status='collected', collected_at=datetime.now(timezone.utc), collected_by=str(user_id))
                     processor.process_evidence(new_evidence)
                     db.add(new_evidence)

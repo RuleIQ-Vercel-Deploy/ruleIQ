@@ -97,7 +97,7 @@ class AutomationScorer:
     Analyzes automation potential and generates implementation roadmaps.
     """
 
-    def __init__(self, neo4j_uri: str, neo4j_user: str, neo4j_password: str):
+    def __init__(self, neo4j_uri: str, neo4j_user: str, neo4j_password: str) -> None:
         self.neo4j_uri = neo4j_uri
         self.neo4j_user = neo4j_user
         self.neo4j_password = neo4j_password
@@ -584,7 +584,7 @@ class AutomationScorer:
 
             # Calculate metrics
             total_hours = sum(opp.effort_hours for opp in opportunities)
-            total_savings = sum(opp.estimated_savings_annual for opp in opportunities)
+            sum(opp.estimated_savings_annual for opp in opportunities)
             avg_roi = np.mean(
                 [
                     opp.roi_months
@@ -756,7 +756,7 @@ class AutomationScorer:
             query = """
             MATCH (r:Regulation)
             WHERE r.business_triggers IS NOT NULL
-            RETURN 
+            RETURN
                 r.tags as tags,
                 avg(r.automation_potential) as avg_automation,
                 count(r) as count

@@ -75,7 +75,7 @@ For specific entity queries (e.g., "GDPR Article 33 requirements"):
 - 1-2 hop traversal for related entities
 - Return specific obligations, controls, evidence
 
-### GLOBAL GraphRAG  
+### GLOBAL GraphRAG
 For synthesis queries (e.g., "AML landscape across jurisdictions"):
 - Cross-jurisdictional aggregation
 - Pattern detection across multiple regulations
@@ -116,7 +116,7 @@ Always return a ContextPack containing:
 - ALWAYS prefer primary sources over secondary
 """
 
-    def __init__(self, neo4j_service: Neo4jGraphRAGService):
+    def __init__(self, neo4j_service: Neo4jGraphRAGService) -> None:
         """Initialize the GraphRAG Retriever"""
         self.neo4j = neo4j_service
         self.embeddings = OpenAIEmbeddings()
@@ -560,11 +560,13 @@ Always return a ContextPack containing:
             return [0.0] * 1536  # Return zero vector as fallback
 
     async def validate_coverage(
-        self, jurisdictions: List[str] = ["UK", "EU", "US"]
+        self, jurisdictions: List[str] = None
     ) -> Dict[str, Any]:
         """
         Validate coverage of regulations across jurisdictions
         """
+        if jurisdictions is None:
+            jurisdictions = ["UK", "EU", "US"]
         coverage_query = """
         MATCH (r:Regulation)
         WITH r.jurisdiction as jurisdiction, count(r) as reg_count

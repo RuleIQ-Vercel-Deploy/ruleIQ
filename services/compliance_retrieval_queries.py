@@ -59,7 +59,7 @@ class QueryResult:
 class ComplianceRetrievalQueries:
     """Production-ready retrieval queries for compliance intelligence"""
 
-    def __init__(self, neo4j_service: Neo4jGraphRAGService):
+    def __init__(self, neo4j_service: Neo4jGraphRAGService) -> None:
         self.neo4j = neo4j_service
 
     async def get_regulatory_coverage_analysis(self, domain_name: Optional[
@@ -71,15 +71,15 @@ class ComplianceRetrievalQueries:
         OPTIONAL MATCH (r)-[:ENFORCED_IN]->(j:Jurisdiction)
         OPTIONAL MATCH (r)<-[:MANDATED_BY]-(req:Requirement)
         OPTIONAL MATCH (req)<-[:ADDRESSES]-(c:Control)
-        
+
         WHERE ($domain IS NULL OR d.name = $domain)
         AND ($jurisdiction IS NULL OR j.code = $jurisdiction OR j.name = $jurisdiction)
-        
-        WITH d, r, j, 
+
+        WITH d, r, j,
              count(DISTINCT req) as requirements_count,
              count(DISTINCT c) as controls_count,
              collect(DISTINCT req.risk_level) as risk_levels
-        
+
         RETURN d.name as domain,
                d.risk_level as domain_risk,
                r.code as regulation_code,
@@ -88,12 +88,12 @@ class ComplianceRetrievalQueries:
                requirements_count,
                controls_count,
                risk_levels,
-               CASE 
+               CASE
                    WHEN controls_count = 0 THEN 0.0
                    WHEN requirements_count = 0 THEN 0.0
                    ELSE toFloat(controls_count) / toFloat(requirements_count)
                END as coverage_ratio
-        
+
         ORDER BY domain, regulation_code
         """
         result = await self.neo4j.execute_query(query, {'domain':
@@ -133,18 +133,18 @@ class ComplianceRetrievalQueries:
         query = """
         MATCH (r:Regulation)-[:ENFORCED_IN]->(j:Jurisdiction)
         WHERE r.code IN $regulation_codes
-        
+
         WITH r, j
         MATCH (r)<-[:MANDATED_BY]-(req:Requirement)
         OPTIONAL MATCH (req)<-[:ADDRESSES]-(c:Control)
         OPTIONAL MATCH (r)<-[:VIOLATES]-(ec:EnforcementCase)
-        
+
         WITH r, j, req, c, ec,
              CASE r.extraterritorial_reach
                  WHEN true THEN ["global"]
                  ELSE [j.code]
              END as applicable_jurisdictions
-        
+
         RETURN r.code as regulation_code,
                r.name as regulation_name,
                r.extraterritorial_reach as extraterritorial,
@@ -157,7 +157,7 @@ class ComplianceRetrievalQueries:
                avg(ec.penalty_amount) as avg_penalty_amount,
                collect(DISTINCT req.business_function) as affected_functions,
                max(ec.case_date) as latest_enforcement
-        
+
         ORDER BY extraterritorial DESC, requirements_count DESC
         """
         result = await self.neo4j.execute_query(query, {'regulation_codes':
@@ -199,55 +199,55 @@ class ComplianceRetrievalQueries:
         """Detect convergence patterns in regulatory risks"""
         query = """
         MATCH (req1:Requirement)-[:SIMILAR_RISK]->(req2:Requirement)
-        WHERE req1.risk_level IN ['high', 'critical'] 
+        WHERE req1.risk_level IN ['high', 'critical']
         AND req2.risk_level IN ['high', 'critical']
-        
+
         MATCH (req1)-[:MANDATED_BY]->(r1:Regulation)
         MATCH (req2)-[:MANDATED_BY]->(r2:Regulation)
         MATCH (r1)-[:GOVERNED_BY]->(d1:ComplianceDomain)
         MATCH (r2)-[:GOVERNED_BY]->(d2:ComplianceDomain)
-        
+
         WITH req1, req2, r1, r2, d1, d2,
-             CASE 
+             CASE
                  WHEN d1 = d2 THEN "same_domain"
                  ELSE "cross_domain"
              END as convergence_type
-        
+
         OPTIONAL MATCH (req1)<-[:ADDRESSES]-(c1:Control)
         OPTIONAL MATCH (req2)<-[:ADDRESSES]-(c2:Control)
-        
+
         WITH req1, req2, r1, r2, d1, d2, convergence_type,
              count(DISTINCT c1) as controls_req1,
              count(DISTINCT c2) as controls_req2,
              collect(DISTINCT c1.control_type) as control_types_1,
              collect(DISTINCT c2.control_type) as control_types_2
-        
+
         RETURN req1.id as requirement_1_id,
                req1.title as requirement_1_title,
                req1.business_function as function_1,
                r1.code as regulation_1,
                d1.name as domain_1,
-               
+
                req2.id as requirement_2_id,
                req2.title as requirement_2_title,
                req2.business_function as function_2,
                r2.code as regulation_2,
                d2.name as domain_2,
-               
+
                convergence_type,
                controls_req1,
                controls_req2,
                control_types_1,
                control_types_2,
-               
-               CASE 
+
+               CASE
                    WHEN controls_req1 > 0 AND controls_req2 > 0 THEN "both_controlled"
                    WHEN controls_req1 > 0 OR controls_req2 > 0 THEN "partially_controlled"
                    ELSE "uncontrolled"
                END as control_status,
-               
+
                size(apoc.coll.intersection(control_types_1, control_types_2)) as shared_control_types
-        
+
         ORDER BY convergence_type, shared_control_types DESC
         """
         result = await self.neo4j.execute_query(query)
@@ -296,18 +296,18 @@ class ComplianceRetrievalQueries:
         query = """
         MATCH (req:Requirement)-[:MANDATED_BY]->(r:Regulation)-[:GOVERNED_BY]->(d:ComplianceDomain)
         WHERE ($functions IS NULL OR req.business_function IN $functions)
-        
+
         OPTIONAL MATCH (req)<-[:ADDRESSES]-(c:Control)
-        
-        WITH req, r, d, 
+
+        WITH req, r, d,
              count(c) as control_count,
              collect(c) as controls
-        
+
         WHERE control_count = 0  // Requirements without controls = gaps
-        
+
         OPTIONAL MATCH (r)<-[:VIOLATES]-(ec:EnforcementCase)
         OPTIONAL MATCH (r)<-[:ASSESSES]-(ra:RiskAssessment)
-        
+
         RETURN req.id as requirement_id,
                req.title as requirement_title,
                req.description as requirement_description,
@@ -315,28 +315,28 @@ class ComplianceRetrievalQueries:
                req.business_function as business_function,
                req.deadline_type as deadline_type,
                req.mandatory as mandatory,
-               
+
                r.code as regulation_code,
                r.name as regulation_name,
                r.risk_rating as regulation_risk,
                r.penalty_framework as penalty_framework,
-               
+
                d.name as domain_name,
                d.business_impact as domain_impact,
-               
+
                count(DISTINCT ec) as historical_violations,
                max(ec.penalty_amount) as max_penalty_observed,
-               
+
                ra.risk_rating as current_risk_assessment,
                ra.residual_risk as residual_risk_level,
                ra.next_review as next_risk_review
-        
-        ORDER BY 
-            CASE req.risk_level 
-                WHEN 'critical' THEN 1 
-                WHEN 'high' THEN 2 
-                WHEN 'medium' THEN 3 
-                ELSE 4 
+
+        ORDER BY
+            CASE req.risk_level
+                WHEN 'critical' THEN 1
+                WHEN 'high' THEN 2
+                WHEN 'medium' THEN 3
+                ELSE 4
             END,
             historical_violations DESC,
             max_penalty_observed DESC
@@ -398,15 +398,15 @@ class ComplianceRetrievalQueries:
         query = """
         MATCH (r:Regulation)
         WHERE r.last_updated >= date($lookback_date)
-        
+
         OPTIONAL MATCH (r)<-[:MANDATED_BY]-(req:Requirement)
         OPTIONAL MATCH (r)<-[:ASSESSES]-(ra:RiskAssessment)
         WHERE ra.next_review <= date($forecast_date)
-        
+
         WITH r, req, ra,
              duration.between(r.effective_date, r.last_updated).months as regulation_age_months,
              duration.between(r.last_updated, date()).months as months_since_update
-        
+
         RETURN r.code as regulation_code,
                r.name as regulation_name,
                r.jurisdiction as jurisdiction,
@@ -414,23 +414,23 @@ class ComplianceRetrievalQueries:
                r.last_updated as last_updated,
                regulation_age_months,
                months_since_update,
-               
+
                count(DISTINCT req) as affected_requirements,
                count(DISTINCT ra) as upcoming_reviews,
                min(ra.next_review) as next_review_date,
-               
-               CASE 
+
+               CASE
                    WHEN months_since_update <= 3 THEN "recent"
                    WHEN months_since_update <= 6 THEN "moderate"
                    ELSE "stable"
                END as change_recency,
-               
-               CASE 
+
+               CASE
                    WHEN regulation_age_months <= 12 THEN "new"
                    WHEN regulation_age_months <= 36 THEN "established"
                    ELSE "mature"
                END as regulation_maturity
-        
+
         ORDER BY months_since_update ASC, upcoming_reviews DESC
         """
         result = await self.neo4j.execute_query(query, {'lookback_date':
@@ -481,14 +481,14 @@ class ComplianceRetrievalQueries:
         query = """
         MATCH (ec:EnforcementCase)-[:VIOLATES]->(r:Regulation)
         WHERE ($violation_types IS NULL OR ec.violation_type IN $violation_types)
-        
+
         MATCH (r)<-[:MANDATED_BY]-(req:Requirement)
         OPTIONAL MATCH (req)<-[:ADDRESSES]-(c:Control)
-        
-        WITH ec, r, req, 
+
+        WITH ec, r, req,
              count(DISTINCT c) as existing_controls,
              collect(DISTINCT c.control_type) as control_types
-        
+
         RETURN ec.id as case_id,
                ec.violation_type as violation_type,
                ec.jurisdiction as jurisdiction,
@@ -499,20 +499,20 @@ class ComplianceRetrievalQueries:
                ec.violation_summary as violation_summary,
                ec.lessons_learned as lessons_learned,
                ec.preventive_measures as preventive_measures,
-               
+
                r.code as regulation_code,
                r.name as regulation_name,
-               
+
                count(DISTINCT req) as affected_requirements,
                existing_controls,
                control_types,
-               
-               CASE 
+
+               CASE
                    WHEN existing_controls = 0 THEN "uncontrolled"
                    WHEN existing_controls < count(DISTINCT req) THEN "partially_controlled"
                    ELSE "fully_controlled"
                END as control_adequacy
-        
+
         ORDER BY ec.case_date DESC, ec.penalty_amount DESC
         """
         result = await self.neo4j.execute_query(query, {'violation_types':

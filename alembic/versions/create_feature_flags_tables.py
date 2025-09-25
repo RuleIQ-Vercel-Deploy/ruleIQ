@@ -1,7 +1,7 @@
 """Create feature flags tables
 
 Revision ID: create_feature_flags_tables
-Revises: 
+Revises:
 Create Date: 2025-01-09
 
 """
@@ -114,7 +114,7 @@ def upgrade() -> None:
     # Insert default feature flags
     op.execute("""
         INSERT INTO feature_flags (id, name, description, enabled, status, percentage, environments, created_by, updated_by)
-        VALUES 
+        VALUES
         (gen_random_uuid(), 'AUTH_MIDDLEWARE_V2_ENABLED', 'Enhanced JWT authentication middleware', true, 'enabled', 100, '["development", "testing", "staging", "production"]'::jsonb, 'system', 'system'),
         (gen_random_uuid(), 'RATE_LIMITING_ENABLED', 'API rate limiting feature', true, 'enabled', 100, '["production", "staging"]'::jsonb, 'system', 'system'),
         (gen_random_uuid(), 'AI_COST_OPTIMIZATION', 'AI cost optimization features', true, 'percentage_rollout', 50, '["production"]'::jsonb, 'system', 'system'),

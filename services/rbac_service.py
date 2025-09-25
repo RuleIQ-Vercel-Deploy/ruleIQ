@@ -16,6 +16,7 @@ from sqlalchemy import and_, or_
 from database.rbac import Role, Permission, UserRole, RolePermission, FrameworkAccess, AuditLog
 from database.user import User
 from database.compliance_framework import ComplianceFramework
+import contextlib
 logger = logging.getLogger(__name__)
 
 
@@ -440,10 +441,8 @@ def initialize_rbac_system(db: Session) ->None:
         'Manage system permissions'), ('admin_audit', 'View Audit Logs',
         'admin_functions', 'Access audit logs')]
     for name, display_name, category, description in default_permissions:
-        try:
+        with contextlib.suppress(ValueError):
             rbac.create_permission(name, display_name, category, description)
-        except ValueError:
-            pass
     default_roles = [('admin', 'Administrator',
         'Full system access with all permissions', True), (
         'framework_manager', 'Framework Manager',
@@ -453,8 +452,6 @@ def initialize_rbac_system(db: Session) ->None:
         'business_user', 'Business User', 'Standard business user access',
         True)]
     for name, display_name, description, is_system in default_roles:
-        try:
+        with contextlib.suppress(ValueError):
             rbac.create_role(name, display_name, description, is_system)
-        except ValueError:
-            pass
     logger.info('RBAC system initialized with default roles and permissions')

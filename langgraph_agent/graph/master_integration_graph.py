@@ -51,7 +51,7 @@ class MasterIntegrationGraph:
     of the compliance system with production-ready reliability.
     """
 
-    def __init__(self, checkpointer: Optional[AsyncPostgresSaver]=None, rag_config: Optional[RAGConfig]=None, enable_streaming: bool=True):
+    def __init__(self, checkpointer: Optional[AsyncPostgresSaver]=None, rag_config: Optional[RAGConfig]=None, enable_streaming: bool=True) -> None:
         """Initialize the master integration graph."""
         self.checkpointer = checkpointer
         self.enable_streaming = enable_streaming

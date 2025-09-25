@@ -185,7 +185,7 @@ class ComplianceAgent:
         memory_manager: Optional[Any] = None,
         rag_system: Optional[Any] = None,
         observability_manager: Optional[Any] = None,
-    ):
+    ) -> None:
         self.config = config
         self.database_url = database_url
         self.tool_manager = tool_manager

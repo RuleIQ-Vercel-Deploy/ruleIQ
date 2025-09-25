@@ -14,7 +14,7 @@ import json
 import hashlib
 import argparse
 from pathlib import Path
-from typing import Dict, List, Tuple, Optional
+from typing import Dict, List
 from datetime import datetime
 
 # Add project root to path
@@ -53,7 +53,7 @@ class HashMigrationValidator:
         'migrations',
     ]
 
-    def __init__(self, project_root: Path):
+    def __init__(self, project_root: Path) -> None:
         """Initialize the migration validator."""
         self.project_root = project_root
         self.findings: List[Dict] = []
@@ -192,7 +192,7 @@ class HashMigrationValidator:
 class CacheMigrationManager:
     """Manages cache invalidation during hash migration."""
 
-    def __init__(self, redis_client=None):
+    def __init__(self, redis_client=None) -> None:
         """Initialize cache migration manager."""
         self.redis_client = redis_client
         self.migration_log = []
@@ -251,7 +251,7 @@ class CacheMigrationManager:
 class RollbackManager:
     """Manages rollback capabilities for the migration."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize rollback manager."""
         self.backup_dir = Path('backups/hash_migration')
         self.backup_dir.mkdir(parents=True, exist_ok=True)

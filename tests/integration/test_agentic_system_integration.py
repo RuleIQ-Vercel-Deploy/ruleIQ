@@ -430,7 +430,7 @@ class TestTrustLevelProgression:
         algorithm = TrustProgressionAlgorithm(user_id)
 
         # Track successful actions
-        for i in range(150):  # More than minimum threshold
+        for _i in range(150):  # More than minimum threshold
             await algorithm.track_action(
                 action_type="code_generation",
                 was_approved=True,

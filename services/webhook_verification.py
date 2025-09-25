@@ -60,7 +60,7 @@ class WebhookVerificationService:
         },
     }
 
-    def __init__(self, redis_client: redis.Redis = None):
+    def __init__(self, redis_client: redis.Redis = None) -> None:
         """Initialize the webhook verification service."""
         self.redis_client = redis_client
         self._secrets_cache = {}

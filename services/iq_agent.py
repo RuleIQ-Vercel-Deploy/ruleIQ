@@ -61,7 +61,7 @@ class IQComplianceAgent:
     """
 
     def __init__(self, neo4j_service: Neo4jGraphRAGService,
-        postgres_session: Optional[AsyncSession]=None, llm_model: str='gpt-4'):
+        postgres_session: Optional[AsyncSession]=None, llm_model: str='gpt-4') -> None:
         """
         Initialize IQComplianceAgent with dual database access.
 
@@ -266,9 +266,9 @@ Remember: You are the Chief Compliance Officer. Think strategically, act decisiv
             try:
                 query = """
                 MATCH (r:Regulation)-[:HAS_REQUIREMENT]->(req:Requirement)
-                WHERE toLower(r.name) CONTAINS toLower($query) 
+                WHERE toLower(r.name) CONTAINS toLower($query)
                    OR toLower(req.title) CONTAINS toLower($query)
-                RETURN r.code as regulation, 
+                RETURN r.code as regulation,
                        collect({
                            id: req.id,
                            title: req.title,
@@ -285,10 +285,10 @@ Remember: You are the Chief Compliance Officer. Think strategically, act decisiv
             try:
                 prompt = f"""
                 User Query: {user_query}
-                
+
                 Relevant Compliance Data:
                 {json.dumps(compliance_data, indent=2) if compliance_data else 'No specific compliance data found'}
-                
+
                 Please provide compliance guidance.
                 """
                 response = await self.llm.ainvoke(prompt)
@@ -666,7 +666,7 @@ Focus on actionable insights derived from the graph analysis.
                     gap_query = """
                     MATCH (r:Regulation {code: 'GDPR'})-[:HAS_REQUIREMENT]->(req:Requirement)
                     WHERE req.risk_level IN ['high', 'critical']
-                    RETURN req.id as requirement_id, req.title as title, 
+                    RETURN req.id as requirement_id, req.title as title,
                            req.risk_level as risk_level, r.code as regulation
                     LIMIT 5
                     """
@@ -688,13 +688,13 @@ Focus on actionable insights derived from the graph analysis.
                 ) if compliance_gaps else 'No specific gaps identified'
         prompt = f"""
         User Query: {user_query}
-        
+
         Business Context:
         {business_context_str}
-        
+
         Compliance Gaps Identified:
         {compliance_gaps_str}
-        
+
         Please provide compliance guidance considering this business context.
         """
         llm_response = ''
@@ -817,7 +817,7 @@ Focus on actionable insights derived from the graph analysis.
         regulation_query = f"""
         MATCH (r:Regulation)-[:HAS_REQUIREMENT]->(req:Requirement)
         WHERE r.code IN {regulations}
-        RETURN r.code as regulation, 
+        RETURN r.code as regulation,
                collect({{
                    id: req.id,
                    title: req.title,

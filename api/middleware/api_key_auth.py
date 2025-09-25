@@ -74,10 +74,7 @@ class APIKeyAuthMiddleware(BaseHTTPMiddleware):
 
     def _requires_api_key_auth(self, path: str) ->bool:
         """Check if the path requires API key authentication."""
-        for prefix in self.protected_prefixes:
-            if path.startswith(prefix):
-                return True
-        return False
+        return any(path.startswith(prefix) for prefix in self.protected_prefixes)
 
     async def _validate_api_key(self, api_key: str, request: Request) ->Tuple[
         bool, Optional[dict], Optional[str]]:

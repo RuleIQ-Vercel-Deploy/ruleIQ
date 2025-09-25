@@ -138,9 +138,8 @@ def validate_file_content(file_content: bytes, content_type: str, filename:
     str='') ->bool:
     """Validate file content matches declared content type."""
     signatures = FILE_SIGNATURES.get(content_type)
-    if signatures is not None:
-        if not any(file_content.startswith(sig) for sig in signatures):
-            return False
+    if signatures is not None and not any(file_content.startswith(sig) for sig in signatures):
+        return False
     try:
         detected_type = get_file_mime_type(file_content, filename)
         if content_type.startswith('text/') and detected_type.startswith(
@@ -322,11 +321,10 @@ def get_file_validator(max_size: int=None, allowed_types: List[str]=None,
                 raise HTTPException(status_code=status.
                     HTTP_422_UNPROCESSABLE_ENTITY, detail=
                     'File content does not match declared type')
-        if enable_malware_check:
-            if not check_for_malicious_content(content, file.filename):
-                raise HTTPException(status_code=status.
-                    HTTP_422_UNPROCESSABLE_ENTITY, detail=
-                    'File contains potentially dangerous content')
+        if enable_malware_check and not check_for_malicious_content(content, file.filename):
+            raise HTTPException(status_code=status.
+                HTTP_422_UNPROCESSABLE_ENTITY, detail=
+                'File contains potentially dangerous content')
         file.filename = analysis_report.filename
         logger.info(
             'File validation complete: %s (Result: %s, Score: %s, Time: %ss)' %

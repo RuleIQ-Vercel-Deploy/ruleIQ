@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 class EnforcementAPIClient:
     """Fetches real enforcement data from FCA, ICO, and other regulators."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.session = None
         self.headers = {'User-Agent':
             'ruleIQ Compliance Platform - Enforcement Monitor', 'Accept':

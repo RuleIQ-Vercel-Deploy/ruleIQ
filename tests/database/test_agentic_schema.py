@@ -464,7 +464,7 @@ class TestConcurrency:
         # Create multiple sessions concurrently
         with ThreadPoolExecutor(max_workers=5) as executor:
             futures = []
-            for i in range(10):
+            for _i in range(10):
                 future = executor.submit(create_session, sample_agent.agent_id, uuid4())
                 futures.append(future)
 

@@ -15,10 +15,10 @@ logger = logging.getLogger(__name__)
 def generate_secure_password(length: int = 24) -> str:
     """
     Generate a cryptographically secure password.
-    
+
     Args:
         length: Password length (minimum 16)
-        
+
     Returns:
         str: Secure random password
     """
@@ -44,9 +44,9 @@ def generate_secure_password(length: int = 24) -> str:
 def get_grafana_credentials() -> Dict[str, str]:
     """
     Get secure Grafana admin credentials.
-    
+
     Returns credentials from environment or generates secure defaults.
-    
+
     Returns:
         Dict with 'username' and 'password'
     """
@@ -90,7 +90,7 @@ def get_grafana_credentials() -> Dict[str, str]:
 def get_prometheus_credentials() -> Dict[str, Any]:
     """
     Get Prometheus security configuration.
-    
+
     Returns:
         Dict with Prometheus security settings
     """
@@ -112,7 +112,7 @@ def get_prometheus_credentials() -> Dict[str, Any]:
 def generate_monitoring_env_file(filepath: str = '.env.monitoring') -> None:
     """
     Generate secure monitoring environment file.
-    
+
     Args:
         filepath: Path to save the environment file
     """
@@ -179,7 +179,7 @@ MONITORING_EVALUATION_INTERVAL=15s
 def validate_monitoring_security() -> Dict[str, bool]:
     """
     Validate monitoring security configuration.
-    
+
     Returns:
         Dict with validation results
     """

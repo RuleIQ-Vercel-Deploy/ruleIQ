@@ -491,9 +491,8 @@ class InstructionPerformanceMonitor:
         """Update A/B test data with new metric"""
         for test_id, test_config in self.active_ab_tests.items():
             if metric.instruction_id in [test_config.instruction_a_id,
-                test_config.instruction_b_id]:
-                if self._should_complete_ab_test(test_config):
-                    self._complete_ab_test(test_id)
+                test_config.instruction_b_id] and self._should_complete_ab_test(test_config):
+                self._complete_ab_test(test_id)
 
     def _should_complete_ab_test(self, test_config: ABTestConfig) ->bool:
         """Check if A/B test should be completed"""
@@ -622,10 +621,9 @@ class InstructionPerformanceMonitor:
         """Find instructions matching the given criteria"""
         matching = []
         for instruction_id, info in self.instruction_registry.items():
-            if instruction_type == 'all' or info.get('type'
-                ) == instruction_type:
-                if not framework or info.get('framework') == framework:
-                    matching.append(instruction_id)
+            if (instruction_type == 'all' or info.get('type'
+                ) == instruction_type) and (not framework or info.get('framework') == framework):
+                matching.append(instruction_id)
         return matching
 
     def _generate_summary_stats(self, time_window: timedelta) ->Dict[str, Any]:

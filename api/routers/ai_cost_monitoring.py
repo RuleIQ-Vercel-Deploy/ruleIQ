@@ -13,7 +13,7 @@ and real-time monitoring of AI service usage and expenses.
 from datetime import date, datetime, timedelta
 from decimal import Decimal
 from typing import Dict, List, Optional, Any
-from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from pydantic import BaseModel, Field
 from api.dependencies.auth import get_current_active_user
 from database.user import User

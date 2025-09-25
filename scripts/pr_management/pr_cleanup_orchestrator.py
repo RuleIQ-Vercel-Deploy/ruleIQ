@@ -4,11 +4,10 @@ PR Cleanup Orchestrator - Main coordinator for systematic PR cleanup
 """
 
 import json
-import sys
 import argparse
 from pathlib import Path
 from datetime import datetime
-from typing import Dict, List
+from typing import Dict
 import logging
 
 # Import all components
@@ -32,7 +31,7 @@ logger = logging.getLogger(__name__)
 class PRCleanupOrchestrator:
     """Orchestrates the entire PR cleanup process"""
 
-    def __init__(self, dry_run: bool = True, config: Dict = None):
+    def __init__(self, dry_run: bool = True, config: Dict = None) -> None:
         """Initialize orchestrator with all components"""
         self.dry_run = dry_run
         self.config = config or {}
@@ -126,7 +125,7 @@ class PRCleanupOrchestrator:
         self.results['phases']['ci_check'] = ci_results
 
         summary = ci_results['summary']
-        logger.info(f"CI Status Summary:")
+        logger.info("CI Status Summary:")
         logger.info(f"  - All passing: {summary['all_passing']}")
         logger.info(f"  - Some failing: {summary['some_failing']}")
         logger.info(f"  - Pending: {summary['pending']}")
@@ -177,7 +176,7 @@ class PRCleanupOrchestrator:
         dependabot_results = self.dependabot.process_all_dependabot_prs()
         self.results['phases']['dependabot'] = dependabot_results
 
-        logger.info(f"Dependabot Processing Summary:")
+        logger.info("Dependabot Processing Summary:")
         logger.info(f"  - Total: {dependabot_results['total_prs']}")
         logger.info(f"  - Processed: {dependabot_results['processed']}")
         logger.info(f"  - Skipped: {dependabot_results['skipped']}")
@@ -258,7 +257,7 @@ class PRCleanupOrchestrator:
             else:
                 logger.info(f"[DRY RUN] Would auto-merge PR #{pr_num}")
 
-        logger.info(f"Decision Summary:")
+        logger.info("Decision Summary:")
         logger.info(f"  - Auto-merge: {len(decision_results['summary']['auto_merge'])}")
         logger.info(f"  - Ready for merge: {len(decision_results['summary']['ready_for_merge'])}")
         logger.info(f"  - Needs review: {len(decision_results['summary']['needs_review'])}")
@@ -273,7 +272,7 @@ class PRCleanupOrchestrator:
         cleanup_results = self.branch_cleanup.cleanup_merged_branches()
         self.results['phases']['branch_cleanup'] = cleanup_results
 
-        logger.info(f"Branch Cleanup Summary:")
+        logger.info("Branch Cleanup Summary:")
         logger.info(f"  - Local deleted: {len(cleanup_results['local_deleted'])}")
         logger.info(f"  - Remote deleted: {len(cleanup_results['remote_deleted'])}")
         logger.info(f"  - Skipped: {len(cleanup_results['skipped'])}")

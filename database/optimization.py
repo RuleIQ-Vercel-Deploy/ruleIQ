@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 class DatabaseOptimizer:
     """Main database optimization handler."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.pool_size = settings.DB_POOL_SIZE if hasattr(settings, 'DB_POOL_SIZE') else 20
         self.max_overflow = settings.DB_MAX_OVERFLOW if hasattr(settings, 'DB_MAX_OVERFLOW') else 10
         self.pool_timeout = 30
@@ -262,7 +262,7 @@ class DatabaseOptimizer:
 class ConnectionPoolManager:
     """Manage database connection pools efficiently."""
 
-    def __init__(self, optimizer: DatabaseOptimizer):
+    def __init__(self, optimizer: DatabaseOptimizer) -> None:
         self.optimizer = optimizer
         self.pools: Dict[str, Any] = {}
         self.pool_stats: Dict[str, Dict] = {}

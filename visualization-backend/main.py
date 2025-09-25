@@ -98,7 +98,7 @@ async def get_candlestick_data(days: int = 30):
     for day in range(days):
         # Generate realistic OHLC data
         daily_volatility = random.uniform(2, 8)
-        trend = random.gauss(0, 1)
+        random.gauss(0, 1)
 
         # Opening price (gap from previous close)
         gap = random.gauss(0, daily_volatility / 4)

@@ -355,8 +355,7 @@ class TestSecurityContractValidation:
             'X-RateLimit-Reset']
         present_headers = [h for h in rate_limit_headers if h in response.
             headers]
-        if present_headers:
-            if 'X-RateLimit-Remaining' in response.headers:
-                remaining = response.headers['X-RateLimit-Remaining']
-                assert remaining.isdigit(
-                    ), 'Rate limit remaining should be a number'
+        if present_headers and 'X-RateLimit-Remaining' in response.headers:
+            remaining = response.headers['X-RateLimit-Remaining']
+            assert remaining.isdigit(
+                ), 'Rate limit remaining should be a number'

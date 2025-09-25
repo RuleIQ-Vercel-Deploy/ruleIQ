@@ -58,8 +58,8 @@ class MockSession:
 
 class Neo4jConnectionFixed:
     """Fixed Neo4j connection with proper error handling."""
-    
-    def __init__(self):
+
+    def __init__(self) -> None:
         self._driver = None
 
     def _initialize_driver(self):
@@ -83,7 +83,7 @@ class Neo4jConnectionFixed:
         if self._driver is None:
             raise RuntimeError("Failed to initialize Neo4j driver")
         return self._driver.session()
-    
+
     def run(self, *args: Any, **kwargs: Any) -> Any:
         """Run a query using the driver."""
         self._initialize_driver()
@@ -144,9 +144,9 @@ class DocumentProcessor:
 class EmbeddingService:
     """Generate embeddings for golden dataset with batch processing support."""
 
-    def __init__(self, model_name: str='BAAI/bge-small-en-v1.5', batch_size: int=32):
+    def __init__(self, model_name: str='BAAI/bge-small-en-v1.5', batch_size: int=32) -> None:
         """Initialize with local sentence-transformers model.
-        
+
         Args:
             model_name: Name of the sentence-transformers model to use
             batch_size: Maximum batch size for encoding multiple texts
@@ -175,10 +175,10 @@ class EmbeddingService:
 
     def generate_embedding(self, texts: str | List[str]) -> List[float] | List[List[float]]:
         """Generate embeddings for single text or batch of texts.
-        
+
         Args:
             texts: Single text string or list of text strings
-            
+
         Returns:
             Single embedding (if input was string) or list of embeddings (if input was list)
         """
@@ -211,7 +211,7 @@ class EmbeddingService:
                 np.random.rand(dimension).tolist()
                 for _ in texts
             ]
-        
+
         # Return single embedding if input was single text
         if is_single:
             return all_embeddings[0]
@@ -221,13 +221,13 @@ class EmbeddingService:
 class ChunkingService:
     """Chunk documents for golden dataset."""
 
-    def __init__(self, chunk_size: int=512, overlap: int=50):
+    def __init__(self, chunk_size: int=512, overlap: int=50) -> None:
         """Initialize chunking parameters.
-        
+
         Args:
             chunk_size: Size of each chunk in characters
             overlap: Number of characters to overlap between chunks
-            
+
         Raises:
             ValueError: If overlap >= chunk_size
         """
@@ -350,7 +350,7 @@ class ChunkingService:
             if isinstance(embeddings[0], (int, float)):
                 # Single embedding returned as List[float], wrap it in a list
                 embeddings = [embeddings]
-        
+
         # Type-safe conversion to ensure correct return type
         result: List[List[float]] = []
         for emb in embeddings:
@@ -363,14 +363,13 @@ class ChunkingService:
                 # Type cast to ensure proper typing
                 emb_list: List[List[float]] = emb  # type: ignore
                 result.extend(emb_list)
+            # This shouldn't happen but handle gracefully
+            elif not isinstance(emb, list):
+                result.append([float(emb)])
             else:
-                # This shouldn't happen but handle gracefully
-                if not isinstance(emb, list):
-                    result.append([float(emb)])
-                else:
-                    # emb is a list but not matching expected patterns
-                    emb_typed: List[float] = emb  # type: ignore
-                    result.append(emb_typed)
+                # emb is a list but not matching expected patterns
+                emb_typed: List[float] = emb  # type: ignore
+                result.append(emb_typed)
 
         logger.info('Generated %d embeddings', len(result))
         return result
@@ -399,7 +398,7 @@ class ChunkingService:
 
     def _write_document_to_neo4j(self, doc: GoldenDoc) -> None:
         """Write document to Neo4j database.
-        
+
         Args:
             doc: Document to write
         """
@@ -559,25 +558,25 @@ class ChunkingService:
 
     def ingest_from_file(self, file_path: str) -> Dict[str, Any]:
         """Ingest golden dataset from file.
-        
+
         Args:
             file_path: Path to the golden dataset JSON file
-            
+
         Returns:
             Ingestion result summary
         """
         result = {'success': False, 'documents_processed': 0,
             'chunks_created': 0, 'embeddings_generated': 0, 'errors': []}
-        
+
         try:
             # Load and validate documents
             documents = self._load_and_validate_documents(file_path)
-            
+
             if not documents:
                 logger.error('No valid documents found in file')
                 result['errors'].append('No valid documents found in file')
                 return result
-            
+
             # Ensure vector index exists
             self._ensure_vector_index()
             # Process each document
@@ -598,7 +597,7 @@ class ChunkingService:
         except (ValueError, RuntimeError, IOError) as e:
             result['errors'].append(f'Ingestion pipeline error: {str(e)}')
             logger.error('❌ Pipeline error: %s', e)
-        
+
         return result
 
     def search_similar(self, query: str, limit: int=5) -> List[Dict[str, Any]]:

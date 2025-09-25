@@ -77,7 +77,7 @@ class CircuitBreaker:
         failure_threshold: int = 5,
         recovery_timeout: timedelta = timedelta(seconds=60),
         half_open_requests: int = 3
-    ):
+    ) -> None:
         """Initialize circuit breaker."""
         self.failure_threshold = failure_threshold
         self.recovery_timeout = recovery_timeout
@@ -140,7 +140,7 @@ class AgentMonitor:
         self,
         metrics_window: timedelta = timedelta(minutes=5),
         health_check_interval: float = 30.0
-    ):
+    ) -> None:
         """Initialize agent monitor."""
         self.metrics_window = metrics_window
         self.health_check_interval = health_check_interval

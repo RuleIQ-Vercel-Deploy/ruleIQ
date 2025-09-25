@@ -11,7 +11,7 @@ import sys
 import socket
 import importlib
 import traceback
-from typing import Dict, List, Tuple, Optional
+from typing import List, Tuple
 
 
 def check_python_packages() -> Tuple[bool, List[str]]:
@@ -21,27 +21,27 @@ def check_python_packages() -> Tuple[bool, List[str]]:
         ("fastapi", "FastAPI"),
         ("uvicorn", "Uvicorn"),
         ("pydantic", "Pydantic"),
-        
+
         # Database
         ("sqlalchemy", "SQLAlchemy"),
         ("alembic", "Alembic"),
         ("psycopg", "psycopg3"),  # Try psycopg3 first
         ("redis", "redis-py"),
-        
+
         # API dependencies
         ("httpx", "HTTPX"),
         ("python-multipart", "python-multipart"),
         ("python-jose", "python-jose[cryptography]"),
         ("passlib", "Passlib"),
-        
+
         # AI/ML
         ("langchain", "LangChain"),
         ("openai", "OpenAI"),
-        
+
         # Testing
         ("pytest", "pytest"),
         ("pytest_asyncio", "pytest-asyncio"),
-        
+
         # Utilities
         ("python-dotenv", "python-dotenv"),
         ("pyyaml", "PyYAML"),
@@ -51,7 +51,7 @@ def check_python_packages() -> Tuple[bool, List[str]]:
     success = True
 
     print("📦 Checking Python packages...")
-    
+
     for module_name, package_name in required_packages:
         try:
             # Special handling for psycopg
@@ -63,7 +63,7 @@ def check_python_packages() -> Tuple[bool, List[str]]:
                     # Try psycopg2 as fallback
                     try:
                         importlib.import_module("psycopg2")
-                        print(f"  ✅ psycopg2 (fallback)")
+                        print("  ✅ psycopg2 (fallback)")
                     except ImportError:
                         errors.append(f"{package_name} or psycopg2")
                         print(f"  ❌ {package_name} (psycopg2 also not found)")
@@ -213,7 +213,7 @@ def check_port_availability() -> Tuple[bool, List[str]]:
     for port, service in ports_to_check:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.settimeout(1)
-        
+
         # Check if port is in use (connect succeeds = port is occupied)
         result = sock.connect_ex(("localhost", port))
         sock.close()
@@ -253,13 +253,12 @@ def check_requirements_file() -> Tuple[bool, List[str]]:
                 print(f"  ❌ {req_file}: {e}")
                 if req_file == "requirements.txt":  # Main file is critical
                     success = False
+        elif req_file == "requirements.txt":
+            errors.append(f"{req_file} not found")
+            print(f"  ❌ {req_file}: NOT FOUND")
+            success = False
         else:
-            if req_file == "requirements.txt":
-                errors.append(f"{req_file} not found")
-                print(f"  ❌ {req_file}: NOT FOUND")
-                success = False
-            else:
-                print(f"  ⚠️  {req_file}: not found (optional)")
+            print(f"  ⚠️  {req_file}: not found (optional)")
 
     return success, errors
 

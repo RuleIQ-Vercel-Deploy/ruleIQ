@@ -197,7 +197,7 @@ class TestCacheStrategyOptimization:
         # Verify invalidation trigger was recorded
         assert any(
             "business_profile_update" in key
-            for key in cache_manager.invalidation_triggers.keys()
+            for key in cache_manager.invalidation_triggers
         )
 
     def test_framework_invalidation(self, cache_manager):

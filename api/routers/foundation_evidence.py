@@ -269,7 +269,7 @@ async def start_foundation_evidence_collection(request:
                 )
         evidence_types = request.evidence_types or []
         if not evidence_types:
-            for provider, integration in integration_map.items():
+            for provider, _integration in integration_map.items():
                 if provider == 'aws':
                     evidence_types.extend(['iam_policies', 'iam_users',
                         'iam_roles', 'security_groups', 'cloudtrail_logs'])

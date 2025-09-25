@@ -23,7 +23,7 @@ class IntegratedErrorHandler:
     Tracks failures per node and implements circuit breaking to prevent cascading failures.
     """
 
-    def __init__(self, failure_threshold: int=3, recovery_timeout: int=60, half_open_requests: int=1):
+    def __init__(self, failure_threshold: int=3, recovery_timeout: int=60, half_open_requests: int=1) -> None:
         """
         Initialize error handler with circuit breaker.
 
@@ -178,10 +178,7 @@ class IntegratedErrorHandler:
                 return True
         error_message = str(error).lower()
         retryable_patterns = ['connection', 'timeout', 'rate limit', 'temporary', 'unavailable', 'too many requests']
-        for pattern in retryable_patterns:
-            if pattern in error_message:
-                return True
-        return False
+        return any(pattern in error_message for pattern in retryable_patterns)
 
     def wrap_node(self, node_func: Callable) -> Callable:
         """

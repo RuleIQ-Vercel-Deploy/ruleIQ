@@ -49,7 +49,7 @@ class ApprovalWorkflow:
     Manages approval workflows for L0 agent actions
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize approval workflow engine"""
         self.pending_requests: Dict[str, ApprovalRequest] = {}
         self.completed_requests: List[ApprovalRequest] = []
@@ -74,7 +74,7 @@ class ApprovalWorkflow:
     ) -> ApprovalRequest:
         """
         Create a new approval request
-        
+
         Args:
             suggestion_id: ID of the suggestion requiring approval
             user_id: ID of the user to request approval from
@@ -84,10 +84,10 @@ class ApprovalWorkflow:
             risk_level: Risk level assessment
             timeout: Optional custom timeout
             metadata: Additional metadata
-        
+
         Returns:
             Created ApprovalRequest
-        
+
         Raises:
             ValueError: If max pending requests exceeded
         """
@@ -129,12 +129,12 @@ class ApprovalWorkflow:
     ) -> bool:
         """
         Approve a pending request
-        
+
         Args:
             request_id: ID of the request to approve
             approved_by: ID of the approving user
             approval_note: Optional approval note
-        
+
         Returns:
             True if approved successfully
         """
@@ -178,12 +178,12 @@ class ApprovalWorkflow:
     ) -> bool:
         """
         Reject a pending request
-        
+
         Args:
             request_id: ID of the request to reject
             rejected_by: ID of the rejecting user
             reason: Optional rejection reason
-        
+
         Returns:
             True if rejected successfully
         """
@@ -218,10 +218,10 @@ class ApprovalWorkflow:
     async def cancel_request(self, request_id: str) -> bool:
         """
         Cancel a pending request
-        
+
         Args:
             request_id: ID of the request to cancel
-        
+
         Returns:
             True if cancelled successfully
         """
@@ -259,12 +259,12 @@ class ApprovalWorkflow:
     ) -> Dict[str, bool]:
         """
         Approve multiple requests at once
-        
+
         Args:
             request_ids: List of request IDs to approve
             approved_by: ID of the approving user
             approval_note: Optional approval note for all
-        
+
         Returns:
             Dictionary mapping request IDs to success status
         """
@@ -286,11 +286,11 @@ class ApprovalWorkflow:
     ) -> ApprovalState:
         """
         Wait for a request to be approved or rejected
-        
+
         Args:
             request_id: ID of the request to wait for
             timeout: Optional timeout override
-        
+
         Returns:
             Final ApprovalState
         """
@@ -354,11 +354,11 @@ class ApprovalWorkflow:
     ) -> List[ApprovalRequest]:
         """
         Get pending approval requests
-        
+
         Args:
             user_id: Optional filter by user
             risk_level: Optional filter by risk level
-        
+
         Returns:
             List of pending requests
         """
@@ -380,12 +380,12 @@ class ApprovalWorkflow:
     ) -> List[ApprovalRequest]:
         """
         Get historical approval requests
-        
+
         Args:
             user_id: Optional filter by user
             state: Optional filter by state
             limit: Maximum number of results
-        
+
         Returns:
             List of historical requests
         """
@@ -402,7 +402,7 @@ class ApprovalWorkflow:
     def cancel_all_pending(self) -> int:
         """
         Cancel all pending requests (emergency stop)
-        
+
         Returns:
             Number of requests cancelled
         """

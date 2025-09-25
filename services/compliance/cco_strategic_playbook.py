@@ -83,7 +83,7 @@ class CCOStrategicPlaybook:
     Implements 2025-2030 strategic vision
     """
 
-    def __init__(self, organization_profile: Dict[str, Any]):
+    def __init__(self, organization_profile: Dict[str, Any]) -> None:
         self.organization = organization_profile
         self.current_maturity = self._assess_current_maturity()
         self.strategic_initiatives = []

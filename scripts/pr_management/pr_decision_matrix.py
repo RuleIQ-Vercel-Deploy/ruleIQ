@@ -4,10 +4,9 @@ PR Decision Matrix - Systematic evaluation and decision recommendations for PRs
 """
 
 import json
-from typing import List, Dict, Optional
+from typing import List, Dict
 from datetime import datetime
 import logging
-from github_api_client import PRInfo
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -17,7 +16,7 @@ logger = logging.getLogger(__name__)
 class PRDecisionMatrix:
     """Provides systematic decision-making for PR management"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize decision matrix"""
         self.criteria = self._load_decision_criteria()
         self.weights = self._load_weights()

@@ -74,7 +74,7 @@ class MockRedisClient:
 
     async def keys(self, pattern: str) -> List[str]:
         import fnmatch
-        return [k for k in self.data.keys() if fnmatch.fnmatch(k, pattern)]
+        return [k for k in self.data if fnmatch.fnmatch(k, pattern)]
 
 
 class TestQueryOptimizationFramework:
@@ -210,7 +210,6 @@ class TestQueryOptimizationFramework:
     @pytest.mark.asyncio
     async def test_batch_query_operations(self):
         """Test batch query operations for performance"""
-        from database.query_optimization import BatchQueryOptimizer
 
         # Mock session
         mock_session = AsyncMock()
@@ -1007,9 +1006,8 @@ class TestIntegrationAndEndToEnd:
             if metric.endswith("_ms"):  # Higher is worse
                 if current > baseline * 1.5:  # 50% degradation threshold
                     regressions[metric] = {"baseline": baseline, "current": current, "change": current - baseline}
-            else:  # Lower is worse
-                if current < baseline * 0.9:  # 10% degradation threshold
-                    regressions[metric] = {"baseline": baseline, "current": current, "change": current - baseline}
+            elif current < baseline * 0.9:  # 10% degradation threshold
+                regressions[metric] = {"baseline": baseline, "current": current, "change": current - baseline}
 
         assert "avg_query_time_ms" in regressions  # Query time regression detected
         assert len(regressions) >= 1

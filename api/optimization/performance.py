@@ -30,7 +30,7 @@ logger = logging.getLogger(__name__)
 class APIOptimizer:
     """Main API performance optimization handler."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.cache_ttl = 300  # 5 minutes default
         self.compression_threshold = 1024  # Compress responses > 1KB
         self.batch_size = 100  # Default batch size for pagination
@@ -74,7 +74,7 @@ class ResponseCacheMiddleware(BaseHTTPMiddleware):
         r"^/api/evidence/\w+/quality$",
     ]
 
-    def __init__(self, app, optimizer: APIOptimizer):
+    def __init__(self, app, optimizer: APIOptimizer) -> None:
         super().__init__(app)
         self.optimizer = optimizer
 
@@ -121,11 +121,7 @@ class ResponseCacheMiddleware(BaseHTTPMiddleware):
             return True
 
         # Check patterns
-        for pattern in self.CACHEABLE_PATTERNS:
-            if re.match(pattern, path):
-                return True
-
-        return False
+        return any(re.match(pattern, path) for pattern in self.CACHEABLE_PATTERNS)
 
     def _generate_cache_key(self, request: Request) -> str:
         """Generate cache key for request."""
@@ -206,10 +202,7 @@ class CompressionOptimizer:
 
         # Don't compress already compressed formats
         compressed_types = {'image/', 'video/', 'audio/', 'application/zip'}
-        if any(content_type.startswith(ct) for ct in compressed_types):
-            return False
-
-        return True
+        return not any(content_type.startswith(ct) for ct in compressed_types)
 
 
 class PaginationOptimizer:
@@ -268,7 +261,7 @@ class PaginationOptimizer:
 class AsyncProcessingOptimizer:
     """Optimize async processing for long-running operations."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.task_queue: Dict[str, asyncio.Task] = {}
         self.results_cache: Dict[str, Any] = {}
 

@@ -36,7 +36,7 @@ class AuditLogger:
         'POST /api/payment',  # Payment operations
     }
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.buffer: List[Dict] = []
         self.buffer_size = 100
         self.flush_interval = 30  # seconds
@@ -123,10 +123,7 @@ class AuditLogger:
             return True
 
         # Security violations
-        if event["event_type"] in ["UNAUTHORIZED_ACCESS", "PERMISSION_DENIED", "SECURITY_VIOLATION"]:
-            return True
-
-        return False
+        return event["event_type"] in ["UNAUTHORIZED_ACCESS", "PERMISSION_DENIED", "SECURITY_VIOLATION"]
 
     async def flush(self):
         """Flush audit logs to database."""
@@ -137,7 +134,7 @@ class AuditLogger:
             # Save to database
             db = SessionLocal()
             try:
-                for event in self.buffer:
+                for _event in self.buffer:
                     # Create audit log entry in database
                     # This would save to your audit_logs table
                     pass
@@ -155,7 +152,7 @@ class AuditLogger:
 class AuditLoggingMiddleware(BaseHTTPMiddleware):
     """Middleware for comprehensive audit logging."""
 
-    def __init__(self, app, audit_logger: Optional[AuditLogger] = None):
+    def __init__(self, app, audit_logger: Optional[AuditLogger] = None) -> None:
         super().__init__(app)
         self.audit_logger = audit_logger or AuditLogger()
 

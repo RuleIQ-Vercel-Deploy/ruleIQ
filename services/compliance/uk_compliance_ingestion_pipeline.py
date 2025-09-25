@@ -23,7 +23,7 @@ class UKComplianceGraphIngestion:
     """
 
     def __init__(self, neo4j_uri: str, neo4j_auth: tuple, embedding_model=None
-        ):
+        ) -> None:
         self.driver = AsyncGraphDatabase.driver(neo4j_uri, auth=neo4j_auth)
         self.embedding_model = embedding_model
         self.text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000,
@@ -503,7 +503,7 @@ class UKComplianceGraphIngestion:
 class UKComplianceGraphQuery:
     """Query helper for UK compliance graph"""
 
-    def __init__(self, neo4j_uri: str, neo4j_auth: tuple):
+    def __init__(self, neo4j_uri: str, neo4j_auth: tuple) -> None:
         self.driver = AsyncGraphDatabase.driver(neo4j_uri, auth=neo4j_auth)
 
     async def find_obligations_by_regulation(self, regulation_id: str) ->List[
@@ -553,7 +553,7 @@ class UKComplianceGraphQuery:
                 WHERE o1.embedding IS NOT NULL
                 MATCH (o2:Obligation)
                 WHERE o2.id <> o1.id AND o2.embedding IS NOT NULL
-                WITH o1, o2, 
+                WITH o1, o2,
                      gds.similarity.cosine(o1.embedding, o2.embedding) as similarity
                 WHERE similarity > 0.7
                 RETURN o2, similarity

@@ -28,6 +28,7 @@ from services.ai.evaluation.golden_datasets.validators import (
     MAX_ENTRIES_COUNT,
     DataClassification,
 )
+import contextlib
 
 
 def create_valid_compliance_scenario() -> ComplianceScenario:
@@ -389,7 +390,7 @@ class TestSecurityValidation:
         # Create deeply nested dict
         nested = {}
         current = nested
-        for i in range(15):  # More than max depth of 10
+        for _i in range(15):  # More than max depth of 10
             current["level"] = {}
             current = current["level"]
 
@@ -574,10 +575,8 @@ class TestSecurityValidation:
         # Test oversized input logging
         huge_input = "X" * (MAX_INPUT_LENGTH + 1)
 
-        try:
+        with contextlib.suppress(ValueError):
             validate_input_bounds(huge_input)
-        except ValueError:
-            pass
 
         # Check that security event was logged
         mock_logger.error.assert_called()

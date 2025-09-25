@@ -5,7 +5,7 @@ Branch Cleanup - Manage local and remote branches after PR processing
 
 import subprocess
 import json
-from typing import List, Dict, Optional
+from typing import List, Dict
 from datetime import datetime
 import logging
 
@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 class BranchCleanup:
     """Handles branch cleanup operations"""
 
-    def __init__(self, dry_run: bool = True):
+    def __init__(self, dry_run: bool = True) -> None:
         """Initialize branch cleanup"""
         self.dry_run = dry_run
         self.protected_branches = ['main', 'master', 'develop', 'staging', 'production']

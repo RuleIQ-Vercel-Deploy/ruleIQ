@@ -51,7 +51,7 @@ async def database_setup():
         await conn.execute(
             """
             CREATE SCHEMA IF NOT EXISTS langgraph;
-            
+
             CREATE TABLE IF NOT EXISTS langgraph.checkpoints (
                 thread_id TEXT,
                 checkpoint_ns TEXT DEFAULT '',
@@ -63,7 +63,7 @@ async def database_setup():
                 created_at TIMESTAMPTZ DEFAULT NOW(),
                 PRIMARY KEY (thread_id, checkpoint_ns, checkpoint_id)
             );
-            
+
             CREATE TABLE IF NOT EXISTS langgraph.checkpoint_writes (
                 thread_id TEXT,
                 checkpoint_ns TEXT DEFAULT '',
@@ -76,7 +76,7 @@ async def database_setup():
                 created_at TIMESTAMPTZ DEFAULT NOW(),
                 PRIMARY KEY (thread_id, checkpoint_ns, checkpoint_id, task_id, idx)
             );
-            
+
             CREATE TABLE IF NOT EXISTS langgraph.checkpoint_migrations (
                 migration_id TEXT PRIMARY KEY,
                 created_at TIMESTAMPTZ DEFAULT NOW()
@@ -119,12 +119,12 @@ async def neo4j_service():
         SET r.name = 'General Data Protection Regulation',
             r.jurisdiction = 'EU',
             r.effective_date = date('2018-05-25')
-        
+
         MERGE (o:Obligation {id: 'gdpr-consent'})
         SET o.title = 'Obtain explicit consent',
             o.description = 'Must obtain explicit consent for data processing',
             o.framework = 'GDPR'
-        
+
         MERGE (r)-[:HAS_OBLIGATION]->(o)
     """
         )
@@ -345,7 +345,7 @@ class TestProductionReadiness:
             company_id = uuid4()
             try:
                 event_count = 0
-                async for event in master_graph.run(session_id=session_id,
+                async for _event in master_graph.run(session_id=session_id,
                     company_id=company_id, user_input=f'Test query {i}'):
                     event_count += 1
                     if event_count >= MAX_RETRIES:
@@ -376,7 +376,7 @@ class TestLongRunningStability:
             company_id = uuid4()
             try:
                 event_count = 0
-                async for event in master_graph.run(session_id=session_id,
+                async for _event in master_graph.run(session_id=session_id,
                     company_id=company_id, user_input=
                     f'Sustained test query {request_count}'):
                     event_count += 1

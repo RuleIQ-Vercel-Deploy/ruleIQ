@@ -46,7 +46,7 @@ class CircuitBreaker:
         failure_threshold: int = 5,
         recovery_timeout: int = 60,
         expected_exception: type = Exception
-    ):
+    ) -> None:
         self.name = name
         self.failure_threshold = failure_threshold
         self.recovery_timeout = recovery_timeout
@@ -138,7 +138,7 @@ class ServiceHealthChecker:
     Monitors service health and manages degradation states.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.services: Dict[str, ServiceState] = {}
         self.health_checks: Dict[str, Callable] = {}
         self.circuit_breakers: Dict[str, CircuitBreaker] = {}
@@ -248,7 +248,7 @@ class GracefulDegradationMiddleware(BaseHTTPMiddleware):
     Middleware for handling graceful degradation of services.
     """
 
-    def __init__(self, app, health_checker: Optional[ServiceHealthChecker] = None):
+    def __init__(self, app, health_checker: Optional[ServiceHealthChecker] = None) -> None:
         super().__init__(app)
         self.health_checker = health_checker or ServiceHealthChecker()
         self._initialize_health_checks()
@@ -374,7 +374,7 @@ class FeatureFlagDegradation:
     Automatically disable feature flags based on error rates.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.error_counts: Dict[str, int] = {}
         self.error_threshold = 10
         self.monitoring_window = 60  # seconds

@@ -30,7 +30,7 @@ logger = logging.getLogger(__name__)
 class JWTAuthMiddlewareV2:
     """
     Secure JWT Authentication Middleware v2 with vulnerability fix.
-    
+
     Security Improvements:
     - NO authentication bypass for undefined routes
     - Strict authentication enforcement by default
@@ -89,10 +89,10 @@ class JWTAuthMiddlewareV2:
         enable_performance_monitoring: bool = True,
         custom_public_paths: Optional[List[str]] = None,
         test_mode: bool = False
-    ):
+    ) -> None:
         """
         Initialize JWT middleware v2 with secure defaults.
-        
+
         Args:
             enable_strict_mode: ALWAYS enforce authentication (default: True)
             enable_rate_limiting: Enable rate limiting for auth endpoints
@@ -151,10 +151,10 @@ class JWTAuthMiddlewareV2:
     def check_rate_limit(self, identifier: str) -> bool:
         """
         Check if rate limit is exceeded for an identifier.
-        
+
         Args:
             identifier: Client IP or user ID
-            
+
         Returns:
             True if rate limit exceeded, False otherwise
         """
@@ -186,10 +186,10 @@ class JWTAuthMiddlewareV2:
     async def validate_jwt_token(self, token: str) -> Optional[Dict[str, Any]]:
         """
         Validate JWT token with comprehensive security checks.
-        
+
         Args:
             token: JWT token string
-            
+
         Returns:
             Decoded token payload if valid, None otherwise
         """
@@ -296,13 +296,13 @@ class JWTAuthMiddlewareV2:
     async def __call__(self, request: Request, call_next):
         """
         Process request through secure JWT authentication middleware.
-        
+
         SECURITY FIX: No bypass for undefined routes - all non-public routes require auth.
-        
+
         Args:
             request: Incoming HTTP request
             call_next: Next middleware in chain
-            
+
         Returns:
             Response after authentication processing
         """
@@ -407,7 +407,7 @@ class JWTAuthMiddlewareV2:
 def get_jwt_middleware_v2(**kwargs) -> JWTAuthMiddlewareV2:
     """
     Factory function to create JWT middleware v2 instance.
-    
+
     This version includes the security fix for SEC-001.
     """
     return JWTAuthMiddlewareV2(**kwargs)

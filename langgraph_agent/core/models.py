@@ -186,7 +186,7 @@ class SafeFallbackResponse(BaseModel):
     @classmethod
     def validate_error_details(cls, v) -> Any:
         sensitive_keys = ['password', 'token', 'secret', 'key', 'credential']
-        for key in v.keys():
+        for key in v:
             if any((sens in key.lower() for sens in sensitive_keys)):
                 raise ValueError(f'Error details cannot contain sensitive key: {key}')
         return v

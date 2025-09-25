@@ -24,7 +24,7 @@ class TokenBucket:
         capacity: int,
         refill_rate: float,
         initial_tokens: Optional[int] = None
-    ):
+    ) -> None:
         self.capacity = capacity
         self.refill_rate = refill_rate  # tokens per second
         self.tokens = initial_tokens if initial_tokens is not None else capacity
@@ -79,7 +79,7 @@ class EnhancedRateLimiter(BaseHTTPMiddleware):
     - Detailed rate limit headers
     """
 
-    def __init__(self, app: ASGIApp, **kwargs):
+    def __init__(self, app: ASGIApp, **kwargs) -> None:
         super().__init__(app)
         self.security_settings = get_security_settings()
         self.rate_config = self.security_settings.rate_limit

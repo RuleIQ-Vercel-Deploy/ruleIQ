@@ -37,7 +37,7 @@ class HealthCheckResult:
         message: str = "",
         details: Optional[Dict[str, Any]] = None,
         duration_ms: Optional[float] = None,
-    ):
+    ) -> None:
         """Initialize health check result."""
         self.name = name
         self.status = status
@@ -64,7 +64,7 @@ class HealthCheckResult:
 class HealthCheck:
     """Base health check class."""
 
-    def __init__(self, name: str, critical: bool = False):
+    def __init__(self, name: str, critical: bool = False) -> None:
         """Initialize health check."""
         self.name = name
         self.critical = critical
@@ -79,7 +79,7 @@ class DatabaseHealthCheck(HealthCheck):
 
     def __init__(
         self, session_factory: Callable[[], AsyncSession], name: str = "database"
-    ):
+    ) -> None:
         """Initialize database health check."""
         super().__init__(name, critical=True)
         self.session_factory = session_factory
@@ -113,7 +113,7 @@ class DatabaseHealthCheck(HealthCheck):
 class RedisHealthCheck(HealthCheck):
     """Redis health check."""
 
-    def __init__(self, redis_url: str, name: str = "redis"):
+    def __init__(self, redis_url: str, name: str = "redis") -> None:
         """Initialize Redis health check."""
         super().__init__(name, critical=False)
         self.redis_url = redis_url
@@ -153,7 +153,7 @@ class DiskSpaceHealthCheck(HealthCheck):
         warning_threshold: float = 80.0,
         critical_threshold: float = 90.0,
         name: str = "disk_space",
-    ):
+    ) -> None:
         """Initialize disk space health check."""
         super().__init__(name, critical=False)
         self.path = path
@@ -203,7 +203,7 @@ class MemoryHealthCheck(HealthCheck):
         warning_threshold: float = 80.0,
         critical_threshold: float = 90.0,
         name: str = "memory",
-    ):
+    ) -> None:
         """Initialize memory health check."""
         super().__init__(name, critical=False)
         self.warning_threshold = warning_threshold
@@ -246,7 +246,7 @@ class MemoryHealthCheck(HealthCheck):
 class ExternalServiceHealthCheck(HealthCheck):
     """External service health check."""
 
-    def __init__(self, url: str, timeout: float = 5.0, name: Optional[str] = None):
+    def __init__(self, url: str, timeout: float = 5.0, name: Optional[str] = None) -> None:
         """Initialize external service health check."""
         super().__init__(name or f"external_{url}", critical=False)
         self.url = url
@@ -298,7 +298,7 @@ class ExternalServiceHealthCheck(HealthCheck):
 class HealthCheckRegistry:
     """Registry for health checks."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize health check registry."""
         self.checks: List[HealthCheck] = []
         self._last_results: Optional[List[HealthCheckResult]] = None

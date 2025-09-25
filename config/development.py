@@ -61,7 +61,7 @@ class DevelopmentConfig(BaseConfig):
         env_file_encoding = "utf-8"
         case_sensitive = True
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         """Initialize development config with defaults"""
         # Set development defaults if not provided
         defaults = {

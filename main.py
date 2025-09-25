@@ -43,7 +43,6 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, None]:
     if settings.cache_migration_on_startup:
         try:
             from scripts.security_hash_migration import CacheMigrationManager
-            from redis.asyncio import Redis
 
             # Create Redis client using cache manager's connection
             redis_client = cache_manager._redis  # Access the Redis client from cache manager
@@ -216,7 +215,7 @@ async def health_check() -> Any:
             message = 'All systems operational'
         pool_utilization = 0
         active_sessions = 0
-        for pool_type, metrics in current_metrics.items():
+        for _pool_type, metrics in current_metrics.items():
             if metrics:
                 pool_utilization = max(pool_utilization, metrics.get('utilization_percent', 0))
         recent_averages = monitoring_summary.get('recent_averages', {})
@@ -283,7 +282,7 @@ async def api_detailed_health_check() -> Any:
         overall_message = 'All services operational'
     pool_utilization = 0
     active_sessions = 0
-    for pool_type, metrics in current_metrics.items():
+    for _pool_type, metrics in current_metrics.items():
         if metrics:
             pool_utilization = max(pool_utilization, metrics.get('utilization_percent', 0))
     recent_averages = monitoring_summary.get('recent_averages', {})

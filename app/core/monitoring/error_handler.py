@@ -28,7 +28,7 @@ class ApplicationError(Exception):
         code: str = "APPLICATION_ERROR",
         status_code: int = status.HTTP_500_INTERNAL_SERVER_ERROR,
         details: Optional[Dict[str, Any]] = None,
-    ):
+    ) -> None:
         """Initialize application error."""
         super().__init__(message)
         self.message = message
@@ -56,7 +56,7 @@ class ApplicationError(Exception):
 class ValidationError(ApplicationError):
     """Validation error."""
 
-    def __init__(self, message: str, field: Optional[str] = None, **kwargs):
+    def __init__(self, message: str, field: Optional[str] = None, **kwargs) -> None:
         """Initialize validation error."""
         details = {"field": field} if field else {}
         details.update(kwargs.get("details", {}))
@@ -71,7 +71,7 @@ class ValidationError(ApplicationError):
 class AuthenticationError(ApplicationError):
     """Authentication error."""
 
-    def __init__(self, message: str = "Authentication required", **kwargs):
+    def __init__(self, message: str = "Authentication required", **kwargs) -> None:
         """Initialize authentication error."""
         super().__init__(
             message=message,
@@ -84,7 +84,7 @@ class AuthenticationError(ApplicationError):
 class AuthorizationError(ApplicationError):
     """Authorization error."""
 
-    def __init__(self, message: str = "Insufficient permissions", **kwargs):
+    def __init__(self, message: str = "Insufficient permissions", **kwargs) -> None:
         """Initialize authorization error."""
         super().__init__(
             message=message,
@@ -97,7 +97,7 @@ class AuthorizationError(ApplicationError):
 class NotFoundError(ApplicationError):
     """Resource not found error."""
 
-    def __init__(self, resource: str, identifier: Any = None, **kwargs):
+    def __init__(self, resource: str, identifier: Any = None, **kwargs) -> None:
         """Initialize not found error."""
         message = f"{resource} not found"
         if identifier:
@@ -118,7 +118,7 @@ class NotFoundError(ApplicationError):
 class ConflictError(ApplicationError):
     """Resource conflict error."""
 
-    def __init__(self, message: str, **kwargs):
+    def __init__(self, message: str, **kwargs) -> None:
         """Initialize conflict error."""
         super().__init__(
             message=message,
@@ -136,7 +136,7 @@ class RateLimitError(ApplicationError):
         message: str = "Rate limit exceeded",
         retry_after: Optional[int] = None,
         **kwargs,
-    ):
+    ) -> None:
         """Initialize rate limit error."""
         details = {"retry_after": retry_after} if retry_after else {}
         details.update(kwargs.get("details", {}))
@@ -151,7 +151,7 @@ class RateLimitError(ApplicationError):
 class ExternalServiceError(ApplicationError):
     """External service error."""
 
-    def __init__(self, service: str, message: str, **kwargs):
+    def __init__(self, service: str, message: str, **kwargs) -> None:
         """Initialize external service error."""
         super().__init__(
             message=f"External service error ({service}): {message}",
@@ -165,7 +165,7 @@ class ExternalServiceError(ApplicationError):
 class ErrorHandler:
     """Error handler with context management."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize error handler."""
         self.error_callbacks = []
         self.context = {}
@@ -251,7 +251,7 @@ class ErrorHandler:
 class GlobalErrorHandler:
     """Global error handler for FastAPI."""
 
-    def __init__(self, app: FastAPI):
+    def __init__(self, app: FastAPI) -> None:
         """Initialize global error handler."""
         self.app = app
         self.handler = ErrorHandler()

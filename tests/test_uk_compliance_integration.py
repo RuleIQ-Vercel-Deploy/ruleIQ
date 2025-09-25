@@ -99,7 +99,7 @@ class TestUKComplianceManifest(unittest.TestCase):
         )
 
         # Check obligation structure
-        for ob_id, obligation in self.manifest.obligations.items():
+        for _ob_id, obligation in self.manifest.obligations.items():
             self.assertIsInstance(obligation, ComplianceObligation)
             self.assertIsNotNone(obligation.obligation_id)
             self.assertIsNotNone(obligation.description)

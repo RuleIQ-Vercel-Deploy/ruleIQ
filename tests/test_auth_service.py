@@ -440,7 +440,6 @@ class TestGlobalAuthService:
 
     def test_global_instance_exists(self):
         """Test that global auth service instance exists."""
-        from services.auth_service import auth_service
         assert isinstance(auth_service, AuthService)
 
 

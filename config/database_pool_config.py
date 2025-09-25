@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 class ConnectionPoolConfig:
     """
     Database connection pool configuration with production-ready defaults.
-    
+
     Connection pooling reduces the overhead of creating new database connections
     by maintaining a pool of reusable connections.
     """
@@ -24,10 +24,10 @@ class ConnectionPoolConfig:
     def get_pool_settings(is_production: bool = None) -> Dict[str, Any]:
         """
         Get optimized connection pool settings based on environment.
-        
+
         Args:
             is_production: Override environment detection
-            
+
         Returns:
             Dict with pool configuration settings
         """
@@ -83,10 +83,10 @@ class ConnectionPoolConfig:
     def get_async_pool_settings(is_production: bool = None) -> Dict[str, Any]:
         """
         Get optimized async connection pool settings.
-        
+
         Args:
             is_production: Override environment detection
-            
+
         Returns:
             Dict with async pool configuration
         """
@@ -117,7 +117,7 @@ class ConnectionPoolConfig:
     def get_connection_limits() -> Dict[str, int]:
         """
         Get database connection limits based on available resources.
-        
+
         Returns:
             Dict with connection limit recommendations
         """
@@ -146,7 +146,7 @@ class ConnectionPoolConfig:
     def validate_pool_config() -> Dict[str, bool]:
         """
         Validate current pool configuration.
-        
+
         Returns:
             Dict with validation results
         """
@@ -190,7 +190,7 @@ class ConnectionPoolConfig:
     def generate_pool_env_file(filepath: str = '.env.db_pool') -> None:
         """
         Generate database pool configuration file.
-        
+
         Args:
             filepath: Path to save the configuration
         """
@@ -240,43 +240,43 @@ SQLALCHEMY_ECHO={'false' if is_production else 'false'}
     def get_monitoring_queries() -> Dict[str, str]:
         """
         Get PostgreSQL queries for monitoring connection pool health.
-        
+
         Returns:
             Dict with monitoring SQL queries
         """
         return {
             'active_connections': """
-                SELECT count(*) as active_connections 
-                FROM pg_stat_activity 
-                WHERE state != 'idle' 
+                SELECT count(*) as active_connections
+                FROM pg_stat_activity
+                WHERE state != 'idle'
                 AND application_name LIKE 'ruleiq%';
             """,
 
             'idle_connections': """
-                SELECT count(*) as idle_connections 
-                FROM pg_stat_activity 
-                WHERE state = 'idle' 
+                SELECT count(*) as idle_connections
+                FROM pg_stat_activity
+                WHERE state = 'idle'
                 AND application_name LIKE 'ruleiq%';
             """,
 
             'long_running_queries': """
-                SELECT pid, age(clock_timestamp(), query_start) as duration, 
-                       state, query 
-                FROM pg_stat_activity 
-                WHERE state != 'idle' 
-                AND query_start < clock_timestamp() - interval '5 minutes' 
+                SELECT pid, age(clock_timestamp(), query_start) as duration,
+                       state, query
+                FROM pg_stat_activity
+                WHERE state != 'idle'
+                AND query_start < clock_timestamp() - interval '5 minutes'
                 AND application_name LIKE 'ruleiq%'
                 ORDER BY duration DESC;
             """,
 
             'connection_stats': """
-                SELECT application_name, 
+                SELECT application_name,
                        count(*) as connections,
                        count(*) filter (where state = 'active') as active,
                        count(*) filter (where state = 'idle') as idle,
                        count(*) filter (where state = 'idle in transaction') as idle_in_transaction,
                        max(age(clock_timestamp(), state_change)) as oldest_connection_age
-                FROM pg_stat_activity 
+                FROM pg_stat_activity
                 WHERE application_name LIKE 'ruleiq%'
                 GROUP BY application_name;
             """,
@@ -287,9 +287,9 @@ SQLALCHEMY_ECHO={'false' if is_production else 'false'}
             """,
 
             'table_sizes': """
-                SELECT schemaname, tablename, 
+                SELECT schemaname, tablename,
                        pg_size_pretty(pg_total_relation_size(schemaname||'.'||tablename)) as size
-                FROM pg_tables 
+                FROM pg_tables
                 WHERE schemaname NOT IN ('pg_catalog', 'information_schema')
                 ORDER BY pg_total_relation_size(schemaname||'.'||tablename) DESC
                 LIMIT 10;
@@ -322,5 +322,5 @@ if __name__ == "__main__":
 
     print("\nMonitoring queries available:")
     queries = ConnectionPoolConfig.get_monitoring_queries()
-    for name in queries.keys():
+    for name in queries:
         print(f"  - {name}")

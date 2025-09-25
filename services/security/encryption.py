@@ -29,7 +29,7 @@ class EncryptionService:
     Comprehensive encryption service for data protection
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize encryption service with key management"""
         self.cache = CacheService()
         self._master_key = self._get_or_create_master_key()
@@ -170,7 +170,7 @@ class EncryptionService:
             decrypted_payload = self._fernet.decrypt(encrypted_bytes)
             payload = json.loads(decrypted_payload)
             value_b64 = payload['value']
-            metadata = payload.get('metadata', {})
+            payload.get('metadata', {})
             value = base64.b64decode(value_b64)
             try:
                 result = json.loads(value)
@@ -369,10 +369,7 @@ class EncryptionService:
             Path to encrypted backup
         """
         try:
-            if isinstance(data, dict):
-                serialized = json.dumps(data)
-            else:
-                serialized = str(data)
+            serialized = json.dumps(data) if isinstance(data, dict) else str(data)
             timestamp = datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')
             backup_file = f'{backup_path}_{timestamp}.backup'
             encrypted_data = self._fernet.encrypt(serialized.encode())

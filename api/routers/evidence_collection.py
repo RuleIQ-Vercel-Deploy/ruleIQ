@@ -51,7 +51,7 @@ async def create_collection_plan(plan_request: CollectionPlanCreate, db:
                 evidence_query = evidence_query.join('compliance_frameworks'
                     ).where(Evidence.framework_id.in_(select(
                     'compliance_frameworks.id').where(
-                    'compliance_frameworks.name' == plan_request.framework)))
+                    plan_request.framework == 'compliance_frameworks.name')))
             result = await db.execute(evidence_query)
             evidence_records = result.scalars().all()
             existing_evidence = [{'evidence_id': str(evidence.id),

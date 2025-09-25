@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 class TestDatabaseManager:
     """Manages test database connections and setup."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.test_engine: Optional[Engine] = None
         self.is_test_env = os.getenv('TESTING', '').lower() == 'true'
 
@@ -180,7 +180,7 @@ def get_test_db_manager() -> TestDatabaseManager:
 def setup_test_database() -> Tuple[bool, Optional[str]]:
     """
     Complete test database setup.
-    
+
     Returns:
         Tuple of (success, error_message)
     """

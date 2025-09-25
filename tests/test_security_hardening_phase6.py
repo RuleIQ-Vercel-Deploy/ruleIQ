@@ -110,9 +110,7 @@ class TestEnhancedAuthentication:
                 return False
             # Check for common passwords
             common_passwords = ["password", "admin", "letmein", "welcome"]
-            if any(common in password.lower() for common in common_passwords):
-                return False
-            return True
+            return not any(common in password.lower() for common in common_passwords)
 
         weak_passwords = ["password", "12345678", "abc123", "password123"]
 
@@ -257,12 +255,11 @@ class TestEnhancedAuthentication:
             def _clean_expired_sessions(self, user_id: str):
                 expired = []
                 for sid, session in self.sessions.items():
-                    if session["user_id"] == user_id:
-                        if (
-                            datetime.now(timezone.utc) - session["last_activity"]
-                            > self.session_timeout
-                        ):
-                            expired.append(sid)
+                    if session["user_id"] == user_id and (
+                        datetime.now(timezone.utc) - session["last_activity"]
+                        > self.session_timeout
+                    ):
+                        expired.append(sid)
                 for sid in expired:
                     del self.sessions[sid]
 
@@ -441,7 +438,7 @@ class TestAuthorizationPolicies:
             "/api/v1/secrets/*",
         ]
 
-        for endpoint in protected_endpoints:
+        for _endpoint in protected_endpoints:
             # Test unauthorized access denial
             # Test authorized access grant
             # Test partial permission scenarios
@@ -980,14 +977,7 @@ class TestVulnerabilityPrevention:
                         return False
 
                 # Check for suspicious characters in combination
-                if "'" in user_input or '"' in user_input:
-                    if any(
-                        keyword in input_upper
-                        for keyword in ["OR", "AND", "SELECT", "DROP"]
-                    ):
-                        return False
-
-                return True
+                return not (("'" in user_input or '"' in user_input) and any(keyword in input_upper for keyword in ["OR", "AND", "SELECT", "DROP"]))
 
             def sanitize_input(self, user_input: str) -> str:
                 """Sanitize user input for safe SQL usage"""
@@ -1095,7 +1085,7 @@ class TestVulnerabilityPrevention:
             "<svg onload=alert('XSS')>",
         ]
 
-        for payload in xss_payloads:
+        for _payload in xss_payloads:
             # Test input encoding
             # Test output escaping
             # Test CSP protection
@@ -1120,7 +1110,7 @@ class TestVulnerabilityPrevention:
             "%2e%2e%2f%2e%2e%2f",
         ]
 
-        for path in malicious_paths:
+        for _path in malicious_paths:
             # Test path validation
             # Test directory restriction
             # Test symbolic link prevention

@@ -8,17 +8,14 @@ import asyncio
 import logging
 import time
 from abc import ABC, abstractmethod
-from typing import Dict, Any, List, Optional, Tuple
+from typing import Dict, Any, List, Optional
 from dataclasses import dataclass
-from contextlib import asynccontextmanager
 
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from sqlalchemy import text
 import neo4j
 from neo4j import GraphDatabase
-from neo4j.exceptions import ClientError
 
-from config.database_pool_config import ConnectionPoolConfig
 
 logger = logging.getLogger(__name__)
 
@@ -43,7 +40,7 @@ class DatabaseError(Exception):
         message: str,
         details: Optional[Dict[str, Any]] = None,
         cause: Optional[Exception] = None
-    ):
+    ) -> None:
         super().__init__(message)
         self.details = details or {}
         self.cause = cause
@@ -99,7 +96,7 @@ class DatabaseConfig:
 class PostgreSQLProvider(DatabaseProvider):
     """PostgreSQL database provider implementation."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.engine = None
         self.session_maker = None
         self._initialized = False
@@ -135,7 +132,7 @@ class PostgreSQLProvider(DatabaseProvider):
             logger.info("PostgreSQL provider initialized successfully")
             return True
 
-        except (ImportError, ConnectionError, ValueError) as e:
+        except (ImportError, ConnectionError, ValueError):
             logger.exception(
                 "Failed to initialize PostgreSQL provider"
             )
@@ -256,7 +253,7 @@ class PostgreSQLProvider(DatabaseProvider):
 class Neo4jProvider(DatabaseProvider):
     """Neo4j graph database provider implementation."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.driver = None
         self._initialized = False
         self._executor = None
@@ -272,7 +269,7 @@ class Neo4jProvider(DatabaseProvider):
             uri = os.getenv('NEO4J_URI', 'neo4j+s://12e71bc4.databases.neo4j.io')
             username = os.getenv('NEO4J_USERNAME', 'neo4j')
             password = os.getenv('NEO4J_PASSWORD', 'ruleiq123')
-            database = os.getenv('NEO4J_DATABASE', 'neo4j')
+            os.getenv('NEO4J_DATABASE', 'neo4j')
 
             # Create Neo4j driver with optimized settings
             self.driver = GraphDatabase.driver(
@@ -295,7 +292,7 @@ class Neo4jProvider(DatabaseProvider):
             logger.info("Neo4j provider initialized successfully")
             return True
 
-        except (ImportError, ConnectionError, neo4j.exceptions.Neo4jError) as e:
+        except (ImportError, ConnectionError, neo4j.exceptions.Neo4jError):
             logger.exception(
                 "Failed to initialize Neo4j provider"
             )
@@ -315,7 +312,7 @@ class Neo4jProvider(DatabaseProvider):
 
             return await asyncio.get_event_loop().run_in_executor(self._executor, _test)
 
-        except (neo4j.exceptions.Neo4jError, ConnectionError) as e:
+        except (neo4j.exceptions.Neo4jError, ConnectionError):
             logger.exception("Neo4j connection test failed")
             return False
 

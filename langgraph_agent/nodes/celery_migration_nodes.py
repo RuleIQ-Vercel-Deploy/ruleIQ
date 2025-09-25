@@ -51,7 +51,7 @@ class TaskMigrationState(TypedDict):
 class ComplianceTaskNode:
     """Migrated compliance tasks from workers/compliance_tasks.py"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.name = "compliance_task_node"
         self.error_handler = ErrorHandlerNode()
 
@@ -173,7 +173,7 @@ class ComplianceTaskNode:
 class EvidenceTaskNode:
     """Migrated evidence tasks from workers/evidence_tasks.py"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.name = "evidence_task_node"
         self.error_handler = ErrorHandlerNode()
 
@@ -275,7 +275,7 @@ class EvidenceTaskNode:
 class NotificationTaskNode:
     """Migrated notification tasks from workers/notification_tasks.py"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.name = "notification_task_node"
         self.error_handler = ErrorHandlerNode()
 
@@ -416,7 +416,7 @@ class NotificationTaskNode:
 class ReportingTaskNode:
     """Migrated reporting tasks from workers/reporting_tasks.py"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.name = "reporting_task_node"
         self.error_handler = ErrorHandlerNode()
 
@@ -593,7 +593,7 @@ class ReportingTaskNode:
 class MonitoringTaskNode:
     """Migrated monitoring tasks from workers/monitoring_tasks.py"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.name = "monitoring_task_node"
         self.error_handler = ErrorHandlerNode()
 

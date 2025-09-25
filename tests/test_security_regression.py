@@ -724,7 +724,7 @@ class TestRateLimitingSecurityRegression:
         mock_request.url.path = "/api/test"
 
         # Should allow requests within limit
-        for i in range(5):  # Under anonymous limit of 10
+        for _i in range(5):  # Under anonymous limit of 10
             allowed, info = rate_limiter.check_rate_limit(mock_request)
             assert allowed is True
             assert info["remaining"] > 0

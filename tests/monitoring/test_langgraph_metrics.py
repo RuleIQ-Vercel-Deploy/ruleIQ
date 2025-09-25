@@ -304,7 +304,7 @@ class TestWorkflowMetricsTracker:
 
         # Start workflows up to limit
         workflow_ids = []
-        for i in range(5):
+        for _i in range(5):
             can_start = self.tracker.can_start_workflow("limited_workflow")
 
             if can_start:
@@ -842,7 +842,7 @@ class TestPerformanceAnalyzer:
         self.analyzer.record_node_memory(workflow_id, "memory_hog", 100 * 1024 * 1024)
 
         # Frequently failing node
-        for i in range(10):
+        for _i in range(10):
             self.analyzer.record_node_failure(workflow_id, "unreliable_node")
 
         # Get recommendations

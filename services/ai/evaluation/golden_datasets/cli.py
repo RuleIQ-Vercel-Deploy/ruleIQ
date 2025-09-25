@@ -16,6 +16,7 @@ from .loaders import load_jsonl
 from .versioning import is_semver
 from .validators import DeepValidator, ExternalDataValidator
 from ..metrics import dataset_quality_summary, coverage_summary
+import sys
 
 
 def validate_and_report(root: Path, version: str, outdir: Path) ->None:
@@ -201,7 +202,7 @@ def main() ->None:
         validate_and_report(args.root, args.version, args.outdir)
     except Exception as e:
         logger.info('Error: %s' % e)
-        exit(1)
+        sys.exit(1)
 
 
 if __name__ == '__main__':

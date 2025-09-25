@@ -71,7 +71,7 @@ class Coordinator:
         self,
         max_concurrent_tasks: int = 10,
         task_timeout: timedelta = timedelta(hours=1)
-    ):
+    ) -> None:
         """Initialize coordinator."""
         self.max_concurrent_tasks = max_concurrent_tasks
         self.task_timeout = task_timeout
@@ -350,9 +350,8 @@ class Coordinator:
             return False
 
         for task_id in self.task_dependencies:
-            if task_id not in visited:
-                if has_cycle(task_id):
-                    deadlocked.append(task_id)
+            if task_id not in visited and has_cycle(task_id):
+                deadlocked.append(task_id)
 
         if deadlocked:
             logger.warning(f"Deadlock detected in tasks: {deadlocked}")
@@ -399,11 +398,10 @@ class Coordinator:
 
     def release_resource(self, resource: str, agent_id: UUID) -> bool:
         """Release a resource lock."""
-        if resource in self.resource_locks:
-            if self.resource_locks[resource] == agent_id:
-                del self.resource_locks[resource]
-                logger.info(f"Released resource {resource} from agent {agent_id}")
-                return True
+        if resource in self.resource_locks and self.resource_locks[resource] == agent_id:
+            del self.resource_locks[resource]
+            logger.info(f"Released resource {resource} from agent {agent_id}")
+            return True
         return False
 
     def register_agent(

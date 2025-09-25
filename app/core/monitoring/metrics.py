@@ -24,7 +24,7 @@ class MetricType:
 class Metric:
     """Base metric class."""
 
-    def __init__(self, name: str, description: str='', labels: Optional[Dict[str, str]]=None):
+    def __init__(self, name: str, description: str='', labels: Optional[Dict[str, str]]=None) -> None:
         """Initialize metric."""
         self.name = name
         self.description = description
@@ -72,7 +72,7 @@ class Gauge(Metric):
 class Histogram(Metric):
     """Histogram metric for distributions."""
 
-    def __init__(self, name: str, description: str='', labels: Optional[Dict[str, str]]=None, buckets: Optional[List[float]]=None):
+    def __init__(self, name: str, description: str='', labels: Optional[Dict[str, str]]=None, buckets: Optional[List[float]]=None) -> None:
         """Initialize histogram."""
         super().__init__(name, description, labels)
         self.buckets = buckets or [0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10]
@@ -109,7 +109,7 @@ class Histogram(Metric):
 class Summary(Histogram):
     """Summary metric - like histogram but with time windows."""
 
-    def __init__(self, name: str, description: str='', labels: Optional[Dict[str, str]]=None, window_size: int=300):
+    def __init__(self, name: str, description: str='', labels: Optional[Dict[str, str]]=None, window_size: int=300) -> None:
         """Initialize summary."""
         super().__init__(name, description, labels, buckets=None)
         self.window_size = window_size
@@ -130,7 +130,7 @@ class Summary(Histogram):
 class MetricsCollector:
     """Centralized metrics collector."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize metrics collector."""
         self.metrics: Dict[str, Metric] = {}
         self._lock = threading.Lock()

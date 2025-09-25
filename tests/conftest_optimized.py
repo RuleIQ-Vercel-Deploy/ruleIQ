@@ -28,7 +28,7 @@ test_durations = {}
 def sqlite_engine():
     """
     In-memory SQLite engine for unit tests.
-    
+
     Uses StaticPool to maintain single connection across threads,
     ensuring database persists throughout test session.
     """
@@ -56,7 +56,7 @@ def sqlite_engine():
 def fast_db_session(sqlite_engine) -> Generator[Session, None, None]:
     """
     Fast database session using transaction rollback.
-    
+
     Each test runs in a transaction that's rolled back after completion,
     ensuring test isolation without expensive table drops/creates.
     """
@@ -91,7 +91,7 @@ def fast_db_session(sqlite_engine) -> Generator[Session, None, None]:
 def postgres_engine():
     """
     PostgreSQL engine for integration tests.
-    
+
     Uses real PostgreSQL with optimized pool settings.
     """
     database_url = os.getenv("TEST_DATABASE_URL", "postgresql://test:test@localhost/test_ruleiq")
@@ -136,7 +136,7 @@ def integration_db_session(postgres_engine) -> Generator[Session, None, None]:
 def cached_test_data() -> Dict[str, Any]:
     """
     Pre-computed test data cached for entire test session.
-    
+
     Generate expensive test data once and reuse across all tests.
     """
     return {
@@ -226,7 +226,7 @@ def _generate_regulations():
 def mock_ai_client():
     """
     Mock AI client for unit tests.
-    
+
     Provides predictable responses without external API calls.
     """
     class MockAIClient:
@@ -252,7 +252,7 @@ def mock_ai_client():
 def redis_mock():
     """
     Mock Redis client for unit tests.
-    
+
     Provides in-memory caching without Redis dependency.
     """
     class MockRedis:
@@ -275,10 +275,9 @@ def redis_mock():
             return True
 
         def exists(self, key: str):
-            if key in self.ttls:
-                if time.time() > self.ttls[key]:
-                    self.delete(key)
-                    return False
+            if key in self.ttls and time.time() > self.ttls[key]:
+                self.delete(key)
+                return False
             return key in self.store
 
     return MockRedis()
@@ -288,7 +287,7 @@ def redis_mock():
 def measure_test_duration(request):
     """
     Automatically measure test execution time.
-    
+
     Helps identify slow tests for optimization.
     """
     start_time = time.time()
@@ -334,7 +333,7 @@ def configure_test_environment():
 def temporary_database():
     """
     Context manager for temporary test database.
-    
+
     Useful for tests that need isolated database state.
     """
     engine = create_engine("sqlite:///:memory:")

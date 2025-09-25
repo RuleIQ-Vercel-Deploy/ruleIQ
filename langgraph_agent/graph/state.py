@@ -210,10 +210,7 @@ def should_interrupt(state: ComplianceAgentState, node_name: str) -> bool:
         return True
 
     # Check turn limits
-    if state["turn_count"] >= 20:
-        return True
-
-    return False
+    return state["turn_count"] >= 20
 
 
 def get_state_summary(state: ComplianceAgentState) -> Dict[str, Any]:

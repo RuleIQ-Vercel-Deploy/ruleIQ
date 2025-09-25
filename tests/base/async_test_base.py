@@ -8,6 +8,7 @@ import asyncio
 import pytest
 from typing import Any, Optional
 from unittest.mock import AsyncMock, MagicMock
+import contextlib
 
 
 class AsyncTestBase:
@@ -55,10 +56,8 @@ class DatabaseTestBase(AsyncTestBase):
         # Clean up test objects
         if self.db_session and self.test_objects:
             for obj in self.test_objects:
-                try:
+                with contextlib.suppress(ValueError, TypeError):
                     self.db_session.delete(obj)
-                except (ValueError, TypeError):
-                    pass
             try:
                 self.db_session.commit()
             except (ValueError, TypeError):

@@ -10,8 +10,7 @@ import sys
 import glob
 import json
 import yaml
-from pathlib import Path
-from typing import Dict, List, Tuple, Optional
+from typing import Dict, List, Tuple
 
 class Colors:
     """ANSI color codes for terminal output"""
@@ -25,7 +24,7 @@ class Colors:
 class SecurityValidator:
     """Validator for GitHub Actions security best practices"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.issues = []
         self.warnings = []
         self.passed = []
@@ -158,7 +157,6 @@ class SecurityValidator:
 
         # Check if actions/github-script is used
         uses_github_script = 'actions/github-script' in content
-        uses_artifacts = 'actions/upload-artifact' in content or 'actions/download-artifact' in content
         uses_docker_push = 'docker/build-push-action' in content
 
         # Analyze workflow-level permissions

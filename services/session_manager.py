@@ -62,7 +62,7 @@ class SessionManager:
     Ensures zero data loss during deployments and rollbacks.
     """
 
-    def __init__(self, redis_client: Optional[redis.Redis] = None):
+    def __init__(self, redis_client: Optional[redis.Redis] = None) -> None:
         self.redis = redis_client
         self.session_ttl = 3600 * 24  # 24 hours
         self.backup_ttl = 3600 * 72   # 72 hours for backups

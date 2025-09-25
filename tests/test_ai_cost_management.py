@@ -910,7 +910,7 @@ class TestIntegrationWithAIServices:
         await cost_manager.set_daily_budget(Decimal("0.10"))
 
         # Make enough requests to trigger alert
-        for i in range(3):
+        for _i in range(3):
             await cost_manager.track_ai_request(
                 service_name="test_service",
                 model_name="gpt-4-turbo",

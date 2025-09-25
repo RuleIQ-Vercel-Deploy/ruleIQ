@@ -10,6 +10,7 @@ from pathlib import Path
 from neo4j import AsyncGraphDatabase
 from dotenv import load_dotenv
 import logging
+import sys
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 load_dotenv()
@@ -173,4 +174,4 @@ async def main():
 
 
 if __name__ == '__main__':
-    exit(asyncio.run(main()))
+    sys.exit(asyncio.run(main()))

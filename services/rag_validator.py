@@ -56,7 +56,7 @@ class ValidationMetrics(BaseModel):
 class RAGValidator:
     """
     RAG-based validator for AI responses against compliance knowledge base.
-    
+
     Validates AI responses using semantic similarity, citation coverage,
     and fact consistency checking against a regulatory knowledge base.
     """
@@ -77,7 +77,7 @@ class RAGValidator:
         knowledge_base_path: Optional[str] = None,
         cache_enabled: bool = True,
         max_cache_size: int = 1000
-    ):
+    ) -> None:
         """Initialize RAG Validator."""
         self.knowledge_base_path = knowledge_base_path
         self.cache_enabled = cache_enabled
@@ -133,12 +133,12 @@ class RAGValidator:
     ) -> ValidationResult:
         """
         Validate an AI response against the knowledge base.
-        
+
         Args:
             response: The AI response to validate
             context: Additional context for validation
             response_id: Unique identifier for the response
-            
+
         Returns:
             ValidationResult with confidence scores and validation status
         """
@@ -233,12 +233,12 @@ class RAGValidator:
     ) -> List[ValidationResult]:
         """
         Validate multiple responses in batch.
-        
+
         Args:
             responses: List of AI responses to validate
             contexts: Optional list of contexts for each response
             max_parallel: Maximum number of parallel validations
-            
+
         Returns:
             List of ValidationResult objects
         """

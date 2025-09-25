@@ -78,18 +78,17 @@ for test_dir in test_dirs:
                             print(f"  ⏭️  Skipped: {skipped}")
                         except (ValueError, KeyError, IndexError):
                             pass
-            if 'error' in line.lower() and 'ERROR' in line:
-                if ' error' in line:
-                    parts = line.split()
-                    for i, part in enumerate(parts):
-                        if 'error' in part.lower() and i > 0:
-                            try:
-                                errors = int(parts[i-1])
-                                total_errors += errors
-                                print(f"  🔥 Errors: {errors}")
-                                break
-                            except (ValueError, KeyError, IndexError):
-                                pass
+            if 'error' in line.lower() and 'ERROR' in line and ' error' in line:
+                parts = line.split()
+                for i, part in enumerate(parts):
+                    if 'error' in part.lower() and i > 0:
+                        try:
+                            errors = int(parts[i-1])
+                            total_errors += errors
+                            print(f"  🔥 Errors: {errors}")
+                            break
+                        except (ValueError, KeyError, IndexError):
+                            pass
 
     except subprocess.TimeoutExpired:
         print("  ⏱️  Timeout - tests took too long")

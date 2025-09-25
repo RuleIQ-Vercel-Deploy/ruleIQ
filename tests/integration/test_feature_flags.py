@@ -317,8 +317,8 @@ class TestFeatureFlagConfiguration:
 
         # Check that environment variables override config
         if hasattr(config, 'from_env'):
-            assert config.flags.get('enable_test_feature', False) == True
-            assert config.flags.get('disable_other_feature', True) == False
+            assert config.flags.get('enable_test_feature', False)
+            assert not config.flags.get('disable_other_feature', True)
 
     def test_feature_flag_validation(self):
         """Test feature flag validation and type checking."""
@@ -331,6 +331,6 @@ class TestFeatureFlagConfiguration:
             assert isinstance(flag_value, bool), f"Feature flag {flag_name} should be boolean, got {type(flag_value)}"
 
         # Flag names should follow naming convention
-        for flag_name in config.flags.keys():
+        for flag_name in config.flags:
             assert flag_name.startswith('enable_') or flag_name.startswith('disable_'), \
                 f"Feature flag {flag_name} doesn't follow naming convention"

@@ -58,7 +58,7 @@ class TestComplianceCheckNode:
             assert result['compliance_data']['regulation'] == 'GDPR'
             assert 'timestamp' in result['compliance_data']
             assert len(result['obligations']) == 2
-            assert result['metadata']['notify_required'] == True
+            assert result['metadata']['notify_required']
             assert result['metadata']['violation_count'] == 1
             assert len(result['history']) == 1
 
@@ -75,7 +75,7 @@ class TestComplianceCheckNode:
             result = await compliance_check_node(mock_state)
             assert result['compliance_data']['compliance_score'
                 ] == DEFAULT_LIMIT
-            assert result.get('metadata', {}).get('notify_required') != True
+            assert not result.get('metadata', {}).get('notify_required')
             assert 'violation_count' not in result.get('metadata', {})
 
     @pytest.mark.asyncio
@@ -283,7 +283,7 @@ class TestIntegration:
             assert final_state['compliance_data']['compliance_score'] == 0.0
             assert (final_state['compliance_data']['risk_assessment'][
                 'level'] == 'MEDIUM',)
-            assert final_state['metadata']['notify_required'] == True
+            assert final_state['metadata']['notify_required']
             assert len(final_state['history']) == 1
 
 

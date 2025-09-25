@@ -268,7 +268,7 @@ class TestReportHelperFunctions:
                     subject='Compliance Report', body=
                     'Please find attached the compliance report.',
                     attachment_path='/tmp/report.pdf')
-                assert result == True
+                assert result
 
 
 class TestReportingWorkflowIntegration:

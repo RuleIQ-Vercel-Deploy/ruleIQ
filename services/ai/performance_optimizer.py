@@ -16,6 +16,7 @@ from datetime import datetime, timezone
 from enum import Enum
 from typing import Any, Dict, List, Optional, Tuple
 from config.logging_config import get_logger
+import contextlib
 logger = get_logger(__name__)
 
 
@@ -240,10 +241,8 @@ class AIPerformanceOptimizer:
 
     def release_rate_limit(self) ->None:
         """Release rate limiting resources."""
-        try:
+        with contextlib.suppress(ValueError):
             self.request_semaphore.release()
-        except ValueError:
-            pass
 
     async def get_performance_metrics(self) ->Dict[str, Any]:
         """Get comprehensive performance metrics."""

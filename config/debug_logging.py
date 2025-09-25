@@ -22,7 +22,7 @@ from pythonjsonlogger import jsonlogger
 class ContextFilter(logging.Filter):
     """Add contextual information to log records"""
 
-    def __init__(self, context: Optional[Dict[str, Any]]=None):
+    def __init__(self, context: Optional[Dict[str, Any]]=None) -> None:
         super().__init__()
         self.context = context or {}
 
@@ -39,7 +39,7 @@ class ContextFilter(logging.Filter):
 class PerformanceLogger:
     """Track and log performance metrics"""
 
-    def __init__(self, logger: logging.Logger):
+    def __init__(self, logger: logging.Logger) -> None:
         self.logger = logger
         self.timers: Dict[str, float] = {}
 
@@ -70,7 +70,7 @@ class PerformanceLogger:
 class DebugLogger:
     """Enhanced logger for debugging and development"""
 
-    def __init__(self, name: str, level: str='INFO'):
+    def __init__(self, name: str, level: str='INFO') -> None:
         self.name = name
         self.logger = logging.getLogger(name)
         self.performance = PerformanceLogger(self.logger)
@@ -168,7 +168,7 @@ class DebugLogger:
 class DebugMiddleware:
     """Middleware to add debug logging to FastAPI"""
 
-    def __init__(self, app, logger: DebugLogger):
+    def __init__(self, app, logger: DebugLogger) -> None:
         self.app = app
         self.logger = logger
 

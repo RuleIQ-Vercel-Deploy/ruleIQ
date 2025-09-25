@@ -19,7 +19,7 @@ from datetime import datetime, timezone
 class EvidenceCollector:
     """Wrapper for evidence collection services."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize evidence collector."""
         self.collected_evidence = []
 

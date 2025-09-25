@@ -19,7 +19,7 @@ logger = get_logger(__name__)
 class WebSocketRateLimiter:
     """Rate limiter for WebSocket connections."""
 
-    def __init__(self, max_connections_per_ip: int = 10, max_messages_per_minute: int = 60):
+    def __init__(self, max_connections_per_ip: int = 10, max_messages_per_minute: int = 60) -> None:
         self.max_connections_per_ip = max_connections_per_ip
         self.max_messages_per_minute = max_messages_per_minute
         self.connections_by_ip: Dict[str, Set[str]] = defaultdict(set)
@@ -76,7 +76,7 @@ class WebSocketRateLimiter:
 class WebSocketOriginValidator:
     """Validates WebSocket connection origins."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         # Get allowed origins from settings
         self.allowed_origins = self._get_allowed_origins()
 
@@ -132,7 +132,7 @@ class WebSocketOriginValidator:
 class WebSocketSecurityMiddleware:
     """
     Comprehensive WebSocket security middleware.
-    
+
     Features:
     - Rate limiting per IP
     - Origin validation
@@ -140,7 +140,7 @@ class WebSocketSecurityMiddleware:
     - Connection tracking
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.rate_limiter = WebSocketRateLimiter()
         self.origin_validator = WebSocketOriginValidator()
 
@@ -151,7 +151,7 @@ class WebSocketSecurityMiddleware:
     ) -> bool:
         """
         Validate WebSocket connection before accepting.
-        
+
         Returns True if connection should be accepted, False otherwise.
         """
         # Get client IP
@@ -184,7 +184,7 @@ class WebSocketSecurityMiddleware:
     ) -> bool:
         """
         Validate incoming WebSocket message rate.
-        
+
         Returns True if message should be processed, False otherwise.
         """
         client_ip = None

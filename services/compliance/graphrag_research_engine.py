@@ -62,55 +62,55 @@ class GraphRAGResearchEngine:
         template=
         """
             Extract machine-actionable compliance obligations from the following UK regulatory text.
-            
+
             Regulation Text: {regulation_text}
             Jurisdiction: {jurisdiction}
             Industry Context: {industry}
-            
+
             For each obligation identified, extract and structure:
-            
+
             1. OBLIGATION IDENTIFICATION
             - Unique identifier (reference to regulation section)
             - Obligation title (concise description)
             - Full requirement text
             - Requirement type (mandatory/recommended/optional)
-            
+
             2. APPLICABILITY
             - Entity types affected
             - Thresholds or conditions
             - Exemptions or exceptions
             - Geographic scope
-            
+
             3. IMPLEMENTATION REQUIREMENTS
             - Specific actions required
             - Documentation needed
             - Systems/processes required
             - Roles/responsibilities
-            
+
             4. COMPLIANCE VERIFICATION
             - Evidence required
             - Audit criteria
             - Testing procedures
             - Reporting requirements
-            
+
             5. TIMELINE & DEADLINES
             - Implementation deadline
             - Reporting frequency
             - Review cycles
             - Transition periods
-            
+
             6. CONSEQUENCES
             - Penalties for non-compliance
             - Enforcement mechanisms
             - Regulatory powers
             - Appeal processes
-            
+
             7. AUTOMATION POTENTIAL
             - Automatable components (0-100% score)
             - Integration points
             - Data requirements
             - System dependencies
-            
+
             Output as structured JSON following the ComplianceObligation schema:
             {{
                 "obligations": [
@@ -133,49 +133,49 @@ class GraphRAGResearchEngine:
         'existing_controls', 'framework'], template=
         """
             Map compliance obligations to controls following UK regulatory standards.
-            
+
             Obligations: {obligations}
             Existing Controls: {existing_controls}
             Framework: {framework}
-            
+
             Perform comprehensive control mapping:
-            
+
             1. CONTROL IDENTIFICATION
             For each obligation, identify:
             - Required controls (must-have)
             - Recommended controls (should-have)
             - Optional enhancements (nice-to-have)
-            
+
             2. CONTROL EFFECTIVENESS MAPPING
             - Preventive controls
             - Detective controls
             - Corrective controls
             - Compensating controls
-            
+
             3. UK FRAMEWORK ALIGNMENT
             - ISO 27001 mapping
             - NIST CSF mapping
             - ICO guidance alignment
             - FCA handbook requirements
-            
+
             4. GAP ANALYSIS
             - Missing controls
             - Inadequate controls
             - Redundant controls
             - Optimization opportunities
-            
+
             5. IMPLEMENTATION PRIORITY
             Priority 1: Regulatory mandated
             Priority 2: High risk mitigation
             Priority 3: Best practices
             Priority 4: Enhancements
-            
+
             6. CONTROL TESTING
             - Test procedures
             - Frequency requirements
             - Evidence requirements
             - Remediation timelines
-            
+
             Output structured control mapping with clear traceability.
             """
         ), 'risk_assessment_research': PromptTemplate(input_variables=[
@@ -183,101 +183,101 @@ class GraphRAGResearchEngine:
         template=
         """
             Conduct regulatory risk research for UK compliance.
-            
+
             Organization: {organization_profile}
             Regulations: {regulations}
             Industry: {industry_context}
-            
+
             Research and analyze:
-            
+
             1. REGULATORY ENFORCEMENT TRENDS
             - Recent UK enforcement actions
             - Penalty trends and amounts
             - Focus areas by regulators
             - Industry-specific enforcement
-            
+
             2. INHERENT RISK FACTORS
             - Business model risks
             - Geographic risks
             - Customer base risks
             - Product/service risks
             - Third-party risks
-            
+
             3. UK-SPECIFIC RISK INDICATORS
             - ICO enforcement priorities
             - FCA thematic reviews
             - SFO investigation trends
             - HSE focus areas
             - HMRC compliance campaigns
-            
+
             4. PEER ANALYSIS
             - Industry incidents
             - Competitor penalties
             - Sector vulnerabilities
             - Best practice adoption
-            
+
             5. EMERGING RISKS
             - Upcoming regulations
             - Technology risks
             - Geopolitical factors
             - Climate/ESG requirements
-            
+
             6. RISK SCORING METHODOLOGY
             - Likelihood assessment (1-5)
             - Impact assessment (1-5)
             - Velocity (speed of onset)
             - Vulnerability factors
             - Control effectiveness
-            
+
             Provide risk intelligence with actionable insights.
             """
         ), 'cross_regulation_analysis': PromptTemplate(input_variables=[
         'regulations', 'organization_scope', 'conflicts'], template=
         """
             Analyze cross-regulation requirements and conflicts for UK compliance.
-            
+
             Regulations: {regulations}
             Scope: {organization_scope}
             Known Conflicts: {conflicts}
-            
+
             Perform cross-regulation analysis:
-            
+
             1. OVERLAPPING REQUIREMENTS
             - Common obligations across regulations
             - Unified compliance opportunities
             - Consolidated controls
             - Shared evidence/documentation
-            
+
             2. CONFLICTING REQUIREMENTS
             - Direct conflicts
             - Interpretation differences
             - Timing conflicts
             - Scope conflicts
-            
+
             3. UK REGULATORY HIERARCHY
             - Primary legislation precedence
             - Secondary legislation
             - Regulatory guidance
             - Industry codes
-            
+
             4. RESOLUTION STRATEGIES
             - Conflict resolution approaches
             - Regulator consultation needs
             - Legal opinion requirements
             - Risk-based decisions
-            
+
             5. INTEGRATION OPPORTUNITIES
             - Unified compliance framework
             - Common control framework
             - Integrated reporting
             - Consolidated assessments
-            
+
             6. EFFICIENCY GAINS
             - Deduplication opportunities
             - Process consolidation
             - Technology leverage
             - Resource optimization
-            
+
             Output integration strategy with conflict resolution.
             """
         ), 'regulatory_change_detection': PromptTemplate(input_variables=[
@@ -285,51 +285,51 @@ class GraphRAGResearchEngine:
         template=
         """
             Detect and analyze UK regulatory changes impacting compliance.
-            
+
             Current Requirements: {current_requirements}
             Recent Updates: {regulatory_updates}
             Horizon Scanning: {horizon_scanning}
-            
+
             Analyze regulatory changes:
-            
+
             1. IMMEDIATE CHANGES
             - In-force date passed
             - Immediate compliance required
             - Emergency measures
             - Enforcement commenced
-            
+
             2. UPCOMING CHANGES (0-6 MONTHS)
             - Confirmed effective dates
             - Final rules published
             - Transition periods ending
             - Grace periods expiring
-            
+
             3. FUTURE CHANGES (6-24 MONTHS)
             - Proposed regulations
             - Consultation outcomes
             - Draft legislation
             - Policy statements
-            
+
             4. HORIZON RISKS (24+ MONTHS)
             - Green papers
             - Policy discussions
             - International developments
             - Technology-driven changes
-            
+
             5. CHANGE IMPACT ASSESSMENT
             - Operational impact
             - System changes required
             - Process updates needed
             - Training requirements
             - Cost implications
-            
+
             6. IMPLEMENTATION ROADMAP
             - Critical path items
             - Dependencies
             - Resource requirements
             - Milestone dates
             - Success criteria
-            
+
             Provide actionable change intelligence with clear timelines.
             """
         ), 'enforcement_pattern_analysis': PromptTemplate(input_variables=[
@@ -337,56 +337,56 @@ class GraphRAGResearchEngine:
         template=
         """
             Analyze UK regulatory enforcement patterns for risk insights.
-            
+
             Enforcement Data: {enforcement_data}
             Organization Profile: {organization_profile}
             Period: {time_period}
-            
+
             Analyze enforcement patterns:
-            
+
             1. ENFORCEMENT STATISTICS
             - Total actions by regulator
             - Penalty amounts and trends
             - Most common violations
             - Industry distribution
-            
+
             2. VIOLATION PATTERNS
             - Root causes identified
             - Systemic issues
             - Repeat offenses
             - Aggravating factors
-            
+
             3. REGULATOR FOCUS AREAS
             - ICO priorities
             - FCA themes
             - CMA investigations
             - HSE campaigns
             - HMRC focus
-            
+
             4. PENALTY CALCULATIONS
             - Base penalty amounts
             - Aggravating factors
             - Mitigating factors
             - Settlement discounts
             - Appeal outcomes
-            
+
             5. ORGANIZATIONAL RELEVANCE
             - Similar organization actions
             - Industry-specific risks
             - Size/complexity factors
             - Geographic considerations
-            
+
             6. PREDICTIVE INDICATORS
             - Early warning signs
             - Risk indicators
             - Inspection triggers
             - Complaint patterns
-            
+
             Provide enforcement intelligence with risk mitigation strategies.
             """
         )}
 
-    def __init__(self, neo4j_uri: str, neo4j_auth: tuple, llm_client):
+    def __init__(self, neo4j_uri: str, neo4j_auth: tuple, llm_client) -> None:
         self.neo4j_driver = AsyncGraphDatabase.driver(neo4j_uri, auth=
             neo4j_auth)
         self.llm_client = llm_client
@@ -461,7 +461,7 @@ class GraphRAGResearchEngine:
             """
                 MATCH (r1:Regulation)-[:CONTAINS]->(o1:Obligation)
                 MATCH (r2:Regulation)-[:CONTAINS]->(o2:Obligation)
-                WHERE r1.id <> r2.id 
+                WHERE r1.id <> r2.id
                 AND (o1.requirement CONTAINS $query OR o2.requirement CONTAINS $query)
                 AND (o1)-[:CONFLICTS_WITH|:OVERLAPS_WITH]-(o2)
                 RETURN r1, r2, o1, o2, type(o1-[]-o2) as relationship
@@ -521,18 +521,18 @@ class GraphRAGResearchEngine:
         """Synthesize findings from multiple sources"""
         synthesis_prompt = """
         Synthesize the following research findings into actionable intelligence.
-        
+
         Research Query: {query}
         LLM Findings: {llm_findings}
         Graph Context: {graph_context}
-        
+
         Provide:
         1. Key findings (prioritized)
         2. Confidence assessment
         3. Evidence sources
         4. Actionable recommendations
         5. Further research needed
-        
+
         Output as structured JSON.
         """
         synthesis_context = {'query': query.query_text, 'llm_findings':

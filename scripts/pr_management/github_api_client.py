@@ -5,13 +5,12 @@ Provides robust GitHub API integration with error handling, rate limiting, and c
 """
 
 import os
-import json
 import time
 import subprocess
-from typing import Dict, List, Optional, Any, Tuple
-from datetime import datetime, timedelta
+from typing import Dict, List, Optional
+from datetime import datetime
 import requests
-from functools import lru_cache, wraps
+from functools import lru_cache
 from dataclasses import dataclass
 import logging
 
@@ -48,7 +47,7 @@ class PRInfo:
 class GitHubAPIClient:
     """Robust GitHub API client for PR management operations"""
 
-    def __init__(self, owner: str = None, repo: str = None, token: str = None, dry_run: bool = False):
+    def __init__(self, owner: str = None, repo: str = None, token: str = None, dry_run: bool = False) -> None:
         """Initialize GitHub API client"""
         self.owner = owner or os.getenv('GITHUB_OWNER', 'OmarA1-Bakri')
         self.repo = repo or os.getenv('GITHUB_REPO', 'ruleIQ')

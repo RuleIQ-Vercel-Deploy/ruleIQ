@@ -144,7 +144,7 @@ class TestConditionalEdges:
         # Assert
         graph_test_harness.assert_node_called("high_confidence_path")
         graph_test_harness.assert_node_not_called("low_confidence_path")
-        assert result.review_required == False
+        assert not result.review_required
 
     def test_multi_branch_conditional(self, graph_test_harness):
         """Test routing with multiple conditional branches."""
@@ -218,7 +218,7 @@ class TestConditionalEdges:
 
         # Assert
         graph_test_harness.assert_node_called("error_handler")
-        assert result.had_routing_error == True
+        assert result.had_routing_error
         assert "fallback_path" in result.execution_history
 
 
@@ -238,7 +238,7 @@ class TestErrorHandling:
         result = graph_test_harness.execute(graph, initial_state)
 
         # Assert
-        assert result.had_errors == True
+        assert result.had_errors
         assert len(result.errors) == 1
         assert result.errors[0]["node"] == "process"
         assert result.workflow_status == "completed_with_errors"
@@ -275,9 +275,9 @@ class TestErrorHandling:
         result = graph_test_harness.execute(graph, initial_state)
 
         # Assert
-        assert result.had_errors == True
+        assert result.had_errors
         assert len(result.errors) == 2
-        assert result.partial_results_available == True
+        assert result.partial_results_available
         assert "check_obligation_3" in [r["node"] for r in result.successful_nodes]
 
     def test_error_handler_node_invocation(self, graph_test_harness):
@@ -294,7 +294,7 @@ class TestErrorHandling:
 
         # Assert
         graph_test_harness.assert_node_called("error_handler")
-        assert result.error_handled == True
+        assert result.error_handled
         assert result.recovery_action == "manual_intervention_required"
 
     def test_validation_error_handling(self, graph_test_harness):
@@ -484,7 +484,7 @@ class TestGraphIntegration:
         assert result.workflow_status == "completed"
         assert len(result.obligations_checked) == 3
         assert all(ob["status"] == "compliant" for ob in result.obligations_checked)
-        assert result.compliance_report_generated == True
+        assert result.compliance_report_generated
 
     @pytest.mark.asyncio
     async def test_concurrent_graph_executions(self, graph_test_harness):
@@ -538,7 +538,7 @@ class TestGraphIntegration:
 
         # Assert
         assert result2.workflow_status == "completed"
-        assert result2.resumed_from_checkpoint == True
+        assert result2.resumed_from_checkpoint
         # Should not re-execute nodes before checkpoint
         graph_test_harness.assert_node_not_called("start", context="resume")
         graph_test_harness.assert_node_not_called("process", context="resume")

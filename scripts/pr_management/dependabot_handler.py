@@ -8,7 +8,7 @@ import json
 import time
 import re
 from pathlib import Path
-from typing import List, Dict, Optional, Tuple
+from typing import List, Dict, Tuple
 from datetime import datetime
 import logging
 from github_api_client import GitHubAPIClient, PRInfo
@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 class DependabotHandler:
     """Handles automated processing of Dependabot pull requests"""
 
-    def __init__(self, client: GitHubAPIClient = None, config: Dict = None):
+    def __init__(self, client: GitHubAPIClient = None, config: Dict = None) -> None:
         """Initialize Dependabot handler"""
         self.client = client or GitHubAPIClient()
         self.config = config or self._load_default_config()
@@ -338,8 +338,8 @@ class DependabotHandler:
     def _detect_ecosystem(self, pr: PRInfo, files: List[Dict]) -> str:
         """Detect the ecosystem based on PR title and changed files"""
         # Check PR title/body for hints
-        title_lower = pr.title.lower()
-        body_lower = (pr.body or '').lower()
+        pr.title.lower()
+        (pr.body or '').lower()
 
         # Check file names for ecosystem indicators
         filenames = [f['filename'] for f in files]
@@ -479,7 +479,7 @@ class DependabotHandler:
                 return False, f"Unexpected source code changes for {ecosystem} update: {', '.join(source_changes)}"
 
         # Check if only expected files are changed
-        if ecosystem != 'pip' and ecosystem != 'gradle':
+        if ecosystem not in {'pip', 'gradle'}:
             unexpected_files = [f for f in filenames if f not in allowed_files]
             # Allow some flexibility for monorepo structures
             unexpected_files = [f for f in unexpected_files if not f.startswith('packages/') and not f.startswith('apps/')]
@@ -676,7 +676,7 @@ def main():
     results = handler.process_all_dependabot_prs()
 
     # Print summary
-    print(f"\nDependabot PR Processing Summary:")
+    print("\nDependabot PR Processing Summary:")
     print(f"  Total PRs: {results['total_prs']}")
     print(f"  Processed: {results['processed']}")
     print(f"  Skipped: {results['skipped']}")

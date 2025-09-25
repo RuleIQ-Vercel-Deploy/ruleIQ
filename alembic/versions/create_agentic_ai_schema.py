@@ -35,7 +35,7 @@ def upgrade() -> None:
 
     # Insert initial version
     op.execute(text("""
-        INSERT INTO schema_versions (version_number, description) 
+        INSERT INTO schema_versions (version_number, description)
         VALUES ('1.0.0', 'Initial agentic AI schema implementation')
     """))
 

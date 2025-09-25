@@ -15,10 +15,7 @@ from sqlalchemy.orm import Session
 
 from api.dependencies.auth import get_current_active_user
 from api.dependencies.security_validation import (
-    SecurityDependencies,
-    validate_request,
-    validate_json_body,
-    validate_query_params
+    validate_request
 )
 from api.utils.security_validation import SecurityValidator
 from database.user import User
@@ -57,7 +54,7 @@ async def create_conversation(
     """Create a new chat conversation with optimized database queries."""
     try:
         from sqlalchemy import func, select
-        
+
         # Sanitize input fields
         if request.title:
             request.title = SecurityValidator.validate_no_dangerous_content(request.title, "title")
@@ -368,7 +365,7 @@ async def send_message(
     """Send a message in a conversation."""
     try:
         from sqlalchemy import desc, select
-        
+
         # Sanitize message content
         request.message = SecurityValidator.validate_no_dangerous_content(request.message, "message")
 

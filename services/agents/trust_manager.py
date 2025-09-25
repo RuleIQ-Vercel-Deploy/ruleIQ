@@ -34,7 +34,7 @@ class TrustManager:
         self,
         db_session: Session,
         rules: Optional[TrustProgressionRules] = None
-    ):
+    ) -> None:
         """Initialize trust manager."""
         self.db = db_session
         self.rules = rules or TrustProgressionRules()
@@ -387,7 +387,7 @@ class TrustManager:
 
         try:
             active_agents = self.db.query(Agent).filter(
-                Agent.is_active == True
+                Agent.is_active
             ).all()
 
             for agent in active_agents:

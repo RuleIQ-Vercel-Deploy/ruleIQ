@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 class TracingConfig:
     """OpenTelemetry tracing configuration for ruleIQ"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.service_name = os.getenv('OTEL_SERVICE_NAME', 'ruleiq-api')
         self.service_version = os.getenv('OTEL_SERVICE_VERSION', '1.0.0')
         self.environment = os.getenv('ENVIRONMENT', 'development')
@@ -92,7 +92,7 @@ class TracingConfig:
 class CustomTracer:
     """Custom tracer wrapper for ruleIQ-specific tracing"""
 
-    def __init__(self, tracer: Optional[trace.Tracer]):
+    def __init__(self, tracer: Optional[trace.Tracer]) -> None:
         self.tracer = tracer
         self.enabled = tracer is not None
 

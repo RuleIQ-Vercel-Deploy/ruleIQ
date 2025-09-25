@@ -43,7 +43,7 @@ class AuthenticationService:
         "special": r'[!@#$%^&*(),.?":{}|<>]',
     }
 
-    def __init__(self, cache_service: Optional[CacheService] = None):
+    def __init__(self, cache_service: Optional[CacheService] = None) -> None:
         """Initialize authentication service"""
         self.cache = cache_service or CacheService()
         self.jwt_secret = settings.jwt_secret_key
@@ -302,7 +302,6 @@ class AuthenticationService:
         """Invalidate all sessions for a user"""
         # This would require tracking sessions per user
         # Implementation depends on session storage strategy
-        pattern = "session:*"
         # Would need to iterate and check user_id in session data
         # Simplified for now
         pass

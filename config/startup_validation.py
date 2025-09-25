@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 class StartupValidator:
     """Validates configuration and environment on startup"""
 
-    def __init__(self, config: Optional[BaseConfig]=None):
+    def __init__(self, config: Optional[BaseConfig]=None) -> None:
         """Initialize validator with optional config"""
         self.config = config or get_current_config()
         self.errors: List[str] = []
@@ -113,7 +113,7 @@ class StartupValidator:
             engine = create_engine(self.config.DATABASE_URL, connect_args={
                 'connect_timeout': 5})
             with engine.connect() as conn:
-                result = conn.execute('SELECT 1')
+                conn.execute('SELECT 1')
                 logger.debug('Database connection successful')
         except ImportError:
             self.warnings.append(
@@ -194,10 +194,9 @@ class StartupValidator:
         else:
             logger.debug('AI services configured: %s' % ', '.join(
                 configured_services))
-        if self.config.OPENAI_API_KEY:
-            if not self.config.OPENAI_API_KEY.startswith('sk-'):
-                self.warnings.append(
-                    "OPENAI_API_KEY doesn't match expected format")
+        if self.config.OPENAI_API_KEY and not self.config.OPENAI_API_KEY.startswith('sk-'):
+            self.warnings.append(
+                "OPENAI_API_KEY doesn't match expected format")
 
     def _validate_file_system(self) ->None:
         """Validate file system configurations"""

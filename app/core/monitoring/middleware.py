@@ -149,7 +149,7 @@ class MetricsMiddleware(BaseHTTPMiddleware):
 class PerformanceMiddleware(BaseHTTPMiddleware):
     """Middleware for performance monitoring."""
 
-    def __init__(self, app: ASGIApp, slow_request_threshold: float = 1.0):
+    def __init__(self, app: ASGIApp, slow_request_threshold: float = 1.0) -> None:
         """Initialize performance middleware."""
         super().__init__(app)
         self.slow_request_threshold = slow_request_threshold

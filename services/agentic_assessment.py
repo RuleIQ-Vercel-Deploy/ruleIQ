@@ -477,7 +477,7 @@ class AgenticAssessmentService:
             # Get framework-specific questions
             framework_types = conversation.context_gathered.get("framework_types", [])
             answered_question_ids = [
-                q["question_id"] for q in conversation.answered_questions,
+                q["question_id"] for q in conversation.answered_questions
             ]
 
             # Find appropriate question from templates

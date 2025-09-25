@@ -84,7 +84,7 @@ class JWTAuthMiddleware(BaseHTTPMiddleware):
         re.compile(r"^/api/test-utils/.*$"),
     ]
 
-    def __init__(self, app, secret_key: Optional[str] = None):
+    def __init__(self, app, secret_key: Optional[str] = None) -> None:
         super().__init__(app)
         self.secret_key = secret_key or settings.SECRET_KEY
         self.algorithm = "HS256"
@@ -151,12 +151,7 @@ class JWTAuthMiddleware(BaseHTTPMiddleware):
             return True
 
         # Check patterns
-        for pattern in self.PUBLIC_PATTERNS:
-            if pattern.match(path):
-                return True
-
-        # Check if it's OPTIONS request (CORS preflight)
-        return False
+        return any(pattern.match(path) for pattern in self.PUBLIC_PATTERNS)
 
     def _is_admin_route(self, path: str) -> bool:
         """Check if route requires admin permissions."""
@@ -165,11 +160,7 @@ class JWTAuthMiddleware(BaseHTTPMiddleware):
             return True
 
         # Check patterns
-        for pattern in self.ADMIN_PATTERNS:
-            if pattern.match(path):
-                return True
-
-        return False
+        return any(pattern.match(path) for pattern in self.ADMIN_PATTERNS)
 
     def _extract_token(self, request: Request) -> Optional[str]:
         """Extract JWT token from request."""
@@ -290,7 +281,7 @@ class JWTAuthMiddleware(BaseHTTPMiddleware):
 class JWTRateLimiter:
     """Rate limiter for JWT-authenticated endpoints."""
 
-    def __init__(self, requests_per_minute: int = 60):
+    def __init__(self, requests_per_minute: int = 60) -> None:
         self.requests_per_minute = requests_per_minute
         self.requests: Dict[str, List[float]] = {}
 

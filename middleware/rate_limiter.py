@@ -31,7 +31,7 @@ class UserTier(str, Enum):
 class RateLimiter:
     """
     Redis-backed rate limiter using sliding window algorithm.
-    
+
     Features:
     - Tiered rate limits (anonymous, authenticated, premium, enterprise)
     - Per-endpoint configuration
@@ -66,7 +66,7 @@ class RateLimiter:
     # Service account identifiers for bypass
     SERVICE_ACCOUNTS = set()
 
-    def __init__(self, redis_client: Optional[redis.Redis] = None):
+    def __init__(self, redis_client: Optional[redis.Redis] = None) -> None:
         """Initialize the rate limiter."""
         self.redis_client = redis_client or self._get_redis_client()
         self.key_prefix = "rate_limit:"
@@ -108,10 +108,10 @@ class RateLimiter:
     def get_user_tier(self, request: Request) -> UserTier:
         """
         Determine the user's tier from the request.
-        
+
         Args:
             request: FastAPI request object
-            
+
         Returns:
             User tier level
         """
@@ -143,10 +143,10 @@ class RateLimiter:
     def get_identifier(self, request: Request) -> str:
         """
         Get unique identifier for rate limiting.
-        
+
         Args:
             request: FastAPI request object
-            
+
         Returns:
             Unique identifier string
         """
@@ -171,11 +171,11 @@ class RateLimiter:
     def get_rate_limit(self, endpoint: str, tier: UserTier) -> Dict[str, int]:
         """
         Get rate limit for endpoint and tier.
-        
+
         Args:
             endpoint: API endpoint path
             tier: User tier
-            
+
         Returns:
             Rate limit configuration
         """
@@ -198,10 +198,10 @@ class RateLimiter:
     def should_bypass(self, request: Request) -> bool:
         """
         Check if request should bypass rate limiting.
-        
+
         Args:
             request: FastAPI request object
-            
+
         Returns:
             True if should bypass
         """
@@ -231,10 +231,10 @@ class RateLimiter:
     async def check_rate_limit(self, request: Request) -> Tuple[bool, Dict[str, Any]]:
         """
         Check if request exceeds rate limit.
-        
+
         Args:
             request: FastAPI request object
-            
+
         Returns:
             Tuple of (is_allowed, rate_limit_info)
         """
@@ -400,7 +400,7 @@ class RateLimiter:
 class RateLimitMiddleware:
     """FastAPI middleware for rate limiting."""
 
-    def __init__(self, app, rate_limiter: Optional[RateLimiter] = None):
+    def __init__(self, app, rate_limiter: Optional[RateLimiter] = None) -> None:
         """Initialize the middleware."""
         self.app = app
         self.rate_limiter = rate_limiter or RateLimiter()

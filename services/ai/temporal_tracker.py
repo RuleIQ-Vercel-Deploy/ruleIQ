@@ -115,7 +115,7 @@ class TemporalTracker:
     Monitors deadlines, amendments, and temporal patterns.
     """
 
-    def __init__(self, neo4j_uri: str, neo4j_user: str, neo4j_password: str):
+    def __init__(self, neo4j_uri: str, neo4j_user: str, neo4j_password: str) -> None:
         self.neo4j_uri = neo4j_uri
         self.neo4j_user = neo4j_user
         self.neo4j_password = neo4j_password
@@ -425,7 +425,7 @@ class TemporalTracker:
         # For now, get all regulations with temporal data
         query = """
         MATCH (r:Regulation)
-        WHERE r.typical_timeline IS NOT NULL 
+        WHERE r.typical_timeline IS NOT NULL
            OR r.enforcement_frequency IS NOT NULL
         RETURN r
         LIMIT 100
@@ -639,7 +639,7 @@ class TemporalTracker:
         Returns:
             Amendment pattern analysis
         """
-        async with self.driver.session() as session:
+        async with self.driver.session():
             # Simulate amendment history (in production, would query real data)
             amendment_history = self._simulate_amendment_history(
                 regulation_id, lookback_years,

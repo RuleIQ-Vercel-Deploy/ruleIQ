@@ -11,13 +11,13 @@ import sys
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Tuple
 
 
 class TestRunner:
     """Comprehensive test execution for deployment validation."""
 
-    def __init__(self, verbose: bool = False, parallel: bool = True):
+    def __init__(self, verbose: bool = False, parallel: bool = True) -> None:
         """Initialize test runner.
 
         Args:
@@ -580,7 +580,7 @@ class TestRunner:
         print(f"Failed: {report['failed']} ❌")
 
         if report["test_statistics"]["total"] > 0:
-            print(f"\nDetailed Statistics:")
+            print("\nDetailed Statistics:")
             print(f"  Total Test Cases: {report['test_statistics']['total']}")
             print(f"  Passed: {report['test_statistics']['passed']}")
             print(f"  Failed: {report['test_statistics']['failed']}")

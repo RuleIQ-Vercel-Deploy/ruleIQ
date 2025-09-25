@@ -120,7 +120,7 @@ class ProductionConfig(BaseConfig):
         if not self.OPENAI_API_KEY and self.ENABLE_AI_PROCESSING:
             raise ValueError("OPENAI_API_KEY must be set when AI processing is enabled")
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         """Initialize production config with validation"""
         super().__init__(**kwargs)
         self.validate_production_config()

@@ -78,7 +78,7 @@ class EnhancedNotificationNode:
     Replaces Celery notification tasks with state-aware, retryable, batch-capable processing.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.name = 'enhanced_notification_node'
         self.error_handler = ErrorHandlerNode()
         self.circuit_breaker_failures = {}
@@ -260,14 +260,13 @@ class EnhancedNotificationNode:
         failures = self.circuit_breaker_failures.get(service, {})
         failure_count = failures.get('count', 0)
         last_failure = failures.get('last_failure')
-        if failure_count >= self.circuit_breaker_threshold:
-            if last_failure:
-                time_since_failure = (datetime.now(timezone.utc) - last_failure).seconds
-                if time_since_failure < self.circuit_breaker_timeout:
-                    return CircuitBreakerStatus.OPEN
-                else:
-                    self.circuit_breaker_failures[service] = {'count': 0}
-                    return CircuitBreakerStatus.HALF_OPEN
+        if failure_count >= self.circuit_breaker_threshold and last_failure:
+            time_since_failure = (datetime.now(timezone.utc) - last_failure).seconds
+            if time_since_failure < self.circuit_breaker_timeout:
+                return CircuitBreakerStatus.OPEN
+            else:
+                self.circuit_breaker_failures[service] = {'count': 0}
+                return CircuitBreakerStatus.HALF_OPEN
         return CircuitBreakerStatus.CLOSED
 
     def _record_circuit_breaker_failure(self, service: str) -> None:
@@ -328,7 +327,7 @@ class EnhancedNotificationNode:
     async def send_push_notification(self, state: Dict[str, Any]) -> Dict[str, Any]:
         """Send push notification to mobile/web"""
         device_tokens = state['task_params'].get('device_tokens', [])
-        notification = state['task_params'].get('notification', {})
+        state['task_params'].get('notification', {})
         state['task_result'] = {'delivered': len(device_tokens), 'failed': 0, 'tokens_processed': device_tokens}
         state['task_status'] = 'completed'
         return state
@@ -371,7 +370,7 @@ class EnhancedNotificationNode:
         for i in range(0, len(messages), rate_limit):
             chunk = messages[i:i + rate_limit]
             chunk_start = asyncio.get_event_loop().time()
-            for message in chunk:
+            for _message in chunk:
                 pass
             chunk_elapsed = asyncio.get_event_loop().time() - chunk_start
             if i + rate_limit <= len(messages):
@@ -450,7 +449,7 @@ class EnhancedNotificationNode:
 
     async def process_with_ai(self, state: Dict[str, Any]) -> Dict[str, Any]:
         """Process with AI-generated content"""
-        max_tokens = state['task_params'].get('max_tokens', 500)
+        state['task_params'].get('max_tokens', 500)
         state['task_result'] = {'generated_content': 'AI generated summary', 'token_usage': {'total': 350, 'prompt': 100, 'completion': 250}}
         state['execution_metrics'] = {'token_usage': {'total': 350}, 'cost_usd': 0.007}
         state['task_status'] = 'completed'

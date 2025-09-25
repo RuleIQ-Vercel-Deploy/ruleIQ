@@ -6,7 +6,7 @@ OpenTelemetry metrics integration for comprehensive observability.
 import logging
 import time
 from collections import defaultdict
-from contextlib import contextmanager
+from contextlib import contextmanager, suppress
 from datetime import datetime, timezone
 from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple, Generator
 from opentelemetry import metrics
@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 class OpenTelemetryMetricsCollector:
     """Collects and manages OpenTelemetry metrics."""
 
-    def __init__(self, service_name: str='ruleiq', environment: str='production', resource: Optional[Resource]=None):
+    def __init__(self, service_name: str='ruleiq', environment: str='production', resource: Optional[Resource]=None) -> None:
         """Initialize OpenTelemetry metrics collector.
 
         Args:
@@ -303,7 +303,7 @@ class OpenTelemetryMetricsCollector:
 class PrometheusExporter:
     """Exports OpenTelemetry metrics in Prometheus format."""
 
-    def __init__(self, collector: Optional[OpenTelemetryMetricsCollector]=None, port: int=9090):
+    def __init__(self, collector: Optional[OpenTelemetryMetricsCollector]=None, port: int=9090) -> None:
         """Initialize Prometheus exporter.
 
         Args:
@@ -318,10 +318,8 @@ class PrometheusExporter:
     def _start_http_server(self):
         """Start HTTP server for Prometheus metrics endpoint."""
         from prometheus_client import start_http_server
-        try:
+        with suppress(ValueError, TypeError):
             start_http_server(self.port)
-        except (ValueError, TypeError):
-            pass
 
     def format_metrics(self) -> str:
         """Format metrics in Prometheus text format.
@@ -425,7 +423,7 @@ class PrometheusExporter:
 class LangGraphMetricsInstrumentor:
     """Instruments LangGraph execution with OpenTelemetry metrics."""
 
-    def __init__(self, collector: OpenTelemetryMetricsCollector):
+    def __init__(self, collector: OpenTelemetryMetricsCollector) -> None:
         """Initialize LangGraph metrics instrumentor.
 
         Args:
@@ -564,7 +562,7 @@ class LangGraphMetricsInstrumentor:
 class MetricsBridge:
     """Bridge between legacy MetricsCollector and OpenTelemetry."""
 
-    def __init__(self, legacy_collector: MetricsCollector, otel_collector: OpenTelemetryMetricsCollector):
+    def __init__(self, legacy_collector: MetricsCollector, otel_collector: OpenTelemetryMetricsCollector) -> None:
         """Initialize metrics bridge.
 
         Args:

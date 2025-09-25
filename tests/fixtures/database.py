@@ -49,10 +49,7 @@ def test_db_engine():
     manager = get_test_db_manager()
 
     # Create or get existing engine
-    if not manager.test_engine:
-        engine = manager.create_test_engine()
-    else:
-        engine = manager.test_engine
+    engine = manager.create_test_engine() if not manager.test_engine else manager.test_engine
 
     # Verify connection
     if not manager.verify_connection(engine):

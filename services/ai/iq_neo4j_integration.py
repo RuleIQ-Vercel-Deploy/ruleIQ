@@ -20,7 +20,7 @@ class IQNeo4jIntegration:
     Provides intelligent query capabilities for compliance decision-making.
     """
 
-    def __init__(self, neo4j_uri: str, neo4j_user: str, neo4j_password: str):
+    def __init__(self, neo4j_uri: str, neo4j_user: str, neo4j_password: str) -> None:
         """Initialize integration with Neo4j connection."""
         self.driver = AsyncGraphDatabase.driver(neo4j_uri, auth=(neo4j_user,
             neo4j_password))
@@ -44,27 +44,27 @@ class IQNeo4jIntegration:
         query = """
         // Find applicable regulations based on business triggers
         MATCH (r:Regulation)
-        WHERE 
+        WHERE
             // Industry match
-            (r.business_triggers IS NOT NULL AND 
-             (r.business_triggers CONTAINS $industry OR 
+            (r.business_triggers IS NOT NULL AND
+             (r.business_triggers CONTAINS $industry OR
               r.business_triggers CONTAINS 'any'))
             OR
             // Direct trigger match
             EXISTS((r)-[:APPLIES_TO]->(:BusinessTrigger {industry: $industry}))
             OR
             EXISTS((r)-[:APPLIES_TO]->(:BusinessTrigger {country: $country}))
-        
+
         // Get enforcement history
         OPTIONAL MATCH (r)-[:HAS_ENFORCEMENT]->(e:Enforcement)
-        
+
         // Get suggested controls
         OPTIONAL MATCH (r)-[:SUGGESTS_CONTROL]->(c:Control)
-        
+
         // Get related regulations
         OPTIONAL MATCH (r)-[:DEPENDS_ON|EQUIVALENT_TO|SUPERSEDES]->(related:Regulation)
-        
-        RETURN 
+
+        RETURN
             r.id as regulation_id,
             r.title as title,
             r.base_risk_score as base_risk,
@@ -182,7 +182,7 @@ class IQNeo4jIntegration:
         MATCH (r:Regulation {id: reg_id})-[:SUGGESTS_CONTROL]->(c:Control)
         WITH c, collect(DISTINCT r.id) as regulations, count(DISTINCT r) as reg_count
         WHERE reg_count > 1
-        RETURN 
+        RETURN
             c.name as control_name,
             c.id as control_id,
             regulations,
@@ -228,7 +228,7 @@ class IQNeo4jIntegration:
             OR EXISTS((r)-[:APPLIES_TO]->(:BusinessTrigger {industry: $industry}))
         WITH r, e
         ORDER BY e.date DESC
-        RETURN 
+        RETURN
             r.id as regulation_id,
             r.title as regulation_title,
             collect({
@@ -277,7 +277,7 @@ class IQNeo4jIntegration:
         UNWIND $reg_ids as reg_id
         MATCH (r:Regulation {id: reg_id})
         OPTIONAL MATCH (r)-[:SUGGESTS_CONTROL]->(c:Control)
-        RETURN 
+        RETURN
             r.id as regulation_id,
             r.title as title,
             r.automation_potential as automation_score,
@@ -363,7 +363,7 @@ class IQNeo4jIntegration:
         query = """
         MATCH (r:Regulation {id: $reg_id})-[:DEPENDS_ON]->(dep:Regulation)
         OPTIONAL MATCH (dep)-[:SUGGESTS_CONTROL]->(c:Control)
-        RETURN 
+        RETURN
             dep.id as id,
             dep.title as title,
             dep.base_risk_score as risk_score,

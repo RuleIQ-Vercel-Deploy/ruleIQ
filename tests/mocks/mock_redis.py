@@ -98,11 +98,10 @@ class MockRedis:
     async def get(self, key: str) -> Optional[str]:
         """Mock get operation."""
         # Check expiration
-        if key in self.expires:
-            if datetime.now() > self.expires[key]:
-                del self.data[key]
-                del self.expires[key]
-                return None
+        if key in self.expires and datetime.now() > self.expires[key]:
+            del self.data[key]
+            del self.expires[key]
+            return None
 
         return self.data.get(key)
 
@@ -138,9 +137,9 @@ class MockRedis:
         # Simple pattern matching (just prefix for now)
         if pattern.endswith("*"):
             prefix = pattern[:-1]
-            return [k for k in self.data.keys() if k.startswith(prefix)]
+            return [k for k in self.data if k.startswith(prefix)]
 
-        return [k for k in self.data.keys() if k == pattern]
+        return [k for k in self.data if k == pattern]
 
     async def delete(self, *keys: str) -> int:
         """Mock delete operation."""

@@ -53,7 +53,7 @@ async def validate_response(
 ) -> ValidationResult:
     """
     Validate a single AI response against the knowledge base.
-    
+
     Returns confidence scores and validation status.
     """
     try:
@@ -110,7 +110,7 @@ async def validate_batch(
 ) -> BatchValidationResult:
     """
     Validate multiple AI responses in batch.
-    
+
     Maximum 10 responses per batch.
     """
     try:

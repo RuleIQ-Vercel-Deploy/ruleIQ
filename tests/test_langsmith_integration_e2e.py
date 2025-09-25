@@ -201,7 +201,7 @@ class TestLangSmithIntegrationE2E:
 
             # Verify each execution was traced with correct session
             assert len(traced_operations) == 3
-            for i, trace in enumerate(traced_operations):
+            for _i, trace in enumerate(traced_operations):
                 assert any(
                     (f"session-{j}" in tag for j in range(3) for tag in trace["tags"])
                 )

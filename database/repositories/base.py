@@ -3,7 +3,6 @@
 from typing import TypeVar, Generic, List, Optional, Type
 from uuid import UUID
 from sqlalchemy.orm import Session
-from sqlalchemy import and_, or_, desc, asc
 
 T = TypeVar('T')
 
@@ -11,7 +10,7 @@ T = TypeVar('T')
 class BaseRepository(Generic[T]):
     """Base repository class providing common CRUD operations."""
 
-    def __init__(self, model_class: Type[T], session: Session):
+    def __init__(self, model_class: Type[T], session: Session) -> None:
         self.model_class = model_class
         self.session = session
 

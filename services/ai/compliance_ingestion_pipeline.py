@@ -137,11 +137,10 @@ class ComplianceDataValidator(BaseModel):
     @validator("risk_metadata")
     def validate_risk_metadata(cls, v):
         """Validate risk metadata structure"""
-        if v is not None:
-            if "base_risk_score" in v:
-                score = v["base_risk_score"]
-                if not (0 <= score <= 10):
-                    raise ValueError(f"Risk score {score} out of range [0, 10]")
+        if v is not None and "base_risk_score" in v:
+            score = v["base_risk_score"]
+            if not (0 <= score <= 10):
+                raise ValueError(f"Risk score {score} out of range [0, 10]")
         return v
 
     class Config:
@@ -163,7 +162,7 @@ class Neo4jComplianceIngestion:
         max_connection_pool_size: int = 50,
         connection_timeout: float = 30.0,
         batch_size: int = 100,
-    ):
+    ) -> None:
         """
         Initialize ingestion pipeline with production configurations
 
@@ -407,49 +406,49 @@ class Neo4jComplianceIngestion:
         SET r += item,
             r.last_ingested = datetime()
         WITH r, item
-        
+
         // Create industry relationships
-        FOREACH (industry IN 
-            CASE 
-                WHEN item.business_triggers IS NOT NULL 
-                AND item.business_triggers.industry IS NOT NULL 
-                THEN [item.business_triggers.industry] 
-                ELSE [] 
+        FOREACH (industry IN
+            CASE
+                WHEN item.business_triggers IS NOT NULL
+                AND item.business_triggers.industry IS NOT NULL
+                THEN [item.business_triggers.industry]
+                ELSE []
             END |
             MERGE (i:Industry {name: industry})
             MERGE (r)-[:APPLIES_TO]->(i),
         )
-        
+
         // Create jurisdiction relationships
-        FOREACH (jurisdiction IN 
-            CASE 
-                WHEN item.business_triggers IS NOT NULL 
-                AND item.business_triggers.jurisdiction IS NOT NULL 
-                THEN [item.business_triggers.jurisdiction] 
-                ELSE [] 
+        FOREACH (jurisdiction IN
+            CASE
+                WHEN item.business_triggers IS NOT NULL
+                AND item.business_triggers.jurisdiction IS NOT NULL
+                THEN [item.business_triggers.jurisdiction]
+                ELSE []
             END |
             MERGE (j:Jurisdiction {name: jurisdiction})
             MERGE (r)-[:GOVERNED_BY]->(j),
         )
-        
+
         // Create control relationships
-        FOREACH (control IN 
-            CASE 
-                WHEN item.suggested_controls IS NOT NULL 
-                THEN item.suggested_controls 
-                ELSE [] 
+        FOREACH (control IN
+            CASE
+                WHEN item.suggested_controls IS NOT NULL
+                THEN item.suggested_controls
+                ELSE []
             END |
             MERGE (c:Control {name: control})
             MERGE (r)-[:SUGGESTS_CONTROL]->(c),
         )
-        
+
         // Create tag relationships
         FOREACH (tag IN item.tags |
             MERGE (t:Tag {name: tag})
             MERGE (r)-[:TAGGED_WITH]->(t),
         )
-        
-        RETURN r.id as id, 
+
+        RETURN r.id as id,
                r.nodes_created as created,
                r.nodes_updated as updated
         """
@@ -699,19 +698,19 @@ class Neo4jComplianceIngestion:
             SET e += action,
                 e.updated_at = datetime()
             WITH e, action
-            
+
             // Link to regulation
             MATCH (r:Regulation {id: action.regulation})
             MERGE (e)-[:ENFORCES]->(r)
-            
+
             // Create organization node
             MERGE (o:Organization {name: action.organization})
             MERGE (e)-[:AGAINST]->(o)
-            
+
             // Create regulator node
             MERGE (reg:Regulator {name: action.regulator})
             MERGE (reg)-[:ISSUED]->(e)
-            
+
             RETURN e.id as id
             """
 
@@ -752,13 +751,13 @@ class Neo4jComplianceIngestion:
             "relationship_count": "MATCH ()-[r:RELATES_TO]->() RETURN count(r) as count",
             "industry_coverage": "MATCH (i:Industry) RETURN collect(i.name) as industries",
             "high_risk_regulations": """
-                MATCH (r:Regulation) 
-                WHERE r.base_risk_score >= 8 
+                MATCH (r:Regulation)
+                WHERE r.base_risk_score >= 8
                 RETURN count(r) as count
             """,
             "automation_ready": """
-                MATCH (r:Regulation) 
-                WHERE r.automation_potential >= 0.7 
+                MATCH (r:Regulation)
+                WHERE r.automation_potential >= 0.7
                 RETURN count(r) as count
             """,
         }
@@ -791,7 +790,7 @@ class IQComplianceIntegration:
     Provides high-performance queries and intelligent filtering
     """
 
-    def __init__(self, neo4j_driver):
+    def __init__(self, neo4j_driver) -> None:
         """
         Initialize integration with Neo4j driver
 
@@ -829,8 +828,8 @@ class IQComplianceIntegration:
             .*,
             controls: collect(DISTINCT c.name),
             related_regulations: collect(DISTINCT related.id),
-            applicability_score: 
-                CASE 
+            applicability_score:
+                CASE
                     WHEN r.business_triggers.industry = $industry THEN 1.0
                     ELSE 0.5
                 END * r.priority / 5.0

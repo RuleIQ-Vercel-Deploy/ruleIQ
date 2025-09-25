@@ -184,7 +184,7 @@ async def test_checkpoint_recovery():
         company_id = uuid4()
         print('Starting initial execution...')
         event_count = 0
-        async for event in master_graph.run(session_id=session_id,
+        async for _event in master_graph.run(session_id=session_id,
             company_id=company_id, user_input=
             'Start compliance assessment for fintech startup', thread_id=
             thread_id):
@@ -199,7 +199,7 @@ async def test_checkpoint_recovery():
                 )
         print('\nResuming from checkpoint...')
         event_count = 0
-        async for event in master_graph.run(session_id=session_id,
+        async for _event in master_graph.run(session_id=session_id,
             company_id=company_id, user_input='Continue the assessment',
             thread_id=thread_id):
             event_count += 1

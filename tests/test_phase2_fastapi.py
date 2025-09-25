@@ -39,10 +39,7 @@ def test_phase2_endpoints():
         print(f'   Endpoint: {method} {endpoint}')
         print('-' * 50)
         try:
-            if method == 'GET':
-                response = client.get(endpoint)
-            else:
-                response = client.post(endpoint, json={})
+            response = client.get(endpoint) if method == 'GET' else client.post(endpoint, json={})
             print(f'   Status: {response.status_code}')
             if response.status_code == HTTP_UNAUTHORIZED:
                 print('   ✅ Correctly protected - returns 401')

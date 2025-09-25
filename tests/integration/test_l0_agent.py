@@ -59,7 +59,7 @@ async def test_risk_score_calculation(l0_agent):
         {"is_critical_path": True}
     )
     assert score > 0.8
-    assert level == RiskLevel.HIGH or level == RiskLevel.CRITICAL
+    assert level in (RiskLevel.HIGH, RiskLevel.CRITICAL)
 
     # Test with production flag
     score, level = l0_agent.calculate_risk_score(

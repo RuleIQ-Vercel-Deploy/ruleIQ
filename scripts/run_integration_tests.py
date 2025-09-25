@@ -72,20 +72,20 @@ def run_integration_suite(suite_name):
         print(f"Error: Unknown suite '{suite_name}'")
         print(f"Available suites: {', '.join(TEST_SUITES.keys())}")
         return 1
-    
+
     suite = TEST_SUITES[suite_name]
     print(f"\nRunning {suite['description']}...")
     print(f"Timeout: {suite['timeout']} seconds")
     print("-" * 60)
-    
+
     cmd = [".venv/bin/python", "-m", "pytest"]
-    
+
     # Add paths if they exist
     existing_paths = []
     for path in suite["paths"]:
         if Path(path).exists():
             existing_paths.append(path)
-    
+
     if existing_paths:
         cmd.extend(existing_paths)
     elif suite["markers"]:
@@ -96,11 +96,11 @@ def run_integration_suite(suite_name):
         # Create a dummy test to avoid failures
         print("Integration tests not yet implemented")
         return 0
-    
+
     # Add markers
     if suite["markers"]:
         cmd.extend(["-m", suite["markers"]])
-    
+
     # Add timeout and other options
     cmd.extend([
         f"--timeout={suite['timeout']}",
@@ -108,7 +108,7 @@ def run_integration_suite(suite_name):
         "--maxfail=3",
         "-v"
     ])
-    
+
     # Run the tests
     try:
         result = subprocess.run(
@@ -146,18 +146,18 @@ def main():
         action="store_true",
         help="List available test suites"
     )
-    
+
     args = parser.parse_args()
-    
+
     if args.list:
         list_suites()
         return 0
-    
+
     if not args.suite:
         print("Error: Please specify a suite with --suite")
         list_suites()
         return 1
-    
+
     return run_integration_suite(args.suite)
 
 if __name__ == "__main__":

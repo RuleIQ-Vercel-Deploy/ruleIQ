@@ -11,6 +11,7 @@ import redis.asyncio as redis
 from redis.exceptions import RedisError, ConnectionError, TimeoutError
 import logging
 from config.security_settings import get_security_settings, RedisFailureStrategy
+import contextlib
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +26,7 @@ class CircuitState(str, Enum):
 class LocalCache:
     """Simple LRU cache for fallback when Redis is unavailable"""
 
-    def __init__(self, max_size: int = 1000, ttl: int = 300):
+    def __init__(self, max_size: int = 1000, ttl: int = 300) -> None:
         self.cache: OrderedDict[str, tuple[Any, float]] = OrderedDict()
         self.max_size = max_size
         self.ttl = ttl
@@ -67,7 +68,7 @@ class LocalCache:
 class RedisCircuitBreaker:
     """
     Circuit breaker for Redis operations with fallback strategies
-    
+
     Features:
     - Circuit breaker pattern to prevent cascade failures
     - Local cache fallback for degraded mode
@@ -82,7 +83,7 @@ class RedisCircuitBreaker:
         failure_threshold: int = 5,
         recovery_timeout: int = 60,
         half_open_requests: int = 3
-    ):
+    ) -> None:
         self.settings = get_security_settings()
         self.redis_config = self.settings.redis
 
@@ -139,10 +140,8 @@ class RedisCircuitBreaker:
         """Cleanup resources"""
         if self.health_check_task:
             self.health_check_task.cancel()
-            try:
+            with contextlib.suppress(asyncio.CancelledError):
                 await self.health_check_task
-            except asyncio.CancelledError:
-                pass
 
         if self.redis_client:
             await self.redis_client.close()

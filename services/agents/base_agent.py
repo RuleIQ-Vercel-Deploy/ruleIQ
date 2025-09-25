@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 class BaseAgent(ABC):
     """Abstract base class for all agents."""
 
-    def __init__(self, agent_id: str, session_id: str, user_id: str):
+    def __init__(self, agent_id: str, session_id: str, user_id: str) -> None:
         """Initialize base agent."""
         self.agent_id = agent_id
         self.session_id = session_id

@@ -23,7 +23,7 @@ class Neo4jConnection:
             cls._instance = super().__new__(cls)
         return cls._instance
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize connection parameters."""
         if not hasattr(self, '_initialized'):
             logger.info('[Neo4jConnection] Fresh initialization...')

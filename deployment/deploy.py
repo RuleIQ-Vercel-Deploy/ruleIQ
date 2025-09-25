@@ -6,13 +6,12 @@ Coordinates the entire deployment process with comprehensive validation and roll
 
 import argparse
 import json
-import os
 import subprocess
 import sys
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional
 
 import yaml
 
@@ -20,7 +19,7 @@ import yaml
 class DeploymentOrchestrator:
     """Main deployment orchestrator for ruleIQ application."""
 
-    def __init__(self, environment: str, config_path: str = "deployment/config.yaml"):
+    def __init__(self, environment: str, config_path: str = "deployment/config.yaml") -> None:
         """Initialize deployment orchestrator.
 
         Args:
@@ -244,7 +243,7 @@ class DeploymentOrchestrator:
             return self.run_python_module(
                 "deployment/docker_manager.py",
                 "Docker deployment",
-                [f"--action=deploy", f"--env={self.environment}"]
+                ["--action=deploy", f"--env={self.environment}"]
             )
 
         # Fallback to Docker Compose
@@ -308,11 +307,7 @@ class DeploymentOrchestrator:
             ("python database_health_check.py", "Database health check")
         ]
 
-        for command, description in health_checks:
-            if not self.run_command(command, description):
-                return False
-
-        return True
+        return all(self.run_command(command, description) for command, description in health_checks)
 
     def rollback(self):
         """Execute rollback procedure."""

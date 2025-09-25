@@ -210,14 +210,14 @@ class Neo4jGraphRAGService:
         query = """
         MATCH (risk:Risk)
         OPTIONAL MATCH (risk)<-[m:MITIGATES]-(ctrl:Control)
-        WITH risk, 
+        WITH risk,
              risk.risk_score AS inherent_risk,
              COALESCE(AVG(m.mitigation_percentage), 0) AS avg_mitigation
         RETURN risk.name AS risk_name,
                risk.category AS category,
                inherent_risk,
                ROUND(inherent_risk * (1 - avg_mitigation/100.0), 2) AS residual_risk,
-               CASE 
+               CASE
                  WHEN inherent_risk * (1 - avg_mitigation/100.0) >= 15 THEN 'HIGH'
                  WHEN inherent_risk * (1 - avg_mitigation/100.0) >= 10 THEN 'MEDIUM'
                  ELSE 'LOW'
@@ -247,7 +247,7 @@ class Neo4jGraphRAGService:
         query = """
         MATCH (j1:Jurisdiction)-[:ENFORCES]->(r1:Regulation)-[:REQUIRES]->(req1:Requirement)
         MATCH (j2:Jurisdiction)-[:ENFORCES]->(r2:Regulation)-[:REQUIRES]->(req2:Requirement)
-        WHERE j1.code <> j2.code 
+        WHERE j1.code <> j2.code
           AND req1.description = req2.description
         RETURN DISTINCT req1.title AS common_requirement,
                COLLECT(DISTINCT j1.code + ':' + r1.name) AS regulations
@@ -324,7 +324,7 @@ class Neo4jGraphRAGService:
                m.target_value AS target,
                m.frequency AS frequency,
                m.owner AS owner,
-               CASE 
+               CASE
                  WHEN m.type = 'KPI' AND m.current_value < m.target_value THEN 'GREEN'
                  WHEN m.type = 'KRI' AND m.current_value > m.target_value THEN 'RED'
                  ELSE 'AMBER'
@@ -364,7 +364,7 @@ class Neo4jGraphRAGService:
         RETURN req.title AS requirement,
                req.mandatory AS is_mandatory,
                COLLECT(ctrl.name) AS existing_controls,
-               CASE 
+               CASE
                  WHEN SIZE(COLLECT(ctrl)) = 0 THEN 'MISSING'
                  ELSE 'IMPLEMENTED'
                END AS status
@@ -415,10 +415,10 @@ class Neo4jGraphRAGService:
                 data = json.load(f)
             if 'domains' in data:
                 query = """
-                UNWIND $domains AS d 
+                UNWIND $domains AS d
                 CREATE (domain:ComplianceDomain {
-                    name: d.name, 
-                    description: d.description, 
+                    name: d.name,
+                    description: d.description,
                     priority: d.priority,
                     regulatory_severity: d.regulatory_severity
                 })
@@ -427,7 +427,7 @@ class Neo4jGraphRAGService:
                     }, read_only=False)
             if 'regulations' in data:
                 query = """
-                UNWIND $regulations AS r 
+                UNWIND $regulations AS r
                 CREATE (reg:Regulation {
                     name: r.name,
                     full_name: r.full_name,

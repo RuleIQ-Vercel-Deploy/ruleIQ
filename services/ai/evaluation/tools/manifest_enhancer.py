@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 class ManifestEnhancer:
     """Enhances compliance manifests with intelligent metadata for IQ Agent."""
 
-    def __init__(self, input_manifest_path: str, output_manifest_path: str):
+    def __init__(self, input_manifest_path: str, output_manifest_path: str) -> None:
         """
         Initialize the enhancer with input and output paths.
 

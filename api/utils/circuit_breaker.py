@@ -66,11 +66,10 @@ class CircuitBreaker:
     @property
     def state(self) ->CircuitBreakerState:
         """Get current state, checking for recovery."""
-        if self._state == CircuitBreakerState.OPEN:
-            if time.time(
-                ) - self._last_failure_time > self.config.recovery_timeout:
-                self._state = CircuitBreakerState.HALF_OPEN
-                self._success_count = 0
+        if self._state == CircuitBreakerState.OPEN and time.time(
+            ) - self._last_failure_time > self.config.recovery_timeout:
+            self._state = CircuitBreakerState.HALF_OPEN
+            self._success_count = 0
         return self._state
 
     async def call(self, func: Callable[..., Awaitable[T]], *args, **kwargs

@@ -149,7 +149,7 @@ class MockFileSystem:
 
     def list_files(self, directory: str) -> List[str]:
         """Mock directory listing."""
-        return [path for path in self.files.keys() if path.startswith(directory)]
+        return [path for path in self.files if path.startswith(directory)]
 
     def file_exists(self, path: str) -> bool:
         """Check if mock file exists."""

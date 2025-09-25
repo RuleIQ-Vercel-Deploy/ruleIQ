@@ -275,7 +275,7 @@ class TestRealComplianceNodes:
                         len(result["compliance_data"]["batch_update_results"]["alerts"])
                         == 1,
                     )
-                    assert result["metadata"]["alerts_generated"] == True
+                    assert result["metadata"]["alerts_generated"]
                     assert result["metadata"]["alert_count"] == 1
 
                     alert = result["compliance_data"]["batch_update_results"]["alerts"][
@@ -404,7 +404,7 @@ class TestRealComplianceNodes:
                         == 1,
                     )
 
-                    assert result["metadata"]["notify_required"] == True
+                    assert result["metadata"]["notify_required"]
                     assert result["metadata"]["alert_count"] == 1
                     assert len(result["metadata"]["alerts"]) == 1
 

@@ -359,7 +359,7 @@ class TestRetryAndFallbackMechanisms:
             raise ValueError("Integration failed")
 
         # Test circuit breaker opens after threshold
-        for i in range(3):
+        for _i in range(3):
             with pytest.raises(ValueError):
                 breaker.call(failing_function)
 

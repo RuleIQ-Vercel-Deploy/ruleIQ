@@ -873,6 +873,7 @@ class ABTestingFramework:
         margin_error = t_critical * pooled_se
         return (mean_diff - margin_error, mean_diff + margin_error)
 
+    def _execute_statistical_test(
         self,
         test_type: StatisticalTest,
         variant_data: Dict[str, List],

@@ -12,11 +12,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from api.dependencies.auth import get_current_active_user
 from api.dependencies.security_validation import (
-    SecurityDependencies,
     validate_request,
-    validate_integration_request,
-    validate_query_params,
-    validate_json_body
+    validate_integration_request
 )
 from api.utils.security_validation import SecurityValidator
 from api.utils.input_validation import InputValidator

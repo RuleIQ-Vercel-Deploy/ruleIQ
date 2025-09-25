@@ -58,7 +58,7 @@ class WorkflowExecution:
 class NodeExecutionTracker:
     """Tracks execution of individual LangGraph nodes."""
 
-    def __init__(self, max_history: int=1000):
+    def __init__(self, max_history: int=1000) -> None:
         """Initialize node execution tracker.
 
         Args:
@@ -358,7 +358,7 @@ class NodeExecutionTracker:
 class WorkflowMetricsTracker:
     """Tracks metrics for complete LangGraph workflows."""
 
-    def __init__(self, max_history: int=100):
+    def __init__(self, max_history: int=100) -> None:
         """Initialize workflow metrics tracker.
 
         Args:
@@ -383,10 +383,7 @@ class WorkflowMetricsTracker:
             Workflow ID
         """
         if timestamp is not None:
-            if isinstance(timestamp, datetime):
-                start_time = timestamp.timestamp()
-            else:
-                start_time = timestamp
+            start_time = timestamp.timestamp() if isinstance(timestamp, datetime) else timestamp
         else:
             start_time = time.time()
         workflow_id = f'{workflow_type}_{start_time}'
@@ -600,7 +597,7 @@ class WorkflowMetricsTracker:
         Returns:
             Performance statistics including percentiles
         """
-        stats = self._workflow_stats.get(workflow_type, {})
+        self._workflow_stats.get(workflow_type, {})
         recent_workflows = [wf for wf in self._workflows if wf.workflow_type == workflow_type and wf.end_time]
         total_workflows = len([wf for wf in self._workflows if wf.workflow_type == workflow_type])
         successful_workflows = len([wf for wf in self._workflows if wf.workflow_type == workflow_type and wf.status == WorkflowStatus.COMPLETED])
@@ -713,7 +710,7 @@ class WorkflowMetricsTracker:
 class StateTransitionTracker:
     """Tracks state transitions in LangGraph workflows."""
 
-    def __init__(self, max_history: int=5000):
+    def __init__(self, max_history: int=5000) -> None:
         """Initialize state transition tracker.
 
         Args:
@@ -987,7 +984,7 @@ class StateTransitionTracker:
 class CheckpointMetrics:
     """Tracks checkpoint operations in LangGraph."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize checkpoint metrics."""
         self._save_times: List[float] = []
         self._load_times: List[float] = []
@@ -1175,8 +1172,6 @@ class CheckpointMetrics:
         Returns:
             Dictionary with failure statistics
         """
-        save_error_types = []
-        load_error_types = []
         if not hasattr(self, '_save_error_types'):
             self._save_error_types = []
         if not hasattr(self, '_load_error_types'):
@@ -1252,7 +1247,7 @@ class CheckpointMetrics:
 class MemoryUsageTracker:
     """Tracks memory usage for LangGraph components."""
 
-    def __init__(self, sample_interval: int=60):
+    def __init__(self, sample_interval: int=60) -> None:
         """Initialize memory usage tracker.
 
         Args:
@@ -1338,7 +1333,7 @@ class MemoryUsageTracker:
             Dictionary mapping component names to leak detection results
         """
         leaks = {}
-        current_time = time.time()
+        time.time()
         for component, entries in self._component_memory.items():
             if len(entries) < 2:
                 continue
@@ -1390,7 +1385,7 @@ class MemoryUsageTracker:
         """
         total_used = 0
         total_allocated = 0
-        for component, entries in self._component_memory.items():
+        for _component, entries in self._component_memory.items():
             if entries:
                 latest = entries[-1]
                 total_used += latest['bytes_used']
@@ -1514,7 +1509,7 @@ class MemoryUsageTracker:
 class ErrorMetricsCollector:
     """Collects and analyzes error metrics for LangGraph."""
 
-    def __init__(self, window_size: int=1000):
+    def __init__(self, window_size: int=1000) -> None:
         """Initialize error metrics collector.
 
         Args:
@@ -1679,7 +1674,7 @@ class ErrorMetricsCollector:
 class PerformanceAnalyzer:
     """Analyzes performance metrics for LangGraph workflows."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize performance analyzer."""
         self._node_tracker = NodeExecutionTracker()
         self._workflow_tracker = WorkflowMetricsTracker()
@@ -1776,7 +1771,7 @@ class LangGraphMetricsCollector:
     state transitions, checkpoints, memory usage, errors, and performance.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize all metric collectors and trackers."""
         self.node_tracker = NodeExecutionTracker()
         self.workflow_tracker = WorkflowMetricsTracker()

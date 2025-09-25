@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 class RegulationScraper:
     """Scrapes regulation content from official URLs."""
 
-    def __init__(self, neo4j_uri: str, neo4j_user: str, neo4j_password: str):
+    def __init__(self, neo4j_uri: str, neo4j_user: str, neo4j_password: str) -> None:
         self.driver = AsyncGraphDatabase.driver(neo4j_uri, auth=(neo4j_user,
             neo4j_password))
         self.markdown_generator = DefaultMarkdownGenerator()

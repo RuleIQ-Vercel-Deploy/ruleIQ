@@ -17,7 +17,7 @@ import sys
 import time
 import traceback
 import argparse
-from typing import Dict, Any, Optional
+from typing import Dict, Any
 
 # PostgreSQL health check
 def check_postgresql(database_url: str, timeout: int = 10, verbose: bool = False) -> Dict[str, Any]:
@@ -53,7 +53,7 @@ def check_postgresql(database_url: str, timeout: int = 10, verbose: bool = False
     try:
         # Connect to database
         if verbose:
-            print(f"  📡 Connecting to PostgreSQL...")
+            print("  📡 Connecting to PostgreSQL...")
 
         if "psycopg2" in str(psycopg.__name__):
             conn = psycopg.connect(database_url, connect_timeout=timeout)
@@ -67,7 +67,7 @@ def check_postgresql(database_url: str, timeout: int = 10, verbose: bool = False
 
         # Test 1: Simple SELECT
         if verbose:
-            print(f"  🔍 Testing SELECT 1...")
+            print("  🔍 Testing SELECT 1...")
         cur.execute("SELECT 1")
         row = cur.fetchone()
         if row and row[0] == 1:
@@ -83,7 +83,7 @@ def check_postgresql(database_url: str, timeout: int = 10, verbose: bool = False
 
         # Test 3: Transaction test
         if verbose:
-            print(f"  🔄 Testing transaction...")
+            print("  🔄 Testing transaction...")
 
         # Begin transaction
         conn.begin() if hasattr(conn, 'begin') else cur.execute("BEGIN")
@@ -174,20 +174,20 @@ def check_redis(redis_url: str, timeout: int = 10, verbose: bool = False) -> Dic
     try:
         # Parse Redis URL and connect
         if verbose:
-            print(f"  📡 Connecting to Redis...")
+            print("  📡 Connecting to Redis...")
 
         client = redis.from_url(redis_url, socket_connect_timeout=timeout)
 
         # Test 1: PING
         if verbose:
-            print(f"  🔍 Testing PING...")
+            print("  🔍 Testing PING...")
         ping_response = client.ping()
         result["details"]["ping_test"] = "passed" if ping_response else "failed"
         result["details"]["connected"] = True
 
         # Test 2: SET/GET/DEL
         if verbose:
-            print(f"  🔄 Testing SET/GET/DEL...")
+            print("  🔄 Testing SET/GET/DEL...")
 
         test_key = f"health_check:{int(time.time())}"
         test_value = "redis_health_check_test"
@@ -312,7 +312,7 @@ def main():
     for result in results:
         total_time += result["time_ms"]
         status = result["status"]
-        
+
         if status != "healthy":
             all_healthy = False
 

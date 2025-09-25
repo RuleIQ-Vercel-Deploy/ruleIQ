@@ -17,7 +17,7 @@ from uuid import UUID
 class ComplianceAnalyzer:
     """Wrapper for compliance analysis services."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize compliance analyzer."""
         # Note: compliance_queries will be initialized when needed
         self.compliance_queries = None
@@ -30,7 +30,7 @@ class ComplianceAnalyzer:
         # Extract key information from business profile
         industry = business_profile.get("industry", "general")
         location = business_profile.get("location", "global")
-        size = business_profile.get("size", "small")
+        business_profile.get("size", "small")
 
         # Determine applicable frameworks
         frameworks = []

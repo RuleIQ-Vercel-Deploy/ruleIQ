@@ -117,10 +117,7 @@ def validate_endpoint(
         elif response.status_code in [401, 403] and not auth_token:
             result["status"] = "auth_required"
         # 404 is tolerated for certain endpoints
-        elif response.status_code == 404 and path in ["/ready", "/health/ready"]:
-            result["status"] = "passed"
-        # 2xx and 3xx are success
-        elif 200 <= response.status_code < 400:
+        elif response.status_code == 404 and path in ["/ready", "/health/ready"] or 200 <= response.status_code < 400:
             result["status"] = "passed"
         # 4xx (except auth) are client errors but not server failures
         else:
@@ -190,7 +187,7 @@ def validate_discovered_routes(
             continue
 
         # Skip OpenAPI internal routes
-        if path.startswith("/openapi") or path == "/docs" or path == "/redoc":
+        if path.startswith("/openapi") or path in {"/docs", "/redoc"}:
             continue
 
         # Only test GET endpoints without required path params

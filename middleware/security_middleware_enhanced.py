@@ -14,7 +14,7 @@ from typing import Optional
 class SecurityMiddleware(BaseHTTPMiddleware):
     """Comprehensive security middleware"""
 
-    def __init__(self, app, **kwargs):
+    def __init__(self, app, **kwargs) -> None:
         super().__init__(app)
         self.sql_injection_patterns = [
             r"(\'|\"|\;|\-\-|\||\*|\=|\\x00|\\n|\\r|\\t)",

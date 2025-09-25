@@ -7,7 +7,6 @@ Optimizes test runs by grouping tests into logical chunks.
 import sys
 import subprocess
 import argparse
-import os
 from pathlib import Path
 
 # Test mode configurations
@@ -65,11 +64,11 @@ TEST_MODES = {
 def run_pytest(mode_config, verbose=False):
     """Run pytest with specified configuration."""
     cmd = ["python", "-m", "pytest"]
-    
+
     # Add markers if specified
     if mode_config["markers"]:
         cmd.extend(["-m", mode_config["markers"]])
-    
+
     # Add parallelization
     if mode_config["parallel"]:
         workers = mode_config["workers"]
@@ -77,13 +76,13 @@ def run_pytest(mode_config, verbose=False):
             cmd.extend(["-n", "auto", "--dist=worksteal"])
         else:
             cmd.extend(["-n", str(workers), "--dist=worksteal"])
-    
+
     # Add common options
     cmd.extend(["--tb=short", "--maxfail=5"])
-    
+
     if verbose:
         cmd.append("-v")
-    
+
     # Run the command
     result = subprocess.run(cmd, cwd=Path(__file__).parent.parent)
     return result.returncode
@@ -98,27 +97,27 @@ def list_modes():
 
 def main():
     parser = argparse.ArgumentParser(description="Run tests in chunked mode")
-    parser.add_argument("--mode", choices=list(TEST_MODES.keys()), 
+    parser.add_argument("--mode", choices=list(TEST_MODES.keys()),
                        help="Test mode to run")
     parser.add_argument("--list-modes", action="store_true",
                        help="List all available test modes")
     parser.add_argument("--verbose", "-v", action="store_true",
                        help="Verbose output")
-    
+
     args = parser.parse_args()
-    
+
     if args.list_modes:
         list_modes()
         return 0
-    
+
     if not args.mode:
         print("Error: Please specify a test mode with --mode")
         list_modes()
         return 1
-    
+
     mode_config = TEST_MODES[args.mode]
     print(f"Running {args.mode} tests: {mode_config['description']}")
-    
+
     return run_pytest(mode_config, args.verbose)
 
 if __name__ == "__main__":

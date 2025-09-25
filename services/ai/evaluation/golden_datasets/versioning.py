@@ -31,7 +31,7 @@ def is_semver(v: str) -> bool:
 class DatasetVersion:
     """Semantic version for datasets."""
 
-    def __init__(self, version: str):
+    def __init__(self, version: str) -> None:
         """Initialize version from string.
 
         Args:
@@ -132,7 +132,7 @@ class VersionMetadata:
 class VersionManager:
     """Manage dataset versions."""
 
-    def __init__(self, base_path: Path):
+    def __init__(self, base_path: Path) -> None:
         """Initialize version manager.
 
         Args:
@@ -163,7 +163,7 @@ class VersionManager:
             Path to the created version directory
         """
         # Validate version
-        version_obj = DatasetVersion(version)
+        DatasetVersion(version)
 
         # Create version directory
         version_dir = self.base_path / f"v{version}"

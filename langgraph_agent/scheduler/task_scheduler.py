@@ -66,7 +66,7 @@ class TaskScheduler:
     - Supports different queue priorities
     """
 
-    def __init__(self, database_url: str):
+    def __init__(self, database_url: str) -> None:
         """
         Initialize the task scheduler with PostgreSQL checkpointing.
 
@@ -240,7 +240,7 @@ class TaskScheduler:
         if not task_metadata:
             return 'end'
         node_name = task_metadata.get('node')
-        queue = task_metadata.get('queue', 'default')
+        task_metadata.get('queue', 'default')
         node_mapping = {'evidence_collector': 'evidence', 'compliance_updater': 'compliance', 'report_generator': 'reports', 'notification_sender': 'notifications', 'cleanup': 'cleanup'}
         return node_mapping.get(node_name, 'error')
 
@@ -267,9 +267,7 @@ class TaskScheduler:
             return datetime.now() + timedelta(hours=6)
         elif '* * *' in schedule:
             return datetime.now() + timedelta(days=1)
-        elif '* * 1' in schedule:
-            return datetime.now() + timedelta(weeks=1)
-        elif '* * 0' in schedule:
+        elif '* * 1' in schedule or '* * 0' in schedule:
             return datetime.now() + timedelta(weeks=1)
         elif '1 * *' in schedule:
             return datetime.now() + timedelta(days=30)
@@ -286,7 +284,7 @@ class TaskScheduler:
             try:
                 initial_state = {'messages': [], 'current_node': 'scheduler', 'retry_count': 0, 'error_count': 0}
                 config = {'configurable': {'thread_id': 'scheduler-main'}}
-                result = await self.graph.ainvoke(initial_state, config)
+                await self.graph.ainvoke(initial_state, config)
                 await asyncio.sleep(60)
             except Exception as e:
                 logger.error(f'Scheduler error: {e}')

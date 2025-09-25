@@ -143,7 +143,7 @@ def validate_input_bounds(data: Any, max_length: int=MAX_INPUT_LENGTH) ->None:
 class DeepValidator:
     """Multi-layer validation for Golden Dataset entries with security controls."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize validator with security features."""
         self.known_frameworks = {'GDPR', 'HIPAA', 'CCPA', 'PCI-DSS', 'SOX',
             'ISO27001', 'NIST', 'FERPA', 'GLBA'}
@@ -505,15 +505,13 @@ class DeepValidator:
                     result.add_error(f'Invalid version format: {entry.version}'
                         )
                     confidence_deductions += 0.3
-            if hasattr(entry, 'created_at'):
-                if entry.created_at > datetime.now():
-                    result.add_error('Creation timestamp is in the future')
-                    confidence_deductions += 0.2
-            if hasattr(entry, 'source'):
-                if entry.source.created_at > datetime.now():
-                    result.add_error(
-                        'Source creation timestamp is in the future')
-                    confidence_deductions += 0.2
+            if hasattr(entry, 'created_at') and entry.created_at > datetime.now():
+                result.add_error('Creation timestamp is in the future')
+                confidence_deductions += 0.2
+            if hasattr(entry, 'source') and entry.source.created_at > datetime.now():
+                result.add_error(
+                    'Source creation timestamp is in the future')
+                confidence_deductions += 0.2
         result.confidence_score = max(0.0, 1.0 - confidence_deductions)
         return result
 
@@ -544,7 +542,7 @@ class DeepValidator:
 class ExternalDataValidator:
     """Validator for external data sources with trust scoring."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize external data validator."""
         self.trusted_sources = {'official_regulation': 1.0,
             'regulatory_document': 0.9, 'official_guidance': 0.85,
@@ -571,12 +569,11 @@ class ExternalDataValidator:
             result.errors.append('Missing source_kind in metadata')
             return result
         result.trust_score = self.calculate_trust_score(entry.source)
-        if result.trust_score < HALF_RATIO:
-            if entry.source.created_at:
-                age_days = (datetime.now() - entry.source.created_at).days
-                if age_days > 365:
-                    result.warnings.append(
-                        f'Data source is {age_days} days old')
+        if result.trust_score < HALF_RATIO and entry.source.created_at:
+            age_days = (datetime.now() - entry.source.created_at).days
+            if age_days > 365:
+                result.warnings.append(
+                    f'Data source is {age_days} days old')
         result.metadata['subscores'] = {'reputation': self.
             _get_source_reputation(entry.source.source_kind), 'extraction':
             self._get_extraction_confidence(entry.source.method),
@@ -727,10 +724,7 @@ class ExternalDataValidator:
 
     def _calculate_completeness_score(self, data: Dict[str, Any]) ->float:
         """Calculate data completeness score."""
-        if 'data' in data:
-            inner_data = data['data']
-        else:
-            inner_data = data
+        inner_data = data.get('data', data)
         required_fields = {'id', 'title'}
         optional_fields = {'description', 'version', 'created_at'}
         present_required = sum(1 for f in required_fields if f in inner_data)

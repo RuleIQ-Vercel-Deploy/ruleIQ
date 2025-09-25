@@ -32,9 +32,8 @@ def dataset_quality_summary(dataset: List[BaseModel]) -> Dict[str, Any]:
             score *= 0.9
         if hasattr(item, "source") and not item.source:
             score *= 0.9
-        if hasattr(item, "regulation_refs"):
-            if not item.regulation_refs:
-                score *= 0.7
+        if hasattr(item, "regulation_refs") and not item.regulation_refs:
+            score *= 0.7
 
         completeness_scores.append(score)
 

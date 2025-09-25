@@ -149,7 +149,7 @@ async def list_feature_flags(
             query = query.filter(FeatureFlagModel.enabled == enabled)
 
         # Pagination
-        total = query.count()
+        query.count()
         flags = query.offset(skip).limit(limit).all()
 
         # Convert to response models

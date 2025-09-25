@@ -161,7 +161,7 @@ class TestGraphCreation:
         graph = create_graph()
 
         # Check all nodes are added
-        node_names = [
+        [
             GRAPH_NODES[key]
             for key in [
                 "router",

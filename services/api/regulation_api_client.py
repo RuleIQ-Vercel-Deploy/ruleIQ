@@ -26,7 +26,7 @@ logger = logging.getLogger(__name__)
 class RegulationAPIClient:
     """Client for fetching regulation data from official APIs."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.cache_dir = Path('data/regulation_cache')
         self.cache_dir.mkdir(parents=True, exist_ok=True)
         self.executor = ThreadPoolExecutor(max_workers=3)
@@ -271,7 +271,7 @@ class RegulationAPIClient:
         try:
             async with self.session.get(url) as response:
                 if response.status == HTTP_OK:
-                    content = await response.text()
+                    await response.text()
                     enforcements = []
                     return enforcements
         except (requests.RequestException, KeyError, IndexError) as e:

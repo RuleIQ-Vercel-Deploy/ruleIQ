@@ -12,6 +12,7 @@ Create Date: 2025-07-17 12:00:00.000000
 """
 
 from alembic import op
+import contextlib
 
 
 # revision identifiers, used by Alembic.
@@ -95,7 +96,7 @@ def upgrade() -> None:
             ALTER TABLE compliance_frameworks
             ADD CONSTRAINT ck_compliance_framework_employee_threshold
             CHECK (
-                employee_threshold IS NULL OR 
+                employee_threshold IS NULL OR
                 (employee_threshold > 0 AND employee_threshold <= 1000000)
             )
         """
@@ -123,7 +124,7 @@ def upgrade() -> None:
             ALTER TABLE evidence_items
             ADD CONSTRAINT ck_evidence_item_type
             CHECK (evidence_type IN (
-                'Policy', 'Procedure', 'Log', 'Certificate', 
+                'Policy', 'Procedure', 'Log', 'Certificate',
                 'Configuration', 'Audit Report', 'Training Record', 'Other'
             ))
         """
@@ -138,7 +139,7 @@ def upgrade() -> None:
             ALTER TABLE evidence_items
             ADD CONSTRAINT ck_evidence_item_status
             CHECK (status IN (
-                'not_started', 'in_progress', 'collected', 'under_review', 
+                'not_started', 'in_progress', 'collected', 'under_review',
                 'approved', 'rejected', 'expired'
             ))
         """
@@ -203,7 +204,7 @@ def upgrade() -> None:
             ALTER TABLE evidence_items
             ADD CONSTRAINT ck_evidence_item_file_size
             CHECK (
-                file_size_bytes IS NULL OR 
+                file_size_bytes IS NULL OR
                 (file_size_bytes >= 0 AND file_size_bytes <= 5368709120)
             )
         """
@@ -219,7 +220,7 @@ def upgrade() -> None:
             ALTER TABLE assessment_sessions
             ADD CONSTRAINT ck_assessment_session_type
             CHECK (session_type IN (
-                'compliance_scoping', 'readiness_assessment', 
+                'compliance_scoping', 'readiness_assessment',
                 'gap_analysis', 'risk_assessment'
             ))
         """
@@ -320,7 +321,7 @@ def upgrade() -> None:
             ALTER TABLE integrations
             ADD CONSTRAINT ck_integration_provider
             CHECK (provider IN (
-                'aws', 'okta', 'google_workspace', 'microsoft_365', 
+                'aws', 'okta', 'google_workspace', 'microsoft_365',
                 'azure', 'github', 'gitlab'
             ))
         """
@@ -385,7 +386,7 @@ def upgrade() -> None:
             ALTER TABLE integration_evidence_items
             ADD CONSTRAINT ck_integration_evidence_source
             CHECK (source_system IN (
-                'aws', 'okta', 'google_workspace', 'microsoft_365', 
+                'aws', 'okta', 'google_workspace', 'microsoft_365',
                 'azure', 'github', 'gitlab', 'manual'
             ))
         """
@@ -506,7 +507,7 @@ def upgrade() -> None:
     # ==== DATE LOGIC CONSTRAINTS ====
 
     # Evidence items date logic
-    try:
+    with contextlib.suppress(Exception):
         op.execute(
             """
             ALTER TABLE evidence_items
@@ -514,10 +515,8 @@ def upgrade() -> None:
             CHECK (collected_at IS NULL OR collected_at >= created_at)
         """
         )
-    except Exception:
-        pass
 
-    try:
+    with contextlib.suppress(Exception):
         op.execute(
             """
             ALTER TABLE evidence_items
@@ -525,10 +524,8 @@ def upgrade() -> None:
             CHECK (reviewed_at IS NULL OR collected_at IS NULL OR reviewed_at >= collected_at)
         """
         )
-    except Exception:
-        pass
 
-    try:
+    with contextlib.suppress(Exception):
         op.execute(
             """
             ALTER TABLE evidence_items
@@ -536,11 +533,9 @@ def upgrade() -> None:
             CHECK (approved_at IS NULL OR reviewed_at IS NULL OR approved_at >= reviewed_at)
         """
         )
-    except Exception:
-        pass
 
     # Assessment session date logic
-    try:
+    with contextlib.suppress(Exception):
         op.execute(
             """
             ALTER TABLE assessment_sessions
@@ -548,10 +543,8 @@ def upgrade() -> None:
             CHECK (last_activity >= started_at)
         """
         )
-    except Exception:
-        pass
 
-    try:
+    with contextlib.suppress(Exception):
         op.execute(
             """
             ALTER TABLE assessment_sessions
@@ -559,11 +552,9 @@ def upgrade() -> None:
             CHECK (completed_at IS NULL OR completed_at >= started_at)
         """
         )
-    except Exception:
-        pass
 
     # Evidence collection date logic
-    try:
+    with contextlib.suppress(Exception):
         op.execute(
             """
             ALTER TABLE evidence_collections
@@ -571,10 +562,8 @@ def upgrade() -> None:
             CHECK (started_at IS NULL OR started_at >= created_at)
         """
         )
-    except Exception:
-        pass
 
-    try:
+    with contextlib.suppress(Exception):
         op.execute(
             """
             ALTER TABLE evidence_collections
@@ -582,11 +571,9 @@ def upgrade() -> None:
             CHECK (completed_at IS NULL OR started_at IS NULL OR completed_at >= started_at)
         """
         )
-    except Exception:
-        pass
 
     # Generated policy date logic
-    try:
+    with contextlib.suppress(Exception):
         op.execute(
             """
             ALTER TABLE generated_policies
@@ -594,10 +581,8 @@ def upgrade() -> None:
             CHECK (reviewed_at IS NULL OR reviewed_at >= generated_at)
         """
         )
-    except Exception:
-        pass
 
-    try:
+    with contextlib.suppress(Exception):
         op.execute(
             """
             ALTER TABLE generated_policies
@@ -605,11 +590,9 @@ def upgrade() -> None:
             CHECK (approved_at IS NULL OR reviewed_at IS NULL OR approved_at >= reviewed_at)
         """
         )
-    except Exception:
-        pass
 
     # Chat conversation date logic
-    try:
+    with contextlib.suppress(Exception):
         op.execute(
             """
             ALTER TABLE chat_conversations
@@ -617,8 +600,6 @@ def upgrade() -> None:
             CHECK (updated_at >= created_at)
         """
         )
-    except Exception:
-        pass
 
     logger.info("✅ Successfully added CHECK constraints for data integrity")
 

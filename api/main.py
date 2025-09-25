@@ -62,7 +62,6 @@ from database import (
     get_db, _AsyncSessionLocal as AsyncSessionLocal
 )
 from config.settings import settings
-from monitoring.sentry import init_sentry
 from config.ai_config import ai_config
 from app.core.monitoring.setup import configure_from_settings
 from app.core.monitoring.shutdown import get_shutdown_manager

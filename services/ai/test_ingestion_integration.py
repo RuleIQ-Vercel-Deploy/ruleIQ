@@ -24,13 +24,14 @@ from services.iq_agent import IQComplianceAgent
 from database import get_db
 import os
 from dotenv import load_dotenv
+import sys
 load_dotenv()
 
 
 class IngestionIntegrationTest:
     """Test suite for Neo4j ingestion and IQ agent integration."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.neo4j_uri = os.getenv('NEO4J_URI', 'bolt://localhost:7688')
         self.neo4j_user = os.getenv('NEO4J_USERNAME', 'neo4j')
         self.neo4j_password = os.getenv('NEO4J_PASSWORD')
@@ -344,4 +345,4 @@ async def main():
 
 if __name__ == '__main__':
     exit_code = asyncio.run(main())
-    exit(exit_code)
+    sys.exit(exit_code)

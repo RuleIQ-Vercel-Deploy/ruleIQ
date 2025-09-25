@@ -23,7 +23,7 @@ class FeedbackStorage:
     Manages feedback storage, retrieval, and synchronization with LangSmith.
     """
 
-    def __init__(self, storage_path: Optional[str]=None):
+    def __init__(self, storage_path: Optional[str]=None) -> None:
         """
         Initialize feedback storage.
 

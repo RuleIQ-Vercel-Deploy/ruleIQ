@@ -36,7 +36,7 @@ class SessionManager:
         db_session: Session,
         max_session_duration: int = 3600,
         max_context_size: int = 100000
-    ):
+    ) -> None:
         """Initialize session manager."""
         self.db = db_session
         self.max_session_duration = timedelta(seconds=max_session_duration)
@@ -388,7 +388,7 @@ class SessionManager:
         """Get all active sessions."""
         try:
             query = self.db.query(AgentSession).filter(
-                AgentSession.ended_at == None
+                AgentSession.ended_at is None
             )
 
             if agent_id:

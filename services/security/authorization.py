@@ -39,7 +39,7 @@ class AuthorizationService:
     ROLE_HIERARCHY = {'super_admin': ['admin', 'manager', 'user', 'viewer'], 'admin': ['manager', 'user', 'viewer'], 'manager': ['user', 'viewer'], 'user': ['viewer'], 'viewer': []}
     DEFAULT_PERMISSIONS = {'super_admin': ['*:*'], 'admin': ['user:*', 'assessment:*', 'policy:*', 'evidence:*', 'report:*', 'settings:*', 'audit:read'], 'manager': ['user:read', 'assessment:*', 'policy:*', 'evidence:*', 'report:*', 'settings:read'], 'user': ['user:read:own', 'assessment:*:own', 'policy:read', 'evidence:*:own', 'report:read:own'], 'viewer': ['assessment:read', 'policy:read', 'report:read']}
 
-    def __init__(self, cache_service: Optional[CacheService]=None):
+    def __init__(self, cache_service: Optional[CacheService]=None) -> None:
         """Initialize authorization service"""
         self.cache = cache_service or CacheService()
         self._permission_cache = {}
@@ -149,9 +149,8 @@ class AuthorizationService:
     def _check_time_restriction(self, restriction: Dict[str, Any]) -> bool:
         """Check time-based access restriction"""
         now = datetime.now()
-        if 'days' in restriction:
-            if now.strftime('%A').lower() not in restriction['days']:
-                return False
+        if 'days' in restriction and now.strftime('%A').lower() not in restriction['days']:
+            return False
         if 'start_time' in restriction and 'end_time' in restriction:
             current_time = now.time()
             start = time.fromisoformat(restriction['start_time'])
@@ -180,13 +179,7 @@ class AuthorizationService:
     def _evaluate_conditions(self, user: User, conditions: Dict[str, Any]) -> bool:
         """Evaluate conditional permission rules"""
         for condition, value in conditions.items():
-            if condition == 'department' and getattr(user, 'department', None) != value:
-                return False
-            elif condition == 'email_verified' and (not getattr(user, 'email_verified', True)):
-                return False
-            elif condition == 'mfa_enabled' and (not getattr(user, 'mfa_enabled', False)):
-                return False
-            elif condition == 'is_active' and (not user.is_active):
+            if condition == 'department' and getattr(user, 'department', None) != value or condition == 'email_verified' and (not getattr(user, 'email_verified', True)) or condition == 'mfa_enabled' and (not getattr(user, 'mfa_enabled', False)) or condition == 'is_active' and (not user.is_active):
                 return False
         return True
 
@@ -260,9 +253,8 @@ class AuthorizationService:
 
     async def filter_by_tenant(self, user: User, query, model) -> Any:
         """Filter query results by tenant"""
-        if hasattr(model, 'tenant_id'):
-            if not self._is_super_admin(user):
-                query = query.filter(model.tenant_id == getattr(user, 'tenant_id', None))
+        if hasattr(model, 'tenant_id') and not self._is_super_admin(user):
+            query = query.filter(model.tenant_id == getattr(user, 'tenant_id', None))
         return query
 _authz_service: Optional[AuthorizationService] = None
 

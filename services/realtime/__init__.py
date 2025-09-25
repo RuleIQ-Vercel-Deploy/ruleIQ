@@ -10,7 +10,7 @@ from .pusher_client import (
 
 __all__ = [
     'PusherClient',
-    'PusherConfig', 
+    'PusherConfig',
     'get_pusher_client',
     'Channels',
     'Events'

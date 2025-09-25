@@ -303,9 +303,8 @@ class AdvancedSafetyManager:
                 '\\\\b(?:confidential|restricted)\\\\b.*(?:internal)\\\\b'])
         elif self.user_role == 'compliance_officer':
             pass
-        elif self.user_role == 'admin':
-            if self.check_permission('can_override_safety'):
-                base_filters['blocked_patterns'] = []
+        elif self.user_role == 'admin' and self.check_permission('can_override_safety'):
+            base_filters['blocked_patterns'] = []
         return base_filters
 
     def get_safety_settings(self, content_type: ContentType, profile_name:
@@ -495,10 +494,7 @@ class AdvancedSafetyManager:
             '\\b(?:article|section|clause|paragraph)\\b.*\\d+',
             '\\b(?:reference|see|cf\\.)\\b.*\\d+']
         import re
-        for pattern in citation_patterns:
-            if re.search(pattern, content, re.IGNORECASE):
-                return True
-        return False
+        return any(re.search(pattern, content, re.IGNORECASE) for pattern in citation_patterns)
 
     def _update_metrics(self, record: SafetyDecisionRecord) ->None:
         """Update safety metrics."""

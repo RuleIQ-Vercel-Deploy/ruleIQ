@@ -3,6 +3,18 @@
 # Doppler Secrets Configuration Script for RuleIQ
 # This script configures the missing Vercel organization secrets in Doppler
 # and prepares the environment for deployment with Doppler integration
+#
+# Usage:
+#   ./scripts/deploy/configure-doppler-secrets.sh [config]
+#
+# Arguments:
+#   config - Optional: Doppler config to use (default: production)
+#            Examples: production, stg, dev
+#
+# Examples:
+#   ./scripts/deploy/configure-doppler-secrets.sh          # Uses production config
+#   ./scripts/deploy/configure-doppler-secrets.sh stg      # Uses staging config
+#   ./scripts/deploy/configure-doppler-secrets.sh prd      # Uses prd config
 
 set -e
 
@@ -12,10 +24,20 @@ echo "========================================="
 echo ""
 
 # Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+RED='[0;31m'
+GREEN='[0;32m'
+YELLOW='[1;33m'
+NC='[0m' # No Color
+
+# Define project and config variables at top
+PROJECT="ruleiq"
+CONFIG_PROD="production"
+CONFIG_STG="stg"
+CONFIG="${1:-$CONFIG_PROD}"  # Allow config to be passed as first argument
+
+# Export for helper functions
+export PROJECT
+export CONFIG
 
 # Check if Doppler CLI is installed
 if ! command -v doppler &> /dev/null; then
@@ -38,39 +60,56 @@ fi
 echo -e "${GREEN}✅ Logged in to Doppler${NC}"
 echo ""
 
-# Project configuration from .vercel/project.json
-VERCEL_ORG_ID="team_bGqFKQr7Q4LAO7GfXITsoA55"
-VERCEL_PROJECT_ID="prj_KEX8s9AmCqmnioQRYN4KE0VdBP7n"
+# Define default Vercel IDs
+VERCEL_ORG_ID_DEFAULT="team_bGqFKQr7Q4LAO7GfXITsoA55"
+VERCEL_PROJECT_ID_DEFAULT="prj_KEX8s9AmCqmnioQRYN4KE0VdBP7n"
+
+# Parse Vercel IDs dynamically from .vercel/project.json when available
+if command -v jq >/dev/null 2>&1 && [ -f .vercel/project.json ]; then
+    VERCEL_ORG_ID=$(jq -r '.orgId // empty' .vercel/project.json)
+    VERCEL_PROJECT_ID=$(jq -r '.projectId // empty' .vercel/project.json)
+    
+    if [ -n "$VERCEL_ORG_ID" ] && [ -n "$VERCEL_PROJECT_ID" ]; then
+        echo -e "${GREEN}✅ Auto-detected Vercel IDs from .vercel/project.json${NC}"
+    fi
+fi
+
+# Fall back to defaults if values are empty
+VERCEL_ORG_ID=${VERCEL_ORG_ID:-$VERCEL_ORG_ID_DEFAULT}
+VERCEL_PROJECT_ID=${VERCEL_PROJECT_ID:-$VERCEL_PROJECT_ID_DEFAULT}
+
+# Indicate source of values
+if [ "$VERCEL_ORG_ID" = "$VERCEL_ORG_ID_DEFAULT" ] && [ "$VERCEL_PROJECT_ID" = "$VERCEL_PROJECT_ID_DEFAULT" ]; then
+    echo -e "${YELLOW}ℹ️ Using default Vercel IDs (no .vercel/project.json or jq not available)${NC}"
+fi
 
 echo "📋 Project Configuration:"
 echo "  - Vercel Organization ID: $VERCEL_ORG_ID"
 echo "  - Vercel Project ID: $VERCEL_PROJECT_ID"
+echo "  - Doppler Project: $PROJECT"
+echo "  - Doppler Config: $CONFIG"
 echo ""
 
-# Switch to production configuration
-echo "🔄 Switching to production configuration..."
-doppler setup --project=ruleiq --config=production
+# Setup Doppler for convenience (but don't rely on it for operations)
+echo "🔄 Setting up Doppler context..."
+doppler setup --project="$PROJECT" --config="$CONFIG"
 
-echo -e "${GREEN}✅ Switched to production configuration${NC}"
+echo -e "${GREEN}✅ Doppler context configured${NC}"
 echo ""
 
-# Function to check if a secret exists
+# Function to check if a secret exists (with explicit project/config)
 check_secret() {
     local secret_name=$1
-    if doppler secrets get "$secret_name" --plain &> /dev/null; then
-        return 0
-    else
-        return 1
-    fi
+    doppler secrets get "$secret_name" --plain --project="$PROJECT" --config="$CONFIG" >/dev/null 2>&1
 }
 
-# Function to set a secret
+# Function to set a secret (with explicit project/config)
 set_secret() {
     local secret_name=$1
     local secret_value=$2
 
     echo "  Setting $secret_name..."
-    if doppler secrets set "$secret_name" "$secret_value" &> /dev/null; then
+    if doppler secrets set "$secret_name" "$secret_value" --project="$PROJECT" --config="$CONFIG" >/dev/null; then
         echo -e "  ${GREEN}✅ $secret_name configured${NC}"
     else
         echo -e "  ${RED}❌ Failed to set $secret_name${NC}"
@@ -160,8 +199,8 @@ echo "🔑 Generating GitHub Actions service token..."
 echo ""
 echo "Creating a service token for GitHub Actions CI/CD..."
 
-# Generate the service token
-SERVICE_TOKEN=$(doppler configs tokens create github-actions --project=ruleiq --config=production --plain 2>/dev/null || true)
+# Generate the service token (with explicit project/config)
+SERVICE_TOKEN=$(doppler configs tokens create github-actions --project="$PROJECT" --config="$CONFIG" --plain 2>/dev/null || true)
 
 if [ -n "$SERVICE_TOKEN" ]; then
     echo -e "${GREEN}✅ Service token generated successfully${NC}"
@@ -185,11 +224,11 @@ else
     echo -e "${YELLOW}ℹ️ Service token may already exist${NC}"
     echo ""
     echo "To view existing tokens:"
-    echo "  doppler configs tokens list --project=ruleiq --config=production"
+    echo "  doppler configs tokens list --project=$PROJECT --config=$CONFIG"
     echo ""
     echo "To revoke and create a new token:"
-    echo "  doppler configs tokens revoke github-actions --project=ruleiq --config=production"
-    echo "  doppler configs tokens create github-actions --project=ruleiq --config=production"
+    echo "  doppler configs tokens revoke github-actions --project=$PROJECT --config=$CONFIG"
+    echo "  doppler configs tokens create github-actions --project=$PROJECT --config=$CONFIG --plain"
 fi
 
 echo ""
@@ -206,5 +245,5 @@ echo "To test locally:"
 echo "  doppler run -- npm run dev"
 echo ""
 echo "To view all configured secrets:"
-echo "  doppler secrets --project=ruleiq --config=production"
+echo "  doppler secrets --project=$PROJECT --config=$CONFIG"
 echo ""

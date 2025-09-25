@@ -93,7 +93,7 @@ class ComplianceQueryEngine:
                 "max_penalty": reg.get("risk_metadata", {}).get("max_penalty"),
                 "enforcement_count": len(enforcements),
                 "total_penalties": sum(
-                    e.get("penalty_amount", 0) for e in enforcements,
+                    e.get("penalty_amount", 0) for e in enforcements
                 ),
             }
 

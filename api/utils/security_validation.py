@@ -7,16 +7,16 @@ to provide comprehensive security validation for all API endpoints.
 
 import re
 import json
-import mimetypes
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List
 from pathlib import Path
 from fastapi import HTTPException, Request, UploadFile, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from pydantic import BaseModel, ValidationError
+from pydantic import ValidationError
 
 # Import existing validators
 from utils.input_validation import validate_evidence_update
 from api.utils.input_validation import sanitize_input, InputValidator
+import contextlib
 
 # Enhanced dangerous pattern detection - categorized for contextual use
 DANGEROUS_PATTERNS_SQL = [
@@ -210,10 +210,8 @@ class SecurityValidator:
         elif hasattr(file, 'headers') and file.headers:
             content_length = file.headers.get('content-length')
             if content_length:
-                try:
+                with contextlib.suppress(ValueError, TypeError):
                     file_size = int(content_length)
-                except (ValueError, TypeError):
-                    pass
 
         # Method 3: Fallback to reading up to MAX_FILE_SIZE + 1 bytes
         if file_size is None:

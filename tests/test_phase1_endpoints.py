@@ -13,6 +13,7 @@ from tests.test_constants import (
     HTTP_OK,
     HTTP_UNAUTHORIZED
 )
+import contextlib
 BASE_URL = 'http://localhost:8000'
 
 
@@ -28,10 +29,8 @@ def test_endpoint(endpoint, description, should_fail=True):
             return True
         elif should_fail and response.status_code != HTTP_UNAUTHORIZED:
             print(f'❌ Expected 401, got {response.status_code}')
-            try:
+            with contextlib.suppress(ValueError, KeyError, IndexError):
                 print(f'Response: {response.text[:200]}')
-            except (ValueError, KeyError, IndexError):
-                pass
             return False
         elif not should_fail and response.status_code == HTTP_OK:
             print('✅ Endpoint accessible')

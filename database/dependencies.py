@@ -6,19 +6,16 @@ management for database providers with proper lifespan management.
 """
 import logging
 from contextlib import asynccontextmanager
-from typing import Dict, Any, Optional, AsyncGenerator
-from fastapi import Request, HTTPException, Depends
+from typing import Dict, Any, Optional
+from fastapi import Request, HTTPException
 from fastapi.responses import JSONResponse
 
 from database.providers import (
     DatabaseProvider,
     PostgreSQLProvider,
-    Neo4jProvider,
-    DatabaseConfig,
-    ConnectionHealth,
-    DatabaseError
+    Neo4jProvider
 )
-from database.health import DatabaseHealthMonitor, HealthStatus
+from database.health import DatabaseHealthMonitor
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +23,7 @@ logger = logging.getLogger(__name__)
 class DatabaseContainer:
     """Container for managing database provider instances."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.providers: Dict[str, DatabaseProvider] = {}
         self.health_monitors: Dict[str, DatabaseHealthMonitor] = {}
 
@@ -111,7 +108,7 @@ class DatabaseContainer:
 class DependencyConfig:
     """Configuration for dependency injection."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.container = DatabaseContainer()
 
     async def initialize_providers(self) -> None:
@@ -304,7 +301,7 @@ async def health_check_endpoint(service: Optional[str] = None) -> JSONResponse:
             all_health = {}
             overall_status = "healthy"
 
-            for service_name in container.providers.keys():
+            for service_name in container.providers:
                 try:
                     health = await container.get_health_status(service_name)
                     all_health[service_name] = health

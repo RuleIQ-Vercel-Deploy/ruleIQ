@@ -28,7 +28,7 @@ security = HTTPBearer(auto_error=False)
 class JWTMiddleware:
     """
     JWT Middleware decorator class for route-level authentication.
-    
+
     Provides decorator methods to require authentication on specific routes.
     Works in conjunction with JWTAuthMiddlewareV2 for comprehensive coverage.
     """
@@ -37,7 +37,7 @@ class JWTMiddleware:
     def require_auth(func: Callable) -> Callable:
         """
         Decorator to require JWT authentication for a route.
-        
+
         Usage:
             @router.get("/protected")
             @JWTMiddleware.require_auth
@@ -58,7 +58,7 @@ class JWTMiddleware:
     def require_admin(func: Callable) -> Callable:
         """
         Decorator to require admin privileges for a route.
-        
+
         Usage:
             @router.get("/admin/users")
             @JWTMiddleware.require_admin
@@ -84,7 +84,7 @@ class JWTMiddleware:
     def require_roles(*allowed_roles: str) -> Callable:
         """
         Decorator to require specific roles for a route.
-        
+
         Usage:
             @router.get("/moderator/content")
             @JWTMiddleware.require_roles("moderator", "admin")
@@ -113,7 +113,7 @@ class JWTMiddleware:
     def optional_auth(func: Callable) -> Callable:
         """
         Decorator for routes that can work with or without authentication.
-        
+
         Usage:
             @router.get("/public-or-personalized")
             @JWTMiddleware.optional_auth
@@ -133,15 +133,15 @@ class JWTMiddleware:
     async def validate_token(credentials: HTTPAuthorizationCredentials = Depends(security)) -> dict:
         """
         Validate JWT token from Authorization header.
-        
+
         This is a dependency function that can be used directly in routes.
-        
+
         Args:
             credentials: Bearer token from Authorization header
-            
+
         Returns:
             Decoded token payload
-            
+
         Raises:
             HTTPException: If token is invalid or missing
         """
@@ -202,7 +202,7 @@ async def get_current_user_optional(
 ) -> Optional[User]:
     """
     Get current user if authenticated, None otherwise.
-    
+
     For use with optional authentication routes.
     """
     if not credentials:

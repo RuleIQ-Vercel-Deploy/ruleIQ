@@ -48,7 +48,7 @@ class PerformanceStats:
 class PerformanceProfiler:
     """Real-time performance profiler"""
 
-    def __init__(self, max_samples: int=1000):
+    def __init__(self, max_samples: int=1000) -> None:
         self.max_samples = max_samples
         self.metrics: Dict[str, deque] = defaultdict(lambda: deque(maxlen=max_samples))
         self.active_operations: Dict[str, float] = {}
@@ -75,7 +75,7 @@ class PerformanceProfiler:
     def get_all_stats(self) -> Dict[str, PerformanceStats]:
         """Get statistics for all operations"""
         with self._lock:
-            return {operation: self.get_stats(operation) for operation in self.metrics.keys() if self.get_stats(operation) is not None}
+            return {operation: self.get_stats(operation) for operation in self.metrics if self.get_stats(operation) is not None}
 
     def get_slowest_operations(self, limit: int=10) -> List[PerformanceStats]:
         """Get the slowest operations by average duration"""
@@ -115,8 +115,8 @@ class PerformanceProfiler:
     def profile_operation(self, operation: str, context: Optional[Dict[str, Any]]=None) -> Generator[Any, None, None]:
         """Context manager to profile a synchronous operation"""
         start_time = time.perf_counter()
-        start_memory = self._process.memory_info().rss / 1024 / 1024
-        start_cpu = self._process.cpu_percent()
+        self._process.memory_info().rss / 1024 / 1024
+        self._process.cpu_percent()
         try:
             yield
         except (ValueError, TypeError):
@@ -134,8 +134,8 @@ class PerformanceProfiler:
     async def profile_async_operation(self, operation: str, context: Optional[Dict[str, Any]]=None) -> AsyncGenerator[Any, None]:
         """Context manager to profile an asynchronous operation"""
         start_time = time.perf_counter()
-        start_memory = self._process.memory_info().rss / 1024 / 1024
-        start_cpu = self._process.cpu_percent()
+        self._process.memory_info().rss / 1024 / 1024
+        self._process.cpu_percent()
         try:
             yield
         except (ValueError, TypeError):
@@ -152,7 +152,7 @@ class PerformanceProfiler:
 class APIPerformanceMonitor:
     """Monitor API endpoint performance specifically"""
 
-    def __init__(self, profiler: PerformanceProfiler):
+    def __init__(self, profiler: PerformanceProfiler) -> None:
         self.profiler = profiler
         self.endpoint_stats: Dict[str, Dict[str, Any]] = defaultdict(dict)
 
@@ -208,7 +208,7 @@ class APIPerformanceMonitor:
 class DatabasePerformanceMonitor:
     """Monitor database operation performance"""
 
-    def __init__(self, profiler: PerformanceProfiler):
+    def __init__(self, profiler: PerformanceProfiler) -> None:
         self.profiler = profiler
         self.query_stats: Dict[str, Dict[str, Any]] = defaultdict(dict)
 
@@ -258,7 +258,7 @@ def profile_db_query(query_type: str, table: str='unknown') -> Any:
 
 def get_performance_report() -> Dict[str, Any]:
     """Get comprehensive performance report"""
-    return {'api_performance': api_monitor.get_endpoint_performance_report(), 'database_performance': {'slow_queries': db_monitor.get_slow_queries_report(), 'total_db_operations': len([k for k in global_profiler.get_all_stats().keys() if k.startswith('db.')])}, 'system_metrics': {'total_operations': len(global_profiler.get_all_stats()), 'total_samples': sum((len(samples) for samples in global_profiler.metrics.values())), 'total_errors': sum(global_profiler.error_counts.values())}}
+    return {'api_performance': api_monitor.get_endpoint_performance_report(), 'database_performance': {'slow_queries': db_monitor.get_slow_queries_report(), 'total_db_operations': len([k for k in global_profiler.get_all_stats() if k.startswith('db.')])}, 'system_metrics': {'total_operations': len(global_profiler.get_all_stats()), 'total_samples': sum((len(samples) for samples in global_profiler.metrics.values())), 'total_errors': sum(global_profiler.error_counts.values())}}
 
 def clear_all_metrics() -> None:
     """Clear all performance metrics"""

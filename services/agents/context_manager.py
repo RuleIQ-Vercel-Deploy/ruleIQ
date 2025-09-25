@@ -29,7 +29,7 @@ class ContextNode:
 class ContextManager:
     """Manages context storage, validation, and merging."""
 
-    def __init__(self, max_context_size: int = 100000):
+    def __init__(self, max_context_size: int = 100000) -> None:
         """Initialize context manager."""
         self.max_context_size = max_context_size
         self.context_trees: Dict[UUID, ContextNode] = {}

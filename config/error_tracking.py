@@ -82,7 +82,7 @@ class ErrorPattern:
 class ErrorTracker:
     """Comprehensive error tracking system"""
 
-    def __init__(self, max_errors: int=10000, pattern_threshold: int=3):
+    def __init__(self, max_errors: int=10000, pattern_threshold: int=3) -> None:
         self.max_errors = max_errors
         self.pattern_threshold = pattern_threshold
         self.errors: List[ErrorReport] = []
@@ -147,7 +147,7 @@ class ErrorTracker:
     def determine_severity(self, error_type: str, message: str, context:
         Dict[str, Any]) ->ErrorSeverity:
         """Automatically determine error severity"""
-        error_lower = error_type.lower()
+        error_type.lower()
         message_lower = message.lower()
         if any(critical_term in message_lower for critical_term in [
             'database', 'connection', 'authentication', 'security', 'critical']
@@ -278,7 +278,7 @@ class ErrorTracker:
 class ErrorAlertingSystem:
     """Alert system for critical errors"""
 
-    def __init__(self, error_tracker: ErrorTracker):
+    def __init__(self, error_tracker: ErrorTracker) -> None:
         self.error_tracker = error_tracker
         self.alert_thresholds = {ErrorSeverity.CRITICAL: 1, ErrorSeverity.
             HIGH: 5, ErrorSeverity.MEDIUM: 20}

@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 class SecurityMiddleware:
     """Comprehensive security middleware integrating all security services"""
 
-    def __init__(self, app, auth_service: Optional[AuthenticationService]=None, authz_service: Optional[AuthorizationService]=None, encryption_service: Optional[EncryptionService]=None, audit_service: Optional[AuditLoggingService]=None, enable_auth: bool=True, enable_authz: bool=True, enable_audit: bool=True, enable_encryption: bool=True, enable_sql_protection: bool=True, public_paths: Optional[List[str]]=None):
+    def __init__(self, app, auth_service: Optional[AuthenticationService]=None, authz_service: Optional[AuthorizationService]=None, encryption_service: Optional[EncryptionService]=None, audit_service: Optional[AuditLoggingService]=None, enable_auth: bool=True, enable_authz: bool=True, enable_audit: bool=True, enable_encryption: bool=True, enable_sql_protection: bool=True, public_paths: Optional[List[str]]=None) -> None:
         """
         Initialize security middleware
 
@@ -75,10 +75,9 @@ class SecurityMiddleware:
                     authorized = await self._authorize_request(request, db)
                     if not authorized:
                         return self._forbidden_response()
-            if self.enable_sql_protection:
-                if await self._detect_sql_injection(request):
-                    await self._log_security_alert(request, 'SQL_INJECTION_ATTEMPT', db)
-                    return self._bad_request_response('Invalid input detected')
+            if self.enable_sql_protection and await self._detect_sql_injection(request):
+                await self._log_security_alert(request, 'SQL_INJECTION_ATTEMPT', db)
+                return self._bad_request_response('Invalid input detected')
             response = await call_next(request)
             if self.enable_audit:
                 await self._log_request(request, response, db)
@@ -174,10 +173,7 @@ class SecurityMiddleware:
         Returns:
             True if SQL pattern detected, False otherwise
         """
-        for pattern in self.sql_patterns:
-            if re.search(pattern, text, re.IGNORECASE):
-                return True
-        return False
+        return any(re.search(pattern, text, re.IGNORECASE) for pattern in self.sql_patterns)
 
     async def _log_request(self, request: Request, response: Response, db: Session) -> None:
         """
@@ -229,10 +225,7 @@ class SecurityMiddleware:
         Returns:
             True if public, False otherwise
         """
-        for public_path in self.public_paths:
-            if path.startswith(public_path):
-                return True
-        return False
+        return any(path.startswith(public_path) for public_path in self.public_paths)
 
     def _extract_resource(self, request: Request) -> str:
         """

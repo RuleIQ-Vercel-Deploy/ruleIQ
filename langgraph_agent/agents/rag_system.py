@@ -154,7 +154,7 @@ class RetrievalResult:
 class DocumentProcessor:
     """Advanced document processing pipeline."""
 
-    def __init__(self, chunk_size: int=RAG_CONFIG['chunk_size'], chunk_overlap: int=RAG_CONFIG['chunk_overlap'], embedding_model: str=MODEL_CONFIG['embedding_model']):
+    def __init__(self, chunk_size: int=RAG_CONFIG['chunk_size'], chunk_overlap: int=RAG_CONFIG['chunk_overlap'], embedding_model: str=MODEL_CONFIG['embedding_model']) -> None:
         self.chunk_size = chunk_size
         self.chunk_overlap = chunk_overlap
         self.embedding_model = embedding_model
@@ -266,7 +266,7 @@ class RAGSystem:
     - Compliance-specific ranking
     """
 
-    def __init__(self, memory_manager: MemoryManager, embeddings: Embeddings, vector_store: Optional[VectorStore]=None, enable_reranking: bool=True, cache_ttl_hours: int=24):
+    def __init__(self, memory_manager: MemoryManager, embeddings: Embeddings, vector_store: Optional[VectorStore]=None, enable_reranking: bool=True, cache_ttl_hours: int=24) -> None:
         self.memory_manager = memory_manager
         self.embeddings = embeddings
         self.vector_store = vector_store
@@ -464,9 +464,8 @@ class RAGSystem:
             if frameworks_filter:
                 if not any((fw in doc_metadata.frameworks for fw in frameworks_filter)):
                     continue
-            if source_filter:
-                if doc_metadata.source not in source_filter:
-                    continue
+            if source_filter and doc_metadata.source not in source_filter:
+                continue
             filtered.append(chunk)
         return filtered
 

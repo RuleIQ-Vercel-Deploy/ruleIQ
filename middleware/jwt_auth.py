@@ -30,7 +30,7 @@ logger = logging.getLogger(__name__)
 class JWTAuthMiddleware:
     """
     Enhanced JWT Authentication Middleware with comprehensive security features.
-    
+
     Features:
     - Token validation with blacklist checking
     - Public and protected route management
@@ -106,10 +106,10 @@ class JWTAuthMiddleware:
         enable_audit_logging: bool = True,
         custom_public_paths: Optional[List[str]] = None,
         custom_protected_paths: Optional[List[str]] = None
-    ):
+    ) -> None:
         """
         Initialize JWT middleware with configuration options.
-        
+
         Args:
             enable_strict_mode: Enforce authentication on all non-public routes
             enable_rate_limiting: Enable rate limiting for auth endpoints
@@ -154,10 +154,10 @@ class JWTAuthMiddleware:
     def check_rate_limit(self, identifier: str) -> bool:
         """
         Check if rate limit is exceeded for an identifier.
-        
+
         Args:
             identifier: Client IP or user ID
-            
+
         Returns:
             True if rate limit exceeded, False otherwise
         """
@@ -188,10 +188,10 @@ class JWTAuthMiddleware:
     async def validate_jwt_token(self, token: str) -> Optional[Dict[str, Any]]:
         """
         Validate JWT token with comprehensive checks.
-        
+
         Args:
             token: JWT token string
-            
+
         Returns:
             Decoded token payload if valid, None otherwise
         """
@@ -268,11 +268,11 @@ class JWTAuthMiddleware:
     async def __call__(self, request: Request, call_next):
         """
         Process request through JWT authentication middleware.
-        
+
         Args:
             request: Incoming HTTP request
             call_next: Next middleware in chain
-            
+
         Returns:
             Response after authentication processing
         """

@@ -46,7 +46,7 @@ class SessionManager:
 
     def __init__(self, redis_client: Optional[redis.Redis]=None,
         max_concurrent_sessions: int=5, session_timeout_minutes: int=60,
-        enable_device_tracking: bool=True, enable_geo_tracking: bool=True):
+        enable_device_tracking: bool=True, enable_geo_tracking: bool=True) -> None:
         """
         Initialize session manager
 

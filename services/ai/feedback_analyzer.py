@@ -58,7 +58,7 @@ class ResponseFeedback:
 class FeedbackAnalyzer:
     """Analyzer for feedback aggregation and pattern detection."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the feedback analyzer."""
         self.feedback_items: List[FeedbackItem] = []
         self.feedback_by_run: Dict[str, List[FeedbackItem]] = defaultdict(list)

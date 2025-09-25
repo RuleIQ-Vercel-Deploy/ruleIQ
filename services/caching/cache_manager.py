@@ -327,7 +327,7 @@ class CacheManager:
                         "Redis serialization error for key %s: %s", key, e
                     )
                     self.metrics.record_error()
-                except RedisError as e:
+                except RedisError:
                     logger.exception("Redis get error for key %s", key)
                     self.metrics.record_error()
                     # Re-raise in debug mode for development

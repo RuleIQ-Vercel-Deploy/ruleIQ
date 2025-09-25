@@ -181,7 +181,7 @@ class CostTrackingContext:
         total_cost = tracker.total_cost
     """
 
-    def __init__(self, context_name: str, user_id: Optional[str]=None):
+    def __init__(self, context_name: str, user_id: Optional[str]=None) -> None:
         self.context_name = context_name
         self.user_id = user_id or 'system'
         self.cost_manager = get_cost_manager()

@@ -41,7 +41,7 @@ class SecretsVault:
     """
 
     def __init__(self, backend: str='auto', region_name: str='us-east-1',
-        secret_name: str='ruleiq-production-secrets'):
+        secret_name: str='ruleiq-production-secrets') -> None:
         self.region_name = region_name
         self.secret_name = secret_name
         self.backend = self._detect_backend(backend)
@@ -567,7 +567,7 @@ if __name__ == '__main__':
     elif command == 'list':
         secrets = vault.get_all_secrets()
         logger.info('🔐 Found %s secrets:' % len(secrets))
-        for key in secrets.keys():
+        for key in secrets:
             logger.info('  - %s' % key)
     else:
         logger.info('❌ Invalid command')

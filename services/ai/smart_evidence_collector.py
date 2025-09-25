@@ -232,9 +232,7 @@ class SmartEvidenceCollector:
         for req in requirements:
             control_id = req.get('control_id')
             evidence_type = req.get('evidence_type')
-            if control_id not in existing_controls:
-                gaps.append(req)
-            elif evidence_type not in existing_types:
+            if control_id not in existing_controls or evidence_type not in existing_types:
                 gaps.append(req)
         return gaps
 

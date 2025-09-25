@@ -130,7 +130,7 @@ def postgres_test_url():
 def postgres_checkpointer(postgres_test_url):
     """
     Create a PostgreSQL checkpointer for LangGraph state persistence.
-    
+
     This fixture handles:
     - Connection setup with proper parameters
     - Table creation if needed

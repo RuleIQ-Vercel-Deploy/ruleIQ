@@ -324,7 +324,7 @@ class TestStreamingConcurrency:
             results = await asyncio.gather(consume_stream(1),
                 consume_stream(2), consume_stream(3))
             assert len(results) == MAX_RETRIES
-            for i, chunks in enumerate(results):
+            for _i, chunks in enumerate(results):
                 assert len(chunks) > DEFAULT_RETRIES
                 assert chunks[-1].chunk_type == 'complete'
 

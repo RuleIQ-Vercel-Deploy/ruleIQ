@@ -44,13 +44,13 @@ def _send_email_directly(
 ) -> bool:
     """
     Send email directly without Celery (migration complete).
-    
+
     Args:
         recipients: List of email addresses
         subject: Email subject
         body: Email body content
         attachments: Optional list of attachments
-    
+
     Returns:
         True if email sent successfully, False otherwise
     """
@@ -623,16 +623,16 @@ async def send_scheduled_report_email(
 
         body = f"""
         Dear Compliance Team,
-        
+
         Your scheduled {report_type} report has been generated.
-        
+
         Report Summary:
         - Generated: {report_data.get('generated_at', datetime.now().isoformat())}
         - Overall Compliance Score: {compliance_score}%
         - Report Type: {report_type}
-        
+
         Please find the detailed report attached (if applicable).
-        
+
         Best regards,
         Compliance Monitoring System
         """
@@ -675,15 +675,15 @@ async def send_on_demand_report_email(
 
         body = f"""
         Dear User,
-        
+
         Your requested {report_type} report has been generated.
-        
+
         Report Details:
         - Generated: {report_data.get('generated_at', datetime.now().isoformat())}
         - Report Title: {report_data.get('report_title', report_type)}
-        
+
         {report_data.get('summary', 'Please see the attached report for details.')}
-        
+
         Best regards,
         Compliance Monitoring System
         """
@@ -728,11 +728,11 @@ def prepare_summary_content(summary: Dict[str, Any]) -> str:
 
     return f"""
     Report Activity Summary
-    
+
     You have {total_reports} active report schedule(s):
-    
+
     {chr(10).join(schedule_details)}
-    
+
     All reports are being generated and distributed according to schedule.
     """
 
@@ -755,12 +755,12 @@ async def send_summary_email(
 
         body = f"""
         Dear {user_name},
-        
+
         {summary_content}
-        
+
         If you have any questions or need to adjust your report schedules,
         please log in to the compliance portal.
-        
+
         Best regards,
         Compliance Monitoring System
         """

@@ -23,7 +23,7 @@ class RAGAdapter:
     old complex interface and the new simplified StandardizedRAG.
     """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         """
         Initialize adapter with compatibility for old RAGSystem interface.
 

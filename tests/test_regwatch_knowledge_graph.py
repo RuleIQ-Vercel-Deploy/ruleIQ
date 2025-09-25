@@ -216,7 +216,7 @@ class TestMemoryManagerIntegration:
     async def test_memory_type_handling(self):
         """Test different memory types (EPISODIC, SEMANTIC, etc.)"""
         memory_types = ['EPISODIC', 'SEMANTIC', 'PROCEDURAL', 'REGULATORY']
-        for mem_type in memory_types:
+        for _mem_type in memory_types:
             pass
 
     @pytest.mark.asyncio

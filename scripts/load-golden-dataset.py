@@ -21,9 +21,9 @@ async def check_connection():
     uri = os.getenv('NEO4J_URI')
     username = os.getenv('NEO4J_USERNAME')
     password = os.getenv('NEO4J_PASSWORD')
-    
+
     print(f"🔍 Checking connection to: {uri}")
-    
+
     try:
         driver = GraphDatabase.driver(uri, auth=(username, password))
         with driver.session() as session:
@@ -32,12 +32,12 @@ async def check_connection():
                 # Get current stats
                 node_count = session.run('MATCH (n) RETURN count(n) as count').single()['count']
                 rel_count = session.run('MATCH ()-[r]->() RETURN count(r) as count').single()['count']
-                
-                print(f"✅ Connected successfully!")
-                print(f"📊 Current database state:")
+
+                print("✅ Connected successfully!")
+                print("📊 Current database state:")
                 print(f"   Nodes: {node_count:,}")
                 print(f"   Relationships: {rel_count:,}")
-                
+
                 driver.close()
                 return True
     except Exception as e:
@@ -47,19 +47,19 @@ async def check_connection():
 
 async def load_golden_dataset():
     """Load the golden compliance dataset into Neo4j."""
-    
+
     print("\n📚 Loading Golden Compliance Dataset")
     print("=" * 50)
-    
+
     neo4j_service = Neo4jGraphRAGService()
     initializer = ComplianceGraphInitializer(neo4j_service)
-    
+
     try:
         # Initialize Neo4j connection
         print("\n1️⃣ Initializing Neo4j service...")
         await neo4j_service.initialize()
         print("   ✅ Service initialized")
-        
+
         # Load the compliance graph
         print("\n2️⃣ Loading compliance data...")
         print("   This includes:")
@@ -69,9 +69,9 @@ async def load_golden_dataset():
         print("   • Requirements, Controls, and Metrics")
         print("   • Risk Assessments and Relationships")
         print("")
-        
+
         result = await initializer.initialize_full_compliance_graph()
-        
+
         print("\n✅ Data loading complete!")
         print("\n📊 Loading Summary:")
         for key, value in result.items():
@@ -81,7 +81,7 @@ async def load_golden_dataset():
                     print(f"      {sub_key}: {sub_value}")
             else:
                 print(f"   {key}: {value}")
-        
+
         # Get final stats
         stats = await neo4j_service.get_graph_statistics()
         print("\n📈 Final Database Statistics:")
@@ -89,15 +89,15 @@ async def load_golden_dataset():
         print(f"   Total Relationships: {stats.get('total_relationships', 0):,}")
         print(f"   Node Labels: {', '.join(stats.get('node_labels', [])[:5])}...")
         print(f"   Relationship Types: {', '.join(stats.get('relationship_types', [])[:5])}...")
-        
+
         return True
-        
+
     except Exception as e:
         print(f"\n❌ Error loading data: {e}")
         import traceback
         traceback.print_exc()
         return False
-        
+
     finally:
         await neo4j_service.close()
         print("\n🔒 Neo4j connection closed")
@@ -105,10 +105,10 @@ async def load_golden_dataset():
 
 async def main():
     """Main function to coordinate the data loading."""
-    
+
     print("🚀 Neo4j AuraDB Golden Dataset Loader")
     print("=" * 50)
-    
+
     # Check connection first
     if not await check_connection():
         print("\n⚠️  Cannot connect to Neo4j AuraDB")
@@ -117,18 +117,18 @@ async def main():
         print("   2. Doppler has the correct credentials")
         print("   3. Run: doppler run -- python scripts/load-golden-dataset.py")
         sys.exit(1)
-    
+
     # Confirm before loading
     print("\n⚠️  This will load the compliance golden dataset into Neo4j")
     response = input("Continue? (yes/no): ")
-    
+
     if response.lower() != 'yes':
         print("❌ Aborted")
         sys.exit(0)
-    
+
     # Load the data
     success = await load_golden_dataset()
-    
+
     if success:
         print("\n🎉 Success! The golden compliance dataset is now loaded in Neo4j AuraDB")
         print("\n📝 Next steps:")

@@ -92,7 +92,7 @@ class AssessmentAgent:
     LangGraph-based conversational assessment agent.
     """
 
-    def __init__(self, db_session):
+    def __init__(self, db_session) -> None:
         self.db = db_session
         self.assistant = ComplianceAssistant(db_session)
         self.circuit_breaker = AICircuitBreaker()
@@ -270,14 +270,14 @@ class AssessmentAgent:
         """Initialize the assessment with a friendly introduction."""
         intro_message = AIMessage(
             content="""
-Hello! I'm IQ, your AI compliance assistant. I'm here to help you understand your compliance needs 
+Hello! I'm IQ, your AI compliance assistant. I'm here to help you understand your compliance needs
 and identify areas where we can strengthen your compliance posture.
 
-This assessment will be conversational - I'll ask you questions about your business and compliance 
-practices, and based on your answers, I'll tailor my follow-up questions to get a complete picture 
+This assessment will be conversational - I'll ask you questions about your business and compliance
+practices, and based on your answers, I'll tailor my follow-up questions to get a complete picture
 of your needs.
 
-Let's start with understanding your business context. What type of business do you operate, and 
+Let's start with understanding your business context. What type of business do you operate, and
 what's your primary industry?
         """,
         )
@@ -446,7 +446,7 @@ what's your primary industry?
         state["questions_answered"] += 1
 
         # Update progress
-        progress = min((state["questions_answered"] / self.MIN_QUESTIONS) * 100, 100)
+        min((state["questions_answered"] / self.MIN_QUESTIONS) * 100, 100)
 
         # Extract key information from answer
         if state["messages"]:
@@ -465,9 +465,7 @@ what's your primary industry?
         # Check completion criteria
         if questions_answered >= self.MIN_QUESTIONS:
             # Check if we have enough information
-            if self._has_sufficient_information(state):
-                state["should_continue"] = False
-            elif questions_answered >= self.MAX_QUESTIONS:
+            if self._has_sufficient_information(state) or questions_answered >= self.MAX_QUESTIONS:
                 state["should_continue"] = False
             else:
                 # Continue if we need more information
@@ -527,8 +525,8 @@ Thank you for completing the assessment! Here's what I've learned about your com
 **Top Recommendations:**
 {self._format_recommendations(state['recommendations'][:3])}
 
-Based on our conversation, I can see that your organization would benefit from a more structured 
-approach to compliance management. Our platform can help automate many of these processes and 
+Based on our conversation, I can see that your organization would benefit from a more structured
+approach to compliance management. Our platform can help automate many of these processes and
 ensure you stay compliant with minimal effort.
 
 Would you like to schedule a demo to see how we can help address your specific needs?

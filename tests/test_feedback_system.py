@@ -153,14 +153,13 @@ class TestFeedbackCollectionAPIs:
                 raise HTTPException(status_code=400, detail="Invalid feedback type")
 
             # Validate rating value
-            if feedback.feedback_type == "rating":
-                if (
-                    not isinstance(feedback.value, (int, float))
-                    or not 1 <= feedback.value <= 5
-                ):
-                    raise HTTPException(
-                        status_code=400, detail="Rating must be between 1 and 5",
-                    )
+            if feedback.feedback_type == "rating" and (
+                not isinstance(feedback.value, (int, float))
+                or not 1 <= feedback.value <= 5
+            ):
+                raise HTTPException(
+                    status_code=400, detail="Rating must be between 1 and 5",
+                )
 
             # Store feedback
             feedback_id = str(uuid.uuid4())

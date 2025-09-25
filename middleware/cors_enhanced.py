@@ -27,7 +27,7 @@ class EnhancedCORSMiddleware(BaseHTTPMiddleware):
         app: ASGIApp,
         environment: Optional[SecurityEnvironment] = None,
         **kwargs
-    ):
+    ) -> None:
         super().__init__(app)
         self.security_settings = get_security_settings()
         self.environment = environment or self.security_settings.environment
@@ -179,11 +179,11 @@ def setup_cors(
 ) -> ASGIApp:
     """
     Setup CORS middleware with proper configuration
-    
+
     Args:
         app: The ASGI application
         environment: Optional environment override
-    
+
     Returns:
         The app with CORS middleware configured
     """

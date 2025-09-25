@@ -106,7 +106,7 @@ class BaseComplianceTool(BaseTool, ABC):
     rate_limit_per_minute: int = 60
     max_execution_time_seconds: int = 30
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
         self._execution_count = 0
         self._last_reset = datetime.now(timezone.utc)
@@ -399,7 +399,7 @@ class ToolManager:
     Advanced tool manager with validation, composition, and async execution.
     """
 
-    def __init__(self, secret_key: str):
+    def __init__(self, secret_key: str) -> None:
         self.secret_key = secret_key
         self.tools: Dict[str, BaseComplianceTool] = {}
         self.tool_categories: Dict[ToolCategory, List[str]] = {}
@@ -612,7 +612,7 @@ class ToolManager:
             "tool_statuses": {},
         }
 
-        for tool_name, tool in self.tools.items():
+        for tool_name, _tool in self.tools.items():
             try:
                 # Simple health check - could be expanded
                 health["tool_statuses"][tool_name] = "available"

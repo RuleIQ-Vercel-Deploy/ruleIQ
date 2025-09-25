@@ -1,12 +1,17 @@
 # 🔐 Doppler + Organization Deployment Status
 
-## ✅ Current Status - CORRECTED
+## ✅ Current Status - FIXED AND READY
+
+### Critical Issues Resolved
+- **Fixed**: Doppler workflow was using GitHub secrets instead of Doppler ✅
+- **Fixed**: Doppler config names corrected (prd/stg instead of production/staging) ✅
+- **Configured**: VERCEL_ORG_ID and VERCEL_PROJECT_ID added to Doppler ✅
 
 ### Doppler Configuration
 - **Project**: `ruleiq` ✅
-- **Environment**: Switch to `production` for deployment
-- **Secrets**: Core secrets configured, Vercel org secrets needed ✅
-- **Workflows**: Both Doppler and standard workflows configured correctly ✅
+- **Environments**: `prd` (production), `stg` (staging), `dev` (development) ✅
+- **Secrets**: Organization secrets configured ✅
+- **Workflows**: Doppler workflow corrected to use Doppler for ALL secrets ✅
 
 ### Git Repository
 - **Remote**: `https://github.com/RuleIQ-Vercel-Deploy/ruleIQ.git` ✅
@@ -23,64 +28,52 @@
 - `DATABASE_URL` - Database connection
 - `JWT_SECRET_KEY` - JWT authentication
 - `SECRET_KEY` - Application secret
-- `VERCEL_API_KEY` - Vercel integration
+- `VERCEL_ORG_ID` - Organization ID: `team_bGqFKQr7Q4LAO7GfXITsoA55` ✅
+- `VERCEL_PROJECT_ID` - Project ID: `prj_KEX8s9AmCqmnioQRYN4KE0VdBP7n` ✅
 
-#### ⚠️ Need to Add/Update
-- `VERCEL_TOKEN` - Update from VERCEL_API_KEY if needed
-- `VERCEL_ORG_ID` - Add value: `team_bGqFKQr7Q4LAO7GfXITsoA55`
-- `VERCEL_PROJECT_ID` - Add value: `prj_KEX8s9AmCqmnioQRYN4KE0VdBP7n`
+#### ⚠️ Need to Add
+- `VERCEL_TOKEN` - Required for Vercel deployments (get from https://vercel.com/account/tokens)
 
 ---
 
-## 🚀 Quick Deployment Steps - IMMEDIATE ACTION
+## 🚀 Quick Deployment Steps - USE NEW SCRIPT
 
-### 1. Run Configuration Script (2 minutes)
+### 1. Run the Quick Deployment Script (RECOMMENDED)
 ```bash
-# Run the automated configuration script
-./scripts/deploy/configure-doppler-secrets.sh
+# Run the new automated deployment script
+./deploy-with-doppler.sh
 
 # This script will:
-# - Check Doppler installation
-# - Switch to production config
-# - Add VERCEL_ORG_ID and VERCEL_PROJECT_ID automatically
-# - Prompt for VERCEL_TOKEN if not configured
-# - Generate GitHub Actions service token
+# - Run configuration script automatically
+# - Validate all secrets are configured
+# - Generate DOPPLER_TOKEN for GitHub Actions
+# - Provide copy-paste instructions for GitHub
+# - Display deployment monitoring links
 ```
 
-### 2. Alternative: Manual Configuration
+### 2. Manual Steps (if needed)
 ```bash
-# Switch to production config
-doppler setup --project=ruleiq --config=production
+# Add VERCEL_TOKEN to Doppler
+doppler secrets set VERCEL_TOKEN --project ruleiq --config prd
+# Paste your token from https://vercel.com/account/tokens
 
-# Add organization-specific secrets with exact values
-doppler secrets set VERCEL_ORG_ID "team_bGqFKQr7Q4LAO7GfXITsoA55"
-doppler secrets set VERCEL_PROJECT_ID "prj_KEX8s9AmCqmnioQRYN4KE0VdBP7n"
-
-# Set Vercel token (if not already set)
-doppler secrets set VERCEL_TOKEN "your-vercel-token-here"
-```
-
-### 3. Generate GitHub Actions Token (30 seconds)
-```bash
 # Generate service token for GitHub Actions
-doppler configs tokens create github-actions-prod --config production --plain
-
-# Copy this token!
+doppler configs tokens create github-actions --project ruleiq --config prd --plain
 ```
 
-### 4. Add to GitHub Actions (30 seconds)
+### 3. Add DOPPLER_TOKEN to GitHub Actions
 Go to: https://github.com/RuleIQ-Vercel-Deploy/ruleIQ/settings/secrets/actions
 
 Add ONE secret:
-- `DOPPLER_TOKEN`: [Token from step 3]
+- `DOPPLER_TOKEN`: [Token from deployment script output]
 
-### 5. Deploy! (1 minute)
+### 4. Deploy!
 ```bash
 # Push to trigger deployment
 git push origin main
 
-# Monitor at:
-https://github.com/RuleIQ-Vercel-Deploy/ruleIQ/actions
+# Or manually trigger:
+# https://github.com/RuleIQ-Vercel-Deploy/ruleIQ/actions/workflows/deploy-vercel-doppler.yml
 ```
 
 ---
@@ -154,10 +147,22 @@ doppler run --config production -- vercel --prod
 ### Issue: Doppler secrets not available in deployment
 **Solution**: Verify DOPPLER_TOKEN is correctly added to GitHub Secrets
 
-### Issue: Vercel deployment fails
-**Solution**: Check that all three Vercel secrets are in Doppler:
-- VERCEL_TOKEN
-- VERCEL_ORG_ID (team_bGqFKQr7Q4LAO7GfXITsoA55)
-- VERCEL_PROJECT_ID (prj_KEX8s9AmCqmnioQRYN4KE0VdBP7n)
+### Issue: Doppler workflow was using GitHub secrets
+**Root Cause**: Workflow was passing `--token=${{ secrets.VERCEL_TOKEN }}` to Vercel commands
+**Solution**: Fixed - removed all GitHub secret references, Doppler now provides all secrets
+
+### Issue: Wrong Doppler config names
+**Root Cause**: Using `production` instead of `prd`, `staging` instead of `stg`
+**Solution**: Fixed - updated workflow and scripts to use correct config names
+
+### Issue: Missing Vercel organization secrets
+**Root Cause**: VERCEL_ORG_ID and VERCEL_PROJECT_ID not in Doppler
+**Solution**: Fixed - configuration script now adds these automatically
+
+### Issue: VERCEL_TOKEN still needed
+**Action Required**: Add your Vercel token to Doppler:
+```bash
+doppler secrets set VERCEL_TOKEN --project ruleiq --config prd
+```
 
 **Deployment infrastructure is now correctly configured for Doppler integration! 🚀**

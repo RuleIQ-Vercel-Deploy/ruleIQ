@@ -308,10 +308,7 @@ class PDFGenerator:
                 label = key.replace("_", " ").title()
 
                 if isinstance(value, float):
-                    if "percentage" in key.lower():
-                        value_str = f"{value:.1f}%"
-                    else:
-                        value_str = f"{value:.1f}"
+                    value_str = f"{value:.1f}%" if "percentage" in key.lower() else f"{value:.1f}"
                 else:
                     value_str = str(value)
 

@@ -7,9 +7,7 @@ This prevents supply chain attacks through compromised actions.
 import os
 import re
 import glob
-import subprocess
-import json
-from typing import Dict, List, Tuple
+import sys
 
 # Configuration for major version bumps
 ALLOWED_MAJOR_UPGRADES = {
@@ -92,7 +90,6 @@ def fix_workflow_file(filepath: str) -> bool:
     with open(filepath, 'r') as f:
         content = f.read()
 
-    original_content = content
     modified = False
 
     # Add permissions if not present
@@ -100,7 +97,7 @@ def fix_workflow_file(filepath: str) -> bool:
     if new_content != content:
         content = new_content
         modified = True
-        print(f"  ✓ Added permissions section")
+        print("  ✓ Added permissions section")
 
     # Update action versions to pinned versions - process each base action once
     for base_action, action_configs in PINNED_ACTIONS.items():
@@ -154,7 +151,7 @@ def fix_workflow_file(filepath: str) -> bool:
         if new_content != content:
             content = new_content
             modified = True
-            print(f"  ✓ Added security warning for pull_request_target")
+            print("  ✓ Added security warning for pull_request_target")
 
     if modified:
         with open(filepath, 'w') as f:
@@ -196,4 +193,4 @@ def main():
     return 0
 
 if __name__ == '__main__':
-    exit(main())
+    sys.exit(main())

@@ -267,17 +267,17 @@ async def verify_websocket_token(
 ) -> User:
     """
     Verify JWT token for WebSocket connections.
-    
+
     WebSocket connections can't use standard HTTP headers for authentication,
     so we accept the token as a query parameter.
-    
+
     Args:
         websocket: The WebSocket connection
         token: JWT token passed as query parameter
-        
+
     Returns:
         User: The authenticated user
-        
+
     Raises:
         WebSocketException: If authentication fails
     """

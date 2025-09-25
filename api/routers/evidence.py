@@ -1,18 +1,14 @@
 from __future__ import annotations
 from typing import Optional, Any, Dict
 from uuid import UUID
-from fastapi import APIRouter, Depends, File, HTTPException, Path, UploadFile
+from fastapi import APIRouter, Depends, HTTPException, Path, UploadFile
 from sqlalchemy.ext.asyncio import AsyncSession
 from api.dependencies.auth import get_current_active_user
 from api.dependencies.security_validation import (
-    SecurityDependencies,
     validate_request,
-    validate_file_upload,
-    validate_json_body,
-    validate_query_params
+    validate_file_upload
 )
 from api.utils.security_validation import SecurityValidator
-from api.utils.input_validation import InputValidator
 from database.user import User
 from api.schemas.evidence_classification import BulkClassificationRequest, BulkClassificationResponse, ClassificationStatsResponse, ControlMappingRequest, ControlMappingResponse, EvidenceClassificationRequest, EvidenceClassificationResponse
 from api.schemas.models import EvidenceAutomationResponse, EvidenceBulkUpdate, EvidenceBulkUpdateResponse, EvidenceCreate, EvidenceDashboardResponse, EvidenceRequirementsResponse, EvidenceResponse, EvidenceSearchResponse, EvidenceStatisticsResponse, EvidenceUpdate, EvidenceValidationResult
@@ -100,7 +96,7 @@ async def search_evidence_items(q: Optional[str]=None, evidence_type:
     # Sanitize search query
     if q:
         q = SecurityValidator.validate_no_dangerous_content(q, "search query")
-    
+
     evidence_items = await EvidenceService.list_all_evidence_items(db=db,
         user=current_user, evidence_type=evidence_type, status=status)
     start_idx = (page - 1) * page_size

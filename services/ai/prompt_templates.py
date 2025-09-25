@@ -175,7 +175,7 @@ class AdvancedPromptSanitizer:
         sanitized = re.sub('[\\x00-\\x08\\x0B\\x0C\\x0E-\\x1F\\x7F]', '',
             sanitized)
         if threat_level == ThreatLevel.MALICIOUS:
-            for category, patterns in self.injection_patterns.items():
+            for _category, patterns in self.injection_patterns.items():
                 for pattern in patterns:
                     sanitized = re.sub(pattern, '[FILTERED]', sanitized,
                         flags=re.IGNORECASE)

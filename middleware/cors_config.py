@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 class CORSConfig:
     """
     CORS configuration manager with environment-specific settings.
-    
+
     Features:
     - Environment-specific origin configuration
     - No wildcards in production
@@ -104,7 +104,7 @@ class CORSConfig:
         "Content-Length",
     ]
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize CORS configuration."""
         self.environment = self._get_environment()
         self.allowed_origins = self._get_allowed_origins()
@@ -194,10 +194,10 @@ class CORSConfig:
     def is_origin_allowed(self, origin: str) -> bool:
         """
         Check if an origin is allowed.
-        
+
         Args:
             origin: Origin header value
-            
+
         Returns:
             True if origin is allowed
         """
@@ -227,10 +227,10 @@ class CORSConfig:
     def get_cors_headers(self, origin: str) -> Dict[str, str]:
         """
         Get CORS headers for response.
-        
+
         Args:
             origin: Request origin
-            
+
         Returns:
             Dictionary of CORS headers
         """
@@ -248,10 +248,10 @@ class CORSConfig:
     def get_preflight_headers(self, origin: str) -> Dict[str, str]:
         """
         Get headers for preflight response.
-        
+
         Args:
             origin: Request origin
-            
+
         Returns:
             Dictionary of preflight headers
         """
@@ -269,7 +269,7 @@ class CORSConfig:
     def to_middleware_kwargs(self) -> Dict[str, Any]:
         """
         Get kwargs for FastAPI CORSMiddleware.
-        
+
         Returns:
             Dictionary of middleware configuration
         """
@@ -286,14 +286,14 @@ class CORSConfig:
 class EnhancedCORSMiddleware:
     """
     Enhanced CORS middleware with logging and security features.
-    
+
     Wraps FastAPI's CORSMiddleware with additional functionality:
     - CORS violation logging
     - Origin spoofing detection
     - Debug mode for development
     """
 
-    def __init__(self, app, config: Optional[CORSConfig] = None):
+    def __init__(self, app, config: Optional[CORSConfig] = None) -> None:
         """Initialize enhanced CORS middleware."""
         self.app = app
         self.config = config or CORSConfig()
@@ -405,10 +405,10 @@ class EnhancedCORSMiddleware:
 def create_cors_middleware(app) -> CORSMiddleware:
     """
     Create and configure CORS middleware for FastAPI app.
-    
+
     Args:
         app: FastAPI application instance
-        
+
     Returns:
         Configured CORSMiddleware
     """
@@ -424,7 +424,7 @@ def create_cors_middleware(app) -> CORSMiddleware:
 def setup_cors(app):
     """
     Setup CORS for FastAPI application.
-    
+
     Args:
         app: FastAPI application instance
     """

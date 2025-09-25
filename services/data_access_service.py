@@ -77,9 +77,7 @@ class DataAccessService:
             profile_owner_id = profile.user_id
         if access_level == 'own_data':
             return profile_owner_id == user.id
-        if access_level == 'organization_data':
-            return True
-        return False
+        return access_level == 'organization_data'
 
     def filter_business_profiles_query(self, user: UserWithRoles, base_query
         ) ->Any:
@@ -119,9 +117,7 @@ class DataAccessService:
             return True
         if access_level == 'own_data':
             return assessment_owner_id == user.id
-        if access_level == 'organization_data':
-            return True
-        return False
+        return access_level == 'organization_data'
 
     def grant_data_access(self, user_id: UUID, access_type: str,
         business_profile_id: UUID=None, granted_by: UUID=None) ->DataAccess:

@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 class TokenBlacklistService:
     """
     Manages JWT token blacklisting using Redis for fast lookups.
-    
+
     Features:
     - Add tokens to blacklist on logout
     - Check if token is blacklisted
@@ -29,7 +29,7 @@ class TokenBlacklistService:
     - Performance optimized with Redis sets
     """
 
-    def __init__(self, redis_client: Optional[redis.Redis] = None):
+    def __init__(self, redis_client: Optional[redis.Redis] = None) -> None:
         """Initialize the token blacklist service."""
         self.redis_client = redis_client or self._get_redis_client()
         self.blacklist_prefix = "token_blacklist:"
@@ -60,13 +60,13 @@ class TokenBlacklistService:
     ) -> bool:
         """
         Add a token to the blacklist.
-        
+
         Args:
             token_jti: JWT ID (jti claim) to blacklist
             expiry: Token expiry time for auto-cleanup
             user_id: Optional user ID for audit trail
             reason: Reason for blacklisting
-            
+
         Returns:
             True if successfully blacklisted
         """
@@ -120,10 +120,10 @@ class TokenBlacklistService:
     def is_blacklisted(self, token_jti: str) -> bool:
         """
         Check if a token is blacklisted.
-        
+
         Args:
             token_jti: JWT ID to check
-            
+
         Returns:
             True if token is blacklisted
         """
@@ -157,10 +157,10 @@ class TokenBlacklistService:
     def remove_from_blacklist(self, token_jti: str) -> bool:
         """
         Remove a token from the blacklist (admin action).
-        
+
         Args:
             token_jti: JWT ID to remove
-            
+
         Returns:
             True if successfully removed
         """
@@ -197,7 +197,7 @@ class TokenBlacklistService:
     def cleanup_expired(self) -> int:
         """
         Clean up expired entries from the active set.
-        
+
         Returns:
             Number of entries cleaned up
         """

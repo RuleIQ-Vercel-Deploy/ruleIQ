@@ -5,10 +5,8 @@ Feature PR Reviewer - Comprehensive review for large feature PRs
 
 import argparse
 import json
-import os
 from pathlib import Path
-from typing import List, Dict, Optional, Tuple
-from datetime import datetime
+from typing import List, Dict
 import logging
 from github_api_client import GitHubAPIClient, PRInfo
 
@@ -20,7 +18,7 @@ logger = logging.getLogger(__name__)
 class FeaturePRReviewer:
     """Reviews and analyzes large feature pull requests"""
 
-    def __init__(self, client: GitHubAPIClient = None, config: Dict = None):
+    def __init__(self, client: GitHubAPIClient = None, config: Dict = None) -> None:
         """Initialize feature PR reviewer"""
         self.client = client or GitHubAPIClient()
         self.config = config or {}
@@ -58,7 +56,7 @@ class FeaturePRReviewer:
     def _analyze_pr_size(self, pr: PRInfo) -> Dict:
         """Analyze PR size and complexity"""
         total_changes = pr.additions + pr.deletions
-        
+
         size_category = 'small'
         if total_changes >= self.thresholds['massive_pr']['additions']:
             size_category = 'massive'
@@ -102,7 +100,7 @@ class FeaturePRReviewer:
         for file in files:
             path = file['filename'].lower()
             changes = file.get('additions', 0) + file.get('deletions', 0)
-            
+
             if 'api' in path or 'backend' in path:
                 component = 'api'
             elif 'frontend' in path or 'client' in path or 'components' in path:
@@ -133,7 +131,7 @@ class FeaturePRReviewer:
         }
 
         components = self._analyze_components(pr)
-        
+
         # Determine impact level
         if pr.changed_files > 100 or pr.additions > 5000:
             impact['level'] = 'critical'
@@ -164,11 +162,11 @@ class FeaturePRReviewer:
     def _analyze_test_coverage(self, pr: PRInfo) -> Dict:
         """Analyze test coverage for PR"""
         files = self.client.get_pr_files(pr.number)
-        
+
         test_files = [f for f in files if 'test' in f['filename'].lower()]
-        code_files = [f for f in files if not 'test' in f['filename'].lower() and 
+        code_files = [f for f in files if 'test' not in f['filename'].lower() and
                       not f['filename'].endswith(('.md', '.json', '.yaml', '.yml'))]
-        
+
         return {
             'test_files': len(test_files),
             'code_files': len(code_files),
@@ -180,14 +178,14 @@ class FeaturePRReviewer:
     def _assess_code_quality(self, pr: PRInfo) -> Dict:
         """Assess code quality metrics"""
         checks = self.client.get_pr_status_checks(pr.number)
-        
+
         quality_checks = {
             'linting': 'unknown',
             'formatting': 'unknown',
             'type_checking': 'unknown',
             'security': 'unknown'
         }
-        
+
         for check_name, status in checks.items():
             check_lower = check_name.lower()
             if 'lint' in check_lower or 'eslint' in check_lower or 'pylint' in check_lower:
@@ -198,10 +196,10 @@ class FeaturePRReviewer:
                 quality_checks['type_checking'] = status
             elif 'security' in check_lower or 'bandit' in check_lower:
                 quality_checks['security'] = status
-        
+
         passed_checks = sum(1 for status in quality_checks.values() if status in ['success', 'passed'])
         total_checks = sum(1 for status in quality_checks.values() if status != 'unknown')
-        
+
         return {
             'checks': quality_checks,
             'passed': passed_checks,
@@ -216,7 +214,7 @@ class FeaturePRReviewer:
             'indicators': [],
             'files': []
         }
-        
+
         # Check PR description
         if pr.body:
             breaking_keywords = ['breaking', 'migration', 'incompatible', 'deprecated']
@@ -224,7 +222,7 @@ class FeaturePRReviewer:
                 if keyword in pr.body.lower():
                     breaking_changes['detected'] = True
                     breaking_changes['indicators'].append(f'Keyword "{keyword}" in description')
-        
+
         # Check files
         files = self.client.get_pr_files(pr.number)
         for file in files:
@@ -234,13 +232,13 @@ class FeaturePRReviewer:
                 breaking_changes['files'].append(filename)
             if 'api' in filename.lower() and file.get('deletions', 0) > 50:
                 breaking_changes['indicators'].append(f'Large API deletions in {filename}')
-        
+
         return breaking_changes
 
     def _recommend_merge_strategy(self, pr: PRInfo) -> Dict:
         """Recommend merge strategy for the PR"""
         size_analysis = self._analyze_pr_size(pr)
-        
+
         if size_analysis['category'] in ['massive', 'extra_large']:
             return {
                 'strategy': 'staged',
@@ -277,7 +275,7 @@ class FeaturePRReviewer:
     def _generate_recommendations(self, review: Dict) -> List[Dict]:
         """Generate specific recommendations"""
         recommendations = []
-        
+
         # Size recommendations
         if review['size_analysis']['category'] in ['massive', 'extra_large']:
             recommendations.append({
@@ -285,7 +283,7 @@ class FeaturePRReviewer:
                 'type': 'split_pr',
                 'message': 'Consider splitting this PR into smaller, focused changes'
             })
-        
+
         # Test recommendations
         if not review['test_coverage']['has_tests']:
             recommendations.append({
@@ -299,7 +297,7 @@ class FeaturePRReviewer:
                 'type': 'improve_tests',
                 'message': 'Test coverage appears insufficient for the changes'
             })
-        
+
         # Breaking changes
         if review['breaking_changes']['detected']:
             recommendations.append({
@@ -307,7 +305,7 @@ class FeaturePRReviewer:
                 'type': 'document_breaking',
                 'message': 'Document breaking changes and provide migration guide'
             })
-        
+
         # Code quality
         if review['code_quality']['quality_score'] < 50:
             recommendations.append({
@@ -315,7 +313,7 @@ class FeaturePRReviewer:
                 'type': 'fix_quality',
                 'message': 'Address code quality issues before merging'
             })
-        
+
         return recommendations
 
     def generate_report(self, review: Dict) -> str:
@@ -323,56 +321,56 @@ class FeaturePRReviewer:
         report = [f"# Feature PR Review: PR #{review['pr_number']}\n"]
         report.append(f"## {review['title']}\n")
         report.append(f"Author: {review['author']}\n\n")
-        
+
         # Size Analysis
         size = review['size_analysis']
-        report.append(f"## Size Analysis\n")
+        report.append("## Size Analysis\n")
         report.append(f"- **Category**: {size['category'].upper()}\n")
         report.append(f"- **Total Changes**: {size['total_changes']} "
                       f"(+{size['additions']}/-{size['deletions']})\n")
         report.append(f"- **Files Changed**: {size['files_changed']}\n")
         report.append(f"- **Complexity Score**: {size['complexity_score']}/100\n\n")
-        
+
         # Component Breakdown
-        report.append(f"## Component Breakdown\n")
+        report.append("## Component Breakdown\n")
         for comp, data in review['component_breakdown'].items():
             if data['files'] > 0:
                 report.append(f"- **{comp.title()}**: {data['files']} files, "
                               f"{data['changes']} changes\n")
-        
+
         # Impact Assessment
         impact = review['impact_assessment']
-        report.append(f"\n## Impact Assessment\n")
+        report.append("\n## Impact Assessment\n")
         report.append(f"- **Impact Level**: {impact['level'].upper()}\n")
         if impact['risks']:
             report.append("### Risks\n")
             for risk in impact['risks']:
                 report.append(f"- {risk}\n")
-        
+
         # Test Coverage
         tests = review['test_coverage']
-        report.append(f"\n## Test Coverage\n")
+        report.append("\n## Test Coverage\n")
         report.append(f"- **Test Files**: {tests['test_files']}\n")
         report.append(f"- **Code Files**: {tests['code_files']}\n")
         report.append(f"- **Coverage Ratio**: {tests['test_ratio']:.2%}\n")
         report.append(f"- **Adequate Tests**: {'✅' if tests['adequate_tests'] else '❌'}\n")
-        
+
         # Recommendations
         if review['recommendations']:
-            report.append(f"\n## Recommendations\n")
-            for rec in sorted(review['recommendations'], 
+            report.append("\n## Recommendations\n")
+            for rec in sorted(review['recommendations'],
                               key=lambda x: ['low', 'medium', 'high', 'critical'].index(x['priority'])):
                 report.append(f"- **[{rec['priority'].upper()}]** {rec['message']}\n")
-        
+
         # Merge Strategy
         strategy = review['merge_strategy']
-        report.append(f"\n## Recommended Merge Strategy\n")
+        report.append("\n## Recommended Merge Strategy\n")
         report.append(f"**Strategy**: {strategy['strategy'].replace('_', ' ').title()}\n")
         report.append(f"**Reason**: {strategy['reason']}\n")
         report.append("### Steps:\n")
         for i, step in enumerate(strategy['steps'], 1):
             report.append(f"{i}. {step}\n")
-        
+
         return ''.join(report)
 
 

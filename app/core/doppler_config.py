@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 class DopplerConfig:
     """Doppler configuration manager with fallback mechanisms."""
 
-    def __init__(self, project: str = "ruleiq", config: str = None):
+    def __init__(self, project: str = "ruleiq", config: str = None) -> None:
         """
         Initialize Doppler configuration.
 

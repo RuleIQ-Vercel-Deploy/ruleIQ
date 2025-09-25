@@ -21,7 +21,7 @@ class SecurityHeadersMiddleware:
         custom_csp: Optional[str] = None,
         nonce_enabled: bool = True,
         report_uri: Optional[str] = None,
-    ):
+    ) -> None:
         """
         Initialize security headers middleware
 
@@ -106,7 +106,7 @@ class SecurityHeadersMiddleware:
 
                 # Create a mock response object for header manipulation
                 class HeaderResponse:
-                    def __init__(self):
+                    def __init__(self) -> None:
                         self.headers = headers
                         self.status_code = response_status
 
@@ -294,7 +294,7 @@ class SecurityHeadersMiddleware:
 class CSPViolationHandler:
     """Handler for CSP violation reports"""
 
-    def __init__(self, storage_backend: Optional[Any] = None):
+    def __init__(self, storage_backend: Optional[Any] = None) -> None:
         """
         Initialize CSP violation handler
 

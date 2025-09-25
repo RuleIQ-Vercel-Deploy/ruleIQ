@@ -529,7 +529,7 @@ class TestEdgeCases:
     def test_empty_input_validation(self):
         """Test validation of empty inputs."""
         assert SecurityValidator.validate_no_dangerous_content("") == ""
-        assert SecurityValidator.validate_no_dangerous_content(None) == None
+        assert SecurityValidator.validate_no_dangerous_content(None) is None
 
     def test_unicode_input_validation(self):
         """Test validation of Unicode inputs."""

@@ -154,7 +154,7 @@ class MemoryManager:
         max_memory_entries: int = 10000,
         cleanup_interval_hours: int = 24,
         store_raw_content: bool = True,
-    ):
+    ) -> None:
         self.neo4j_uri = neo4j_uri
         self.neo4j_user = neo4j_user
         self.neo4j_password = neo4j_password

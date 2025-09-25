@@ -15,7 +15,7 @@ try:
 except ImportError:
     # Mock classes for when Graphiti is not available
     class MemoryManager:
-        def __init__(self, *args, **kwargs):
+        def __init__(self, *args, **kwargs) -> None:
             raise ImportError(f"MemoryManager requires graphiti_core: {e}")
 
     class MemoryType:
@@ -33,7 +33,7 @@ try:
 except ImportError:
     # Mock classes for when dependencies are missing
     class RAGSystem:
-        def __init__(self, *args, **kwargs):
+        def __init__(self, *args, **kwargs) -> None:
             raise ImportError(f"RAGSystem requires additional dependencies: {e}")
 
     class DocumentChunk:
@@ -51,7 +51,7 @@ try:
 except ImportError:
     # Mock classes for when observability dependencies are missing
     class ObservabilityManager:
-        def __init__(self, *args, **kwargs):
+        def __init__(self, *args, **kwargs) -> None:
             raise ImportError(
                 f"ObservabilityManager requires additional dependencies: {e}"
             )

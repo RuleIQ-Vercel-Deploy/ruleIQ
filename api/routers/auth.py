@@ -6,17 +6,15 @@ from datetime import datetime
 from uuid import UUID, uuid4
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.security import OAuth2PasswordRequestForm
-from pydantic import BaseModel, ValidationError
+from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from api.dependencies.auth import ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token, create_refresh_token, get_password_hash, oauth2_scheme, verify_password
 from api.middleware.rate_limiter import auth_rate_limit
 from api.schemas.models import Token, UserCreate, UserResponse
 from api.dependencies.security_validation import (
-    SecurityDependencies,
-    validate_json_body,
     validate_request
 )
-from api.utils.security_validation import SecurityValidator, handle_validation_error
+from api.utils.security_validation import SecurityValidator
 from utils.input_validation import InputValidator, ValidationError as InputValidationError
 from database.db_setup import get_db
 from database.user import User
@@ -111,7 +109,7 @@ async def login_for_access_token(request: Request, form_data:
 
         # Validate password doesn't contain dangerous patterns
         SecurityValidator.validate_no_dangerous_content(form_data.password, "password")
-    except (InputValidationError, HTTPException) as e:
+    except (InputValidationError, HTTPException):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                           detail="Invalid login credentials")
 
@@ -172,7 +170,7 @@ async def login(request: Request, login_data: LoginRequest, db: Session=
 
         # Validate password doesn't contain dangerous patterns
         SecurityValidator.validate_no_dangerous_content(login_data.password, "password")
-    except (InputValidationError, HTTPException) as e:
+    except (InputValidationError, HTTPException):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                           detail="Invalid login credentials")
 

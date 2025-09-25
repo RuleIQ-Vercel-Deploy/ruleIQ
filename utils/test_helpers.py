@@ -22,14 +22,14 @@ T = TypeVar('T')
 async def async_with_timeout(coro, timeout: float):
     """
     Execute an async operation with a timeout.
-    
+
     Args:
         coro: Coroutine to execute
         timeout: Timeout in seconds
-        
+
     Returns:
         Result of the coroutine
-        
+
     Raises:
         asyncio.TimeoutError: If operation exceeds timeout
     """
@@ -39,16 +39,16 @@ async def async_with_timeout(coro, timeout: float):
 def sync_with_timeout(func: Callable, timeout: float, *args, **kwargs):
     """
     Execute a synchronous function with a timeout.
-    
+
     Args:
         func: Function to execute
         timeout: Timeout in seconds
         *args: Positional arguments for func
         **kwargs: Keyword arguments for func
-        
+
     Returns:
         Result of the function
-        
+
     Raises:
         TimeoutError: If operation exceeds timeout
     """
@@ -79,10 +79,10 @@ def sync_with_timeout(func: Callable, timeout: float, *args, **kwargs):
 def with_db_cleanup(async_func):
     """
     Decorator to ensure database connections are cleaned up.
-    
+
     Args:
         async_func: Async function that uses a database connection
-        
+
     Returns:
         Wrapped function with cleanup
     """
@@ -102,10 +102,10 @@ def with_db_cleanup(async_func):
 def with_redis_cleanup(async_func):
     """
     Decorator to ensure Redis connections are cleaned up.
-    
+
     Args:
         async_func: Async function that uses a Redis connection
-        
+
     Returns:
         Wrapped function with cleanup
     """
@@ -125,7 +125,7 @@ def with_redis_cleanup(async_func):
 async def cleanup_all_connections(connections: Dict[str, Any]):
     """
     Clean up multiple connections.
-    
+
     Args:
         connections: Dictionary of connection objects
     """
@@ -144,10 +144,10 @@ async def cleanup_all_connections(connections: Dict[str, Any]):
 def with_test_timeout(seconds: int):
     """
     Decorator to add timeout to test functions.
-    
+
     Args:
         seconds: Timeout in seconds
-        
+
     Returns:
         Decorated test function with timeout
     """
@@ -181,7 +181,7 @@ def with_test_timeout(seconds: int):
 def create_smart_mock_ai_client():
     """
     Create a mock AI client that returns context-specific responses.
-    
+
     Returns:
         Mock AI client with intelligent responses
     """
@@ -225,7 +225,7 @@ def create_smart_mock_ai_client():
 def create_smart_mock_openai():
     """
     Create a mock OpenAI client with intelligent responses.
-    
+
     Returns:
         Mock OpenAI client
     """
@@ -258,7 +258,7 @@ def create_smart_mock_openai():
 def get_redis_config() -> Dict[str, Any]:
     """
     Get Redis configuration from environment.
-    
+
     Returns:
         Redis configuration dictionary
     """
@@ -272,7 +272,7 @@ def get_redis_config() -> Dict[str, Any]:
 def get_postgres_config() -> Dict[str, Any]:
     """
     Get PostgreSQL configuration from environment.
-    
+
     Returns:
         PostgreSQL configuration dictionary
     """
@@ -302,7 +302,7 @@ def get_postgres_config() -> Dict[str, Any]:
 async def isolated_test_context():
     """
     Provide an isolated context for test execution.
-    
+
     Yields:
         Test context with cleanup guaranteed
     """
@@ -318,13 +318,13 @@ async def isolated_test_context():
 def timeout_context(seconds: float):
     """
     Context manager for timeout handling.
-    
+
     Args:
         seconds: Timeout in seconds
-        
+
     Yields:
         None
-        
+
     Raises:
         TimeoutError: If context exceeds timeout
     """

@@ -29,6 +29,7 @@ from .prompt_templates import PromptTemplates
 from .quality_monitor import get_quality_monitor
 from .response_cache import get_ai_cache
 from .tools import get_tool_schemas, tool_executor
+import contextlib
 logger = get_logger(__name__)
 
 
@@ -106,7 +107,7 @@ class ComplianceAssistant:
                 context else None, task_complexity=complexity, tools=tools,
                 prefer_speed=prefer_speed))
             if cached_content:
-                setattr(model, '_cached_content', cached_content)
+                model._cached_content = cached_content
                 logger.debug('Attached cached content to model for %s' %
                     task_type)
             model_name = getattr(model, 'model_name', 'unknown')
@@ -394,7 +395,7 @@ class ComplianceAssistant:
                 self.quality_monitor = await get_quality_monitor()
             safe_context = context or {}
             priority = safe_context.get('priority', 1)
-            cache_key = f'fast_{hash(prompt)}_{hash(str(safe_context))}'
+            f'fast_{hash(prompt)}_{hash(str(safe_context))}'
             try:
                 cached_response = await asyncio.wait_for(self.ai_cache.
                     get_cached_response(prompt, safe_context), timeout=0.5)
@@ -486,7 +487,7 @@ class ComplianceAssistant:
         prompt_lower = prompt.lower()
         if 'gdpr' in prompt_lower:
             return """Based on GDPR requirements, here are key considerations:
-            
+
 • Lawful basis for processing personal data
 • Data subject rights (access, rectification, erasure)
 • Privacy by design and by default
@@ -496,7 +497,7 @@ class ComplianceAssistant:
 I recommend consulting with a data protection specialist for specific guidance."""
         elif 'iso' in prompt_lower and '27001' in prompt_lower:
             return """For ISO 27001 implementation:
-            
+
 • Risk assessment and treatment
 • Information security policies
 • Security awareness and training
@@ -506,7 +507,7 @@ I recommend consulting with a data protection specialist for specific guidance."
 Consider engaging an ISO 27001 consultant for detailed implementation."""
         else:
             return """I'm currently experiencing high demand. Here's general compliance guidance:
-            
+
 • Identify applicable regulations for your industry
 • Conduct gap analysis against requirements
 • Develop policies and procedures
@@ -1765,19 +1766,18 @@ Please try your question again or contact support for immediate assistance."""
         detected_intent = 'general_query'
         confidence = 0.5
         detected_framework = None
-        if assessment_context:
-            if assessment_context.get('in_assessment'):
-                for intent, patterns in intent_patterns.items():
-                    if intent.startswith('assessment_') or intent in [
-                        'question_clarification', 'gap_analysis',
-                        'implementation_guidance']:
-                        for pattern in patterns:
-                            if re.search(pattern, message_lower):
-                                detected_intent = intent
-                                confidence = 0.9
-                                break
-                        if detected_intent != 'general_query':
+        if assessment_context and assessment_context.get('in_assessment'):
+            for intent, patterns in intent_patterns.items():
+                if intent.startswith('assessment_') or intent in [
+                    'question_clarification', 'gap_analysis',
+                    'implementation_guidance']:
+                    for pattern in patterns:
+                        if re.search(pattern, message_lower):
+                            detected_intent = intent
+                            confidence = 0.9
                             break
+                    if detected_intent != 'general_query':
+                        break
         if detected_intent == 'general_query':
             for intent, patterns in intent_patterns.items():
                 for pattern in patterns:
@@ -2233,27 +2233,23 @@ Provide brief, practical guidance in JSON format with 'guidance' and 'confidence
                 'AI help request timed out for %s, using fast fallback' %
                 question_id)
             if self.analytics_monitor:
-                try:
+                with contextlib.suppress(ValueError, TypeError):
                     await self.analytics_monitor.record_metric(MetricType.
                         ERROR, 'ai_timeout_error', 1, metadata={
                         'error_type': 'TimeoutError', 'operation':
                         'get_assessment_help', 'question_id': question_id,
                         'framework_id': framework_id})
-                except (ValueError, TypeError):
-                    pass
             return self._get_fast_fallback_help(question_text, framework_id,
                 question_id)
         except (ValueError, TypeError) as e:
             logger.error('Error generating assessment help: %s' % e)
             if self.analytics_monitor:
-                try:
+                with contextlib.suppress(ValueError, TypeError):
                     await self.analytics_monitor.record_metric(MetricType.
                         ERROR, 'ai_service_error', 1, metadata={
                         'error_type': type(e).__name__, 'operation':
                         'get_assessment_help', 'question_id': question_id,
                         'framework_id': framework_id})
-                except (ValueError, TypeError):
-                    pass
             return self._get_fallback_assessment_help(question_text,
                 framework_id)
 
@@ -3159,16 +3155,16 @@ Provide brief, practical guidance in JSON format with 'guidance' and 'confidence
             Generate {max_questions} compliance assessment questions for a {business_type} business with {company_size} employees.
             Assessment type: {assessment_type}
             Difficulty level: {difficulty_level}
-            
+
             Questions should cover:
             - Data protection and privacy (GDPR compliance)
             - Security practices and policies
             - Employee training and awareness
             - Risk management processes
             - Documentation and record keeping
-            
+
             IMPORTANT: Use 'question_id' as the field name (not 'id').
-            
+
             Return the questions in this EXACT JSON format:
             {{
                 "questions": [
@@ -3185,7 +3181,7 @@ Provide brief, practical guidance in JSON format with 'guidance' and 'confidence
                 "total_questions": {max_questions},
                 "assessment_context": "{assessment_type}"
             }}
-            
+
             Ensure questions are:
             1. Relevant to {business_type} businesses
             2. Appropriate for {company_size} organizations
@@ -3245,7 +3241,7 @@ Provide brief, practical guidance in JSON format with 'guidance' and 'confidence
             context_info = ''
             if previous_answers:
                 context_info = '\nPrevious answers context:\n'
-                for i, answer in enumerate(previous_answers[-3:]):
+                for _i, answer in enumerate(previous_answers[-3:]):
                     context_info += f"""- {answer.get('question', 'Question')}: {answer.get('answer', 'No answer')}
 """
             system_prompt = (
@@ -3257,14 +3253,14 @@ Provide brief, practical guidance in JSON format with 'guidance' and 'confidence
             Question type: {question_type}
             Difficulty: {difficulty}
             {context_info}
-            
+
             The question should:
             1. Be relevant to the business context
             2. Build upon or relate to previous answers if provided
             3. Cover important compliance areas (GDPR, security, training, documentation)
             4. Be clear and actionable
             5. Use 'question_id' as the field name (critical requirement)
-            
+
             Return the question in this EXACT JSON format:
             {{
                 "question_text": "Question text here",
@@ -3276,7 +3272,7 @@ Provide brief, practical guidance in JSON format with 'guidance' and 'confidence
                 "compliance_weight": 1.0,
                 "contextual": true
             }}
-            
+
             For boolean questions, use ["Yes", "No"] as options.
             For text questions, omit the options field entirely.
             """
@@ -3384,18 +3380,18 @@ Compliance frameworks needed: {', '.join(compliance_needs[:3])}
                 )
             user_prompt = f"""
             Generate 3-5 specific compliance recommendations for a {business_type} business with {company_size} employees in the {industry} industry.
-            
+
             Current compliance score: {compliance_score:.1%}
             Urgency level: {urgency} - {action_priority}
             {needs_context}{risk_context}
-            
+
             For each recommendation, provide:
             1. Clear, actionable title
             2. Specific steps to implement
             3. Priority level (critical, high, medium, low)
             4. Estimated timeline
             5. Expected compliance impact
-            
+
             Return recommendations in this JSON format:
             {{
                 "recommendations": [
@@ -3410,7 +3406,7 @@ Compliance frameworks needed: {', '.join(compliance_needs[:3])}
                     }},
                 ]
             }}
-            
+
             Focus on the most impactful recommendations first.
             """
             model_instance, instruction_id = self._get_task_appropriate_model(
@@ -3644,24 +3640,24 @@ Analyze this conversation and provide insights in JSON format."""
                 focus_areas = ['maintenance', 'best_practices', 'innovation']
             prompt = f"""
             Generate personalized compliance recommendations for a {company_size} {business_type} business in the {industry} industry.
-            
+
             Current compliance score: {compliance_score}%
             Priority level: {priority_level}
             Focus areas: {', '.join(focus_areas)}
-            
+
             Analysis insights:
             {json.dumps(analysis_results.get('insights', {}), indent=2)}
-            
+
             Compliance needs identified:
             {json.dumps(analysis_results.get('compliance_needs', []), indent=2)}
-            
+
             Generate 3-5 specific, actionable recommendations that:
             1. Address the most critical compliance gaps
             2. Are appropriate for the business size and type
             3. Include clear next steps
             4. Consider resource constraints
             5. Provide measurable outcomes
-            
+
             Format as JSON:
             {{
                 "recommendations": [

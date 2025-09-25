@@ -325,7 +325,7 @@ class TestDistributedRateLimiting:
         # Should include standard rate limit headers
         expected_headers = ["X-RateLimit-Remaining", "X-RateLimit-Reset", "X-RateLimit-Limit"]
         for header in expected_headers:
-            assert header in [f"X-RateLimit-{k.title()}" for k in info.keys()]
+            assert header in [f"X-RateLimit-{k.title()}" for k in info]
 
     @pytest.mark.asyncio
     async def test_distributed_rate_limiting(self, mock_lb):

@@ -84,7 +84,7 @@ class AutomaticRollbackSystem:
     Ensures <5 minute recovery time with blue-green deployment switching.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.state = DeploymentState.STABLE
         self.current_version: Optional[DeploymentVersion] = None
         self.previous_version: Optional[DeploymentVersion] = None
@@ -440,7 +440,7 @@ class AutomaticRollbackSystem:
     async def _get_current_metrics(self) -> Dict[str, float]:
         """Get current system metrics."""
         from monitoring.metrics import get_metrics_collector
-        collector = get_metrics_collector()
+        get_metrics_collector()
 
         # In production, you'd parse Prometheus metrics
         # For now, return mock metrics

@@ -29,7 +29,7 @@ AsyncSessionLocal = async_sessionmaker(
 def get_db() -> Generator[Session, None, None]:
     """
     Dependency to get database session.
-    
+
     Yields:
         Session: Database session
     """
@@ -42,7 +42,7 @@ def get_db() -> Generator[Session, None, None]:
 async def get_async_db() -> AsyncGenerator[AsyncSession, None]:
     """
     Dependency to get async database session.
-    
+
     Yields:
         AsyncSession: Async database session
     """

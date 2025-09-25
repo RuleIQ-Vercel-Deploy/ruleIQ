@@ -4,12 +4,10 @@ PR Analyzer - Comprehensive analysis and categorization of all open pull request
 """
 
 import json
-import os
-from typing import List, Dict, Any, Tuple
-from datetime import datetime, timedelta
+from typing import List, Dict
+from datetime import datetime
 from collections import defaultdict
 import logging
-from tabulate import tabulate
 from github_api_client import GitHubAPIClient, PRInfo
 
 # Configure logging
@@ -20,7 +18,7 @@ logger = logging.getLogger(__name__)
 class PRAnalyzer:
     """Analyzes and categorizes pull requests with detailed insights"""
 
-    def __init__(self, client: GitHubAPIClient = None):
+    def __init__(self, client: GitHubAPIClient = None) -> None:
         """Initialize PR Analyzer"""
         self.client = client or GitHubAPIClient()
         self.analysis_results = {

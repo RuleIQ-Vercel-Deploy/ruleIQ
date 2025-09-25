@@ -15,6 +15,7 @@ load_dotenv()
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from services.agentic_rag import AgenticRAGSystem
+import contextlib
 
 
 async def test_rag_processing():
@@ -125,10 +126,8 @@ This enables automatic state persistence between workflow runs.
 
     finally:
         # Clean up connections
-        try:
+        with contextlib.suppress(ValueError, TypeError):
             rag_system.close()
-        except (ValueError, TypeError):
-            pass
 
 
 if __name__ == "__main__":

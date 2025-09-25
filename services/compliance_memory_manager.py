@@ -79,7 +79,7 @@ class MemoryRetrievalResult:
 class ComplianceMemoryManager:
     """Advanced memory management for compliance intelligence"""
 
-    def __init__(self, neo4j_service: Neo4jGraphRAGService):
+    def __init__(self, neo4j_service: Neo4jGraphRAGService) -> None:
         self.neo4j = neo4j_service
         self.memory_store: Dict[str, MemoryNode] = {}
         self.clusters: Dict[str, MemoryCluster] = {}
@@ -265,9 +265,7 @@ class ComplianceMemoryManager:
         memories_to_remove = []
         for memory_id, memory in self.memory_store.items():
             should_remove = False
-            if memory.timestamp < cutoff_date:
-                should_remove = True
-            elif memory.importance_score < min_importance and memory.access_count < 2 and memory.timestamp < datetime.now(
+            if memory.timestamp < cutoff_date or memory.importance_score < min_importance and memory.access_count < 2 and memory.timestamp < datetime.now(
                 timezone.utc) - timedelta(days=7):
                 should_remove = True
             if memory.memory_type in [MemoryType.COMPLIANCE_RULE,

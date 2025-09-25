@@ -630,7 +630,7 @@ class TestBulkOperations:
         # Verify all were updated
         active_count = integration_db_session.query(User).filter(
             User.email.like("bulk%@test.com"),
-            User.is_active == True
+            User.is_active
         ).count()
         assert active_count == 50
 

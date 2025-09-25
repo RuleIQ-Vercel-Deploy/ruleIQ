@@ -91,7 +91,7 @@ class EvaluationResult:
 class EvaluationPipeline:
     """Core evaluation pipeline."""
 
-    def __init__(self, config: PipelineConfig):
+    def __init__(self, config: PipelineConfig) -> None:
         self.config = config
         self.evaluators: Dict[str, Callable] = {}
         self._cache: Dict[str, EvaluationResult] = {}
@@ -227,7 +227,7 @@ class MetricAggregator:
 class RegressionDetector:
     """Detects performance regressions."""
 
-    def __init__(self, threshold: float=0.1):
+    def __init__(self, threshold: float=0.1) -> None:
         self.threshold = threshold
 
     def detect(self, baseline: Dict[str, float], current: Dict[str, float]
@@ -354,7 +354,7 @@ class BaselineComparator:
 class PipelineOrchestrator:
     """Orchestrates the evaluation pipeline."""
 
-    def __init__(self, config: PipelineConfig):
+    def __init__(self, config: PipelineConfig) -> None:
         self.config = config
         self.pipeline = EvaluationPipeline(config)
         self.aggregator = MetricAggregator()

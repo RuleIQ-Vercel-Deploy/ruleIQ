@@ -9,7 +9,7 @@ from services.ai.evaluation.golden_datasets.versioning import VersionManager
 class JSONLLoader:
     """Load and save JSONL datasets."""
 
-    def __init__(self, file_path: str):
+    def __init__(self, file_path: str) -> None:
         """Initialize loader with file path.
 
         Args:
@@ -47,7 +47,7 @@ class JSONLLoader:
 class GoldenDatasetLoader:
     """Main loader for golden datasets."""
 
-    def __init__(self, root_path: str):
+    def __init__(self, root_path: str) -> None:
         """Initialize loader with root path.
 
         Args:
@@ -128,7 +128,7 @@ class GoldenDatasetLoader:
 class DatasetRegistry:
     """Registry for managing multiple datasets."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize empty registry."""
         self.datasets: Dict[str, Dict[str, Any]] = {}
         self.loaders: Dict[str, GoldenDatasetLoader] = {}

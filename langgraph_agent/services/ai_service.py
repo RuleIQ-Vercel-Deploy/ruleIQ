@@ -13,7 +13,7 @@ from typing import Optional, Dict, Any
 class AIService:
     """Wrapper for AI service integration."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize AI service with existing assistant."""
         self.assistant = None
 

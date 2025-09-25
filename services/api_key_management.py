@@ -80,7 +80,7 @@ class APIKeyManager:
     - Audit logging
     """
 
-    def __init__(self, db_session: AsyncSession, redis_client: redis.Redis):
+    def __init__(self, db_session: AsyncSession, redis_client: redis.Redis) -> None:
         self.db = db_session
         self.redis = redis_client
         self.encryption = EncryptionService()
@@ -258,11 +258,10 @@ class APIKeyManager:
                     return False, None, "Request IP not allowed"
 
             # Check origin whitelist
-            if metadata.allowed_origins and origin:
-                if not any(
-                    origin.startswith(allowed) for allowed in metadata.allowed_origins
-                ):
-                    return False, None, "Origin not allowed"
+            if metadata.allowed_origins and origin and not any(
+                origin.startswith(allowed) for allowed in metadata.allowed_origins
+            ):
+                return False, None, "Origin not allowed"
 
             # Check scope
             if required_scope and required_scope not in metadata.scopes:

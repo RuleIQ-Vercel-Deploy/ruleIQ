@@ -6,7 +6,7 @@ added to router endpoints for automatic security validation.
 """
 
 from typing import Any, Dict, Optional
-from fastapi import Depends, HTTPException, Request, UploadFile, Form
+from fastapi import Depends, HTTPException, Request, UploadFile
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
 from api.utils.security_validation import (

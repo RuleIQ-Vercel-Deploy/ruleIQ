@@ -24,7 +24,7 @@ class FeatureFlag(BaseModel):
 class FeatureFlagService:
     """Service for managing feature flags"""
 
-    def __init__(self, redis_client: Optional[redis.Redis] = None):
+    def __init__(self, redis_client: Optional[redis.Redis] = None) -> None:
         self.redis = redis_client or redis.Redis(
             host='localhost',
             port=6379,

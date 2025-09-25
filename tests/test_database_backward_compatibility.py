@@ -160,7 +160,6 @@ class TestGlobalStateCompatibility:
     def test_async_session_maker_compatibility(self):
         """Test that async_session_maker global variable still exists."""
         # This should not raise an exception
-        from database.db_setup import async_session_maker
         # The actual value depends on whether the engine is initialized
         # We just verify it exists
         assert async_session_maker is not None or async_session_maker is None  # Could be None if not initialized

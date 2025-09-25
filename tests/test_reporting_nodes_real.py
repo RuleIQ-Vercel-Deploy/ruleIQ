@@ -376,7 +376,7 @@ class TestReportingNodesRealImplementation:
             assert result_state["report_data"]["status"] == "completed"
             assert result_state["report_data"]["report_type"] == "executive_summary"
             assert result_state["report_data"]["format"] == "pdf"
-            assert result_state["report_data"]["distributed"] == True
+            assert result_state["report_data"]["distributed"]
 
     @pytest.mark.asyncio
     async def test_generate_on_demand_report_node_missing_request(
@@ -477,7 +477,7 @@ class TestReportingNodesRealImplementation:
             [{"filename": "report.pdf", "content": b"PDF content"}],
         )
 
-        assert result == True
+        assert result
 
     def test_send_email_sync_multiple_recipients(self):
         """Test email sending to multiple recipients."""
@@ -491,7 +491,7 @@ class TestReportingNodesRealImplementation:
             None,
         )
 
-        assert result == True
+        assert result
 
 class TestReportGeneratorIntegration:
     """Test integration with ReportGenerator service."""

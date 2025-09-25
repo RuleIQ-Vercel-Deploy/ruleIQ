@@ -56,7 +56,7 @@ class DecisionTracker:
         self,
         db_session: Session,
         validation_threshold: float = 0.7
-    ):
+    ) -> None:
         """Initialize decision tracker."""
         self.db = db_session
         self.validation_threshold = validation_threshold

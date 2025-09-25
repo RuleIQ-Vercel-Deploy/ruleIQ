@@ -53,7 +53,7 @@ class Message:
 class CommunicationProtocol:
     """Defines communication protocol between agents."""
 
-    def __init__(self, max_retries: int = 3, timeout: float = 30.0):
+    def __init__(self, max_retries: int = 3, timeout: float = 30.0) -> None:
         """Initialize communication protocol."""
         self.max_retries = max_retries
         self.timeout = timeout

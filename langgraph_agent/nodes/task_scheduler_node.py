@@ -185,10 +185,7 @@ def should_schedule_report(state: Dict[str, Any]) -> bool:
 
     # Check if explicitly requested
     metadata = state.get("metadata", {})
-    if metadata.get("generate_report"):
-        return True
-
-    return False
+    return bool(metadata.get("generate_report"))
 
 
 def should_schedule_notification(state: Dict[str, Any]) -> bool:
@@ -209,10 +206,7 @@ def should_schedule_notification(state: Dict[str, Any]) -> bool:
 
     # Check if explicitly requested
     metadata = state.get("metadata", {})
-    if metadata.get("send_notification"):
-        return True
-
-    return False
+    return bool(metadata.get("send_notification"))
 
 
 def get_next_scheduled_time(schedule_type: str, delay_hours: int = 0) -> str:

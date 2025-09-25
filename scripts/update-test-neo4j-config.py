@@ -5,12 +5,10 @@ This script should be run carefully as test environments might need different co
 """
 
 import os
-import re
-from pathlib import Path
 
 def update_neo4j_urls(file_path, dry_run=True):
     """Update Neo4j URLs in a file from bolt://localhost to AuraDB."""
-    
+
     replacements = {
         r'bolt://localhost:7688': 'neo4j+s://12e71bc4.databases.neo4j.io',
         r'bolt://localhost:7687': 'neo4j+s://12e71bc4.databases.neo4j.io',
@@ -19,20 +17,19 @@ def update_neo4j_urls(file_path, dry_run=True):
         r"'bolt://localhost:7688'": "'neo4j+s://12e71bc4.databases.neo4j.io'",
         r"'bolt://localhost:7687'": "'neo4j+s://12e71bc4.databases.neo4j.io'",
     }
-    
+
     try:
         with open(file_path, 'r') as f:
             content = f.read()
-        
-        original_content = content
+
         changes_made = False
-        
+
         for pattern, replacement in replacements.items():
             if pattern in content:
                 content = content.replace(pattern, replacement)
                 changes_made = True
                 print(f"  ✓ Replaced {pattern}")
-        
+
         if changes_made:
             if not dry_run:
                 with open(file_path, 'w') as f:
@@ -44,18 +41,18 @@ def update_neo4j_urls(file_path, dry_run=True):
         else:
             print(f"  ⏭️  No changes needed for {file_path}")
             return False
-            
+
     except Exception as e:
         print(f"  ❌ Error processing {file_path}: {e}")
         return False
 
 def main():
     """Main function to update all test files."""
-    
+
     print("🔄 Neo4j Test Configuration Update Script")
     print("=========================================")
     print()
-    
+
     # Files that need updating based on search results
     files_to_update = [
         # Services
@@ -70,7 +67,7 @@ def main():
         'services/compliance/uk_compliance_ingestion_pipeline.py',
         'services/agentic_rag.py',
         'services/scrapers/regulation_scraper.py',
-        
+
         # Tests
         'tests/test_complete_integration.py',
         'tests/test_master_integration.py',
@@ -87,11 +84,11 @@ def main():
         'tests/test_neo4j_basic.py',
         'tests/setup_test_environment.py',
     ]
-    
+
     # Check if running in dry-run mode
     import sys
     dry_run = '--dry-run' in sys.argv or '-d' in sys.argv
-    
+
     if dry_run:
         print("🔍 Running in DRY-RUN mode (no files will be modified)")
     else:
@@ -100,9 +97,9 @@ def main():
         if response.lower() != 'yes':
             print("❌ Aborted")
             return
-    
+
     print()
-    
+
     updated_count = 0
     for file_path in files_to_update:
         if os.path.exists(file_path):
@@ -112,9 +109,9 @@ def main():
             print()
         else:
             print(f"⏭️  File not found: {file_path}")
-    
+
     print(f"\n📊 Summary: {updated_count} files {'would be' if dry_run else 'were'} updated")
-    
+
     if dry_run:
         print("\n💡 To apply changes, run without --dry-run flag:")
         print("   python scripts/update-test-neo4j-config.py")

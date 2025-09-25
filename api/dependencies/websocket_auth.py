@@ -21,15 +21,15 @@ logger = get_logger(__name__)
 async def extract_token_from_headers(websocket: WebSocket) -> Optional[str]:
     """
     Extract JWT token from WebSocket headers.
-    
+
     Looks for token in multiple header locations for compatibility:
     1. Authorization header (Bearer token)
     2. X-Auth-Token header
     3. Sec-WebSocket-Protocol header (for browser compatibility)
-    
+
     Args:
         websocket: The WebSocket connection
-        
+
     Returns:
         Optional[str]: The extracted token or None
     """
@@ -59,16 +59,16 @@ async def verify_websocket_token_from_headers(
 ) -> Optional[User]:
     """
     Verify JWT token from WebSocket headers.
-    
+
     This is a secure alternative to passing tokens in query parameters.
-    
+
     Args:
         websocket: The WebSocket connection
         accept_connection: Whether to accept the connection before validation
-        
+
     Returns:
         Optional[User]: The authenticated user or None if authentication fails
-        
+
     Raises:
         WebSocketException: If authentication fails
     """
@@ -166,7 +166,7 @@ async def verify_websocket_token_from_headers(
 async def send_auth_required_message(websocket: WebSocket) -> None:
     """
     Send authentication required message to WebSocket client.
-    
+
     Args:
         websocket: The WebSocket connection
     """
@@ -195,10 +195,10 @@ class WebSocketAuthMiddleware:
     Middleware for WebSocket authentication using headers.
     """
 
-    def __init__(self, require_auth: bool = True):
+    def __init__(self, require_auth: bool = True) -> None:
         """
         Initialize the middleware.
-        
+
         Args:
             require_auth: Whether authentication is required
         """
@@ -211,11 +211,11 @@ class WebSocketAuthMiddleware:
     ) -> Optional[User]:
         """
         Authenticate WebSocket connection.
-        
+
         Args:
             websocket: The WebSocket connection
             accept_connection: Whether to accept before validation
-            
+
         Returns:
             Optional[User]: Authenticated user or None
         """
@@ -241,14 +241,14 @@ async def verify_websocket_token_with_fallback(
 ) -> Optional[User]:
     """
     Verify WebSocket token with fallback to query parameter.
-    
+
     This function first tries to get token from headers, then falls back
     to query parameter for backward compatibility during migration.
-    
+
     Args:
         websocket: The WebSocket connection
         token_from_query: Optional token from query parameter (deprecated)
-        
+
     Returns:
         Optional[User]: Authenticated user or None
     """

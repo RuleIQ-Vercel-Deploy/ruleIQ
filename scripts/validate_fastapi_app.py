@@ -14,8 +14,7 @@ Exit codes:
 """
 
 import sys
-import json
-from typing import Dict, List, Tuple, Optional
+from typing import Tuple
 
 
 def validate_app_import() -> Tuple[bool, str]:
@@ -192,7 +191,7 @@ def validate_docs_urls() -> Tuple[bool, str]:
             if app.openapi_url != expected_openapi_url:
                 return False, f"❌ Incorrect OpenAPI URL: expected {expected_openapi_url}, got {app.openapi_url}"
 
-            return True, f"✅ Documentation URLs correctly configured for debug mode"
+            return True, "✅ Documentation URLs correctly configured for debug mode"
         else:
             # In production mode, docs should be disabled
             if app.docs_url is not None:
@@ -205,7 +204,7 @@ def validate_docs_urls() -> Tuple[bool, str]:
             if app.openapi_url != "/api/v1/openapi.json":
                 return False, f"❌ OpenAPI URL incorrect: expected /api/v1/openapi.json, got {app.openapi_url}"
 
-            return True, f"✅ Documentation URLs correctly disabled for production mode"
+            return True, "✅ Documentation URLs correctly disabled for production mode"
 
     except Exception as e:
         return False, f"❌ Failed to validate docs URLs: {str(e)}"

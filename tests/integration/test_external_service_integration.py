@@ -50,7 +50,7 @@ class TestAIServiceIntegration:
         auth_manager = TestAuthManager()
         user = auth_manager.create_test_user(
             email="ai.integration@test.com",
-            username="ai.integration@test.com".split("@")[0],
+            username=["ai.integration", "test.com"][0],
         )
         from api.dependencies.auth import create_access_token
 
@@ -256,7 +256,7 @@ class TestDatabaseIntegration:
         auth_manager = TestAuthManager()
         user = auth_manager.create_test_user(
             email="db.integration@test.com",
-            username="db.integration@test.com".split("@")[0],
+            username=["db.integration", "test.com"][0],
         )
         from api.dependencies.auth import create_access_token
 
@@ -384,7 +384,7 @@ class TestRedisIntegration:
         auth_manager = TestAuthManager()
         user = auth_manager.create_test_user(
             email="redis.integration@test.com",
-            username="redis.integration@test.com".split("@")[0],
+            username=["redis.integration", "test.com"][0],
         )
         from api.dependencies.auth import create_access_token
 
@@ -596,7 +596,7 @@ class TestFileStorageIntegration:
         auth_manager = TestAuthManager()
         user = auth_manager.create_test_user(
             email="storage.test@example.com",
-            username="storage.test@example.com".split("@")[0],
+            username=["storage.test", "example.com"][0],
         )
         from api.dependencies.auth import create_access_token
 
@@ -704,7 +704,7 @@ class TestThirdPartyAPIIntegration:
         auth_manager = TestAuthManager()
         user = auth_manager.create_test_user(
             email="api.integration@test.com",
-            username="api.integration@test.com".split("@")[0],
+            username=["api.integration", "test.com"][0],
         )
         from api.dependencies.auth import create_access_token
 

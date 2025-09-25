@@ -7,7 +7,7 @@ import argparse
 import json
 import re
 from pathlib import Path
-from typing import List, Dict, Optional, Tuple
+from typing import List, Dict
 from datetime import datetime
 import logging
 from github_api_client import GitHubAPIClient, PRInfo
@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 class SecurityPRReviewer:
     """Reviews and validates security-related pull requests"""
 
-    def __init__(self, client: GitHubAPIClient = None, config: Dict = None):
+    def __init__(self, client: GitHubAPIClient = None, config: Dict = None) -> None:
         """Initialize security PR reviewer"""
         self.client = client or GitHubAPIClient()
         self.config = config or {}
@@ -610,10 +610,7 @@ def main():
 
     # Load configuration if provided
     config = None
-    if args.config:
-        config_path = Path(args.config)
-    else:
-        config_path = Path(__file__).with_name('config.yaml')
+    config_path = Path(args.config) if args.config else Path(__file__).with_name('config.yaml')
 
     if config_path.exists():
         try:

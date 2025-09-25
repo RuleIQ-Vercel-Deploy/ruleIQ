@@ -71,7 +71,7 @@ class PromotionThresholds(BaseModel):
 class TrustProgressionAlgorithm:
     """
     Algorithm for tracking and progressing user trust levels.
-    
+
     Monitors user behavior, calculates trust scores, and manages
     trust level transitions with comprehensive safety checks.
     """
@@ -110,7 +110,7 @@ class TrustProgressionAlgorithm:
     TIME_DECAY_WINDOW_DAYS = 90
     TIME_DECAY_FACTOR = 0.95  # Applied monthly
 
-    def __init__(self, user_id: str, initial_trust_level: TrustLevel = TrustLevel.L0_OBSERVED):
+    def __init__(self, user_id: str, initial_trust_level: TrustLevel = TrustLevel.L0_OBSERVED) -> None:
         """Initialize trust progression algorithm for a user."""
         self.user_id = user_id
         self.current_trust_level = initial_trust_level
@@ -134,7 +134,7 @@ class TrustProgressionAlgorithm:
     ) -> None:
         """
         Track a user action for trust scoring.
-        
+
         Args:
             action_type: Type of action performed
             was_approved: Whether action was approved
@@ -192,7 +192,7 @@ class TrustProgressionAlgorithm:
     def calculate_trust_score(self) -> TrustScore:
         """
         Calculate current trust score based on behavioral metrics.
-        
+
         Returns:
             TrustScore with detailed component scores
         """
@@ -340,7 +340,7 @@ class TrustProgressionAlgorithm:
     async def check_promotion_eligibility(self) -> Tuple[bool, Optional[TrustLevel], List[str]]:
         """
         Check if user is eligible for trust level promotion.
-        
+
         Returns:
             Tuple of (eligible, next_level, reasons)
         """
@@ -407,12 +407,12 @@ class TrustProgressionAlgorithm:
     ) -> Dict[str, Any]:
         """
         Promote user to next trust level.
-        
+
         Args:
             authorized_by: ID of authorizing user/system
             reason: Reason for promotion
             is_override: Whether this is a manual override
-            
+
         Returns:
             Promotion result details
         """
@@ -465,12 +465,12 @@ class TrustProgressionAlgorithm:
     ) -> Dict[str, Any]:
         """
         Demote user trust level due to violations.
-        
+
         Args:
             reason: Reason for demotion
             severity: Violation severity (low, medium, high, critical)
             authorized_by: ID of authorizing user/system
-            
+
         Returns:
             Demotion result details
         """
@@ -574,7 +574,7 @@ class TrustProgressionAlgorithm:
 class AnomalyDetector:
     """Detect anomalies in user behavior patterns."""
 
-    def __init__(self, user_id: str):
+    def __init__(self, user_id: str) -> None:
         """Initialize anomaly detector."""
         self.user_id = user_id
         self.baseline_patterns: Dict[str, Any] = {}
@@ -583,7 +583,7 @@ class AnomalyDetector:
     async def check_anomaly(self, action: Dict[str, Any]) -> bool:
         """
         Check if action represents anomalous behavior.
-        
+
         Returns:
             True if anomaly detected
         """

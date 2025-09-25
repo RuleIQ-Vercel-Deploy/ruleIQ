@@ -48,7 +48,7 @@ class FeedbackItem:
 class LangSmithFeedbackCollector:
     """Collect and manage feedback for LangSmith runs."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.feedback_queue: List[FeedbackItem] = []
         self.feedback_stats = {'total_collected': 0, 'by_type': {ft.value:
             (0) for ft in FeedbackType}, 'by_user': {}}

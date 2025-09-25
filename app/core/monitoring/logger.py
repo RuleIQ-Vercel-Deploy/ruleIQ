@@ -123,7 +123,7 @@ class ColoredFormatter(logging.Formatter):
 class StructuredLogger:
     """Enhanced logger with structured logging capabilities."""
 
-    def __init__(self, name: str, level: Union[str, LogLevel] = LogLevel.INFO):
+    def __init__(self, name: str, level: Union[str, LogLevel] = LogLevel.INFO) -> None:
         """Initialize structured logger."""
         self.logger = logging.getLogger(name)
         self.set_level(level)

@@ -23,7 +23,7 @@ class CeleryMigrationGraph:
     Replaces Celery with LangGraph for 100% task coverage.
     """
 
-    def __init__(self, checkpointer: Optional[AsyncPostgresSaver]=None):
+    def __init__(self, checkpointer: Optional[AsyncPostgresSaver]=None) -> None:
         self.checkpointer = checkpointer
         self.graph = None
         self.compiled_graph = None
@@ -158,11 +158,10 @@ class CeleryMigrationGraph:
             final_state = None
             async for event in self.compiled_graph.astream(state, config):
                 final_state = event
-            if final_state:
-                if isinstance(final_state, dict):
-                    for key, value in final_state.items():
-                        if isinstance(value, dict) and 'task_result' in value:
-                            return value.get('task_result', {})
+            if final_state and isinstance(final_state, dict):
+                for _key, value in final_state.items():
+                    if isinstance(value, dict) and 'task_result' in value:
+                        return value.get('task_result', {})
             return {'status': 'completed', 'message': 'Task executed successfully'}
         except Exception as e:
             logger.error(f'Error executing task {task_type}: {str(e)}')

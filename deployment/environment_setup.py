@@ -5,21 +5,20 @@ Sets up and validates environment configurations for different deployment target
 """
 
 import argparse
-import json
 import os
 import secrets
 import subprocess
 import sys
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List
 
-from dotenv import dotenv_values, load_dotenv
+from dotenv import dotenv_values
 
 
 class EnvironmentSetup:
     """Environment configuration manager for deployment."""
 
-    def __init__(self, environment: str = "staging"):
+    def __init__(self, environment: str = "staging") -> None:
         """Initialize environment setup.
 
         Args:
@@ -344,7 +343,7 @@ class EnvironmentSetup:
 
         # Write to file
         with open(self.env_file, "w") as f:
-            f.write(f"# ruleIQ Environment Configuration\n")
+            f.write("# ruleIQ Environment Configuration\n")
             f.write(f"# Environment: {self.environment}\n")
             f.write(f"# Generated: {os.popen('date').read().strip()}\n\n")
 

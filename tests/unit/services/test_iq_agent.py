@@ -383,21 +383,21 @@ class TestIQComplianceAgent:
             "cost_estimate": 8000.0,  # Below budget (10000.0)
             "priority": "high",
         }
-        assert await iq_agent._should_auto_execute(low_risk_action) == True
+        assert await iq_agent._should_auto_execute(low_risk_action)
 
         high_risk_action = {
             "severity_score": 8.0,  # Above threshold
             "cost_estimate": 5000.0,  # Below budget
             "priority": "critical",
         }
-        assert await iq_agent._should_auto_execute(high_risk_action) == False
+        assert not await iq_agent._should_auto_execute(high_risk_action)
 
         high_cost_action = {
             "severity_score": 5.0,  # Below threshold
             "cost_estimate": 15000.0,  # Above budget
             "priority": "high",
         }
-        assert await iq_agent._should_auto_execute(high_cost_action) == False
+        assert not await iq_agent._should_auto_execute(high_cost_action)
 
     async def test_risk_posture_calculation(self, iq_agent):
         """Test risk posture determination logic"""

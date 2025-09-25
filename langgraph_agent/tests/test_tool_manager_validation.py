@@ -274,7 +274,7 @@ class TestToolManagerExecution:
         )
 
         assert isinstance(result, ToolResult)
-        assert result.success == True
+        assert result.success
         assert result.tool_name == "compliance_analysis"
         assert result.result is not None
         assert result.execution_time_ms >= 0
@@ -372,7 +372,7 @@ class TestToolStats:
         assert len(stats) == 4  # One for each default tool
 
         # Check stat structure
-        for tool_name, tool_stats in stats.items():
+        for _tool_name, tool_stats in stats.items():
             assert "total_executions" in tool_stats
             assert "successful_executions" in tool_stats
             assert "failed_executions" in tool_stats
@@ -415,7 +415,7 @@ class TestToolStats:
         assert len(health["tool_statuses"]) == 4
 
         # All tools should be available initially
-        for tool_name, status in health["tool_statuses"].items():
+        for _tool_name, status in health["tool_statuses"].items():
             assert status == "available"
 
 
@@ -427,17 +427,17 @@ class TestRateLimiting:
         tool = ComplianceAnalysisTool()
 
         # Initially should be within limits
-        assert tool._check_rate_limit() == True
+        assert tool._check_rate_limit()
 
         # Simulate hitting rate limit
         tool._execution_count = tool.rate_limit_per_minute
-        assert tool._check_rate_limit() == False
+        assert not tool._check_rate_limit()
 
         # Simulate time passing (reset period)
         from datetime import datetime, timedelta, timezone
 
         tool._last_reset = datetime.now(timezone.utc) - timedelta(seconds=61)
-        assert tool._check_rate_limit() == True
+        assert tool._check_rate_limit()
         assert tool._execution_count == 0  # Should reset counter
 
 
@@ -459,17 +459,16 @@ class TestSignatureValidation:
         ).hexdigest()
 
         # Test valid signature
-        assert tool._validate_signature(input_data, expected_signature, secret) == True
+        assert tool._validate_signature(input_data, expected_signature, secret)
 
         # Test invalid signature
         assert (
-            tool._validate_signature(input_data, "invalid_signature", secret) == False
+            not tool._validate_signature(input_data, "invalid_signature", secret)
         )
 
         # Test with different secret
         assert (
-            tool._validate_signature(input_data, expected_signature, "wrong_secret")
-            == False
+            not tool._validate_signature(input_data, expected_signature, "wrong_secret")
         )
 
 
@@ -513,6 +512,6 @@ class TestErrorHandling:
         )
 
         assert isinstance(result, ToolResult)
-        assert result.success == False
+        assert not result.success
         assert "Test error" in result.error
         assert result.execution_time_ms >= 0

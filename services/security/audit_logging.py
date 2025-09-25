@@ -56,7 +56,7 @@ class AuditEventAction(Enum):
 class AuditLoggingService:
     """Service for comprehensive audit logging"""
 
-    def __init__(self, cache_service: Optional[CacheService]=None):
+    def __init__(self, cache_service: Optional[CacheService]=None) -> None:
         """Initialize audit logging service"""
         self.cache = cache_service or CacheService()
         self.retention_days = settings.audit_log_retention_days or 90

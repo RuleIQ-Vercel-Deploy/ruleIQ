@@ -17,7 +17,7 @@ from validate_module_imports import ImportValidator, CircularDependencyDetector
 
 class TestUnusedImportDetector(unittest.TestCase):
     """Test the UnusedImportDetector class."""
-    
+
     def test_detect_simple_unused_import(self):
         """Test detection of simple unused imports."""
         code = """
@@ -30,11 +30,11 @@ def main():
         tree = ast.parse(code)
         detector = UnusedImportDetector()
         detector.visit(tree)
-        
+
         unused = detector.get_unused_imports()
         self.assertIn('os', unused)
         self.assertNotIn('sys', unused)
-    
+
     def test_detect_from_import_unused(self):
         """Test detection of unused from...import statements."""
         code = """
@@ -46,12 +46,12 @@ def process(items: List[str]) -> Dict[str, int]:
         tree = ast.parse(code)
         detector = UnusedImportDetector()
         detector.visit(tree)
-        
+
         unused = detector.get_unused_imports()
         self.assertIn('Optional', unused)
         self.assertNotIn('List', unused)
         self.assertNotIn('Dict', unused)
-    
+
     def test_type_checking_imports_preserved(self):
         """Test that TYPE_CHECKING imports are preserved."""
         code = """
@@ -67,12 +67,12 @@ def process(obj):
         tree = ast.parse(code)
         detector = UnusedImportDetector()
         detector.visit(tree)
-        
+
         unused = detector.get_unused_imports()
         self.assertNotIn('TYPE_CHECKING', unused)
         # MyClass is in TYPE_CHECKING block, shouldn't be marked as unused
         self.assertNotIn('MyClass', unused)
-    
+
     def test_annotation_imports_preserved(self):
         """Test that imports used in annotations are preserved."""
         code = """
@@ -88,12 +88,12 @@ def get_value() -> Optional[str]:
         tree = ast.parse(code)
         detector = UnusedImportDetector()
         detector.visit(tree)
-        
+
         unused = detector.get_unused_imports()
         self.assertNotIn('List', unused)
         self.assertNotIn('Optional', unused)
         self.assertNotIn('datetime', unused)
-    
+
     def test_class_base_imports_preserved(self):
         """Test that imports used as base classes are preserved."""
         code = """
@@ -109,11 +109,11 @@ class MyMapping(Mapping):
         tree = ast.parse(code)
         detector = UnusedImportDetector()
         detector.visit(tree)
-        
+
         unused = detector.get_unused_imports()
         self.assertNotIn('ABC', unused)
         self.assertNotIn('Mapping', unused)
-    
+
     def test_string_annotations(self):
         """Test handling of string annotations."""
         code = """
@@ -126,12 +126,12 @@ def process() -> "List[MyClass]":
         tree = ast.parse(code)
         detector = UnusedImportDetector()
         detector.visit(tree)
-        
+
         unused = detector.get_unused_imports()
         # Both should be detected as used in string annotation
         self.assertNotIn('List', unused)
         self.assertNotIn('MyClass', unused)
-    
+
     def test_aliased_imports(self):
         """Test detection of aliased imports."""
         code = """
@@ -143,7 +143,7 @@ data = np.array([1, 2, 3])
         tree = ast.parse(code)
         detector = UnusedImportDetector()
         detector.visit(tree)
-        
+
         unused = detector.get_unused_imports()
         self.assertIn('pd', unused)  # Aliased name should be checked
         self.assertNotIn('np', unused)
@@ -151,7 +151,7 @@ data = np.array([1, 2, 3])
 
 class TestImportCleaner(unittest.TestCase):
     """Test the import cleaning functions."""
-    
+
     def test_find_unused_imports_in_file(self):
         """Test finding unused imports in a file."""
         with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False) as f:
@@ -164,7 +164,7 @@ print(sys.version)
 p = Path('.')
 """)
             f.flush()
-            
+
             try:
                 unused, error = find_unused_imports(Path(f.name))
                 self.assertIsNone(error)
@@ -173,7 +173,7 @@ p = Path('.')
                 self.assertNotIn('Path', unused)
             finally:
                 os.unlink(f.name)
-    
+
     def test_remove_unused_imports(self):
         """Test removing unused imports from a file."""
         with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False) as f:
@@ -186,16 +186,16 @@ p = Path('.')
 """
             f.write(original_code)
             f.flush()
-            
+
             try:
                 # First find unused imports
                 unused, _ = find_unused_imports(Path(f.name))
                 self.assertIn('os', unused)
-                
+
                 # Remove them
                 modified = remove_unused_imports(Path(f.name), unused)
                 self.assertTrue(modified)
-                
+
                 # Check the file was modified correctly
                 with open(f.name, 'r') as rf:
                     new_code = rf.read()
@@ -204,7 +204,7 @@ p = Path('.')
                     self.assertIn('from pathlib import Path', new_code)
             finally:
                 os.unlink(f.name)
-    
+
     def test_dry_run_mode(self):
         """Test dry-run mode doesn't modify files."""
         with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False) as f:
@@ -215,12 +215,12 @@ print(sys.version)
 """
             f.write(original_code)
             f.flush()
-            
+
             try:
                 # Find and "remove" with dry-run
                 unused, _ = find_unused_imports(Path(f.name))
                 remove_unused_imports(Path(f.name), unused, dry_run=True)
-                
+
                 # Check file wasn't modified
                 with open(f.name, 'r') as rf:
                     new_code = rf.read()
@@ -231,7 +231,7 @@ print(sys.version)
 
 class TestImportValidator(unittest.TestCase):
     """Test the ImportValidator class."""
-    
+
     def test_validate_standard_imports(self):
         """Test validation of standard library imports."""
         with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False) as f:
@@ -242,18 +242,18 @@ from pathlib import Path
 from typing import List
 """)
             f.flush()
-            
+
             try:
                 tree = ast.parse(open(f.name).read())
                 validator = ImportValidator(Path(f.name), Path(f.name).parent)
                 validator.visit(tree)
-                
+
                 issues = validator.validate_imports()
                 # Standard library imports should be valid
                 self.assertEqual(len(issues), 0)
             finally:
                 os.unlink(f.name)
-    
+
     def test_validate_all_exports(self):
         """Test validation of __all__ exports."""
         code = """
@@ -270,51 +270,51 @@ class Class1:
         with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False) as f:
             f.write(code)
             f.flush()
-            
+
             try:
                 tree = ast.parse(code)
                 validator = ImportValidator(Path(f.name), Path(f.name).parent)
                 validator.visit(tree)
-                
+
                 issues = validator.validate_imports()
                 # Should report undefined_export as an issue
                 self.assertTrue(any('undefined_export' in issue for issue in issues))
             finally:
                 os.unlink(f.name)
-    
+
     def test_relative_import_resolution(self):
         """Test resolution of relative imports."""
         # Create a temporary directory structure
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir_path = Path(tmpdir)
-            
+
             # Create package structure
             package_dir = tmpdir_path / 'mypackage'
             package_dir.mkdir()
             (package_dir / '__init__.py').touch()
-            
+
             subpackage_dir = package_dir / 'subpackage'
             subpackage_dir.mkdir()
             (subpackage_dir / '__init__.py').touch()
-            
+
             # Create a module with relative import
             test_file = subpackage_dir / 'module.py'
             test_file.write_text("""
 from .. import something
 from . import other
 """)
-            
+
             tree = ast.parse(test_file.read_text())
             validator = ImportValidator(test_file, tmpdir_path)
             validator.visit(tree)
-            
+
             # Check that relative imports were resolved correctly
             self.assertEqual(len(validator.from_imports), 2)
-            
+
             # The first import should resolve to 'mypackage'
             first_import = validator.from_imports[0]
             self.assertEqual(first_import['module'], 'mypackage')
-            
+
             # The second import should resolve to 'mypackage.subpackage'
             second_import = validator.from_imports[1]
             self.assertEqual(second_import['module'], 'mypackage.subpackage')
@@ -322,47 +322,47 @@ from . import other
 
 class TestCircularDependencyDetector(unittest.TestCase):
     """Test the CircularDependencyDetector class."""
-    
+
     def test_detect_simple_circular_dependency(self):
         """Test detection of simple circular dependencies."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir_path = Path(tmpdir)
-            
+
             # Create two modules that import each other
             module_a = tmpdir_path / 'module_a.py'
             module_a.write_text('import module_b\n')
-            
+
             module_b = tmpdir_path / 'module_b.py'
             module_b.write_text('import module_a\n')
-            
+
             detector = CircularDependencyDetector(tmpdir_path)
             detector.build_import_graph()
             circles = detector.find_circular_dependencies()
-            
+
             # Should detect one circular dependency
             self.assertEqual(len(circles), 1)
             self.assertIn('module_a', circles[0])
             self.assertIn('module_b', circles[0])
-    
+
     def test_detect_complex_circular_dependency(self):
         """Test detection of complex circular dependencies."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir_path = Path(tmpdir)
-            
+
             # Create a chain: A -> B -> C -> A
             module_a = tmpdir_path / 'module_a.py'
             module_a.write_text('import module_b\n')
-            
+
             module_b = tmpdir_path / 'module_b.py'
             module_b.write_text('import module_c\n')
-            
+
             module_c = tmpdir_path / 'module_c.py'
             module_c.write_text('import module_a\n')
-            
+
             detector = CircularDependencyDetector(tmpdir_path)
             detector.build_import_graph()
             circles = detector.find_circular_dependencies()
-            
+
             # Should detect the circular dependency
             self.assertEqual(len(circles), 1)
             circle = circles[0]
@@ -370,26 +370,26 @@ class TestCircularDependencyDetector(unittest.TestCase):
             self.assertIn('module_a', circle)
             self.assertIn('module_b', circle)
             self.assertIn('module_c', circle)
-    
+
     def test_no_circular_dependency(self):
         """Test when there are no circular dependencies."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir_path = Path(tmpdir)
-            
+
             # Create a linear dependency chain: A -> B -> C
             module_a = tmpdir_path / 'module_a.py'
             module_a.write_text('import module_b\n')
-            
+
             module_b = tmpdir_path / 'module_b.py'
             module_b.write_text('import module_c\n')
-            
+
             module_c = tmpdir_path / 'module_c.py'
             module_c.write_text('# No imports\n')
-            
+
             detector = CircularDependencyDetector(tmpdir_path)
             detector.build_import_graph()
             circles = detector.find_circular_dependencies()
-            
+
             # Should not detect any circular dependencies
             self.assertEqual(len(circles), 0)
 

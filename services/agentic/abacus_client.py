@@ -19,7 +19,7 @@ class AbacusAIClient:
     ensuring no hardcoded secrets exist in the codebase.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the Abacus AI client with Doppler-managed secrets."""
         self.doppler = DopplerConfig()
         self._api_key: Optional[str] = None

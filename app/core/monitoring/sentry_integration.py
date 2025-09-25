@@ -20,7 +20,7 @@ logger = get_logger(__name__)
 class SentryConfig:
     """Sentry configuration."""
 
-    def __init__(self, dsn: Optional[str]=None, environment: str='development', release: Optional[str]=None, sample_rate: float=1.0, traces_sample_rate: float=0.1, profiles_sample_rate: float=0.1, attach_stacktrace: bool=True, send_default_pii: bool=False, debug: bool=False):
+    def __init__(self, dsn: Optional[str]=None, environment: str='development', release: Optional[str]=None, sample_rate: float=1.0, traces_sample_rate: float=0.1, profiles_sample_rate: float=0.1, attach_stacktrace: bool=True, send_default_pii: bool=False, debug: bool=False) -> None:
         """Initialize Sentry configuration."""
         self.dsn = dsn or os.getenv('SENTRY_DSN')
         self.environment = environment or os.getenv('ENVIRONMENT', 'development')

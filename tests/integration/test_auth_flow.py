@@ -249,7 +249,7 @@ class TestSessionManagement:
 
         # Create multiple sessions
         sessions = []
-        for i in range(5):  # Assuming limit is 3
+        for _i in range(5):  # Assuming limit is 3
             response = integration_client.post(
                 "/api/v1/auth/login",
                 data={"username": user_email, "password": password},

@@ -24,7 +24,7 @@ class AgentFactory:
     _agent_types: Dict[str, Type] = {}
 
     @classmethod
-    def register_agent_type(cls, persona_type: str, agent_class: Type):
+    def register_agent_type(cls, persona_type: str, agent_class: Type) -> None:
         """Register a new agent type."""
         cls._agent_types[persona_type] = agent_class
         logger.info(f"Registered agent type: {persona_type}")
@@ -42,7 +42,7 @@ class AgentFactory:
 class AgentManager:
     """Manages agent lifecycle and state persistence."""
 
-    def __init__(self, db_session: Session, state_dir: str = ".agent_states"):
+    def __init__(self, db_session: Session, state_dir: str = ".agent_states") -> None:
         """Initialize agent manager."""
         self.db = db_session
         self.state_dir = Path(state_dir)
@@ -275,7 +275,7 @@ class AgentManager:
         try:
             total_agents = self.db.query(Agent).count()
             active_agents = self.db.query(Agent).filter(
-                Agent.is_active == True
+                Agent.is_active
             ).count()
 
             # Count by persona type

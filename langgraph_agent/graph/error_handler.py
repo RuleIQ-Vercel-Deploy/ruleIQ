@@ -27,7 +27,7 @@ logger = get_logger(__name__)
 class ErrorHandlerNode:
     """Centralized error handling for all graph nodes."""
 
-    def __init__(self, max_retries: int = 3):
+    def __init__(self, max_retries: int = 3) -> None:
         """
         Initialize error handler with retry strategies.
 

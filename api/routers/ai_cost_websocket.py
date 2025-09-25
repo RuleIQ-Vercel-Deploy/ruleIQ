@@ -21,6 +21,7 @@ from fastapi.websockets import WebSocketState
 from pydantic import BaseModel
 from services.ai.cost_management import AICostManager, CostTrackingService
 from config.logging_config import get_logger
+import contextlib
 logger = get_logger(__name__)
 router = APIRouter(tags=['AI Cost WebSocket'])
 
@@ -205,7 +206,7 @@ async def realtime_cost_dashboard(
 
     Provides live updates of cost metrics, budget status, and alerts.
     Requires JWT authentication via headers (preferred) or query parameter (deprecated).
-    
+
     Authentication Headers:
     - Authorization: Bearer <token>
     - X-Auth-Token: <token>
@@ -271,7 +272,7 @@ async def budget_alerts_websocket(websocket: WebSocket) ->None:
 
     Sends immediate notifications when budget thresholds are exceeded.
     Requires JWT authentication via headers.
-    
+
     Authentication Headers:
     - Authorization: Bearer <token>
     - X-Auth-Token: <token>
@@ -325,7 +326,7 @@ async def service_cost_monitoring(websocket: WebSocket, service_name: str) ->Non
 
     Provides real-time cost updates for a specific AI service.
     Requires JWT authentication via headers.
-    
+
     Authentication Headers:
     - Authorization: Bearer <token>
     - X-Auth-Token: <token>
@@ -506,10 +507,8 @@ async def stop_websocket_background_tasks() ->None:
     global _background_task
     if _background_task and not _background_task.done():
         _background_task.cancel()
-        try:
+        with contextlib.suppress(asyncio.CancelledError):
             await _background_task
-        except asyncio.CancelledError:
-            pass
         logger.info('Stopped WebSocket cost monitoring background task')
 
 

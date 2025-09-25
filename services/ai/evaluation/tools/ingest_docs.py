@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 class ManifestProcessor:
     """Process manifest files for document ingestion."""
 
-    def __init__(self, manifest_path: str):
+    def __init__(self, manifest_path: str) -> None:
         """Initialize with manifest path."""
         self.manifest_path = Path(manifest_path)
         self.manifest_data = None
@@ -64,7 +64,7 @@ class ManifestProcessor:
 class DocumentFetcher:
     """Fetch and extract text from URLs."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize document fetcher."""
         self.session = None
         self._setup_session()
@@ -141,7 +141,7 @@ class DocumentFetcher:
 class GoldenDatasetBuilder:
     """Build golden dataset from manifest documents."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize builder components."""
         self.fetcher = DocumentFetcher()
         self.doc_processor = DocumentProcessor()

@@ -14,7 +14,7 @@ logger = get_logger(__name__)
 class GracefulShutdown:
     """Manages graceful shutdown of the application."""
 
-    def __init__(self, timeout: float=30.0):
+    def __init__(self, timeout: float=30.0) -> None:
         """
         Initialize graceful shutdown handler.
 
@@ -99,7 +99,7 @@ class GracefulShutdown:
 class ConnectionDrainer:
     """Manages connection draining during shutdown."""
 
-    def __init__(self, drain_timeout: float=15.0):
+    def __init__(self, drain_timeout: float=15.0) -> None:
         """
         Initialize connection drainer.
 

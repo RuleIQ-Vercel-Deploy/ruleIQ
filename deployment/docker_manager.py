@@ -5,12 +5,9 @@ Handles containerized deployment with health checks and orchestration.
 """
 
 import argparse
-import json
-import os
 import subprocess
 import sys
 import time
-from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
@@ -20,7 +17,7 @@ import yaml
 class DockerManager:
     """Docker deployment and orchestration manager."""
 
-    def __init__(self, environment: str = "staging", compose_file: Optional[str] = None):
+    def __init__(self, environment: str = "staging", compose_file: Optional[str] = None) -> None:
         """Initialize Docker manager.
 
         Args:
@@ -41,9 +38,8 @@ class DockerManager:
         if self.environment == "production":
             if Path("docker-compose.prod.yml").exists():
                 return "docker-compose.prod.yml"
-        elif self.environment == "test":
-            if Path("docker-compose.test.yml").exists():
-                return "docker-compose.test.yml"
+        elif self.environment == "test" and Path("docker-compose.test.yml").exists():
+            return "docker-compose.test.yml"
 
         # Default to base compose file
         return "docker-compose.yml"

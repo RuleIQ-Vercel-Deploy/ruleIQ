@@ -138,7 +138,7 @@ def test_environment_override():
     config = reload_config("testing")
 
     print("\n2. Checking if override worked:")
-    if config.DATABASE_URL == test_db_url:
+    if test_db_url == config.DATABASE_URL:
         print("✅ DATABASE_URL successfully overridden!")
     else:
         print(f"❌ DATABASE_URL not overridden. Got: {config.DATABASE_URL[:50]}...")
@@ -146,7 +146,7 @@ def test_environment_override():
     # Test with development config too
     print("\n3. Testing with development config:")
     config_dev = reload_config("development")
-    if config_dev.DATABASE_URL == test_db_url:
+    if test_db_url == config_dev.DATABASE_URL:
         print("✅ Development config also uses environment override!")
     else:
         print("❌ Development config not using override")

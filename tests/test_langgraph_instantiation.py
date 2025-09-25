@@ -5,6 +5,7 @@ import asyncio
 import os
 from uuid import uuid4
 import logging
+import sys
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -74,4 +75,4 @@ async def test_instantiation():
 
 if __name__ == "__main__":
     success = asyncio.run(test_instantiation())
-    exit(0 if success else 1)
+    sys.exit(0 if success else 1)

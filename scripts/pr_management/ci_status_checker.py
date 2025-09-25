@@ -8,9 +8,9 @@ import json
 import time
 from pathlib import Path
 from typing import List, Dict, Optional, Tuple
-from datetime import datetime, timedelta
+from datetime import datetime
 import logging
-from github_api_client import GitHubAPIClient, PRInfo
+from github_api_client import GitHubAPIClient
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 class CIStatusChecker:
     """Monitors and analyzes CI/CD status for pull requests"""
 
-    def __init__(self, client: GitHubAPIClient = None, config: Dict = None):
+    def __init__(self, client: GitHubAPIClient = None, config: Dict = None) -> None:
         """Initialize CI status checker"""
         self.client = client or GitHubAPIClient()
         self.config = config or {}
@@ -168,7 +168,7 @@ class CIStatusChecker:
         """Get list of missing required checks"""
         missing = []
         for required in self.required_checks:
-            if not any(required.lower() in check.lower() for check in checks.keys()):
+            if not any(required.lower() in check.lower() for check in checks):
                 missing.append(required)
         return missing
 

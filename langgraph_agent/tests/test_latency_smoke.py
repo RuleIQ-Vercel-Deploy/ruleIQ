@@ -161,7 +161,7 @@ class TestGraphLatency:
         for test_input in test_inputs:
             start_time = time.time()
 
-            result = await invoke_graph(compiled_graph=mock_graph, **test_input)
+            await invoke_graph(compiled_graph=mock_graph, **test_input)
 
             end_time = time.time()
             latency_ms = (end_time - start_time) * 1000
@@ -204,7 +204,7 @@ class TestGraphLatency:
         first_token_time = None
 
         chunk_count = 0
-        async for chunk in stream_graph(
+        async for _chunk in stream_graph(
             compiled_graph=mock_graph,
             company_id=company_id,
             user_input="Test streaming",
@@ -616,10 +616,10 @@ class TestRealisticLatencyBenchmarks:
 
         latencies = []
 
-        for i, test_case in enumerate(test_cases * 4):  # 20 total tests
+        for _i, test_case in enumerate(test_cases * 4):  # 20 total tests
             start_time = time.time()
 
-            result = await invoke_graph(
+            await invoke_graph(
                 compiled_graph=mock_graph, company_id=uuid4(), user_input=test_case
             )
 

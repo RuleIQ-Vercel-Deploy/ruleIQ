@@ -95,7 +95,7 @@ class ComplianceMetric:
 class ComplianceGraphInitializer:
     """Initializes Neo4j graph with CCO compliance playbook data"""
 
-    def __init__(self, neo4j_service: Neo4jGraphRAGService):
+    def __init__(self, neo4j_service: Neo4jGraphRAGService) -> None:
         self.neo4j = neo4j_service
 
     async def initialize_full_compliance_graph(self) ->Dict[str, Any]:
@@ -135,7 +135,7 @@ class ComplianceGraphInitializer:
     async def _clear_existing_data(self) ->None:
         """Clear existing compliance data (optional)"""
         query = """
-        MATCH (n) 
+        MATCH (n)
         WHERE any(label IN labels(n) WHERE label IN [
             'ComplianceDomain', 'Jurisdiction', 'Regulation', 'Requirement',
             'Control', 'Metric', 'RiskAssessment', 'EnforcementCase'
@@ -502,7 +502,7 @@ class ComplianceGraphInitializer:
             """,
             ]
         for query in relationship_queries:
-            result = await self.neo4j.execute_query(query, read_only=False)
+            await self.neo4j.execute_query(query, read_only=False)
             total_relationships += 1
         logger.info('Created relationship patterns: %s' % len(
             relationship_queries))
@@ -633,7 +633,7 @@ class ComplianceGraphInitializer:
             CREATE (ec1)-[:SIMILAR_VIOLATION]->(ec2)
             """
         ]
-        
+
         for query in queries:
             await self.neo4j.execute_query(query, read_only=False)
         logger.info('Created temporal relationships')

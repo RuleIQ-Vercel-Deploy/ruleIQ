@@ -55,7 +55,7 @@ async def get_usage_dashboard(current_user: User=Depends(get_current_active_user
     - Most frequently used features
     """
     current_usage = []
-    for feature, limits in RateLimitService.LIMITS.items():
+    for feature, _limits in RateLimitService.LIMITS.items():
         usage_info = await RateLimitService.check_rate_limit(db, current_user, feature, check_only=True)
         stats = UsageStats(feature=feature.replace('_', ' ').title(), used_today=usage_info['used_today'], daily_limit=usage_info['daily_limit'], remaining=usage_info['remaining'], reset_time=usage_info['reset_time'])
         current_usage.append(stats)

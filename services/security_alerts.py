@@ -65,7 +65,7 @@ class SecurityAlertService:
         failed_attempts: int,
         ip_address: str,
         user_agent: Optional[str] = None,
-    ):
+    ) -> None:
         """
         Send email alert for failed login attempts.
 
@@ -93,25 +93,25 @@ class SecurityAlertService:
         <html>
             <body style="font-family: Arial, sans-serif;">
                 <h2 style="color: #d32f2f;">Security Alert</h2>
-                
+
                 <p>We've detected multiple failed login attempts on your account:</p>
-                
+
                 <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;">
                     <p><strong>Failed Attempts:</strong> {failed_attempts}</p>
                     <p><strong>IP Address:</strong> {ip_address}</p>
                     <p><strong>Time:</strong> {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')} UTC</p>
                     {f'<p><strong>Device:</strong> {user_agent}</p>' if user_agent else ''}
                 </div>
-                
+
                 <h3>What should you do?</h3>
                 <ul>
                     <li>If this was you, please ensure you're using the correct password</li>
                     <li>If this wasn't you, please change your password immediately</li>
                     <li>Consider enabling two-factor authentication for added security</li>
                 </ul>
-                
+
                 <p style="margin-top: 30px;">
-                    <a href="{os.getenv('FRONTEND_URL', 'https://app.ruleiq.com')}/reset-password" 
+                    <a href="{os.getenv('FRONTEND_URL', 'https://app.ruleiq.com')}/reset-password"
                        style= (
                            "background-color: #1976d2; color: white; padding: 10px 20px; text-decoration: "
                            "none; border-radius: 5px;"",
@@ -119,9 +119,9 @@ class SecurityAlertService:
                         Reset Password
                     </a>
                 </p>
-                
+
                 <p style="color: #666; font-size: 12px; margin-top: 30px;">
-                    This is an automated security alert from RuleIQ. 
+                    This is an automated security alert from RuleIQ.
                     Please do not reply to this email.
                 </p>
             </body>
@@ -185,7 +185,7 @@ This is an automated security alert from RuleIQ.
         success: bool,
         ip_address: str,
         user_agent: Optional[str] = None,
-    ):
+    ) -> None:
         """
         Log login attempt and check if alert is needed.
 
@@ -198,7 +198,6 @@ This is an automated security alert from RuleIQ.
         """
         # Log the attempt
         action = "login_success" if success else "login_failure"
-        status = "success" if success else "failed"
 
         audit_log = AuditLog(
             user_id=user.id,
@@ -244,7 +243,7 @@ This is an automated security alert from RuleIQ.
                 )
 
     @classmethod
-    async def send_password_change_notification(cls, user: User, ip_address: str):
+    async def send_password_change_notification(cls, user: User, ip_address: str) -> None:
         """
         Send notification when password is changed.
 
@@ -260,22 +259,21 @@ This is an automated security alert from RuleIQ.
             )
             return
 
-        subject = "Your Password Has Been Changed"
 
-        html_body = f"""
+        f"""
         <html>
             <body style="font-family: Arial, sans-serif;">
                 <h2>Password Changed Successfully</h2>
-                
+
                 <p>Your password was successfully changed.</p>
-                
+
                 <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;">
                     <p><strong>Changed at:</strong> {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')} UTC</p>
                     <p><strong>IP Address:</strong> {ip_address}</p>
                 </div>
-                
+
                 <p>If you did not make this change, please contact support immediately.</p>
-                
+
                 <p style="color: #666; font-size: 12px; margin-top: 30px;">
                     This is an automated notification from RuleIQ.
                 </p>

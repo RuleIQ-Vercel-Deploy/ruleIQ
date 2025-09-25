@@ -192,7 +192,7 @@ class LangSmithEvaluator:
 class PerformanceBenchmark:
     """Utilities for performance benchmarking with LangSmith."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.baseline_metrics: Dict[str, EvaluationMetrics] = {}
 
     def set_baseline(self, operation: str, metrics: EvaluationMetrics) -> None:

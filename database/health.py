@@ -9,9 +9,9 @@ import logging
 import time
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from typing import Dict, Any, List, Optional, Protocol, Callable
+from typing import Dict, Any, List, Optional, Protocol
 from enum import Enum
-from datetime import datetime, timedelta
+import contextlib
 
 logger = logging.getLogger(__name__)
 
@@ -62,7 +62,7 @@ class AlertCallback(Protocol):
 class DatabaseHealthMonitor(ABC):
     """Abstract base class for database health monitors."""
 
-    def __init__(self, provider_name: str):
+    def __init__(self, provider_name: str) -> None:
         self.provider_name = provider_name
         self._health_callbacks: List[HealthCheckCallback] = []
         self._alert_callbacks: List[AlertCallback] = []
@@ -159,7 +159,7 @@ class DatabaseHealthMonitor(ABC):
 class PostgreSQLHealthMonitor(DatabaseHealthMonitor):
     """Health monitor for PostgreSQL database provider."""
 
-    def __init__(self, postgres_provider):
+    def __init__(self, postgres_provider) -> None:
         super().__init__("postgres")
         self.provider = postgres_provider
 
@@ -250,7 +250,7 @@ class PostgreSQLHealthMonitor(DatabaseHealthMonitor):
 class Neo4jHealthMonitor(DatabaseHealthMonitor):
     """Health monitor for Neo4j database provider."""
 
-    def __init__(self, neo4j_provider):
+    def __init__(self, neo4j_provider) -> None:
         super().__init__("neo4j")
         self.provider = neo4j_provider
 
@@ -347,7 +347,7 @@ class HealthCheckConfig:
 class HealthMonitorService:
     """Service for managing multiple health monitors."""
 
-    def __init__(self, config: Optional[HealthCheckConfig] = None):
+    def __init__(self, config: Optional[HealthCheckConfig] = None) -> None:
         self.config = config or HealthCheckConfig()
         self.monitors: Dict[str, DatabaseHealthMonitor] = {}
         self._running = False
@@ -433,10 +433,8 @@ class HealthMonitorService:
         self._running = False
         if self._task:
             self._task.cancel()
-            try:
+            with contextlib.suppress(asyncio.CancelledError):
                 await self._task
-            except asyncio.CancelledError:
-                pass
         logger.info("Health monitoring stopped")
 
     async def _monitoring_loop(self) -> None:

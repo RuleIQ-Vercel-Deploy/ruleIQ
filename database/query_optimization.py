@@ -184,7 +184,7 @@ class QueryOptimizer:
                     mean_exec_time,
                     max_exec_time,
                     rows,
-                    100.0 * shared_blks_hit / 
+                    100.0 * shared_blks_hit /
                     nullif(shared_blks_hit + shared_blks_read, 0) as hit_percent
                 FROM pg_stat_statements
                 WHERE mean_exec_time > :threshold
@@ -397,7 +397,7 @@ class QueryCache:
     def invalidate_pattern(self, pattern: str) ->None:
         """Invalidate cache entries matching pattern."""
         import re
-        keys_to_remove = [key for key in self._cache.keys() if re.search(
+        keys_to_remove = [key for key in self._cache if re.search(
             pattern, key)]
         for key in keys_to_remove:
             self.invalidate(key)

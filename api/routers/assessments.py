@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List, TYPE_CHECKING
+from typing import Any, Dict, List
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -13,7 +13,7 @@ from api.dependencies.database import get_async_db
 # Import models needed for this router
 from api.schemas.models import (
     AssessmentQuestion,
-    AssessmentResponseUpdate, 
+    AssessmentResponseUpdate,
     AssessmentSessionCreate,
     AssessmentSessionResponse
 )

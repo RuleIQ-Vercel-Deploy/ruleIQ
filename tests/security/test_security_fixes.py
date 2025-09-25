@@ -61,7 +61,7 @@ class TestSecurityFixes:
         """Test rate limiting is properly implemented"""
         response = client.post('/api/v1/auth/login', json={'email':
             'test@example.com', 'password': 'wrongpassword'})
-        for i in range(6):
+        for _i in range(6):
             response = client.post('/api/v1/auth/login', json={'email':
                 'test@example.com', 'password': 'wrongpassword'})
         assert response.status_code == 429

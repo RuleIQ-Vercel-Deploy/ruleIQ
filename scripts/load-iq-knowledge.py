@@ -6,18 +6,14 @@ Gives IQ his full mojo with UK regulations, persona, and intelligence
 
 import asyncio
 import json
-import os
 import sys
 from pathlib import Path
-from typing import Dict, List, Any
 import hashlib
-from datetime import datetime
 
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from services.neo4j_service import Neo4jGraphRAGService
-from neo4j import GraphDatabase
 import logging
 
 logging.basicConfig(level=logging.INFO)
@@ -27,7 +23,7 @@ logger = logging.getLogger(__name__)
 class IQKnowledgeLoader:
     """Load IQ's complete knowledge base into Neo4j"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.neo4j = Neo4jGraphRAGService()
         self.stats = {
             'iq_persona': 0,
@@ -331,7 +327,7 @@ class IQKnowledgeLoader:
 
         for query in relationship_queries:
             try:
-                result = await self.neo4j.execute_query(query, read_only=False)
+                await self.neo4j.execute_query(query, read_only=False)
                 self.stats['relationships'] += 1
             except Exception as e:
                 logger.warning(f"   ⚠️  Relationship query failed: {e}")

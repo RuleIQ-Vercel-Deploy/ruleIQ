@@ -19,7 +19,7 @@ CONTENT_TYPE_LATEST = 'text/plain; version=0.0.4; charset=utf-8'
 class CollectorRegistry:
     """Mock Prometheus CollectorRegistry for compatibility."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize registry."""
         self.collectors = []
 
@@ -40,7 +40,7 @@ class CollectorRegistry:
 class PrometheusFormatter:
     """Formats metrics in Prometheus text format."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize Prometheus formatter."""
         self.metric_families: Dict[str, Dict[str, Any]] = {}
         self._type_map = {'counter': 'counter', 'gauge': 'gauge', 'histogram': 'histogram', 'summary': 'summary', 'untyped': 'untyped'}
@@ -246,7 +246,7 @@ class PrometheusFormatter:
 class LabelSanitizer:
     """Sanitizes metric and label names for Prometheus compatibility."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize label sanitizer."""
         self.metric_name_re = re.compile('^[a-zA-Z_:][a-zA-Z0-9_:]*$')
         self.label_name_re = re.compile('^[a-zA-Z_][a-zA-Z0-9_]*$')
@@ -350,7 +350,7 @@ class LabelSanitizer:
 class MetricTypeMapper:
     """Maps between different metric type systems."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize metric type mapper."""
         self.otel_to_prometheus_map = {'Counter': 'counter', 'UpDownCounter': 'gauge', 'Histogram': 'histogram', 'ObservableCounter': 'counter', 'ObservableUpDownCounter': 'gauge', 'ObservableGauge': 'gauge'}
         self.prometheus_to_otel = {'counter': 'Counter', 'gauge': 'ObservableGauge', 'histogram': 'Histogram', 'summary': 'Histogram'}
@@ -426,7 +426,7 @@ class MetricTypeMapper:
 class MetricsHTTPServer:
     """HTTP server for Prometheus metrics endpoint."""
 
-    def __init__(self, port: int=9090, path: str='/metrics'):
+    def __init__(self, port: int=9090, path: str='/metrics') -> None:
         """Initialize metrics HTTP server.
 
         Args:
@@ -523,7 +523,7 @@ class MetricsHTTPServer:
 class PrometheusMetricsExporter:
     """Main Prometheus metrics exporter."""
 
-    def __init__(self, port: int=9090, path: str='/metrics', registry=None):
+    def __init__(self, port: int=9090, path: str='/metrics', registry=None) -> None:
         """Initialize Prometheus metrics exporter.
 
         Args:
@@ -647,7 +647,7 @@ class PrometheusMetricsExporter:
             help_text = metric['help']
             output.append(f'# HELP {name} {help_text}')
             output.append(f'# TYPE {name} {metric_type}')
-            for label_set, value_data in metric['values'].items():
+            for _label_set, value_data in metric['values'].items():
                 value = value_data['value']
                 labels = value_data.get('labels', {})
                 if labels:
@@ -699,7 +699,7 @@ class PrometheusMetricsExporter:
 
         class MockCounter:
 
-            def __init__(self, name):
+            def __init__(self, name) -> None:
                 self.name = name
                 self._labels = {}
 
@@ -711,7 +711,7 @@ class PrometheusMetricsExporter:
 
         class MockMetric:
 
-            def __init__(self):
+            def __init__(self) -> None:
                 self.value = 0
 
             def inc(self, amount=1) -> None:
@@ -736,7 +736,7 @@ class PrometheusMetricsExporter:
 
         class MockGauge:
 
-            def __init__(self, name):
+            def __init__(self, name) -> None:
                 self.name = name
                 self._labels = {}
 
@@ -748,7 +748,7 @@ class PrometheusMetricsExporter:
 
         class MockMetric:
 
-            def __init__(self):
+            def __init__(self) -> None:
                 self.value = 0
 
             def set(self, value) -> None:
@@ -773,7 +773,7 @@ class PrometheusMetricsExporter:
 
             class MockHistogram:
 
-                def __init__(self, name, description, labels):
+                def __init__(self, name, description, labels) -> None:
                     self.name = name
                     self.description = description
                     self.label_names = labels
@@ -829,7 +829,7 @@ class PrometheusMetricsExporter:
         if not hasattr(self, '_timestamped_metrics'):
             return {}
         result = {}
-        for metric_key, metric_data in self._timestamped_metrics.items():
+        for _metric_key, metric_data in self._timestamped_metrics.items():
             name = metric_data['name']
             result[name] = {'value': metric_data['value'], 'labels': metric_data['labels'], 'timestamp': metric_data.get('timestamp')}
         return result

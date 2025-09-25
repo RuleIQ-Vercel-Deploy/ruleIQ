@@ -228,7 +228,7 @@ class RateLimitService:
             )
         else:
             # Reset all features
-            actions = [f"{f}_request" for f in cls.LIMITS.keys()]
+            actions = [f"{f}_request" for f in cls.LIMITS]
             stmt = select(AuditLog).where(
                 and_(
                     AuditLog.user_id == user.id,

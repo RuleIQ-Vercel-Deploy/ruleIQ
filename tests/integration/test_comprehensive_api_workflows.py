@@ -572,7 +572,7 @@ class TestComprehensiveAPIWorkflows:
             # Should indicate external service was unavailable
             assert (
                 "warnings" in assessment
-                or assessment.get("external_data_available") == False,
+                or not assessment.get("external_data_available"),
             )
 
 

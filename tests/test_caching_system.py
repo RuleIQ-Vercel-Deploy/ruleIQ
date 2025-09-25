@@ -26,6 +26,7 @@ import redis.asyncio as redis
 from pydantic import BaseModel
 
 from config.settings import settings
+import contextlib
 
 
 class MockRedisClient:
@@ -74,7 +75,7 @@ class MockRedisClient:
     async def keys(self, pattern: str) -> List[str]:
         """Mock keys operation"""
         import fnmatch
-        return [k for k in self.data.keys() if fnmatch.fnmatch(k, pattern)]
+        return [k for k in self.data if fnmatch.fnmatch(k, pattern)]
 
 
 class TestDataModel(BaseModel):
@@ -407,10 +408,8 @@ class TestCacheWarming:
 
         # Stop warming
         warming_task.cancel()
-        try:
+        with contextlib.suppress(asyncio.CancelledError):
             await warming_task
-        except asyncio.CancelledError:
-            pass
 
         # Data should be warmed
         result = await cache_system.get("bg:key1")

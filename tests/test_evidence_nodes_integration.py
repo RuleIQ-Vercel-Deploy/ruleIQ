@@ -13,6 +13,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from database.evidence_item import EvidenceItem
 from langgraph_agent.nodes.evidence_nodes import EvidenceCollectionNode, evidence_node
+import contextlib
 
 
 # Fixtures
@@ -369,10 +370,8 @@ class TestEvidenceCollectionNodeIntegration:
         mock_get_db.return_value = async_generator([mock_session])
 
         # Try to process evidence - should fail but handle gracefully
-        try:
+        with contextlib.suppress(ValueError, TypeError):
             await node.sync_evidence_status(minimal_state)
-        except (ValueError, TypeError):
-            pass
 
         # Circuit breaker state might change based on failure handling
         assert hasattr(node, "circuit_breaker_state")
