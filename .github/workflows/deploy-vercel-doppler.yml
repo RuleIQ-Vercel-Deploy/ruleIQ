@@ -19,7 +19,7 @@ on:
 env:
   DOPPLER_PROJECT: ruleiq
   DOPPLER_CONFIG_PREVIEW: staging
-  DOPPLER_CONFIG_PRODUCTION: production
+  DOPPLER_CONFIG_PRODUCTION: prd
 
 jobs:
   # Deploy preview for pull requests (only when Doppler is configured)
