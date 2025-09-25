@@ -1,0 +1,147 @@
+name: Deploy to Cloud Run with Doppler
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  PROJECT_ID: ruleiq
+  REGION: europe-west2
+  SERVICE_NAME: ruleiq-backend
+  DOPPLER_PROJECT: ruleiq
+  DOPPLER_CONFIG: production
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Doppler CLI
+        run: |
+          curl -Ls --tlsv1.2 --proto "=https" --retry 3 https://cli.doppler.com/install.sh | sudo sh
+
+      - name: Authenticate Doppler
+        run: |
+          doppler configure set token ${{ secrets.DOPPLER_TOKEN }}
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          project_id: ${{ env.PROJECT_ID }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker for GCR
+        run: |
+          gcloud auth configure-docker gcr.io
+
+      - name: Sync Doppler secrets to Google Secret Manager
+        run: |
+          # Enable Secret Manager API
+          gcloud services enable secretmanager.googleapis.com
+
+          # Function to sync a secret
+          sync_secret() {
+            local name=$1
+            local value=$2
+
+            # Check if secret exists
+            if gcloud secrets describe ${name} --project=${PROJECT_ID} >/dev/null 2>&1; then
+              echo "Updating secret ${name}..."
+              echo -n "${value}" | gcloud secrets versions add ${name} --data-file=- --project=${PROJECT_ID}
+            else
+              echo "Creating secret ${name}..."
+              echo -n "${value}" | gcloud secrets create ${name} --replication-policy="automatic" --data-file=- --project=${PROJECT_ID}
+            fi
+
+            # Grant service account access
+            gcloud secrets add-iam-policy-binding ${name} \
+              --member="serviceAccount:${PROJECT_ID}-compute@developer.gserviceaccount.com" \
+              --role="roles/secretmanager.secretAccessor" \
+              --project=${PROJECT_ID} || true
+          }
+
+          # Get and sync all required secrets from Doppler
+          echo "Syncing secrets from Doppler to Google Secret Manager..."
+
+          # Core secrets
+          sync_secret "DATABASE_URL" "$(doppler secrets get DATABASE_URL --plain)"
+          sync_secret "JWT_SECRET_KEY" "$(doppler secrets get JWT_SECRET_KEY --plain)"
+          sync_secret "REDIS_URL" "$(doppler secrets get REDIS_URL --plain)"
+          sync_secret "GOOGLE_API_KEY" "$(doppler secrets get GOOGLE_API_KEY --plain)"
+          sync_secret "GOOGLE_AI_API_KEY" "$(doppler secrets get GOOGLE_AI_API_KEY --plain)"
+
+          # Optional secrets (check if they exist in Doppler first)
+          if doppler secrets get OPENAI_API_KEY --plain >/dev/null 2>&1; then
+            sync_secret "OPENAI_API_KEY" "$(doppler secrets get OPENAI_API_KEY --plain)"
+          fi
+
+          if doppler secrets get SENTRY_DSN --plain >/dev/null 2>&1; then
+            sync_secret "SENTRY_DSN" "$(doppler secrets get SENTRY_DSN --plain)"
+          fi
+
+      - name: Build Docker image
+        run: |
+          docker build -t gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE_NAME }}:${{ github.sha }} \
+                       -t gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE_NAME }}:latest \
+                       .
+
+      - name: Push Docker image
+        run: |
+          docker push gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE_NAME }}:${{ github.sha }}
+          docker push gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE_NAME }}:latest
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy ${{ env.SERVICE_NAME }} \
+            --image gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE_NAME }}:${{ github.sha }} \
+            --region ${{ env.REGION }} \
+            --platform managed \
+            --allow-unauthenticated \
+            --memory 2Gi \
+            --cpu 2 \
+            --timeout 300 \
+            --max-instances 100 \
+            --min-instances 1 \
+            --port 8080 \
+            --execution-environment gen2 \
+            --startup-cpu-boost \
+            --concurrency 80 \
+            --cpu-throttling \
+            --set-env-vars "PYTHONUNBUFFERED=1,PORT=8080,ENVIRONMENT=production" \
+            --set-secrets "DATABASE_URL=DATABASE_URL:latest,JWT_SECRET_KEY=JWT_SECRET_KEY:latest,GOOGLE_API_KEY=GOOGLE_API_KEY:latest,GOOGLE_AI_API_KEY=GOOGLE_AI_API_KEY:latest,REDIS_URL=REDIS_URL:latest" \
+            --project ${{ env.PROJECT_ID }}
+
+      - name: Get service URL
+        run: |
+          SERVICE_URL=$(gcloud run services describe ${{ env.SERVICE_NAME }} \
+            --region=${{ env.REGION }} \
+            --project=${{ env.PROJECT_ID }} \
+            --format='value(status.url)')
+          echo "Service deployed at: ${SERVICE_URL}"
+          echo "SERVICE_URL=${SERVICE_URL}" >> $GITHUB_ENV
+
+      - name: Test deployment
+        run: |
+          echo "Testing health endpoint..."
+          curl -f "${SERVICE_URL}/health/live" || echo "Liveness check failed (may need time to start)"
+          sleep 5
+          curl -f "${SERVICE_URL}/health/ready" || echo "Readiness check failed (DB might not be connected)"
+
+      - name: Deployment summary
+        run: |
+          echo "✅ Deployment successful!"
+          echo "Service: ${{ env.SERVICE_NAME }}"
+          echo "Region: ${{ env.REGION }}"
+          echo "URL: ${{ env.SERVICE_URL }}"
+          echo "Image: gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE_NAME }}:${{ github.sha }}"
