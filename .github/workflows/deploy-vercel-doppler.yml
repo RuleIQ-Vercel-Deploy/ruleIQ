@@ -41,7 +41,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install Doppler CLI
-        uses: dopplerhq/cli-action@1ddcafdd40ad2dcb90261e8c88a6c93ad2f2f6d0  # v3.0.0 commit SHA
+        uses: dopplerhq/cli-action@v3
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -129,7 +129,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install Doppler CLI
-        uses: dopplerhq/cli-action@1ddcafdd40ad2dcb90261e8c88a6c93ad2f2f6d0  # v3.0.0 commit SHA
+        uses: dopplerhq/cli-action@v3
 
       - name: Set Environment Config
         id: env-config
