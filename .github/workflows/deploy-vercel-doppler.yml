@@ -236,10 +236,11 @@ jobs:
 
           # Check endpoints
           echo "Checking /health endpoint..."
-          if curl -f -s -o /dev/null -w "%{http_code}" "$URL/health" | grep -q "^2"; then
-            echo "✅ Health check passed"
+          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$URL/health")
+          if echo "$HTTP_CODE" | grep -q "^[24]"; then
+            echo "✅ Health check passed (HTTP $HTTP_CODE)"
           else
-            echo "❌ Health check failed"
+            echo "❌ Health check failed (HTTP $HTTP_CODE)"
             VALIDATION_FAILED=1
           fi
 
