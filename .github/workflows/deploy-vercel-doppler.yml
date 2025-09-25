@@ -93,7 +93,7 @@ jobs:
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
         run: |
-          DEPLOYMENT_URL=$(doppler run --project ${{ env.DOPPLER_PROJECT }} --config ${{ env.DOPPLER_CONFIG_PREVIEW }} -- sh -c 'vercel deploy --prebuilt --token="$VERCEL_TOKEN"' | tail -n 1)
+          DEPLOYMENT_URL=$(doppler run --project ${{ env.DOPPLER_PROJECT }} --config ${{ env.DOPPLER_CONFIG_PREVIEW }} -- sh -c 'vercel deploy --prebuilt --archive=tgz --token="$VERCEL_TOKEN"' | tail -n 1)
           echo "$DEPLOYMENT_URL" > deployment-url.txt
           echo "url=$DEPLOYMENT_URL" >> $GITHUB_OUTPUT
           echo "🚀 Preview deployed to: $DEPLOYMENT_URL"
@@ -216,7 +216,7 @@ jobs:
         run: |
           CONFIG="${{ steps.env-config.outputs.config }}"
           PROD_FLAG="${{ steps.env-config.outputs.prod_flag }}"
-          DEPLOYMENT_URL=$(doppler run --project ${{ env.DOPPLER_PROJECT }} --config $CONFIG -- sh -c 'vercel deploy --prebuilt '$PROD_FLAG' --token="$VERCEL_TOKEN"' | tail -n 1)
+          DEPLOYMENT_URL=$(doppler run --project ${{ env.DOPPLER_PROJECT }} --config $CONFIG -- sh -c 'vercel deploy --prebuilt '$PROD_FLAG' --archive=tgz --token="$VERCEL_TOKEN"' | tail -n 1)
           echo "$DEPLOYMENT_URL" > deployment-url.txt
           echo "url=$DEPLOYMENT_URL" >> $GITHUB_OUTPUT
           echo "🚀 Deployed to: $DEPLOYMENT_URL"
@@ -324,7 +324,7 @@ jobs:
           fi
 
           echo "🚀 Redeploying previous build to production..."
-          ROLLBACK_URL=$(doppler run --project ${{ env.DOPPLER_PROJECT }} --config $CONFIG -- sh -c "vercel deploy '$PREV_URL' --prod --prebuilt --confirm --token=\"\$VERCEL_TOKEN\"" 2>/dev/null | tail -n 1 || echo "")
+          ROLLBACK_URL=$(doppler run --project ${{ env.DOPPLER_PROJECT }} --config $CONFIG -- sh -c "vercel deploy '$PREV_URL' --prod --prebuilt --confirm --archive=tgz --token=\"\$VERCEL_TOKEN\"" 2>/dev/null | tail -n 1 || echo "")
 
           if [ -z "$ROLLBACK_URL" ]; then
             echo "❌ Rollback failed - unable to redeploy previous version"
