@@ -1,0 +1,152 @@
+name: Deploy to Google Cloud Run with Doppler
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - production
+          - staging
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  SERVICE: ruleiq-backend
+  REGION: us-central1
+  DOPPLER_PROJECT: ruleiq
+  DOPPLER_CONFIG_STAGING: stg
+  DOPPLER_CONFIG_PRODUCTION: prd
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'production' }}
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Doppler CLI
+        uses: dopplerhq/cli-action@v3
+
+      - name: Set Environment Config
+        id: env-config
+        run: |
+          ENV_NAME="${{ github.event.inputs.environment || 'production' }}"
+          if [ "$ENV_NAME" = "staging" ]; then
+            echo "config=${{ env.DOPPLER_CONFIG_STAGING }}" >> $GITHUB_OUTPUT
+            echo "gcp_sa_key=${{ secrets.GCP_SA_KEY_STAGING }}" >> $GITHUB_OUTPUT
+          else
+            echo "config=${{ env.DOPPLER_CONFIG_PRODUCTION }}" >> $GITHUB_OUTPUT
+            echo "gcp_sa_key=${{ secrets.GCP_SA_KEY_PRODUCTION }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ steps.env-config.outputs.gcp_sa_key }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+
+      - name: Configure Docker for GCP
+        run: |
+          gcloud auth configure-docker
+
+      - name: Build Docker image
+        run: |
+          docker build -t gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }} .
+          docker tag gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }} gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:latest
+
+      - name: Push Docker image
+        run: |
+          docker push gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }}
+          docker push gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:latest
+
+      - name: Get Doppler secrets
+        id: doppler
+        env:
+          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
+        run: |
+          CONFIG="${{ steps.env-config.outputs.config }}"
+
+          # Get all secrets from Doppler as JSON
+          SECRETS_JSON=$(doppler secrets download --no-file --format json --project ${{ env.DOPPLER_PROJECT }} --config $CONFIG)
+
+          # Create env vars string for Cloud Run
+          ENV_VARS=""
+          for key in $(echo $SECRETS_JSON | jq -r 'keys[]'); do
+            value=$(echo $SECRETS_JSON | jq -r --arg key "$key" '.[$key]')
+            # Escape special characters for shell
+            value=$(printf '%q' "$value")
+            ENV_VARS="${ENV_VARS}${key}=${value},"
+          done
+
+          # Remove trailing comma
+          ENV_VARS=${ENV_VARS%,}
+
+          # Save to output
+          echo "env_vars=$ENV_VARS" >> $GITHUB_OUTPUT
+
+      - name: Deploy to Cloud Run
+        id: deploy
+        run: |
+          gcloud run deploy ${{ env.SERVICE }} \
+            --image gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }} \
+            --region ${{ env.REGION }} \
+            --platform managed \
+            --allow-unauthenticated \
+            --memory 2Gi \
+            --cpu 2 \
+            --timeout 60 \
+            --max-instances 100 \
+            --min-instances 1 \
+            --port 8080 \
+            --set-env-vars="${{ steps.doppler.outputs.env_vars }}" \
+            --set-env-vars="PYTHONUNBUFFERED=1"
+
+          # Get the service URL
+          SERVICE_URL=$(gcloud run services describe ${{ env.SERVICE }} --region ${{ env.REGION }} --format 'value(status.url)')
+          echo "url=$SERVICE_URL" >> $GITHUB_OUTPUT
+          echo "🚀 Deployed to: $SERVICE_URL"
+
+      - name: Validate Deployment
+        run: |
+          URL="${{ steps.deploy.outputs.url }}"
+          echo "🔍 Validating deployment at: $URL"
+
+          # Wait for deployment to be ready
+          sleep 15
+
+          # Check health endpoint
+          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$URL/health")
+          if echo "$HTTP_CODE" | grep -q "^[24]"; then
+            echo "✅ Health check passed (HTTP $HTTP_CODE)"
+          else
+            echo "❌ Health check failed (HTTP $HTTP_CODE)"
+            exit 1
+          fi
+
+      - name: Clean up old images
+        if: always()
+        continue-on-error: true
+        run: |
+          # Keep only the last 5 images
+          gcloud container images list-tags gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }} \
+            --limit=999 --format='get(digest)' | \
+            tail -n +6 | \
+            xargs -I {} gcloud container images delete \
+            "gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}@{}" --quiet || true
