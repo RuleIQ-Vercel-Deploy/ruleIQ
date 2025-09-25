@@ -18,7 +18,7 @@ on:
 
 env:
   DOPPLER_PROJECT: ruleiq
-  DOPPLER_CONFIG_PREVIEW: staging
+  DOPPLER_CONFIG_PREVIEW: stg
   DOPPLER_CONFIG_PRODUCTION: prd
 
 jobs:
