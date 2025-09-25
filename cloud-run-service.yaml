@@ -1,0 +1,137 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: ruleiq-backend
+  labels:
+    cloud.googleapis.com/location: us-central1
+  annotations:
+    run.googleapis.com/execution-environment: gen2
+    run.googleapis.com/startup-cpu-boost: 'true'
+spec:
+  template:
+    metadata:
+      annotations:
+        # Maximum number of concurrent requests per container instance
+        run.googleapis.com/execution-environment: gen2
+        run.googleapis.com/startup-cpu-boost: 'true'
+        autoscaling.knative.dev/maxScale: '100'
+        autoscaling.knative.dev/minScale: '1'
+    spec:
+      containerConcurrency: 80
+      timeoutSeconds: 300
+      serviceAccountName: ruleiq-backend-sa
+      containers:
+        - image: gcr.io/PROJECT_ID/ruleiq-backend:latest
+          name: ruleiq-backend
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          env:
+            - name: PORT
+              value: '8080'
+            - name: PYTHONUNBUFFERED
+              value: '1'
+            - name: ENVIRONMENT
+              value: production
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: DATABASE_URL
+                  key: latest
+            - name: JWT_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: JWT_SECRET_KEY
+                  key: latest
+            - name: GOOGLE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: GOOGLE_API_KEY
+                  key: latest
+            - name: GOOGLE_AI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: GOOGLE_AI_API_KEY
+                  key: latest
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: REDIS_URL
+                  key: latest
+                  optional: true
+            - name: GOOGLE_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: GOOGLE_CLIENT_ID
+                  key: latest
+                  optional: true
+            - name: GOOGLE_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: GOOGLE_CLIENT_SECRET
+                  key: latest
+                  optional: true
+            - name: SENTRY_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: SENTRY_DSN
+                  key: latest
+                  optional: true
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: AWS_ACCESS_KEY_ID
+                  key: latest
+                  optional: true
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: AWS_SECRET_ACCESS_KEY
+                  key: latest
+                  optional: true
+          resources:
+            requests:
+              cpu: '1'
+              memory: 1Gi
+            limits:
+              cpu: '2'
+              memory: 2Gi
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: 8080
+              httpHeaders:
+                - name: User-Agent
+                  value: GoogleHC/1.0
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 10
+            failureThreshold: 3
+            successThreshold: 1
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: 8080
+              httpHeaders:
+                - name: User-Agent
+                  value: GoogleHC/1.0
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+            successThreshold: 1
+          startupProbe:
+            httpGet:
+              path: /health/live
+              port: 8080
+              httpHeaders:
+                - name: User-Agent
+                  value: GoogleHC/1.0
+            initialDelaySeconds: 0
+            periodSeconds: 10
+            timeoutSeconds: 10
+            failureThreshold: 30
+            successThreshold: 1
+  traffic:
+    - percent: 100
+      latestRevision: true

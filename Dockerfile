@@ -5,7 +5,8 @@ FROM python:3.11-slim
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=1 \
-    PIP_DISABLE_PIP_VERSION_CHECK=1
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PORT=8080
 
 # Set work directory
 WORKDIR /app
@@ -24,21 +25,16 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy project files
 COPY . .
 
-# Copy and make start script executable
-COPY start.sh /app/start.sh
-RUN chmod +x /app/start.sh
+# Make startup script executable
+RUN chmod +x start.sh
 
-# Create non-root user
-RUN groupadd -r appuser && useradd -r -g appuser appuser
-RUN chown -R appuser:appuser /app
-USER appuser
+# Don't switch to non-root user for now to avoid permission issues
+# RUN groupadd -r appuser && useradd -r -g appuser appuser
+# RUN chown -R appuser:appuser /app
+# USER appuser
 
-# Expose port (Cloud Run sets PORT environment variable)
+# Expose port
 EXPOSE 8080
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:${PORT:-8080}/health || exit 1
-
-# Run the application using start script
-CMD ["/app/start.sh"]
+# Use the startup script
+CMD ["./start.sh"]

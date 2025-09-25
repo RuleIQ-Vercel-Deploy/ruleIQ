@@ -82,13 +82,17 @@ async def lifespan(app: FastAPI) ->AsyncGenerator[None, None]:
     logger.info('--- Lifespan Startup: Configuration Validated ---')
     logger.info(
         '--- Lifespan Startup: Verifying Database Connection (Async)... ---')
-    if not await test_async_database_connection():
+    ok = await test_async_database_connection()
+    if not ok:
         logger.error(
-            '--- Lifespan Startup: Async database connection verification FAILED ---'
+            '--- Lifespan Startup: DB connection verification FAILED (non-fatal at startup) ---'
             )
-        raise RuntimeError('Async database connection verification failed')
-    logger.info(
-        '--- Lifespan Startup: Database Connection Verified (Async) ---')
+        # Set a flag to indicate DB is not ready - health checks will use this
+        app.state.db_ready = False
+    else:
+        logger.info(
+            '--- Lifespan Startup: Database Connection Verified (Async) ---')
+        app.state.db_ready = True
     logger.info('--- Lifespan Startup: Completed Successfully ---')
     yield
     logger.info('Shutting down ruleIQ API...')
@@ -296,6 +300,8 @@ def validate_configuration() ->None:
 
 
 if __name__ == '__main__':
-    uvicorn.run('api.main:app', host=str(settings.host), port=int(settings.
-        port), reload=bool(settings.debug), log_level=settings.
+    import os
+    port = int(os.getenv('PORT', settings.port))
+    uvicorn.run('api.main:app', host=str(settings.host), port=port, 
+        reload=bool(settings.debug), log_level=settings.
         log_level.value.lower(), workers=1 if settings.debug else 4)
