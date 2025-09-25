@@ -21,14 +21,26 @@ __pycache__/
 .coverage
 htmlcov/
 
-# Dependencies - only include what's installed via requirements.txt
-# Exclude large ML/data science packages if not needed
-**/*tensorflow*
-**/*torch*
-**/*numpy*
-**/*pandas*
-**/*scipy*
-**/*sklearn*
+# Exclude test files and docs from installed packages
+**/**/tests/
+**/**/test/
+**/**/testing/
+**/**/docs/
+**/**/examples/
+**/**/benchmarks/
+**/**/*.md
+**/**/*.txt
+**/**/*.rst
+
+# Exclude unnecessary parts of heavy packages
+**/langchain/docs/
+**/langchain/tests/
+**/chromadb/test/
+**/chromadb/docs/
+**/boto3/docs/
+**/botocore/docs/
+**/datasets/
+**/.git/
 
 # Testing
 tests/

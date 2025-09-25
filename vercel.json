@@ -13,6 +13,5 @@
       "source": "/(.*)",
       "destination": "/api"
     }
-  ],
-  "installCommand": "pip install -r requirements-vercel.txt"
+  ]
 }
