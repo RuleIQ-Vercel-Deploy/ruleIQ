@@ -414,12 +414,19 @@ class Settings(BaseSettings):
     @classmethod
     def validate_database_url(cls, v: str) ->str:
         """Validate database URL format"""
+        # Check if running in Cloud Run environment
+        is_cloud_run = os.getenv('K_SERVICE') is not None or os.getenv('CLOUD_RUN_JOB') is not None
+        is_testing = os.getenv('TESTING', '').lower() == 'true'
+        
         if not v or not v.startswith(('postgresql://', 'postgres://', 'postgresql+asyncpg://', 'sqlite://')):
-            if os.getenv('TESTING', '').lower() == 'true':
-                # In testing, use environment variable or fail
-                test_url = os.getenv('TEST_DATABASE_URL', '')
-                if test_url:
-                    return test_url
+            if is_testing:
+                # In testing, use environment variable or provide a default
+                test_url = os.getenv('TEST_DATABASE_URL', 'sqlite:///tmp/test.db')
+                return test_url
+            elif is_cloud_run:
+                # In Cloud Run, allow empty database URL - defer to api.main.validate_configuration()
+                logger.debug("🌩️ Cloud Run detected: Database URL not configured (will check at runtime)")
+                return ''
             raise ValueError('Database URL must be provided and start with postgresql://, postgres://, or sqlite:///')
         return v
 
@@ -447,7 +454,13 @@ class Settings(BaseSettings):
     @classmethod
     def validate_jwt_secret(cls, v: str) ->str:
         """Validate JWT secret key strength"""
+        is_testing = os.getenv('TESTING', '').lower() == 'true'
+        
         if not v or len(v) < 32:
+            if is_testing:
+                # In testing mode, allow a temporary key
+                import secrets
+                return secrets.token_hex(32)
             raise ValueError('JWT secret key must be at least 32 characters long and provided via environment')
         return v
 

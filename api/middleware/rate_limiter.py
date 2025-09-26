@@ -117,6 +117,20 @@ async def rate_limit_middleware(request: Request, call_next: Callable) -> Any:
     Returns:
         The response from the next handler or a rate limit error
     """
+    # Check if running in Cloud Run without Redis
+    import os
+    import logging
+    logger = logging.getLogger(__name__)
+    
+    is_cloud_run = os.getenv('K_SERVICE') is not None or os.getenv('CLOUD_RUN_JOB') is not None
+    if is_cloud_run:
+        # Check if Redis is configured
+        redis_url = os.getenv('REDIS_URL', '')
+        if not redis_url:
+            # Skip global rate limiting in Cloud Run without Redis
+            logger.warning('🌩️ Cloud Run: Skipping per-instance rate limiting (no Redis configured)')
+            return await call_next(request)
+    
     # Skip rate limiting for documentation endpoints
     excluded_paths = [
         '/docs', '/redoc', '/openapi.json',

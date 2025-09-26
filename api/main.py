@@ -67,10 +67,15 @@ from api.middleware.security_headers import security_headers_middleware
 from config.ai_config import ai_config
 from app.core.monitoring.setup import configure_from_settings
 from app.core.monitoring.shutdown import get_shutdown_manager
-from config.logging_config import setup_logging
-
-# Initialize logging using shared configuration
-setup_logging()
+# Initialize logging with error handling
+try:
+    from config.logging_config import setup_logging
+    setup_logging()
+except Exception as e:
+    import logging
+    logging.basicConfig(level=logging.INFO)
+    bootstrap_logger = logging.getLogger(__name__)
+    bootstrap_logger.warning("Logging config unavailable: %s", e)
 
 # Initialize logger
 logger = logging.getLogger(__name__)
@@ -269,8 +274,8 @@ app.add_middleware(GZipMiddleware, minimum_size=1000)
 configure_from_settings(app)
 shutdown_manager.install_signal_handlers()
 
-app.middleware('http')(error_handler_middleware)
 app.middleware('http')(security_headers_middleware)
+app.middleware('http')(error_handler_middleware)
 app.middleware('http')(rate_limit_middleware)
 
 # Include routers

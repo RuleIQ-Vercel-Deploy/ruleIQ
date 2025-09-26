@@ -52,7 +52,7 @@ class DatabaseConfig:
         if missing_vars:
             error_msg = f"""Missing required environment variables: {', '.join(missing_vars)}
 Please copy env.template to .env.local and configure the variables."""
-            logger.error(error_msg)
+            logger.error("Missing required environment variables: %s. Please copy env.template to .env.local and configure the variables.", ', '.join(missing_vars))
             raise OSError(error_msg)
         if os.path.exists('.env.local'):
             logger.info('Loaded configuration from .env.local')
@@ -74,7 +74,7 @@ Please copy env.template to .env.local and configure the variables."""
             logger.error(error_msg)
             raise OSError(error_msg)
         safe_url = db_url.split('@')[1] if '@' in db_url else db_url
-        logger.info('Connecting to database: %s' % safe_url)
+        logger.info('Connecting to database: %s', safe_url)
         sync_db_url = db_url
         if '+asyncpg' in sync_db_url:
             sync_db_url = sync_db_url.replace('+asyncpg', '+psycopg2')
@@ -118,7 +118,7 @@ Please copy env.template to .env.local and configure the variables."""
                     'pool_recycle': int(os.getenv('DB_POOL_RECYCLE', '1800')),
                     'pool_timeout': int(os.getenv('DB_POOL_TIMEOUT', '30'))}
             except ValueError as e:
-                logger.error('Invalid database configuration value: %s' % e)
+                logger.error('Invalid database configuration value: %s', e)
                 raise ValueError(f'Invalid database configuration: {e}')
             if is_async:
                 async_kwargs = {**base_kwargs, 'pool_reset_on_return': 'commit'}
@@ -149,7 +149,7 @@ def _init_sync_db() ->None:
             logger.info('Synchronous database engine initialized successfully')
         except Exception as e:
             logger.error(
-                'Failed to initialize synchronous database engine: %s' % e)
+                'Failed to initialize synchronous database engine: %s', e)
             raise
 
 
@@ -169,7 +169,7 @@ def _init_async_db() -> None:
             
             # Extract driver from URL for logging
             driver_name = 'asyncpg' if 'asyncpg' in async_db_url else 'psycopg' if 'psycopg' in async_db_url else 'unknown'
-            logger.debug(f'Using async driver: {driver_name}')
+            logger.debug('Using async driver: %s', driver_name)
             
             # Create async engine with the appropriate driver
             engine_kwargs = DatabaseConfig.get_engine_kwargs(is_async=True)
@@ -183,17 +183,17 @@ def _init_async_db() -> None:
             )
             
             if is_cloud_run:
-                logger.info(f'🌩️ Cloud Run: Asynchronous database engine initialized successfully with {driver_name}')
+                logger.info('🌩️ Cloud Run: Asynchronous database engine initialized successfully with %s', driver_name)
             else:
-                logger.info(f'Asynchronous database engine initialized successfully with {driver_name}')
+                logger.info('Asynchronous database engine initialized successfully with %s', driver_name)
                 
         except Exception as e:
             error_msg = f'Failed to initialize asynchronous database engine: {e}'
             if is_cloud_run:
-                logger.warning(f'🌩️ Cloud Run: {error_msg} - will retry on demand')
+                logger.warning('🌩️ Cloud Run: Failed to initialize asynchronous database engine: %s - will retry on demand', e)
                 return  # Allow graceful degradation in Cloud Run
             else:
-                logger.error(error_msg)
+                logger.error('Failed to initialize asynchronous database engine: %s', e)
                 raise
 
 
@@ -215,7 +215,7 @@ def init_db() ->bool:
         logger.info('Database initialization completed successfully')
         return True
     except Exception as e:
-        logger.error('Database initialization failed: %s' % e, exc_info=True)
+        logger.error('Database initialization failed: %s', e, exc_info=True)
         return False
 
 
@@ -229,7 +229,7 @@ def test_database_connection() ->bool:
             logger.info('Database connection test successful')
             return True
     except Exception as e:
-        logger.error('Database connection test failed: %s' % e)
+        logger.error('Database connection test failed: %s', e)
         return False
 
 
@@ -262,16 +262,16 @@ async def test_async_database_connection() ->bool:
             return True
     except ImportError as e:
         if is_cloud_run:
-            logger.warning(f'🌩️ Cloud Run: Async database connection test skipped due to missing dependencies: {e}')
+            logger.warning('🌩️ Cloud Run: Async database connection test skipped due to missing dependencies: %s', e)
             return False
         else:
-            logger.error(f'Async database connection test failed due to missing dependencies: {e}')
+            logger.error('Async database connection test failed due to missing dependencies: %s', e)
             return False
     except Exception as e:
         if is_cloud_run:
-            logger.warning(f'🌩️ Cloud Run: Async database connection test failed: {e}')
+            logger.warning('🌩️ Cloud Run: Async database connection test failed: %s', e)
         else:
-            logger.error(f'Async database connection test failed: {e}')
+            logger.error('Async database connection test failed: %s', e)
         return False
 
 
@@ -310,7 +310,7 @@ async def get_async_db() ->AsyncGenerator[AsyncSession, None]:
         is_cloud_run = bool(os.getenv('K_SERVICE') or os.getenv('CLOUD_RUN_JOB'))
         error_msg = 'Async database session maker not available'
         if is_cloud_run:
-            logger.warning(f'🌩️ Cloud Run: {error_msg} - async database operations not supported')
+            logger.warning('🌩️ Cloud Run: %s - async database operations not supported', error_msg)
         raise HTTPException(status_code=503, detail=f'{error_msg} - check database configuration and asyncpg installation')
     
     async with session_maker() as session:
@@ -363,7 +363,7 @@ def get_engine_info() ->Dict[str, Any]:
                 'async_pool_overflow': getattr(pool, 'overflow', lambda: 0)() if hasattr(pool, 'overflow') else 0
             })
         except Exception as e:
-            logger.debug(f'Could not get async pool info: {e}')
+            logger.debug('Could not get async pool info: %s', e)
     if _ENGINE:
         try:
             pool = _ENGINE.pool
@@ -374,7 +374,7 @@ def get_engine_info() ->Dict[str, Any]:
                 'sync_pool_overflow': getattr(pool, 'overflow', lambda: 0)() if hasattr(pool, 'overflow') else 0
             })
         except Exception as e:
-            logger.debug(f'Could not get sync pool info: {e}')
+            logger.debug('Could not get sync pool info: %s', e)
     return info
 
 
@@ -392,19 +392,19 @@ def get_async_session_maker():
             _init_async_db()
         except ImportError as e:
             if is_cloud_run:
-                logger.warning(f'🌩️ Cloud Run: Async database initialization failed due to missing dependencies: {e}')
+                logger.warning('🌩️ Cloud Run: Async database initialization failed due to missing dependencies: %s', e)
                 logger.warning('🌩️ Cloud Run: Returning None - async operations will not be available')
                 return None
             else:
-                logger.error(f'Failed to initialize async database: {e}')
+                logger.error('Failed to initialize async database: %s', e)
                 raise
         except Exception as e:
             if is_cloud_run:
-                logger.warning(f'🌩️ Cloud Run: Async database initialization failed: {e}')
+                logger.warning('🌩️ Cloud Run: Async database initialization failed: %s', e)
                 logger.warning('🌩️ Cloud Run: Returning None - will retry later')
                 return None
             else:
-                logger.error(f'Failed to get async session maker: {e}')
+                logger.error('Failed to get async session maker: %s', e)
                 raise
     
     return _ASYNC_SESSION_LOCAL

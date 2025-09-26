@@ -45,9 +45,9 @@ try:
         _AsyncSessionLocal = None
         _SESSION_LOCAL = None
         if IS_CLOUD_RUN:
-            logger.warning(f'🌩️ Cloud Run: Session locals not available: {session_error}')
+            logger.warning('🌩️ Cloud Run: Session locals not available: %s', session_error)
         else:
-            logger.warning(f'Session locals not available: {session_error}')
+            logger.warning('Session locals not available: %s', session_error)
     
     if IS_CLOUD_RUN:
         logger.info('🌩️ Cloud Run: Database setup imported successfully')
@@ -55,10 +55,12 @@ try:
         logger.debug('Database setup imported successfully')
         
 except ImportError as db_error:
-    error_msg = f'Failed to import database setup: {db_error}'
     if IS_CLOUD_RUN:
-        logger.warning(f'🌩️ Cloud Run: {error_msg} - some database functions may not be available')
+        logger.warning('🌩️ Cloud Run: Failed to import database setup: %s - some database functions may not be available', db_error)
         # Provide fallback implementations for Cloud Run
+        from typing import Generator, AsyncGenerator, Any
+        from contextlib import contextmanager
+        
         Base = None
         init_db = lambda: False
         test_database_connection = lambda: False
@@ -70,24 +72,37 @@ except ImportError as db_error:
             return None
         
         get_engine_info = lambda: {}
-        get_db = lambda: None
         
-        async def get_async_db():
+        def get_db() -> Generator[Any, None, None]:
+            if False:
+                yield None
+        
+        async def get_async_db() -> AsyncGenerator[Any, None]:
+            if False:
+                yield None
+        
+        @contextmanager
+        def _get_db_context():
             yield None
         
-        get_db_context = lambda: None
+        get_db_context = _get_db_context
         get_async_session_maker = lambda: None
-        DatabaseConfig = None
+        
+        class DatabaseConfig:
+            """Stub DatabaseConfig class for Cloud Run fallback"""
+            pass
         _AsyncSessionLocal = None
         _SESSION_LOCAL = None
     else:
-        logger.error(error_msg)
+        logger.error('Failed to import database setup: %s', db_error)
         raise
 except Exception as setup_error:
-    error_msg = f'Unexpected error importing database setup: {setup_error}'
     if IS_CLOUD_RUN:
-        logger.warning(f'🌩️ Cloud Run: {error_msg} - continuing with limited functionality')
+        logger.warning('🌩️ Cloud Run: Unexpected error importing database setup: %s - continuing with limited functionality', setup_error)
         # Provide fallback implementations
+        from typing import Generator, AsyncGenerator, Any
+        from contextlib import contextmanager
+        
         Base = None
         init_db = lambda: False
         test_database_connection = lambda: False
@@ -99,18 +114,29 @@ except Exception as setup_error:
             return None
         
         get_engine_info = lambda: {}
-        get_db = lambda: None
         
-        async def get_async_db():
+        def get_db() -> Generator[Any, None, None]:
+            if False:
+                yield None
+        
+        async def get_async_db() -> AsyncGenerator[Any, None]:
+            if False:
+                yield None
+        
+        @contextmanager
+        def _get_db_context():
             yield None
         
-        get_db_context = lambda: None
+        get_db_context = _get_db_context
         get_async_session_maker = lambda: None
-        DatabaseConfig = None
+        
+        class DatabaseConfig:
+            """Stub DatabaseConfig class for Cloud Run fallback"""
+            pass
         _AsyncSessionLocal = None
         _SESSION_LOCAL = None
     else:
-        logger.error(error_msg)
+        logger.error('Unexpected error importing database setup: %s', setup_error)
         raise
 
 # Provide None defaults for all model variables to support lazy loading
@@ -141,7 +167,7 @@ def load_models():
         else:
             logger.debug('Core models imported successfully')
     except ImportError as e:
-        logger.warning(f'Core models import failed: {e}')
+        logger.warning('Core models import failed: %s', e)
 
     # Freemium models with error handling
     try:
@@ -180,11 +206,10 @@ def load_models():
             logger.debug('Freemium and integration models imported successfully')
 
     except ImportError as freemium_error:
-        error_msg = f'Failed to import freemium/integration models: {freemium_error}'
         if IS_CLOUD_RUN:
-            logger.warning(f'🌩️ Cloud Run: {error_msg} - some freemium features may not be available')
+            logger.warning('🌩️ Cloud Run: Failed to import freemium/integration models: %s - some freemium features may not be available', freemium_error)
         else:
-            logger.warning(error_msg)
+            logger.warning('Failed to import freemium/integration models: %s', freemium_error)
 
     # RBAC models with error handling
     try:
@@ -215,11 +240,10 @@ def load_models():
             logger.debug('RBAC models imported successfully')
 
     except ImportError as rbac_error:
-        error_msg = f'Failed to import RBAC models: {rbac_error}'
         if IS_CLOUD_RUN:
-            logger.warning(f'🌩️ Cloud Run: {error_msg} - RBAC features may not be available')
+            logger.warning('🌩️ Cloud Run: Failed to import RBAC models: %s - RBAC features may not be available', rbac_error)
         else:
-            logger.warning(error_msg)
+            logger.warning('Failed to import RBAC models: %s', rbac_error)
 
 if IS_CLOUD_RUN:
     logger.info('🌩️ Cloud Run: Database package initialization completed')

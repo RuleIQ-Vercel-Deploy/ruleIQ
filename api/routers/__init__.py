@@ -36,8 +36,12 @@ for name in _modules:
                 name
             )
             _failed_imports.append(name)
-            # Create a placeholder to prevent import errors in main.py
-            globals()[name] = module
+            # Create a placeholder with minimal router to prevent import errors in main.py
+            placeholder = types.SimpleNamespace(
+                module_name=name,
+                router=APIRouter()  # Minimal router prevents attribute errors
+            )
+            globals()[name] = placeholder
         else:
             globals()[name] = module
             _successful_imports.append(name)

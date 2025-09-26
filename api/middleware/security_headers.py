@@ -23,7 +23,7 @@ except Exception:
     debug = False
 
 
-async def security_headers_middleware(request: Request, call_next: Callable) -> Any:
+async def security_headers_middleware(request: Request, call_next: Callable) -> Response:
     """
     Add security headers to all responses.
     
