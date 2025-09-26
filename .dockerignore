@@ -1,45 +1,132 @@
-#Large/backup/generated
+# Python Virtual Environment (IMPORTANT - reduces build size significantly)
+.venv/
+venv/
+env/
+ENV/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.pytest_cache/
+.coverage
+.hypothesis/
+*.egg-info/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Large/backup/generated
 backup_*/
 backups/
 archive/
 audit/
 
-#Frontend (not needed for backend image)
+# Frontend (not needed for backend image)
 frontend/
 **/node_modules/
 **/.next/
 **/dist/
 
-#Docs and Postman
+# Documentation
 docs/
 postman/
+*.md
+LICENSE
+CONTRIBUTING
 
-#Scanners/analysis outputs
+# Scanners/analysis outputs
 .scannerwork/
 sonarcloud/
 .VSCodeCounter/
 scannerwork/
 dead_code_/
 dead_code_.*
-load_test_.
-bandit_report.json
-lint_results.json
-outdated_deps.json
-current_deps.json
-security_audit.json
-security_audit_progress.md
-security_audit_report.md
-dead_code_analysis_report.json
-dead_code_removal_report.json
-dead_code_removal_final_report.md
+load_test_.*
+*_report.json
+*_report.md
+*.html
 
-#Tests
+# Tests
 tests/
 test-results.xml
 htmlcov/
 .pytest_cache/
+coverage.xml
+*.cover
 
-#Local/runtime uploads and logs
+# Local/runtime uploads and logs
 uploads/
 logs/
 *.log
+*.log.*
+
+# Cloud and deployment configs (not needed in container)
+.dockerignore
+Dockerfile.*
+docker-compose*.yml
+.env.example
+.env.local
+.env.test
+cloudbuild.yaml
+skaffold.yaml
+
+# PR Management and scripts
+scripts/pr_management/
+scripts/deploy/
+scripts/test/
+
+# Agent protocols
+.serena/
+.claude/
+.cursor/
+.kilocode/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+*.bak
+*.backup
+*.old
+
+# Security files that shouldn't be in image
+*.pem
+*.key
+*.cert
+*.crt
+*.p12
+*.pfx
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+migrations/versions/*
+
+# Build artifacts
+build/
+dist/
+*.egg
+*.whl
+
+# OS files
+Thumbs.db
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
