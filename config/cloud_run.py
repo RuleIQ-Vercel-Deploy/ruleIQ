@@ -20,7 +20,10 @@ class CloudRunConfig(BaseConfig):
     JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', 'temporary-jwt-key-replace-in-production')
 
     # Database - using SQLite for initial testing (replace with Cloud SQL)
+    # Use sync SQLite URL, not async
     DATABASE_URL = os.getenv('DATABASE_URL', 'sqlite:///./ruleiq.db')
+    # For async operations, we'll convert this in the db layer
+    ASYNC_DATABASE_URL = os.getenv('ASYNC_DATABASE_URL', 'sqlite+aiosqlite:///./ruleiq.db')
 
     # Redis - disable for initial testing (replace with Memorystore)
     REDIS_URL = os.getenv('REDIS_URL', '')

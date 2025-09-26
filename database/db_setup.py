@@ -323,5 +323,8 @@ def get_async_session_maker():
         _init_async_db()
     return _ASYNC_SESSION_LOCAL
 
-# For backward compatibility
-async_session_maker = get_async_session_maker()
+# For backward compatibility - use a callable that does lazy initialization
+def async_session_maker():
+    """Lazy initialization wrapper for async session maker."""
+    session_maker = get_async_session_maker()
+    return session_maker()
