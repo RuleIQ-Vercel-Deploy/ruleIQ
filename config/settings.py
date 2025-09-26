@@ -135,7 +135,7 @@ class Settings(BaseSettings):
         description='Environment'
     )
     debug: bool = Field(
-        default_factory=lambda: os.getenv('DEBUG', 'true').lower() == 'true',
+        default_factory=lambda: os.getenv('DEBUG', 'false').lower() == 'true',
         description='Debug mode'
     )
     version: str = Field(default='1.0.0', description='API version')
@@ -175,7 +175,7 @@ class Settings(BaseSettings):
     @property
     def async_database_url(self) -> str:
         """Convert database URL to async format for asyncpg"""
-        url = self.database_url
+        url = str(self.database_url)  # Convert to string if it's a Field object
         if url.startswith('postgresql://'):
             return url.replace('postgresql://', 'postgresql+asyncpg://')
         elif url.startswith('postgres://'):
@@ -196,7 +196,7 @@ class Settings(BaseSettings):
                 'REDIS_URL'
             ) or ''
         ),
-        description='Redis URL for caching'
+        description='Redis URL for caching (optional in Cloud Run)'
     )
     redis_max_connections: int = Field(default=20, description='Max Redis connections')
     redis_socket_keepalive: bool = Field(default=True, description='Redis socket keepalive')
@@ -323,14 +323,14 @@ class Settings(BaseSettings):
     celery_broker_url: str = Field(
         default_factory=lambda: (
             'redis://localhost:6380/1' if os.getenv('TESTING', '').lower() == 'true'
-            else get_secret_or_env('CELERY_BROKER_URL', 'redis://localhost:6379/1')
+            else get_secret_or_env('CELERY_BROKER_URL', 'CELERY_BROKER_URL') or 'redis://localhost:6379/1'
         ),
         description='Celery broker URL'
     )
     celery_result_backend: str = Field(
         default_factory=lambda: (
             'redis://localhost:6380/2' if os.getenv('TESTING', '').lower() == 'true'
-            else get_secret_or_env('CELERY_RESULT_BACKEND', 'redis://localhost:6379/2')
+            else get_secret_or_env('CELERY_RESULT_BACKEND', 'CELERY_RESULT_BACKEND') or 'redis://localhost:6379/2'
         ),
         description='Celery result backend'
     )
@@ -414,26 +414,33 @@ class Settings(BaseSettings):
     @classmethod
     def validate_database_url(cls, v: str) ->str:
         """Validate database URL format"""
-        if not v or not v.startswith(('postgresql://', 'postgresql+asyncpg://', 'sqlite:///')):
+        if not v or not v.startswith(('postgresql://', 'postgres://', 'postgresql+asyncpg://', 'sqlite://')):
             if os.getenv('TESTING', '').lower() == 'true':
                 # In testing, use environment variable or fail
                 test_url = os.getenv('TEST_DATABASE_URL', '')
                 if test_url:
                     return test_url
-            raise ValueError('Database URL must be provided and start with postgresql:// or sqlite:///')
+            raise ValueError('Database URL must be provided and start with postgresql://, postgres://, or sqlite:///')
         return v
 
     @field_validator('redis_url')
     @classmethod
     def validate_redis_url(cls, v: str) ->str:
         """Validate Redis URL format"""
+        # Check if running in Cloud Run environment
+        is_cloud_run = os.getenv('K_SERVICE') is not None or os.getenv('CLOUD_RUN_JOB') is not None
+
         if not v or not v.startswith('redis://'):
             if os.getenv('TESTING', '').lower() == 'true':
                 # In testing, use environment variable or fail
                 test_url = os.getenv('REDIS_URL', '')
                 if test_url:
                     return test_url
-            raise ValueError('Redis URL must be provided and start with redis://')
+            elif is_cloud_run:
+                # In Cloud Run, Redis is optional - return empty string when not configured
+                logger.debug("🌩️ Cloud Run detected: Redis not configured (optional)")
+                return ''
+            raise ValueError('Redis URL must be provided and start with redis:// (except in Cloud Run where it\'s optional)')
         return v
 
     @field_validator('jwt_secret_key')
@@ -511,6 +518,13 @@ class Settings(BaseSettings):
             logger.info('🧪 Testing environment: SecretsVault disabled, using test configuration')
             return
 
+        # Log Cloud Run specific configuration
+        if self.is_cloud_run:
+            logger.info('🌩️ Cloud Run environment detected')
+            logger.info(f'🌩️ Redis URL: {"configured" if self.redis_url else "using fallback"}')
+            logger.info(f'🌩️ Database URL: {"configured" if self.database_url else "missing"}')
+            logger.info(f'🌩️ JWT Secret: {"configured" if self.jwt_secret_key else "missing"}')
+
         health = self.get_secrets_vault_health()
         if health['status'] == 'healthy':
             logger.info('✅ SecretsVault: AWS Secrets Manager connected and healthy')
@@ -551,9 +565,29 @@ def _get_or_create_settings() ->Settings:
     """Get existing settings or create new ones"""
     global _settings
     if _settings is None:
-        _settings = Settings()
-        if not _settings.is_testing:
-            _settings.log_vault_status()
+        try:
+            _settings = Settings()
+            # Log Cloud Run detection
+            if _settings.is_cloud_run:
+                logger.info("🌩️ Cloud Run environment detected - using Cloud Run optimized configuration")
+            if not _settings.is_testing:
+                _settings.log_vault_status()
+        except Exception as e:
+            logger.error(f"❌ Failed to initialize settings: {e}")
+            # In Cloud Run, try to provide minimal working settings
+            if os.getenv('K_SERVICE') is not None or os.getenv('CLOUD_RUN_JOB') is not None:
+                logger.warning("🌩️ Attempting Cloud Run fallback configuration...")
+                # Set minimal environment variables for Cloud Run
+                if not os.getenv('REDIS_URL'):
+                    os.environ['REDIS_URL'] = 'redis://localhost:6379/0'
+                try:
+                    _settings = Settings()
+                    logger.info("✅ Cloud Run fallback configuration successful")
+                except Exception as fallback_error:
+                    logger.error(f"❌ Cloud Run fallback failed: {fallback_error}")
+                    raise
+            else:
+                raise
     return _settings
 
 
