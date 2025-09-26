@@ -31,10 +31,13 @@ logger = logging.getLogger(__name__)
 class PRCleanupOrchestrator:
     """Orchestrates the entire PR cleanup process"""
 
-    def __init__(self, dry_run: bool = True, config: Dict = None) -> None:
+    def __init__(self, dry_run: bool = True, config: Dict = None, output_dir: str = None) -> None:
         """Initialize orchestrator with all components"""
         self.dry_run = dry_run
         self.config = config or {}
+        self.output_dir = Path(output_dir) if output_dir else Path('scripts/pr_management/reports')
+        self.output_dir.mkdir(parents=True, exist_ok=True)
+
         self.client = GitHubAPIClient(dry_run=dry_run)
         self.analyzer = PRAnalyzer(self.client)
         self.dependabot = DependabotHandler(self.client, config=self.config.get('dependabot', {}))
@@ -111,9 +114,10 @@ class PRCleanupOrchestrator:
 
         # Save analysis report
         report = self.analyzer.generate_report('markdown')
-        with open('pr_analysis_report.md', 'w') as f:
+        report_path = self.output_dir / 'pr_analysis_report.md'
+        with open(report_path, 'w') as f:
             f.write(report)
-        logger.info("Analysis report saved to pr_analysis_report.md")
+        logger.info(f"Analysis report saved to {report_path}")
 
     def _phase_ci_check(self):
         """Phase 2: CI/CD Status Verification"""
@@ -211,7 +215,8 @@ class PRCleanupOrchestrator:
 
                 # Generate report
                 report = self.feature_reviewer.generate_report(review)
-                with open(f'feature_pr_{pr_num}_review.md', 'w') as f:
+                report_path = self.output_dir / f'feature_pr_{pr_num}_review.md'
+                with open(report_path, 'w') as f:
                     f.write(report)
 
             self.results['phases']['feature_prs'] = feature_results
@@ -323,17 +328,128 @@ class PRCleanupOrchestrator:
     def _check_major_version(self, pr) -> bool:
         """Check if PR has major version bump"""
         import re
+        version_pattern = r'from (\d+)\.[\d.]+ to (\d+)\.[\d.]+'
+
+        # Check title first (primary source)
+        match = re.search(version_pattern, pr.title)
+        if match:
+            return int(match.group(2)) > int(match.group(1))
+
+        # Also check body if present (fallback)
         if pr.body:
-            version_pattern = r'from (\d+)\.[\d.]+ to (\d+)\.[\d.]+'
-            match = re.search(version_pattern, pr.title)
+            match = re.search(version_pattern, pr.body)
             if match:
                 return int(match.group(2)) > int(match.group(1))
+
         return False
 
     def _check_has_tests(self, pr) -> bool:
         """Check if PR includes test files"""
         files = self.client.get_pr_files(pr.number)
         return any('test' in f['filename'].lower() for f in files)
+
+    def generate_pr_cleanup_summary(self) -> str:
+        """Generate concise PR cleanup summary for repository root"""
+        report = ["# PR Cleanup Summary\n\n"]
+        report.append(f"**Generated**: {self.results['timestamp']}  \n")
+        report.append(f"**Mode**: {self.results['mode'].upper()}\n\n")
+
+        # PR Analysis Results
+        if 'analysis' in self.results['phases']:
+            analysis = self.results['phases']['analysis']
+            summary = analysis.get('summary', {})
+            report.append("## PR Analysis Results\n\n")
+            report.append(f"- Total Open PRs: {summary.get('total_prs', 0)}\n")
+            report.append(f"- Dependabot PRs: {summary.get('dependabot_prs', 0)}\n")
+            report.append(f"- Security PRs: {summary.get('security_prs', 0)}\n")
+            report.append(f"- Feature PRs: {summary.get('feature_prs', 0)}\n")
+            report.append(f"- PRs with Conflicts: {summary.get('with_conflicts', 0)}\n")
+            report.append(f"- CI Failing: {summary.get('ci_failing', 0)}\n\n")
+
+        # Actions Taken
+        report.append("## Actions Taken\n\n")
+        if self.results['actions_taken']:
+            merged = [a for a in self.results['actions_taken'] if 'merged' in a.lower()]
+            closed = [a for a in self.results['actions_taken'] if 'closed' in a.lower()]
+            needs_action = [a for a in self.results['actions_taken'] if 'needs' in a.lower()]
+
+            if merged:
+                report.append("### Merged\n")
+                for action in merged:
+                    report.append(f"- {action}\n")
+                report.append("\n")
+
+            if closed:
+                report.append("### Closed\n")
+                for action in closed:
+                    report.append(f"- {action}\n")
+                report.append("\n")
+
+            if needs_action:
+                report.append("### Needs Action\n")
+                for action in needs_action:
+                    report.append(f"- {action}\n")
+                report.append("\n")
+        else:
+            report.append("_No actions taken (dry run or no actionable PRs)_\n\n")
+
+        # Dependabot Processing
+        if 'dependabot' in self.results['phases']:
+            dep = self.results['phases']['dependabot']
+            report.append("## Dependabot Processing\n\n")
+            report.append(f"- Processed: {dep.get('processed', 0)}\n")
+            report.append(f"- Skipped: {dep.get('skipped', 0)}\n")
+            report.append(f"- Failed: {dep.get('failed', 0)}\n\n")
+
+        # Security PR Status
+        if 'security' in self.results['phases']:
+            sec = self.results['phases']['security']
+            report.append("## Security PR Status\n\n")
+            if 'summary' in sec:
+                urgent = sec['summary'].get('urgent_merges', [])
+                if urgent:
+                    report.append(f"- Urgent merges: {', '.join(f'#{pr}' for pr in urgent)}\n")
+                else:
+                    report.append("- No urgent security PRs\n")
+            report.append("\n")
+
+        # Feature PR Notes
+        if 'feature_prs' in self.results['phases']:
+            report.append("## Feature PR Notes\n\n")
+            feature_prs = self.results['phases']['feature_prs']
+            if feature_prs:
+                report.append(f"- Reviewed {len(feature_prs)} feature PRs\n")
+                report.append(f"- Detailed reports saved in {self.output_dir}\n\n")
+            else:
+                report.append("- No feature PRs reviewed\n\n")
+
+        # CI Status
+        if 'ci_check' in self.results['phases']:
+            ci = self.results['phases']['ci_check']
+            summary = ci.get('summary', {})
+            report.append("## CI Status\n\n")
+            report.append(f"- All Passing: {summary.get('all_passing', 0)}\n")
+            report.append(f"- Some Failing: {summary.get('some_failing', 0)}\n")
+            report.append(f"- Pending: {summary.get('pending', 0)}\n\n")
+
+        # Remaining Actions
+        report.append("## Remaining Actions\n\n")
+        if 'decisions' in self.results['phases']:
+            decisions = self.results['phases']['decisions']
+            summary = decisions.get('summary', {})
+            needs_review = summary.get('needs_review', [])
+            blocked = summary.get('blocked', [])
+
+            if needs_review:
+                report.append(f"- PRs needing review: {', '.join(f'#{pr}' for pr in needs_review)}\n")
+            if blocked:
+                report.append(f"- Blocked PRs: {', '.join(f'#{pr}' for pr in blocked)}\n")
+            if not needs_review and not blocked:
+                report.append("- No remaining actions required\n")
+        else:
+            report.append("- Decision phase not completed\n")
+
+        return ''.join(report)
 
     def generate_final_report(self) -> str:
         """Generate comprehensive final report"""
@@ -371,9 +487,8 @@ def main():
     parser = argparse.ArgumentParser(description='PR Cleanup Orchestrator')
     parser.add_argument('--live', action='store_true', help='Run in live mode (default is dry-run)')
     parser.add_argument('--dry-run', dest='dry_run', action='store_true', help='Run in dry-run mode (default)')
-    parser.add_argument('--output', default='orchestration_results.json', help='Output file for results')
+    parser.add_argument('--output-dir', type=str, default='scripts/pr_management/reports', help='Output directory for all reports')
     parser.add_argument('--config', type=str, help='Path to configuration file')
-    parser.add_argument('--report-file', type=str, default='orchestration_report.md', help='Path to save report file')
     args = parser.parse_args()
 
     # Determine mode (--live takes precedence)
@@ -394,7 +509,7 @@ def main():
                 logger.warning(f"Error loading config: {e}, using defaults")
 
     # Initialize and run orchestrator
-    orchestrator = PRCleanupOrchestrator(dry_run=dry_run, config=config or {})
+    orchestrator = PRCleanupOrchestrator(dry_run=dry_run, config=config or {}, output_dir=args.output_dir)
     results = orchestrator.execute_cleanup()
 
     # Generate and save reports
@@ -402,15 +517,28 @@ def main():
     print("\n" + "=" * 80)
     print(final_report)
 
-    # Save detailed results
-    with open(args.output, 'w') as f:
-        json.dump(results, f, indent=2, default=str)
-    logger.info(f"Results saved to {args.output}")
+    # Ensure output directory exists
+    output_path = Path(args.output_dir)
+    output_path.mkdir(parents=True, exist_ok=True)
 
-    # Save final report
-    with open(args.report_file, 'w') as f:
+    # Save detailed results
+    results_file = output_path / 'orchestration_results.json'
+    with open(results_file, 'w') as f:
+        json.dump(results, f, indent=2, default=str)
+    logger.info(f"Results saved to {results_file}")
+
+    # Save orchestration report
+    report_file = output_path / 'orchestration_report.md'
+    with open(report_file, 'w') as f:
         f.write(final_report)
-    logger.info(f"Report saved to {args.report_file}")
+    logger.info(f"Report saved to {report_file}")
+
+    # Save PR Cleanup Summary at repository root
+    summary_report = orchestrator.generate_pr_cleanup_summary()
+    summary_file = Path('PR_CLEANUP_SUMMARY.md')
+    with open(summary_file, 'w') as f:
+        f.write(summary_report)
+    logger.info(f"PR Cleanup Summary saved to {summary_file}")
 
     logger.info("\n" + "=" * 80)
     logger.info("PR CLEANUP ORCHESTRATION COMPLETE")

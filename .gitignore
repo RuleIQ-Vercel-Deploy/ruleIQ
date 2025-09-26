@@ -1,66 +1,67 @@
-# -----------------------------------------------------------------------------
-
-# Windsurf Ignore File (.windsurfignore)
-
-# Any path or glob listed below will be excluded from Windsurf’s AI indexing
-
-# and autonomous edits.  Syntax is identical to .gitignore.
-
-# -----------------------------------------------------------------------------
-
-\############################
-
-1. Dependency directories
-
+# =============================================================================
+# Dependencies
+# =============================================================================
 node_modules/
 bower_components/
 vendor/
 .venv/
 venv/
 env/
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
 
-Python byte‑code caches (match anywhere)
-
-**/pycache/
-
-Exclude all compiled Python files
-
-*.py[cod]
-
-2. Build / output artefacts Build / output artefacts
-
+# =============================================================================
+# Build Outputs
+# =============================================================================
 dist/
 build/
 out/
 target/
 coverage/
 *.egg-info/
+.next/
+.turbo/
 
-3. Packaging leftovers
+# =============================================================================
+# Python
+# =============================================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg
+*.manifest
+*.spec
 
-*.tar.gz
-*.whl
-
-4. Logs & runtime state
-
+# =============================================================================
+# Logs
+# =============================================================================
+logs/
 *.log
-.log.
-
-Coverage DB created by pytest / coverage.py
-
-.coverage
-coverage.*
-
-IDE & tooling debug logs
-
+*.log.*
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+lerna-debug.log*
 pip-log.txt
-*.pid
+pip-delete-this-directory.txt
 
-5. Environment & secrets Environment & secrets
-
+# =============================================================================
+# Environment & Secrets
+# =============================================================================
+!.env.example
 .env
 .env.*
 *.pem
@@ -69,155 +70,168 @@ pip-log.txt
 *.pfx
 secrets/
 credentials.json
+.secrets/
+**/.secrets/
 
-6. IDE / editor metadata
-
+# =============================================================================
+# IDE & Editors
+# =============================================================================
 .vscode/
 .idea/
-*.suo
-*.user
-*.userosscache
-*.sln.docstates
-
-# Augment local settings
-.augment-guidelines/settings.local.json
-
-7. OS‑specific cruft
-
-.DS_Store
-Thumbs.db
 *.swp
+*.swo
 *~
-*.bak
+*.sublime-project
+*.sublime-workspace
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.iml
+*.ipr
+*.iws
+.cursor/
+.windsurfrules
+.augment-guidelines/
+.kilocode/
+.kilocodemodes
 
-8. Test artefacts
+# =============================================================================
+# Operating System
+# =============================================================================
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msm
+*.msp
+*.lnk
 
-pytest_cache/
+# =============================================================================
+# Testing
+# =============================================================================
+.pytest_cache/
 test-results/
 junit-results/
 coverage.xml
+*.coverage
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+.hypothesis/
+.benchmarks/
+test_artifacts/
+test_configs/docker-compose.test.yml
+test-*.html
 
-9. Temporary files
-
+# =============================================================================
+# Temporary Files
+# =============================================================================
 tmp/
-Temp/
+temp/
 *.tmp
+*.temp
 *.cache
+*.bak
+*.backup
+*.swp
+*.pid
+*.seed
+*.pid.lock
 
-10. Generated docs
-
+# =============================================================================
+# Documentation
+# =============================================================================
 docs/_build/
+docs/.doctrees/
+site/
 
-11. Container & infrastructure
-
+# =============================================================================
+# Containers & Infrastructure
+# =============================================================================
 .docker/
 *.tfstate
-.tfstate.
+*.tfstate.*
+.terraform/
+.vagrant/
+*.box
 
-12. Lock‑files (exclude from LLM, keep in VCS)
-
-package-lock.json
-yarn.lock
-
-13. Large binary assets
-
+# =============================================================================
+# Large Binary Files
+# =============================================================================
 *.iso
 *.dmg
 *.zip
 *.rar
 *.7z
-*.png
-*.jpg
-*.jpeg
-*.gif
-*.mp4
-*.mov
+*.tar.gz
+*.tgz
+*.jar
+*.war
+*.ear
+*.dll
+*.exe
+*.pyc
+*.pyo
 
------------------------------------------------------------------------------
+# =============================================================================
+# PR Management Artifacts
+# =============================================================================
+scripts/pr_management/reports/
+pr_analysis_report.md
+feature_pr_*_review.md
+orchestration_report.md
+orchestration_results.json
+PR_CLEANUP_SUMMARY.md
 
-End of file
-
------------------------------------------------------------------------------
-
-
-# Environment files - Security Critical
-!.env.example
-.env
-.env.local
-.env.*.local
-.env.production
-.env.staging
-
-# Secure key storage directory
-.secrets/
-**/.secrets/
-
-# Cache files with potential secrets
+# =============================================================================
+# Project-Specific
+# =============================================================================
+# Serena cache (keep memories)
 .serena/cache/
 */.serena/cache/
 **/.serena/cache/
 
-# Debug and testing tools - keep out of version control
-debug-suite.html
-*.pkl
+# Claude artifacts (keep config)
+.claude/serena-*.sh
+.claude/serena-*.json
+.claude/serena-*.flag
+.claude/verification-complete.json
 
-# Backup environment files
-.env.local.backup*
-.env.backup*
-# Environment files
-!.env.example
-.env
-.env.local
-.env.*.local
-
-# Cache files with potential secrets
-.serena/cache/
-*/.serena/cache/
-**/.serena/cache/
-.claude/
-**/claude/
-**/.claude/
-# Debug and testing tools - keep out of version control
-debug-suite.html
-
-# Tool-specific session files (Added for cleanup)
-#.claude/serena-*.sh
-#.claude/serena-*.json
-#.claude/serena-*.flag
-#.serena/memories/
-.cursor/rules/
-.windsurfrules
-.augment-guidelines/
-
-# Design iterations and generated files
+# Design and analysis
 .superdesign/
 ruleIQ*.html
-
-# Runtime and schedule files
-celerybeat-schedule*
-
-# Context and analysis files (auto-generated)
 .context/
 
-# Legacy and migration folders
+# Runtime files
+celerybeat-schedule*
+*.pkl
+
+# Legacy and migration
 frontend/legacy/
 results.json
 postman/environment-doppler-synced.json
 postman/newman-environment-doppler.json
 
-# Test artifacts and configs
-test_artifacts/
-test_configs/docker-compose.test.yml
-*.coverage
-coverage.xml
-test-*.html
-
-# Archive and backup directories
+# Archive directories
 archive/
 backups/
 backup_*/
-*.backup
-*.bak
 
+# Deployment
 .vercel
 .scannerwork/
+railway.json
+
+# Debug files
+debug-suite.html
+debug_*.py
+*_debug.json
