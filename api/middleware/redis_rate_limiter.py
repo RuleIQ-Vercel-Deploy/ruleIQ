@@ -108,8 +108,9 @@ class RedisRateLimiter:
             await self.redis_client.close()
 
 
-general_limiter = RedisRateLimiter(requests_per_window=settings.
-    rate_limit_requests, window_seconds=settings.rate_limit_window,
+general_limiter = RedisRateLimiter(
+    requests_per_window=getattr(settings, 'rate_limit_per_minute', 60),
+    window_seconds=60,  # Fixed 60-second window for per-minute rate limits
     key_prefix='general')
 auth_limiter = RedisRateLimiter(requests_per_window=10, window_seconds=60,
     key_prefix='auth')
