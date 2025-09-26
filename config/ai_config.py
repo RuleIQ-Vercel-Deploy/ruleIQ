@@ -129,6 +129,10 @@ class AIConfig:
             raise ValueError('GOOGLE_API_KEY environment variable is required')
         genai.configure(api_key=self.google_api_key)
 
+    def health_check(self) -> None:
+        """Public health check method that initializes Google AI if needed"""
+        self._initialize_google_ai()
+
     def get_model(self, model_type: Optional[ModelType]=None,
         system_instruction: Optional[str]=None, tools: Optional[List[Dict[
         str, Any]]]=None) ->genai.GenerativeModel:

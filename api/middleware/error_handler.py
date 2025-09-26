@@ -1,25 +1,35 @@
-"""
 from __future__ import annotations
 import logging
-
-
-logger = logging.getLogger(__name__)
-Error Handling Middleware for ComplianceGPT API
-
-This module provides a global error handler that catches exceptions and returns
-a standardized JSON response, leveraging the custom exception hierarchy.
-"""
-from typing import Any
 import traceback
 import uuid
+from typing import Any
+
 from fastapi import Request
 from fastapi.responses import JSONResponse
 from pydantic import ValidationError
 from sqlalchemy.exc import SQLAlchemyError
-from config.logging_config import get_logger
+
+try:
+    from config.logging_config import get_logger
+    logger = get_logger(__name__)
+except Exception:
+    import logging
+    logger = logging.getLogger(__name__)
+
 from config.settings import settings
-from core.exceptions import ApplicationException
-logger = get_logger(__name__)
+
+try:
+    from core.exceptions import ApplicationException
+except Exception:
+    class ApplicationException(Exception):
+        def __init__(self, message: str, status_code: int = 400):
+            self.message = message
+            self.status_code = status_code
+
+"""
+Error Handling Middleware for ruleIQ API.
+Provides a global error handler returning standardized JSON responses.
+"""
 
 
 async def error_handler_middleware(request: Request, call_next) ->Any:
