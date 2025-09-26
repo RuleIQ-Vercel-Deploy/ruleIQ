@@ -1,31 +1,35 @@
 from __future__ import annotations
-import requests
+from datetime import datetime, timedelta, timezone
 from typing import Any, Dict
-from datetime import timedelta, timezone
-from datetime import datetime
 from uuid import UUID, uuid4
+
+import logging
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.security import OAuth2PasswordRequestForm
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
-from api.dependencies.auth import ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token, create_refresh_token, get_password_hash, oauth2_scheme, verify_password
+
+from api.dependencies.auth import (
+    ACCESS_TOKEN_EXPIRE_MINUTES,
+    create_access_token,
+    create_refresh_token,
+    get_password_hash,
+    oauth2_scheme,
+    verify_password,
+)
 from api.middleware.rate_limiter import auth_rate_limit
 from api.schemas.models import Token, UserCreate, UserResponse
-from api.dependencies.security_validation import (
-import logging
-
-logger = logging.getLogger(__name__)
-    validate_request
-)
+from api.dependencies.security_validation import validate_request
 from api.utils.security_validation import SecurityValidator
 from utils.input_validation import InputValidator, ValidationError as InputValidationError
-from database.db_setup import get_db
+from database.db_setup import get_db, async_session_maker
 from database.user import User
 from database.rbac import Role
 from services.auth_service import auth_service
 from services.rbac_service import RBACService
 from services.security_alerts import SecurityAlertService
 from config.logging_config import get_logger
+
 logger = get_logger(__name__)
 
 
@@ -71,8 +75,6 @@ async def register(user: UserCreate, db: Session=Depends(get_db)) ->Any:
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
-    from database.rbac import Role
-    from services.rbac_service import RBACService
     try:
         rbac_service = RBACService(db)
         business_user_role = db.query(Role).filter(Role.name == 'business_user'

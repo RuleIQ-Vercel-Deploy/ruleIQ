@@ -23,11 +23,17 @@ from api.dependencies.auth import get_current_active_user
 from database.user import User
 from api.dependencies.database import get_async_db
 from services.rate_limiting import RateLimitService
-from api.middleware.ai_rate_limiter import ai_analysis_rate_limit, ai_followup_rate_limit, ai_help_rate_limit, ai_rate_limit_stats, ai_recommendations_rate_limit, get_ai_rate_limit_stats
+from api.middleware.ai_rate_limiter import (
+    ai_analysis_rate_limit, ai_followup_rate_limit, ai_help_rate_limit,
+    ai_rate_limit_stats, ai_recommendations_rate_limit, get_ai_rate_limit_stats
+)
 from core.exceptions import NotFoundException
 from database.business_profile import BusinessProfile
 from services.ai import ComplianceAssistant
-from services.ai.exceptions import AIServiceException, AIContentFilterException, AIModelException, AIParsingException, AIQuotaExceededException, AITimeoutException
+from services.ai.exceptions import (
+    AIServiceException, AIContentFilterException, AIModelException,
+    AIParsingException, AIQuotaExceededException, AITimeoutException
+)
 logger = logging.getLogger(__name__)
 router = APIRouter(tags=['AI Assessment Assistant'])
 
@@ -225,33 +231,33 @@ async def get_question_help(framework_id: str, request: AIHelpRequest,
             guidance_response.get('generated_at', ''))
     except NotFoundException as e:
         logger.warning('Business profile not found in question help: %s' % e)
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=
-            str(e))
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
     except AIContentFilterException as e:
         logger.warning('AI content filter triggered in question help: %s' % e)
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail
-            =f'Content not appropriate for AI assistance: {e.filter_reason}')
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f'Content not appropriate for AI assistance: {e.filter_reason}') from e
     except AIQuotaExceededException as e:
         logger.warning('AI quota exceeded in question help: %s' % e)
         raise HTTPException(status_code=status.HTTP_429_TOO_MANY_REQUESTS,
-            detail=f'AI service quota exceeded: {e.quota_type}')
+            detail=f'AI service quota exceeded: {e.quota_type}') from e
     except (AIModelException, AIParsingException) as e:
         logger.error('AI model/parsing error in question help: %s' % e)
-        raise HTTPException(status_code=status.HTTP_502_BAD_GATEWAY, detail
-            ='AI service experiencing technical difficulties')
+        raise HTTPException(status_code=status.HTTP_502_BAD_GATEWAY,
+            detail='AI service experiencing technical difficulties') from e
     except AITimeoutException as e:
         logger.warning('AI timeout in question help: %s' % e)
         raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail='AI service timeout - please try again')
+            detail='AI service timeout - please try again') from e
     except AIServiceException as e:
         logger.error('AI service error in question help: %s' % e)
         raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail=f'AI assistance temporarily unavailable: {e.message}')
+            detail=f'AI assistance temporarily unavailable: {e.message}') from e
     except Exception as e:
         logger.error('Unexpected error in question help: %s' % e)
-        raise HTTPException(status_code=status.
-            HTTP_500_INTERNAL_SERVER_ERROR, detail=
-            'Unable to provide AI assistance at this time')
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail='Unable to provide AI assistance at this time') from e
 
 
 @router.post('/{framework_id}/help/stream')
