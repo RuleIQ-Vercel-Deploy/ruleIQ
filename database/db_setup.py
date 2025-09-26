@@ -7,19 +7,28 @@ management utilities.
 """
 import os
 import logging
-from typing import AsyncGenerator, Dict, Any, Generator
+from typing import AsyncGenerator, Dict, Any, Generator, Optional, TYPE_CHECKING
 from contextlib import contextmanager
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, text, MetaData, Engine
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker, AsyncEngine
 from sqlalchemy.orm import declarative_base, sessionmaker, Session
+from fastapi import HTTPException
 load_dotenv('.env.local', override=True)
 load_dotenv('.env', override=False)
 logger = logging.getLogger(__name__)
-_ENGINE: Engine | None = None
-_SESSION_LOCAL: sessionmaker[Session] | None = None
-_ASYNC_ENGINE: AsyncEngine | None = None
-_ASYNC_SESSION_LOCAL: async_sessionmaker[AsyncSession] | None = None
+if TYPE_CHECKING:
+    from sqlalchemy.orm import sessionmaker as SessionMakerType
+    from sqlalchemy.ext.asyncio import async_sessionmaker as AsyncSessionMakerType
+    _ENGINE: Optional[Engine] = None
+    _SESSION_LOCAL: Optional[SessionMakerType[Session]] = None
+    _ASYNC_ENGINE: Optional[AsyncEngine] = None
+    _ASYNC_SESSION_LOCAL: Optional[AsyncSessionMakerType[AsyncSession]] = None
+else:
+    _ENGINE: Optional[Engine] = None
+    _SESSION_LOCAL: Optional[Any] = None
+    _ASYNC_ENGINE: Optional[AsyncEngine] = None
+    _ASYNC_SESSION_LOCAL: Optional[Any] = None
 naming_convention = {'ix': 'ix_%(column_0_label)s', 'uq':
     'uq_%(table_name)s_%(column_0_name)s', 'ck':
     'ck_%(table_name)s_%(constraint_name)s', 'fk':
@@ -43,7 +52,7 @@ class DatabaseConfig:
         if missing_vars:
             error_msg = f"""Missing required environment variables: {', '.join(missing_vars)}
 Please copy env.template to .env.local and configure the variables."""
-            logger.error(error_msg)
+            logger.error("Missing required environment variables: %s. Please copy env.template to .env.local and configure the variables.", ', '.join(missing_vars))
             raise OSError(error_msg)
         if os.path.exists('.env.local'):
             logger.info('Loaded configuration from .env.local')
@@ -61,13 +70,11 @@ Please copy env.template to .env.local and configure the variables."""
         DatabaseConfig.validate_environment()
         db_url = os.getenv('DATABASE_URL')
         if not db_url:
-            error_msg = (
-                'DATABASE_URL environment variable not set. Please set it in your .env file or environment.',
-                )
+            error_msg = 'DATABASE_URL environment variable not set. Please set it in your .env file or environment.'
             logger.error(error_msg)
             raise OSError(error_msg)
         safe_url = db_url.split('@')[1] if '@' in db_url else db_url
-        logger.info('Connecting to database: %s' % safe_url)
+        logger.info('Connecting to database: %s', safe_url)
         sync_db_url = db_url
         if '+asyncpg' in sync_db_url:
             sync_db_url = sync_db_url.replace('+asyncpg', '+psycopg2')
@@ -75,26 +82,17 @@ Please copy env.template to .env.local and configure the variables."""
             sync_db_url = sync_db_url.replace('postgresql://',
                 'postgresql+psycopg2://', 1)
         async_db_url = db_url
-        if '+asyncpg' not in async_db_url:
-            async_db_url_candidate = async_db_url.replace('+psycopg2',
-                '+asyncpg')
-            if ('postgresql://' in async_db_url_candidate and '+asyncpg' not in
-                async_db_url_candidate):
-                async_db_url = async_db_url_candidate.replace('postgresql://',
-                    'postgresql+asyncpg://', 1)
-            elif '+asyncpg' in async_db_url_candidate:
-                async_db_url = async_db_url_candidate
-            elif 'postgresql://' in async_db_url and '+psycopg2' not in async_db_url and '+asyncpg' not in async_db_url:
-                async_db_url = async_db_url.replace('postgresql://',
-                    'postgresql+asyncpg://', 1)
-        if 'sslmode=require' in async_db_url:
-            from urllib.parse import urlparse, urlunparse, parse_qs, urlencode
-            parts = urlparse(async_db_url)
-            query_params = parse_qs(parts.query)
-            query_params.pop('sslmode', None)
-            query_params.pop('channel_binding', None)
-            new_query = urlencode(query_params, doseq=True)
-            async_db_url = urlunparse(parts._replace(query=new_query))
+        try:
+            import asyncpg  # noqa: F401
+            if 'postgresql://' in async_db_url and '+asyncpg' not in async_db_url:
+                async_db_url = async_db_url.replace('postgresql://', 'postgresql+asyncpg://', 1)
+        except ImportError:
+            logger.warning('asyncpg not available, falling back to psycopg for async connections')
+            # Fallback to psycopg for async connections (psycopg v3 supports async)
+            if 'postgresql://' in async_db_url and '+psycopg' not in async_db_url:
+                async_db_url = async_db_url.replace('postgresql://', 'postgresql+psycopg://', 1)
+            elif '+asyncpg' in async_db_url:
+                async_db_url = async_db_url.replace('+asyncpg', '+psycopg')
         return db_url, sync_db_url, async_db_url
 
     @staticmethod
@@ -120,7 +118,7 @@ Please copy env.template to .env.local and configure the variables."""
                     'pool_recycle': int(os.getenv('DB_POOL_RECYCLE', '1800')),
                     'pool_timeout': int(os.getenv('DB_POOL_TIMEOUT', '30'))}
             except ValueError as e:
-                logger.error('Invalid database configuration value: %s' % e)
+                logger.error('Invalid database configuration value: %s', e)
                 raise ValueError(f'Invalid database configuration: {e}')
             if is_async:
                 async_kwargs = {**base_kwargs, 'pool_reset_on_return': 'commit'}
@@ -151,27 +149,52 @@ def _init_sync_db() ->None:
             logger.info('Synchronous database engine initialized successfully')
         except Exception as e:
             logger.error(
-                'Failed to initialize synchronous database engine: %s' % e)
+                'Failed to initialize synchronous database engine: %s', e)
             raise
 
 
-def _init_async_db() ->None:
+def _init_async_db() -> None:
     """Initializes asynchronous database engine and session maker if not already initialized."""
     global _ASYNC_ENGINE, _ASYNC_SESSION_LOCAL
     if _ASYNC_ENGINE is None:
+        # Check for Cloud Run environment
+        is_cloud_run = bool(os.getenv('K_SERVICE') or os.getenv('CLOUD_RUN_JOB'))
+        
         try:
+            # Get database URLs, which handles driver fallback internally
             _, _, async_db_url = DatabaseConfig.get_database_urls()
+            if async_db_url is None:
+                logger.warning('Async database URL is None - no async driver available')
+                return  # Cannot create async engine without a driver
+            
+            # Extract driver from URL for logging
+            driver_name = 'asyncpg' if 'asyncpg' in async_db_url else 'psycopg' if 'psycopg' in async_db_url else 'unknown'
+            logger.debug('Using async driver: %s', driver_name)
+            
+            # Create async engine with the appropriate driver
             engine_kwargs = DatabaseConfig.get_engine_kwargs(is_async=True)
             _ASYNC_ENGINE = create_async_engine(async_db_url, **engine_kwargs)
-            _ASYNC_SESSION_LOCAL = async_sessionmaker(bind=_ASYNC_ENGINE,
-                class_=AsyncSession, expire_on_commit=False, autocommit=
-                False, autoflush=False)
-            logger.info('Asynchronous database engine initialized successfully',
-                )
+            _ASYNC_SESSION_LOCAL = async_sessionmaker(
+                bind=_ASYNC_ENGINE,
+                class_=AsyncSession,
+                expire_on_commit=False,
+                autocommit=False,
+                autoflush=False
+            )
+            
+            if is_cloud_run:
+                logger.info('🌩️ Cloud Run: Asynchronous database engine initialized successfully with %s', driver_name)
+            else:
+                logger.info('Asynchronous database engine initialized successfully with %s', driver_name)
+                
         except Exception as e:
-            logger.error(
-                'Failed to initialize asynchronous database engine: %s' % e)
-            raise
+            error_msg = f'Failed to initialize asynchronous database engine: {e}'
+            if is_cloud_run:
+                logger.warning('🌩️ Cloud Run: Failed to initialize asynchronous database engine: %s - will retry on demand', e)
+                return  # Allow graceful degradation in Cloud Run
+            else:
+                logger.error('Failed to initialize asynchronous database engine: %s', e)
+                raise
 
 
 def init_db() ->bool:
@@ -187,17 +210,12 @@ def init_db() ->bool:
         _init_sync_db()
         _init_async_db()
 
-        # Create all tables if they don't exist
-        if _ENGINE is not None:
-            Base.metadata.create_all(bind=_ENGINE)
-            logger.info('Database tables created/verified')
-
         if not test_database_connection():
             return False
         logger.info('Database initialization completed successfully')
         return True
     except Exception as e:
-        logger.error('Database initialization failed: %s' % e, exc_info=True)
+        logger.error('Database initialization failed: %s', e, exc_info=True)
         return False
 
 
@@ -205,27 +223,55 @@ def test_database_connection() ->bool:
     """Test database connection synchronously."""
     try:
         _init_sync_db()
-        from database.db_setup import _ENGINE
+        global _ENGINE
         with _ENGINE.connect() as conn:
             conn.execute(text('SELECT 1'))
             logger.info('Database connection test successful')
             return True
     except Exception as e:
-        logger.error('Database connection test failed: %s' % e)
+        logger.error('Database connection test failed: %s', e)
         return False
 
 
 async def test_async_database_connection() ->bool:
     """Test database connection asynchronously."""
+    is_cloud_run = bool(os.getenv('K_SERVICE') or os.getenv('CLOUD_RUN_JOB'))
+    
     try:
-        _init_async_db()
-        from database.db_setup import _ASYNC_ENGINE
+        # Try to get the session maker (which will initialize if needed)
+        session_maker = get_async_session_maker()
+        if session_maker is None:
+            if is_cloud_run:
+                logger.warning('🌩️ Cloud Run: Async database not available - skipping connection test')
+                return False
+            else:
+                logger.error('Async database session maker not available')
+                return False
+        
+        # Test the connection using the global engine
+        if _ASYNC_ENGINE is None:
+            logger.error('Async database engine not initialized')
+            return False
+            
         async with _ASYNC_ENGINE.connect() as conn:
             await conn.execute(text('SELECT 1'))
-            logger.info('Async database connection test successful')
+            if is_cloud_run:
+                logger.info('🌩️ Cloud Run: Async database connection test successful')
+            else:
+                logger.info('Async database connection test successful')
             return True
+    except ImportError as e:
+        if is_cloud_run:
+            logger.warning('🌩️ Cloud Run: Async database connection test skipped due to missing dependencies: %s', e)
+            return False
+        else:
+            logger.error('Async database connection test failed due to missing dependencies: %s', e)
+            return False
     except Exception as e:
-        logger.error('Async database connection test failed: %s' % e)
+        if is_cloud_run:
+            logger.warning('🌩️ Cloud Run: Async database connection test failed: %s', e)
+        else:
+            logger.error('Async database connection test failed: %s', e)
         return False
 
 
@@ -259,8 +305,15 @@ async def get_async_db() ->AsyncGenerator[AsyncSession, None]:
     """
     Provides an asynchronous database session and ensures it's closed afterwards.
     """
-    _init_async_db()
-    async with _ASYNC_SESSION_LOCAL() as session:
+    session_maker = get_async_session_maker()
+    if session_maker is None:
+        is_cloud_run = bool(os.getenv('K_SERVICE') or os.getenv('CLOUD_RUN_JOB'))
+        error_msg = 'Async database session maker not available'
+        if is_cloud_run:
+            logger.warning('🌩️ Cloud Run: %s - async database operations not supported', error_msg)
+        raise HTTPException(status_code=503, detail=f'{error_msg} - check database configuration and asyncpg installation')
+    
+    async with session_maker() as session:
         try:
             yield session
         except (ValueError, TypeError):
@@ -301,16 +354,27 @@ def get_engine_info() ->Dict[str, Any]:
     info = {'sync_engine_initialized': _ENGINE is not None,
         'async_engine_initialized': _ASYNC_ENGINE is not None}
     if _ASYNC_ENGINE:
-        pool = _ASYNC_ENGINE.pool
-        info.update({'async_pool_size': pool.size(),
-            'async_pool_checked_in': pool.checkedin(),
-            'async_pool_checked_out': pool.checkedout(),
-            'async_pool_overflow': pool.overflow()})
+        try:
+            pool = _ASYNC_ENGINE.pool
+            info.update({
+                'async_pool_size': getattr(pool, 'size', lambda: 0)() if hasattr(pool, 'size') else 0,
+                'async_pool_checked_in': getattr(pool, 'checkedin', lambda: 0)() if hasattr(pool, 'checkedin') else 0,
+                'async_pool_checked_out': getattr(pool, 'checkedout', lambda: 0)() if hasattr(pool, 'checkedout') else 0,
+                'async_pool_overflow': getattr(pool, 'overflow', lambda: 0)() if hasattr(pool, 'overflow') else 0
+            })
+        except Exception as e:
+            logger.debug('Could not get async pool info: %s', e)
     if _ENGINE:
-        pool = _ENGINE.pool
-        info.update({'sync_pool_size': pool.size(), 'sync_pool_checked_in':
-            pool.checkedin(), 'sync_pool_checked_out': pool.checkedout(),
-            'sync_pool_overflow': pool.overflow()})
+        try:
+            pool = _ENGINE.pool
+            info.update({
+                'sync_pool_size': getattr(pool, 'size', lambda: 0)() if hasattr(pool, 'size') else 0,
+                'sync_pool_checked_in': getattr(pool, 'checkedin', lambda: 0)() if hasattr(pool, 'checkedin') else 0,
+                'sync_pool_checked_out': getattr(pool, 'checkedout', lambda: 0)() if hasattr(pool, 'checkedout') else 0,
+                'sync_pool_overflow': getattr(pool, 'overflow', lambda: 0)() if hasattr(pool, 'overflow') else 0
+            })
+        except Exception as e:
+            logger.debug('Could not get sync pool info: %s', e)
     return info
 
 
@@ -319,9 +383,32 @@ _init_sync_db = _init_sync_db
 _init_async_db = _init_async_db
 def get_async_session_maker():
     """Get the async session maker, initializing if needed."""
+    global _ASYNC_SESSION_LOCAL
+    
     if _ASYNC_SESSION_LOCAL is None:
-        _init_async_db()
+        is_cloud_run = bool(os.getenv('K_SERVICE') or os.getenv('CLOUD_RUN_JOB'))
+        
+        try:
+            _init_async_db()
+        except ImportError as e:
+            if is_cloud_run:
+                logger.warning('🌩️ Cloud Run: Async database initialization failed due to missing dependencies: %s', e)
+                logger.warning('🌩️ Cloud Run: Returning None - async operations will not be available')
+                return None
+            else:
+                logger.error('Failed to initialize async database: %s', e)
+                raise
+        except Exception as e:
+            if is_cloud_run:
+                logger.warning('🌩️ Cloud Run: Async database initialization failed: %s', e)
+                logger.warning('🌩️ Cloud Run: Returning None - will retry later')
+                return None
+            else:
+                logger.error('Failed to get async session maker: %s', e)
+                raise
+    
     return _ASYNC_SESSION_LOCAL
 
-# For backward compatibility
-async_session_maker = get_async_session_maker()
+# For backward compatibility - but make it lazy to prevent eager initialization
+# This will be None initially and only populated when get_async_session_maker() is called
+async_session_maker = None

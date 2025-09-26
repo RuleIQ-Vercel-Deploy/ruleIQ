@@ -4,14 +4,19 @@
 # Core FastAPI framework
 fastapi==0.110.0
 uvicorn==0.27.0
+python-multipart==0.0.9
 
 # Data validation and settings
 pydantic==2.7.4
 pydantic-settings==2.4.0
 
 # Database connectivity
-sqlalchemy==2.0.27
+# SQLAlchemy with async support for PostgreSQL
+sqlalchemy[asyncio]==2.0.27
+# PostgreSQL drivers - both async (asyncpg) and sync (psycopg2) for compatibility
 psycopg==3.1.18
+asyncpg>=0.29.0,<1.0.0
+psycopg2-binary==2.9.9
 
 # Authentication and security
 python-jose[cryptography]==3.3.0
@@ -22,6 +27,16 @@ python-dotenv==1.0.1
 
 # HTTP client for external API calls
 httpx==0.27.0
+requests>=2.31.0
+
+# Redis for caching and sessions (optional in Cloud Run)
+redis[asyncio]==5.0.1
+
+# Google Cloud integration
+google-cloud-secret-manager==2.20.0
+
+# AI services (for Google AI integration)
+google-generativeai==0.8.3
 
 # Type hints compatibility (resolves all package conflicts)
 typing-extensions>=4.11,<5
@@ -31,3 +46,6 @@ slowapi==0.1.9
 
 # Logging
 python-json-logger==2.0.7
+
+# Security and monitoring
+sentry-sdk[fastapi]==1.40.3

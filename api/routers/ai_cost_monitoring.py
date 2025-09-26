@@ -1,18 +1,10 @@
-"""
-from __future__ import annotations
-import logging
-
-
-logger = logging.getLogger(__name__)
-# Constants
-DEFAULT_LIMIT = 100
-
-
-AI Cost Monitoring API Router
+"""AI Cost Monitoring API Router
 
 Provides endpoints for AI cost tracking, budget management, optimization insights,
 and real-time monitoring of AI service usage and expenses.
 """
+from __future__ import annotations
+
 from datetime import date, datetime, timedelta
 from decimal import Decimal
 from typing import Dict, List, Optional, Any
@@ -23,6 +15,10 @@ from database.user import User
 from api.middleware.rate_limiter import RateLimited
 from services.ai.cost_management import AICostManager, CostTrackingService, BudgetAlertService, CostOptimizationService
 from config.logging_config import get_logger
+
+# Constants
+DEFAULT_LIMIT = 100
+
 logger = get_logger(__name__)
 router = APIRouter(tags=['AI Cost Management'])
 

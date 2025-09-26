@@ -5,9 +5,9 @@ steps:
     args:
       - 'build'
       - '-t'
-      - 'gcr.io/$PROJECT_ID/ruleiq-backend:$COMMIT_SHA'
+      - '${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/${IMAGE_NAME}:${COMMIT_SHA}'
       - '-t'
-      - 'gcr.io/$PROJECT_ID/ruleiq-backend:latest'
+      - '${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/${IMAGE_NAME}:latest'
       - '.'
 
   # Push the container image to Container Registry
@@ -15,18 +15,67 @@ steps:
     args:
       - 'push'
       - '--all-tags'
-      - 'gcr.io/$PROJECT_ID/ruleiq-backend'
+      - '${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/${IMAGE_NAME}'
+
+  # Verify that the Docker image contains all required dependencies
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'run'
+      - '--rm'
+      - '${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/${IMAGE_NAME}:${COMMIT_SHA}'
+      - 'python'
+      - '-c'
+      - 'import asyncpg, psycopg, sqlalchemy; print("All database dependencies verified in Docker image")'
+    id: 'verify-dependencies'
+
+  # Test that the application can start without immediate database connection
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'run'
+      - '--rm'
+      - '-e'
+      - 'K_SERVICE=ruleiq'
+      - '-e'
+      - 'TESTING=true'
+      - '-e'
+      - 'JWT_SECRET_KEY=$(openssl rand -hex 32)'
+      - '-e'
+      - 'DATABASE_URL=sqlite:///tmp/test.db'
+      - '-p'
+      - '8080:8080'
+      - '--detach'
+      - '--name'
+      - 'test-container'
+      - '${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/${IMAGE_NAME}:${COMMIT_SHA}'
+    id: 'start-test-container'
+
+  # Wait for container to start and test health endpoint
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'exec'
+      - 'test-container'
+      - 'sh'
+      - '-c'
+      - 'sleep 10 && curl -f http://localhost:8080/health/live || exit 1'
+    id: 'test-health-endpoint'
+
+  # Clean up test container
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'stop'
+      - 'test-container'
+    id: 'cleanup-test-container'
 
   # Deploy container image to Cloud Run
-  - name: 'gcr.io/cloud-builders/gcloud'
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:474.0.0'
     args:
       - 'run'
       - 'deploy'
-      - 'ruleiq-backend'
+      - 'ruleiq'
       - '--image'
-      - 'gcr.io/$PROJECT_ID/ruleiq-backend:$COMMIT_SHA'
+      - '${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/${IMAGE_NAME}:${COMMIT_SHA}'
       - '--region'
-      - 'us-central1'
+      - 'europe-west2'
       - '--platform'
       - 'managed'
       - '--allow-unauthenticated'
@@ -48,18 +97,71 @@ steps:
       - '--concurrency'
       - '80'
       - '--cpu-throttling'
+      - '--startup-probe-initial-delay-seconds'
+      - '30'
+      - '--startup-probe-timeout-seconds'
+      - '10'
+      - '--startup-probe-period-seconds'
+      - '10'
+      - '--startup-probe-failure-threshold'
+      - '6'
+      - '--startup-probe-path'
+      - '/health/startup'
+      - '--liveness-probe-initial-delay-seconds'
+      - '60'
+      - '--liveness-probe-timeout-seconds'
+      - '5'
+      - '--liveness-probe-period-seconds'
+      - '30'
+      - '--liveness-probe-failure-threshold'
+      - '3'
+      - '--liveness-probe-path'
+      - '/health/live'
       - '--set-env-vars'
-      - 'PYTHONUNBUFFERED=1,PORT=8080,ENVIRONMENT=production'
+      - 'PYTHONUNBUFFERED=1,PORT=8080,ENVIRONMENT=production,K_SERVICE=ruleiq,K_CONFIGURATION=ruleiq,K_REVISION=ruleiq-${COMMIT_SHA}'
       - '--set-secrets'
-      - 'DATABASE_URL=DATABASE_URL:latest,JWT_SECRET_KEY=JWT_SECRET_KEY:latest'
+      - 'DATABASE_URL=DATABASE_URL:latest,JWT_SECRET_KEY=JWT_SECRET_KEY:latest,REDIS_URL=REDIS_URL:latest,GOOGLE_AI_API_KEY=GOOGLE_AI_API_KEY:latest'
+
+  # Verify deployment by testing health endpoints
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:474.0.0'
+    args:
+      - 'run'
+      - 'services'
+      - 'describe'
+      - 'ruleiq'
+      - '--region'
+      - 'europe-west2'
+      - '--format'
+      - 'value(status.url)'
+    id: 'get-service-url'
+
+  # Test the deployed service health endpoints
+  - name: 'gcr.io/cloud-builders/bash'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        SERVICE_URL=$(gcloud run services describe ruleiq --region=europe-west2 --format='value(status.url)')
+        curl -f -m 30 --retry 5 --retry-delay 10 "$SERVICE_URL/health/live"
+    id: 'verify-deployment'
+
+  # Test startup endpoint to ensure application is fully initialized
+  - name: 'gcr.io/cloud-builders/bash'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        SERVICE_URL=$(gcloud run services describe ruleiq --region=europe-west2 --format='value(status.url)')
+        curl -f -m 30 --retry 3 --retry-delay 5 "$SERVICE_URL/health/startup"
+    id: 'verify-startup'
 
 # Store images in Container Registry
 images:
-  - 'gcr.io/$PROJECT_ID/ruleiq-backend:$COMMIT_SHA'
-  - 'gcr.io/$PROJECT_ID/ruleiq-backend:latest'
+  - '${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/${IMAGE_NAME}:${COMMIT_SHA}'
+  - '${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/${IMAGE_NAME}:latest'
 
-# Timeout for the entire build
-timeout: '1200s'
+# Timeout for the entire build (increased to accommodate verification steps)
+timeout: '1800s'
 
 # Service account to use for the build
 serviceAccount: 'projects/$PROJECT_ID/serviceAccounts/cloud-build@$PROJECT_ID.iam.gserviceaccount.com'

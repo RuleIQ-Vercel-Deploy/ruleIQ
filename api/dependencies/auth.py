@@ -293,7 +293,7 @@ async def verify_websocket_token(
             raise WebSocketException(code=status.WS_1008_POLICY_VIOLATION)
 
         # Check if token is blacklisted
-        if is_token_blacklisted(token):
+        if await is_token_blacklisted(token):
             await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
             raise WebSocketException(code=status.WS_1008_POLICY_VIOLATION)
 

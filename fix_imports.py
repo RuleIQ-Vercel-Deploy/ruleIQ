@@ -2,8 +2,6 @@
 """Script to fix common import issues in Python files."""
 
 import os
-import re
-from pathlib import Path
 
 def fix_file_imports(filepath):
     """Fix common import issues in a Python file."""

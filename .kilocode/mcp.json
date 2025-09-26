@@ -50,6 +50,22 @@
         "activate_project"
       ]
     },
+    "time": {
+      "command": "uvx",
+      "args": [
+        "mcp-server-time"
+      ]
+    },
+    "neo4j-aura": {
+      "command": "uvx",
+      "args": [
+        "mcp-neo4j-aura-manager@0.4.2"
+      ],
+      "env": {
+        "NEO4J_AURA_CLIENT_ID": "${NEO4J_AURA_CLIENT_ID}",
+        "NEO4J_AURA_CLIENT_SECRET": "${NEO4J_AURA_CLIENT_SECRET}"
+      }
+    },
     "context7": {
       "command": "npx",
       "args": [
@@ -58,35 +74,6 @@
       ],
       "env": {
         "DEFAULT_MINIMUM_TOKENS": ""
-      }
-    },
-    "time": {
-      "command": "uvx",
-      "args": [
-        "mcp-server-time"
-      ]
-    },
-    "neon": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "mcp-remote@latest",
-        "https://mcp.neon.tech/mcp"
-      ],
-      "env": {
-        "NEON_DB_HOST": "https://app-odd-smoke-68034269.dpl.myneon.app",
-        "NEON_DB_URL": "postgresql://neondb_owner:npg_s0JhnfGNy3Ze@ep-wild-grass-a8o37wq8-pooler.eastus2.azure.neon.tech/neondb?sslmode=require",
-        "NEON_DB_PORT": "5432",
-        "NEON_PROJ_ID": "bd862e91-0474-452d-a6a8-113c6aee804e",
-        "NEON_SECRET": "ssk_aryk06bbbecb809v4b3myj3v8tvrrzxwrxchvap3rjs48"
-      }
-    },
-    "neo4j-aura": {
-      "command": "uvx",
-      "args": [ "mcp-neo4j-aura-manager@0.4.2" ],
-      "env": {
-        "NEO4J_AURA_CLIENT_ID": "neo4j+s://8da8b7f8.databases.neo4j.io",
-        "NEO4J_AURA_CLIENT_SECRET": "UUpJv3CNVonLbuJ5C-pZN7AAX5e5hmZbmd83_R4fEfgUIjXtmqqbA4oa2KPNpWCm"
       }
     }
   }

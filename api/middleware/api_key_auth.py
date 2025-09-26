@@ -80,7 +80,8 @@ class APIKeyAuthMiddleware(BaseHTTPMiddleware):
         bool, Optional[dict], Optional[str]]:
         """Validate API key using the APIKeyManager."""
         try:
-            async for db in get_db():
+            from database.db_setup import get_db_context
+            with get_db_context() as db:
                 redis_client = await get_redis_client()
                 manager = APIKeyManager(db, redis_client)
                 is_valid, metadata, error = await manager.validate_api_key(
