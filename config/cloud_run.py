@@ -19,19 +19,16 @@ class CloudRunConfig(BaseConfig):
     SECRET_KEY = os.getenv('SECRET_KEY', 'temporary-secret-key-replace-in-production')
     JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', 'temporary-jwt-key-replace-in-production')
 
-    # Database - using SQLite for initial testing (replace with Cloud SQL)
-    # Use sync SQLite URL, not async
-    DATABASE_URL = os.getenv('DATABASE_URL', 'sqlite:///./ruleiq.db')
-    # For async operations, we'll convert this in the db layer
-    ASYNC_DATABASE_URL = os.getenv('ASYNC_DATABASE_URL', 'sqlite+aiosqlite:///./ruleiq.db')
+    # Database - Neon PostgreSQL (required from environment)
+    DATABASE_URL = os.getenv('DATABASE_URL')
 
-    # Redis - disable for initial testing (replace with Memorystore)
-    REDIS_URL = os.getenv('REDIS_URL', '')
+    # Redis (required from environment)
+    REDIS_URL = os.getenv('REDIS_URL')
 
-    # Neo4j - disable for initial testing
-    NEO4J_URI = os.getenv('NEO4J_URI', '')
-    NEO4J_USERNAME = os.getenv('NEO4J_USERNAME', '')
-    NEO4J_PASSWORD = os.getenv('NEO4J_PASSWORD', '')
+    # Neo4j (required from environment)
+    NEO4J_URI = os.getenv('NEO4J_URI')
+    NEO4J_USERNAME = os.getenv('NEO4J_USERNAME')
+    NEO4J_PASSWORD = os.getenv('NEO4J_PASSWORD')
 
     # API Configuration
     API_HOST = '0.0.0.0'
