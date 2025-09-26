@@ -122,7 +122,7 @@ jobs:
             --max-instances 100 \
             --min-instances 1 \
             --port 8080 \
-            --set-env-vars="PYTHONUNBUFFERED=1,DOPPLER_ENVIRONMENT=${{ env.DOPPLER_CONFIG }}" \
+            --set-env-vars="PYTHONUNBUFFERED=1,ENVIRONMENT=production,PORT=8080" \
             --set-secrets="${{ steps.sync-secrets.outputs.secret_args }}"
 
           # Get the service URL
