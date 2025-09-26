@@ -67,9 +67,10 @@ from api.middleware.security_headers import security_headers_middleware
 from config.ai_config import ai_config
 from app.core.monitoring.setup import configure_from_settings
 from app.core.monitoring.shutdown import get_shutdown_manager
+from config.logging_config import setup_logging
 
-# Constants
-HTTP_SERVICE_UNAVAILABLE = 503
+# Initialize logging using shared configuration
+setup_logging()
 
 # Initialize logger
 logger = logging.getLogger(__name__)
@@ -102,9 +103,9 @@ except ImportError as e:
         logger.error("❌ Failed to import database modules: %s", e)
         raise
 
-# Initialize logging using shared configuration
-from config.logging_config import setup_logging
-setup_logging()
+# Constants
+HTTP_SERVICE_UNAVAILABLE = 503
+
 logger.info("✅ Settings loaded successfully")
 if os.getenv('K_SERVICE') or os.getenv('CLOUD_RUN_JOB'):
     logger.info("🌩️ Cloud Run environment detected")

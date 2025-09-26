@@ -1,4 +1,15 @@
 {
+  "name": "ruleiq-backend",
+  "version": "1.0.0",
+  "description": "RuleIQ Backend API",
+  "main": "main.py",
+  "scripts": {
+    "start": "python -m uvicorn api.main:app --host 0.0.0.0 --port 8080",
+    "dev": "python -m uvicorn api.main:app --host 0.0.0.0 --port 8080 --reload"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "dependencies": {
     "@vercel/analytics": "^1.5.0"
   }
