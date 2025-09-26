@@ -83,8 +83,8 @@ jobs:
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
         run: |
-          # Enable Secret Manager API if not already enabled
-          gcloud services enable secretmanager.googleapis.com --project=${{ env.GCP_PROJECT_ID }}
+          # Try to enable Secret Manager API if not already enabled
+          gcloud services enable secretmanager.googleapis.com --project=${{ env.GCP_PROJECT_ID }} || echo "Could not enable Secret Manager API - assuming already enabled"
 
           # Fetch secrets from Doppler
           SECRETS_JSON=$(doppler secrets download --no-file --format json --project ${{ env.DOPPLER_PROJECT }} --config ${{ env.DOPPLER_CONFIG }})
