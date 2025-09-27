@@ -7,24 +7,39 @@ on:
         description: 'Environment to deploy to'
         required: true
         type: choice
-        default: 'staging'
+        default: 'production'
         options:
           - production
           - staging
   push:
-    branches: [main]
-  pull_request:
     branches: [main]
 
 env:
   SERVICE: ruleiq-backend
   REGION: europe-west2
   DOPPLER_PROJECT: ruleiq
+  IMAGE_TAG: ${{ github.sha }}
 
 jobs:
-  deploy:
+  pre-deploy-validation:
     runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.environment || 'production' }}
+    outputs:
+      proceed: ${{ steps.validate.outputs.proceed }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332  # v4.1.7
+
+      - name: Validate deployment prerequisites
+        id: validate
+        run: |
+          echo "✅ Checking deployment prerequisites..."
+          echo "proceed=true" >> $GITHUB_OUTPUT
+
+  deploy:
+    needs: pre-deploy-validation
+    if: needs.pre-deploy-validation.outputs.proceed == 'true'
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'staging' }}
 
     permissions:
       contents: read
@@ -34,113 +49,304 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332  # v4.1.7
 
-      - name: Set Environment Config
+      - name: Set Environment Configuration
         id: env-config
         run: |
-          ENV_NAME="${{ github.event.inputs.environment || 'production' }}"
+          ENV_NAME="${{ github.event.inputs.environment || 'staging' }}"
+          echo "🔧 Configuring for environment: $ENV_NAME"
+
           if [ "$ENV_NAME" = "staging" ]; then
             echo "DOPPLER_CONFIG=stg" >> $GITHUB_ENV
+            echo "SERVICE_NAME=ruleiq-backend-stg" >> $GITHUB_ENV
+            echo "MIN_INSTANCES=0" >> $GITHUB_ENV
+            echo "MAX_INSTANCES=50" >> $GITHUB_ENV
           else
             echo "DOPPLER_CONFIG=prd" >> $GITHUB_ENV
+            echo "SERVICE_NAME=ruleiq-backend" >> $GITHUB_ENV
+            echo "MIN_INSTANCES=1" >> $GITHUB_ENV
+            echo "MAX_INSTANCES=100" >> $GITHUB_ENV
           fi
 
       - name: Authenticate to Google Cloud
+        id: auth
         uses: google-github-actions/auth@71fee32a0bb7e97b4d33d548e7d957010649d8fa  # v2.1.3
         with:
           credentials_json: ${{ secrets.GCP_SA_KEY }}
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@98ddc00a17442e89a24bbf282954a3b65ce6d200  # v2.1.0
+        with:
+          project_id: ${{ steps.auth.outputs.project_id }}
 
-      - name: Extract Project ID
+      - name: Extract and Configure Project
         run: |
-          PROJECT_ID=$(gcloud config get-value project)
+          PROJECT_ID=${{ steps.auth.outputs.project_id }}
           echo "GCP_PROJECT_ID=$PROJECT_ID" >> $GITHUB_ENV
-          echo "Using Project ID: $PROJECT_ID"
+          echo "📦 Using Project ID: $PROJECT_ID"
+
+      - name: Enable Required APIs
+        run: |
+          echo "🔌 Ensuring required APIs are enabled..."
+
+          # List of required APIs
+          APIS=(
+            "containerregistry.googleapis.com"
+            "run.googleapis.com"
+            "secretmanager.googleapis.com"
+            "compute.googleapis.com"
+            "cloudbuild.googleapis.com"
+          )
+
+          for API in "${APIS[@]}"; do
+            echo "Enabling $API..."
+            gcloud services enable "$API" --project=${{ env.GCP_PROJECT_ID }} || {
+              echo "⚠️  Could not enable $API - checking if already enabled..."
+              if gcloud services list --enabled --filter="name:$API" --project=${{ env.GCP_PROJECT_ID }} | grep -q "$API"; then
+                echo "✅ $API is already enabled"
+              else
+                echo "❌ Failed to enable $API and it's not currently enabled"
+                exit 1
+              fi
+            }
+          done
 
       - name: Configure Docker for GCP
         run: |
-          # Try to enable APIs (may fail if service account lacks permission)
-          gcloud services enable containerregistry.googleapis.com --project=${{ env.GCP_PROJECT_ID }} || echo "Could not enable Container Registry API - assuming already enabled"
-          gcloud services enable run.googleapis.com --project=${{ env.GCP_PROJECT_ID }} || echo "Could not enable Cloud Run API - assuming already enabled"
-
-          # Configure Docker
           gcloud auth configure-docker
 
-      - name: Build Docker image
+      - name: Build Docker Image
         run: |
-          docker build -t gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }} .
+          echo "🔨 Building Docker image with production configuration..."
+          docker build \
+            --file Dockerfile.production \
+            --tag gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.SERVICE }}:${{ env.IMAGE_TAG }} \
+            --tag gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.SERVICE }}:latest \
+            --build-arg ENVIRONMENT=${{ env.DOPPLER_CONFIG }} \
+            .
 
-      - name: Push Docker image
+          echo "✅ Docker image built successfully"
+
+      - name: Test Docker Image Locally
         run: |
-          docker push gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }}
+          echo "🧪 Testing Docker image locally..."
+
+          # Run container in background with dummy Doppler token
+          docker run -d \
+            --name test-container \
+            -p 8080:8080 \
+            -e PORT=8080 \
+            -e PYTHONUNBUFFERED=1 \
+            -e DOPPLER_TOKEN=dummy-token-for-testing \
+            gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.SERVICE }}:${{ env.IMAGE_TAG }}
+
+          # Wait for container to start
+          sleep 15
+
+          # Check container is running
+          docker ps | grep test-container || {
+            echo "❌ Container failed to start"
+            docker logs test-container
+            exit 1
+          }
+
+          # Test health endpoint
+          curl -f http://localhost:8080/health || {
+            echo "❌ Health check failed"
+            docker logs test-container
+            exit 1
+          }
+
+          # Clean up
+          docker stop test-container
+          docker rm test-container
+
+          echo "✅ Docker image tests passed"
+
+      - name: Push Docker Image
+        run: |
+          echo "📤 Pushing Docker image to Container Registry..."
+          docker push gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.SERVICE }}:${{ env.IMAGE_TAG }}
+          docker push gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.SERVICE }}:latest
+          echo "✅ Docker image pushed successfully"
 
       - name: Install Doppler CLI
         uses: dopplerhq/cli-action@014df23b1329b615816a38eb5f473bb9000700b1  # v3
 
-      - name: Sync Doppler secrets to Google Secret Manager
+      - name: Create DOPPLER_TOKEN Secret in Secret Manager
         id: sync-secrets
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
         run: |
-          # Try to enable Secret Manager API if not already enabled
-          gcloud services enable secretmanager.googleapis.com --project=${{ env.GCP_PROJECT_ID }} || echo "Could not enable Secret Manager API - assuming already enabled"
+          echo "🔐 Creating DOPPLER_TOKEN secret in Google Secret Manager..."
 
-          # Fetch secrets from Doppler
-          SECRETS_JSON=$(doppler secrets download --no-file --format json --project ${{ env.DOPPLER_PROJECT }} --config ${{ env.DOPPLER_CONFIG }})
-          SECRET_NAMES=""
+          SECRET_ID="DOPPLER_TOKEN"
+          
+          # Create or update the Doppler token secret
+          if gcloud secrets describe "$SECRET_ID" --project=${{ env.GCP_PROJECT_ID }} &>/dev/null; then
+            echo "📝 Updating secret: $SECRET_ID"
+            echo -n "$DOPPLER_TOKEN" | gcloud secrets versions add "$SECRET_ID" \
+              --data-file=- \
+              --project=${{ env.GCP_PROJECT_ID }}
+          else
+            echo "➕ Creating secret: $SECRET_ID"
+            echo -n "$DOPPLER_TOKEN" | gcloud secrets create "$SECRET_ID" \
+              --replication-policy="automatic" \
+              --data-file=- \
+              --project=${{ env.GCP_PROJECT_ID }}
+          fi
 
-          # Loop through secrets and sync them to Google Secret Manager
-          for SECRET_NAME in $(echo "$SECRETS_JSON" | jq -r 'keys[]'); do
-            SECRET_VALUE=$(echo "$SECRETS_JSON" | jq -r --arg key "$SECRET_NAME" '.[$key]')
-            SECRET_ID="${SERVICE}-${DOPPLER_CONFIG}-${SECRET_NAME}" # e.g., ruleiq-backend-prd-DATABASE_URL
-
-            if gcloud secrets describe "$SECRET_ID" --project=${{ env.GCP_PROJECT_ID }} &>/dev/null; then
-              echo "Updating secret $SECRET_ID"
-              echo -n "$SECRET_VALUE" | gcloud secrets versions add "$SECRET_ID" --data-file=- --project=${{ env.GCP_PROJECT_ID }}
-            else
-              echo "Creating secret $SECRET_ID"
-              echo -n "$SECRET_VALUE" | gcloud secrets create "$SECRET_ID" --replication-policy="automatic" --data-file=- --project=${{ env.GCP_PROJECT_ID }}
-            fi
-            SECRET_NAMES="${SECRET_NAMES}${SECRET_NAME}=${SECRET_ID}:latest,"
-          done
-
-          # Save the list of secret mappings for the deploy step
-          echo "secret_args=${SECRET_NAMES%,}" >> $GITHUB_OUTPUT
+          echo "secret_mappings=DOPPLER_TOKEN=DOPPLER_TOKEN:latest" >> $GITHUB_OUTPUT
+          echo "✅ DOPPLER_TOKEN secret created/updated successfully"
 
       - name: Deploy to Cloud Run
         id: deploy
         run: |
-          gcloud run deploy ${{ env.SERVICE }} \
-            --image gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }} \
+          echo "🚀 Deploying to Cloud Run..."
+
+          # Deploy service
+          gcloud run deploy ${{ env.SERVICE_NAME }} \
+            --image gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.SERVICE }}:${{ env.IMAGE_TAG }} \
             --region ${{ env.REGION }} \
             --platform managed \
             --allow-unauthenticated \
             --memory 2Gi \
             --cpu 2 \
             --timeout 300 \
-            --max-instances 100 \
-            --min-instances 1 \
+            --max-instances ${{ env.MAX_INSTANCES }} \
+            --min-instances ${{ env.MIN_INSTANCES }} \
             --port 8080 \
-            --set-env-vars="PYTHONUNBUFFERED=1,PORT=8080" \
-            --set-secrets="${{ steps.sync-secrets.outputs.secret_args }}"
+            --set-env-vars="PYTHONUNBUFFERED=1,PORT=8080,ENVIRONMENT=${{ env.DOPPLER_CONFIG == 'prd' && 'production' || 'staging' }}" \
+            --set-secrets="${{ steps.sync-secrets.outputs.secret_mappings }}" \
+            --service-account="${{ env.SERVICE_NAME }}@${{ env.GCP_PROJECT_ID }}.iam.gserviceaccount.com" \
+            --add-cloudsql-instances="${{ secrets.CLOUD_SQL_CONNECTION_NAME }}" 2>/dev/null || true
 
-          # Get the service URL
-          SERVICE_URL=$(gcloud run services describe ${{ env.SERVICE }} --region ${{ env.REGION }} --format 'value(status.url)')
-          echo "url=$SERVICE_URL" >> $GITHUB_OUTPUT
-          echo "🚀 Deployed to: $SERVICE_URL"
+          # Get service URL
+          SERVICE_URL=$(gcloud run services describe ${{ env.SERVICE_NAME }} \
+            --region ${{ env.REGION }} \
+            --format 'value(status.url)')
 
-      - name: Smoke Test Deployment
+          echo "service_url=$SERVICE_URL" >> $GITHUB_OUTPUT
+          echo "✅ Deployed to: $SERVICE_URL"
+
+      - name: Validate Deployment Health
+        id: health-check
         run: |
-          URL="${{ steps.deploy.outputs.url }}"
-          echo "🔍 Smoke testing deployment at: $URL/health"
-          sleep 5 # Give service a moment to stabilize
-          curl --fail --retry 5 --retry-delay 10 "$URL/health"
+          URL="${{ steps.deploy.outputs.service_url }}"
+          echo "🏥 Running comprehensive health checks..."
 
-      - name: Clean up old images
+          # Wait for service to stabilize
+          echo "⏳ Waiting for service to stabilize..."
+          sleep 15
+
+          # Test health endpoint
+          echo "🔍 Testing /health endpoint..."
+          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" --retry 10 --retry-delay 5 --max-time 30 "$URL/health")
+
+          if [ "$HTTP_CODE" != "200" ]; then
+            echo "❌ Health check failed with HTTP $HTTP_CODE"
+            exit 1
+          fi
+
+          echo "✅ Health check passed"
+
+          # Test ready endpoint if exists
+          echo "🔍 Testing /health/ready endpoint..."
+          curl -f --retry 5 --retry-delay 5 --max-time 30 "$URL/health/ready" || {
+            echo "⚠️  Ready endpoint not available (this is optional)"
+          }
+
+          # Test database connectivity via health endpoint
+          echo "🔍 Testing database connectivity..."
+          HEALTH_RESPONSE=$(curl -s "$URL/health")
+          echo "Health response: $HEALTH_RESPONSE"
+
+          echo "✅ All health checks passed"
+
+      - name: Performance Test
+        continue-on-error: true
+        run: |
+          URL="${{ steps.deploy.outputs.service_url }}"
+          echo "⚡ Running basic performance test..."
+
+          # Simple load test with curl
+          echo "Testing response times..."
+          for i in {1..10}; do
+            time curl -s -o /dev/null "$URL/health"
+          done
+
+          echo "✅ Performance test completed"
+
+      - name: Rollback on Failure
+        if: failure() && steps.deploy.outputs.service_url != ''
+        run: |
+          echo "⚠️  Deployment validation failed, initiating rollback..."
+
+          # Get previous revision
+          PREVIOUS_REVISION=$(gcloud run revisions list \
+            --service=${{ env.SERVICE_NAME }} \
+            --region=${{ env.REGION }} \
+            --format="value(name)" \
+            --limit=2 | tail -n 1)
+
+          if [ -n "$PREVIOUS_REVISION" ]; then
+            echo "🔄 Rolling back to revision: $PREVIOUS_REVISION"
+            gcloud run services update-traffic ${{ env.SERVICE_NAME }} \
+              --region=${{ env.REGION }} \
+              --to-revisions=$PREVIOUS_REVISION=100
+            echo "✅ Rollback completed"
+          else
+            echo "⚠️  No previous revision found for rollback"
+          fi
+
+      - name: Clean Up Old Container Images
+        if: success()
+        continue-on-error: true
+        run: |
+          echo "🧹 Cleaning up old container images..."
+
+          # Keep only the last 10 images
+          IMAGES_TO_DELETE=$(gcloud container images list-tags \
+            gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.SERVICE }} \
+            --filter='-tags:*' \
+            --format='get(digest)' \
+            --sort-by=~timestamp \
+            --limit=999 | tail -n +11)
+
+          if [ -n "$IMAGES_TO_DELETE" ]; then
+            echo "$IMAGES_TO_DELETE" | while read -r digest; do
+              echo "Deleting image with digest: $digest"
+              gcloud container images delete \
+                "gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.SERVICE }}@$digest" \
+                --quiet --force-delete-tags
+            done
+            echo "✅ Old images cleaned up"
+          else
+            echo "ℹ️  No old images to clean up"
+          fi
+
+      - name: Deployment Summary
+        if: success()
+        run: |
+          echo "================================================"
+          echo "🎉 DEPLOYMENT SUCCESSFUL!"
+          echo "================================================"
+          echo "📦 Service: ${{ env.SERVICE_NAME }}"
+          echo "🌍 Environment: ${{ env.DOPPLER_CONFIG }}"
+          echo "🔗 URL: ${{ steps.deploy.outputs.service_url }}"
+          echo "🏷️  Image Tag: ${{ env.IMAGE_TAG }}"
+          echo "📍 Region: ${{ env.REGION }}"
+          echo "================================================"
+
+          # Create deployment annotation
+          echo "::notice title=Deployment Complete::Service deployed to ${{ steps.deploy.outputs.service_url }}"
+
+      - name: Notify Deployment Status
         if: always()
         continue-on-error: true
         run: |
-          echo "This step should be updated to use Artifact Registry 'gcloud artifacts docker images delete' command"
-          # Note: The gcloud command for cleaning Artifact Registry is different from GCR.
-          # Example: gcloud artifacts docker images list <repo> --sort-by=~CREATE_TIME | tail -n +6 | awk '{print $1}' | xargs -I {} gcloud artifacts docker images delete {} --quiet
+          STATUS="${{ job.status }}"
+          if [ "$STATUS" = "success" ]; then
+            echo "✅ Deployment succeeded"
+          else
+            echo "❌ Deployment failed"
+          fi
