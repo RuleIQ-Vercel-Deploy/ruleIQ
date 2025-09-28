@@ -9,7 +9,7 @@ import { TopNavigation } from '@/components/navigation/top-navigation';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { useDesignSystem } from '@/hooks/use-design-system';
+import { useDesignSystem } from '@/providers/design-system-provider';
 
 export function NavigationDemo() {
   const { designSystem, toggleDesignSystem, isNewTheme } = useDesignSystem();

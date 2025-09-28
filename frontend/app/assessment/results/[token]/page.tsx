@@ -3,15 +3,12 @@ import AssessmentResultsClient from './client';
 import { assessmentResultsService } from '@/lib/services/assessment-results.service';
 
 interface PageProps {
-  params: Promise<{
+  params: {
     token: string;
-  }>;
+  };
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  // Await params for Next.js 15 compatibility
-  const { token } = await params;
-  
   // Use static metadata to avoid server-side fetching latency
   // Dynamic metadata is non-critical for this page
   return {
@@ -21,7 +18,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title: 'Compliance Assessment Results | ruleIQ',
       description: 'Comprehensive compliance assessment analysis with risk scoring and actionable recommendations.',
       type: 'website',
-      url: `${process.env.NEXT_PUBLIC_BASE_URL || ''}/assessment/results/${token}`,
+      url: `${process.env.NEXT_PUBLIC_BASE_URL || ''}/assessment/results/${params.token}`,
     },
     twitter: {
       card: 'summary_large_image',
@@ -78,8 +75,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   */
 }
 
-export default async function AssessmentResultsPage({ params }: PageProps) {
-  // Await params for Next.js 15 compatibility
-  const { token } = await params;
-  return <AssessmentResultsClient token={token} />;
+export default function AssessmentResultsPage({ params }: PageProps) {
+  return <AssessmentResultsClient token={params.token} />;
 }

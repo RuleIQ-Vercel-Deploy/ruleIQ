@@ -83,7 +83,7 @@ const UI_TO_EXPORT_KEY_MAP = {
 
 // Helper function to map UI option names to export utility option names
 const mapUIOptionsToExportOptions = (uiOptions: Partial<UIExportOptions>): Partial<ExportOptions & { fileName?: string; estimatedBreakdown?: boolean }> => {
-  const mappedOptions: any = {};
+  const mappedOptions: Partial<ExportOptions & { fileName?: string; estimatedBreakdown?: boolean }> = {};
 
   // Type-safe iteration through UI options
   (Object.keys(uiOptions) as Array<keyof UIExportOptions>).forEach((key) => {
@@ -91,12 +91,12 @@ const mapUIOptionsToExportOptions = (uiOptions: Partial<UIExportOptions>): Parti
     const mappedKey = UI_TO_EXPORT_KEY_MAP[key];
 
     if (mappedKey && value !== undefined) {
-      // Use bracket notation for dynamic property assignment
-      mappedOptions[mappedKey] = value;
+      // Type-safe assignment without using any
+      mappedOptions[mappedKey as keyof typeof mappedOptions] = value as any;
     }
   });
 
-  return mappedOptions as Partial<ExportOptions & { fileName?: string; estimatedBreakdown?: boolean }>;
+  return mappedOptions;
 };
 
 // Export format configurations
@@ -274,7 +274,7 @@ export const ExportButton: React.FC<ExportButtonProps> = ({
   // Progress tracking
   const progressRef = useRef<NodeJS.Timeout | null>(null);
   // Track last export parameters for retry
-  const lastExportRef = useRef<{format:'csv'|'excel'|'pdf', options: Partial<UIExportOptions>} | null>(null);
+  const lastExportRef = useRef<{format:'csv'|'excel'|'pdf', options: Partial<UIExportOptions>}>();
 
   // Reset export state
   const resetExportState = useCallback(() => {
@@ -367,8 +367,8 @@ export const ExportButton: React.FC<ExportButtonProps> = ({
 
       // Validate data first
       const baseOptions = createExportOptions(format, {
-        ...(companyName && { companyName }),
-        ...(reportTitle && { reportTitle }),
+        companyName,
+        reportTitle,
         ...mappedOptions,
         chartImages,
         estimatedBreakdown
@@ -442,8 +442,8 @@ export const ExportButton: React.FC<ExportButtonProps> = ({
   const handleQuickExport = useCallback((format: 'csv' | 'excel' | 'pdf') => {
     // Always include companyName and reportTitle even for quick exports
     const defaultOptions = {
-      ...(companyName && { companyName }),
-      ...(reportTitle && { reportTitle })
+      companyName,
+      reportTitle
     };
     executeExport(format, defaultOptions);
   }, [executeExport, companyName, reportTitle]);
@@ -501,7 +501,6 @@ export const ExportButton: React.FC<ExportButtonProps> = ({
       const timer = setTimeout(resetExportState, 5000);
       return () => clearTimeout(timer);
     }
-    return undefined;
   }, [exportState.success, resetExportState]);
 
   // Render export progress

@@ -10,7 +10,6 @@ import {
   ResponsiveContainer,
   Area,
   AreaChart,
-  ComposedChart,
 } from 'recharts';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -66,7 +65,7 @@ export function ComplianceTrendChart({
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
-          <ComposedChart data={formattedData}>
+          <AreaChart data={formattedData}>
             <defs>
               <linearGradient id="colorScore" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor={neuralPurple.primary} stopOpacity={0.3} />
@@ -98,12 +97,12 @@ export function ComplianceTrendChart({
             <Line
               type="monotone"
               dataKey="target"
-              stroke={silver.DEFAULT}
+              stroke={silver.primary}
               strokeWidth={2}
               strokeDasharray="5 5"
               dot={false}
             />
-          </ComposedChart>
+          </AreaChart>
         </ResponsiveContainer>
       </CardContent>
     </Card>

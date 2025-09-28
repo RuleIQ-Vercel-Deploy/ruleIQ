@@ -70,7 +70,7 @@ export const useAuthStore = create<AuthState>()(
     (set, get) => ({
       // Initial state
       user: null,
-  tokens: { access: null, refresh: null },
+      tokens: null as any, // Fixed: Should be null initially, not an object
       isAuthenticated: false,
       isLoading: false,
       error: null,
@@ -115,8 +115,8 @@ export const useAuthStore = create<AuthState>()(
           const user: User = await userResponse.json();
 
           // Extract permissions and role from user if available
-          const permissions = (user as { permissions?: string[] }).permissions || [];
-          const role = (user as { role?: string }).role || null;
+          const permissions = (user as any).permissions || [];
+          const role = (user as any).role || null;
 
           set({
             user,
@@ -189,8 +189,8 @@ export const useAuthStore = create<AuthState>()(
             error: null,
             accessToken: responseTokens?.access_token || responseTokens?.access || null,
             refreshTokenValue: responseTokens?.refresh_token || responseTokens?.refresh || null,
-            permissions: (user as { permissions?: string[] }).permissions || [],
-            role: (user as { role?: string }).role || null,
+            permissions: (user as any).permissions || [],
+            role: (user as any).role || null,
           });
         } catch (error) {
           set({

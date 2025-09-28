@@ -152,7 +152,7 @@ class PaymentService {
    * Get invoices
    */
   async getInvoices(params?: { limit?: number; starting_after?: string }): Promise<Invoice[]> {
-    const response = await apiClient.get<{ invoices: Invoice[] }>('/payments/invoices', params ? { params } : {});
+    const response = await apiClient.get<{ invoices: Invoice[] }>('/payments/invoices', { params });
     return response.invoices;
   }
 

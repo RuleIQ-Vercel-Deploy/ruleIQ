@@ -51,7 +51,7 @@ class MonitoringService {
   }): Promise<{ alerts: SystemAlert[]; total: number }> {
     const response = await apiClient.get<{ alerts: SystemAlert[]; total: number }>(
       '/monitoring/alerts',
-      params ? { params } : {},
+      { params },
     );
     return response;
   }
@@ -97,7 +97,7 @@ class MonitoringService {
       request_count: number;
     }>;
   }> {
-    const response = await apiClient.get<any>('/monitoring/api-performance', params ? { params } : {});
+    const response = await apiClient.get<any>('/monitoring/api-performance', { params });
     return response;
   }
 
@@ -123,7 +123,7 @@ class MonitoringService {
     }>;
     total: number;
   }> {
-    const response = await apiClient.get<any>('/monitoring/error-logs', params ? { params } : {});
+    const response = await apiClient.get<any>('/monitoring/error-logs', { params });
     return response;
   }
 
@@ -169,7 +169,7 @@ class MonitoringService {
     }>;
     total: number;
   }> {
-    const response = await apiClient.get<any>('/monitoring/audit-logs', params ? { params } : {});
+    const response = await apiClient.get<any>('/monitoring/audit-logs', { params });
     return response;
   }
 

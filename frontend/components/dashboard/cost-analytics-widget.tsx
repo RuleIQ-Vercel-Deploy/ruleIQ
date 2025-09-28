@@ -38,12 +38,12 @@ export const CostAnalyticsWidget: React.FC<CostAnalyticsWidgetProps> = ({
 
   // Use real data if available, otherwise use placeholders
   const displayData = (isFeatureEnabled && connectionState === 'connected' && costData) ? {
-    totalCost: parseFloat(costData.total_cost || '0'),
-    totalTokens: costData.total_tokens || 0,
-    avgCostPerRequest: costData.total_requests > 0 ? parseFloat(costData.total_cost || '0') / costData.total_requests : 0,
-    budgetUsed: 0, // This would need to be calculated from actual budget limits
-    trend: '+0%', // This would need to be provided by the API
-    alerts: 0, // This would need to come from budget alerts
+    totalCost: costData.totalCost || 0,
+    totalTokens: costData.totalTokens || 0,
+    avgCostPerRequest: costData.avgCostPerRequest || 0,
+    budgetUsed: costData.budgetUsagePercentage || 0,
+    trend: costData.trend || '+0%',
+    alerts: costData.activeAlerts || 0,
   } : placeholderData;
 
   return (

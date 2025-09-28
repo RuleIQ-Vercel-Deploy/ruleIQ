@@ -291,12 +291,12 @@ export const formatters = {
    */
   formatSeverity: (severity: string): { text: string; color: string } => {
     const severityMap: Record<string, { text: string; color: string }> = {
-      critical: { text: 'Critical', color: THEME_COLORS.danger || '#ef4444' },
+      critical: { text: 'Critical', color: THEME_COLORS.danger },
       high: { text: 'High', color: '#f97316' },
-      medium: { text: 'Medium', color: THEME_COLORS.warning || '#f59e0b' },
-      low: { text: 'Low', color: THEME_COLORS.success || '#10b981' }
+      medium: { text: 'Medium', color: THEME_COLORS.warning },
+      low: { text: 'Low', color: THEME_COLORS.success }
     };
-    return severityMap[severity.toLowerCase()] || { text: severity, color: THEME_COLORS.textLight || '#64748b' };
+    return severityMap[severity.toLowerCase()] || { text: severity, color: THEME_COLORS.textLight };
   },
 
   /**
@@ -780,7 +780,7 @@ export async function exportAssessmentPDF(
           fontSize: 10,
           cellPadding: 3
         },
-        margin: { horizontal: margin }
+        margin: { left: margin, right: margin }
       });
 
       yPosition = (doc as any).lastAutoTable.finalY + 15;
@@ -835,7 +835,7 @@ export async function exportAssessmentPDF(
           2: { cellWidth: 60 },
           3: { cellWidth: 50 }
         },
-        margin: { horizontal: margin }
+        margin: { left: margin, right: margin }
       });
 
       yPosition = (doc as any).lastAutoTable.finalY + 15;
@@ -889,7 +889,7 @@ export async function exportAssessmentPDF(
         columnStyles: {
           2: { cellWidth: 70 }
         },
-        margin: { horizontal: margin }
+        margin: { left: margin, right: margin }
       });
 
       yPosition = (doc as any).lastAutoTable.finalY + 15;
@@ -937,7 +937,7 @@ export async function exportAssessmentPDF(
           3: { cellWidth: 30 },
           4: { cellWidth: 20 }
         },
-        margin: { horizontal: margin }
+        margin: { left: margin, right: margin }
       });
 
       yPosition = (doc as any).lastAutoTable.finalY + 15;

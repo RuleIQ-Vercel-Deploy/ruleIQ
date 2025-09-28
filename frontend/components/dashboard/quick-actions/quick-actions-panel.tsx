@@ -177,25 +177,8 @@ export function QuickActionsPanel() {
               {/* Actions List */}
               <div className="p-2">
                 {quickActions.map((action, index) => {
+                  const Icon = action.icon;
                   const isDisabled = action.requiresProfile && !hasProfile;
-
-                  // Render icon based on action.id instead of dynamic Icon component
-                  const renderIcon = () => {
-                    switch (action.id) {
-                      case 'new-assessment':
-                        return <Shield className="h-5 w-5" />;
-                      case 'generate-policy':
-                        return <FileText className="h-5 w-5" />;
-                      case 'upload-evidence':
-                        return <Upload className="h-5 w-5" />;
-                      case 'ask-iq':
-                        return <MessageSquare className="h-5 w-5" />;
-                      case 'quick-scan':
-                        return <Zap className="h-5 w-5" />;
-                      default:
-                        return <Plus className="h-5 w-5" />;
-                    }
-                  };
 
                   return (
                     <motion.button
@@ -220,7 +203,7 @@ export function QuickActionsPanel() {
                             action.color,
                           )}
                         >
-                          {renderIcon()}
+                          <Icon className="h-5 w-5" />
                         </div>
                         <div className="min-w-0 flex-1">
                           <div className="font-medium text-gray-900">{action.label}</div>

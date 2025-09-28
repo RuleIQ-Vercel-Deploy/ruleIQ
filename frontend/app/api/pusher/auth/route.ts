@@ -109,26 +109,42 @@ async function validateChannelAccess(
  */
 export async function POST(req: NextRequest) {
   try {
-    // Use JWT-only authentication (NextAuth removed from project)
-    console.log('Using JWT-only authentication mode');
+    // Try to import NextAuth options, fallback to JWT-only mode if not available
+    let session = null;
+    try {
+      const { authOptions } = await import('../../auth/[...nextauth]/route');
+      session = await getServerSession(authOptions);
+    } catch (error) {
+      // NextAuth not configured, will use JWT-only mode
+      console.log('NextAuth not configured, using JWT-only authentication');
+    }
 
-    // Validate JWT token from Authorization header
+    // Alternative: Validate JWT token from Authorization header
     let userId: string | null = null;
     let userRole: string = 'viewer';
     let userName: string = 'Anonymous';
     let userEmail: string = '';
 
-    const authHeader = req.headers.get('authorization');
-    if (authHeader?.startsWith('Bearer ')) {
-      const token = authHeader.substring(7);
-      try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'default-secret-change-in-production') as any;
-        userId = decoded.userId || decoded.sub;
-        userRole = decoded.role || 'viewer';
-        userName = decoded.name || 'Anonymous';
-        userEmail = decoded.email || '';
-      } catch (error) {
-        console.error('JWT validation failed:', error);
+    if (session?.user) {
+      // Use session data
+      userId = session.user.id || session.user.email || null;
+      userRole = (session.user as any).role || 'viewer';
+      userName = session.user.name || 'Anonymous';
+      userEmail = session.user.email || '';
+    } else {
+      // Try JWT token
+      const authHeader = req.headers.get('authorization');
+      if (authHeader?.startsWith('Bearer ')) {
+        const token = authHeader.substring(7);
+        try {
+          const decoded = jwt.verify(token, process.env.JWT_SECRET || 'default-secret-change-in-production') as any;
+          userId = decoded.userId || decoded.sub;
+          userRole = decoded.role || 'viewer';
+          userName = decoded.name || 'Anonymous';
+          userEmail = decoded.email || '';
+        } catch (error) {
+          console.error('JWT validation failed:', error);
+        }
       }
     }
 

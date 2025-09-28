@@ -19,7 +19,7 @@ import { Button } from '@/components/ui/button';
 import { IQComplianceResponse } from './IQComplianceResponse';
 import { IQTrustIndicator } from './IQTrustIndicator';
 import { useIQAgentStore } from '@/lib/stores/iq-agent.store';
-import type { IQComplianceQueryResponse } from '@/types/iq-agent';
+import type { ComplianceQueryResponse } from '@/types/iq-agent';
 
 interface IQEnhancedMessageProps {
   message: ChatMessage;
@@ -35,7 +35,7 @@ export function IQEnhancedMessage({
   className 
 }: IQEnhancedMessageProps) {
   const [showFullResponse, setShowFullResponse] = useState(false);
-  const { currentResponse } = useIQAgentStore();
+  const { lastResponse } = useIQAgentStore();
   
   const isUser = message.role === 'user';
   const isSystem = message.role === 'system';
@@ -163,7 +163,7 @@ export function IQEnhancedMessage({
                   )}
                 </div>
                 
-                {currentResponse && (
+                {lastResponse && (
                   <Button
                     variant="ghost"
                     size="sm"
@@ -201,57 +201,14 @@ export function IQEnhancedMessage({
       </div>
 
       {/* Full IQ Agent Response Details */}
-      {showFullResponse && isIQAgent && currentResponse && (() => {
-        // Adapt the IQAgentResponse to ExtendedIQResponse format
-        const adaptedResponse: any = {
-          success: true,
-          data: currentResponse,
-          summary: currentResponse.llm_response || 'No summary available',
-          trust_level: 'helper',
-          confidence_score: 85,
-          response_time_ms: 2500,
-          evidence: [] // Would need to extract from artifacts if available
-        };
-        
-        // Only add optional properties if they have valid data
-        if (currentResponse.artifacts?.action_plan && currentResponse.next_actions?.length) {
-          adaptedResponse.action_plan = {
-            immediate_actions: currentResponse.next_actions.map(action => ({
-              title: action.action,
-              description: action.action,
-              priority: action.priority,
-              estimated_effort: 'Medium'
-            }))
-          };
-        }
-        
-        if (currentResponse.artifacts?.risk_assessment) {
-          adaptedResponse.risk_assessment = {
-            overall_risk_level: currentResponse.artifacts.risk_assessment.overall_risk_level || 'medium',
-            identified_risks: []
-          };
-        }
-        
-        if (currentResponse.graph_context) {
-          adaptedResponse.graph_analysis = {
-            nodes_accessed: currentResponse.graph_context.nodes_traversed || 0,
-            relationships_traversed: 0,
-            relevant_frameworks: [],
-            confidence_factors: {
-              data_completeness: 0.8
-            }
-          };
-        }
-        
-        return (
-          <div className="ml-11 mt-4">
-            <IQComplianceResponse 
-              response={adaptedResponse}
-              className="border-l-2 border-blue-200 pl-4"
-            />
-          </div>
-        );
-      })()}
+      {showFullResponse && isIQAgent && lastResponse && (
+        <div className="ml-11 mt-4">
+          <IQComplianceResponse 
+            response={lastResponse}
+            className="border-l-2 border-blue-200 pl-4"
+          />
+        </div>
+      )}
     </div>
   );
 }

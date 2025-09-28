@@ -1120,6 +1120,9 @@ export const assessmentResultsService = new AssessmentResultsService();
 
 export default AssessmentResultsService;
 export type {
+  HistoricalAssessment,
   TrendDataPoint,
+  TrendAnalysisData,
+  ExportData,
   ServiceOptions,
 };

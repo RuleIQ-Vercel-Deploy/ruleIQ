@@ -57,17 +57,17 @@ const typographyVariants = cva('', {
   },
 });
 
-type TypographyProps = {
-  as?: React.ElementType;
+type TypographyProps<T extends React.ElementType = 'p'> = {
+  as?: T;
   variant?: VariantProps<typeof typographyVariants>['variant'];
   color?: VariantProps<typeof typographyVariants>['color'];
   align?: VariantProps<typeof typographyVariants>['align'];
   weight?: VariantProps<typeof typographyVariants>['weight'];
   className?: string;
   children?: React.ReactNode;
-} & React.HTMLAttributes<HTMLElement>;
+} & React.ComponentPropsWithoutRef<T>;
 
-const Typography = ({
+const Typography = <T extends React.ElementType = 'p'>({
   as,
   variant = 'body',
   color = 'default',
@@ -76,21 +76,21 @@ const Typography = ({
   className,
   children,
   ...props
-}: TypographyProps) => {
-  const Component = as || getDefaultComponent(variant) || 'p';
+}: TypographyProps<T>) => {
+  const Component = as || getDefaultComponent(variant);
 
-  return React.createElement(
-    Component,
-    {
-      className: cn(typographyVariants({ variant, color, align, weight }), className),
-      ...props,
-    },
-    children
+  return (
+    <Component
+      className={cn(typographyVariants({ variant, color, align, weight }), className)}
+      {...props}
+    >
+      {children}
+    </Component>
   );
 };
 
 // Helper to determine default HTML element based on variant
-function getDefaultComponent(variant: TypographyProps['variant']): React.ElementType | undefined {
+function getDefaultComponent(variant: TypographyProps['variant']): React.ElementType {
   switch (variant) {
     case 'h1':
     case 'display-lg':
@@ -114,39 +114,39 @@ function getDefaultComponent(variant: TypographyProps['variant']): React.Element
 }
 
 // Pre-configured components for convenience
-export const H1: React.FC<Omit<TypographyProps, 'variant'>> = (props) => (
+export const H1: React.FC<Omit<TypographyProps<'h1'>, 'variant'>> = (props) => (
   <Typography as="h1" variant="h1" {...props} />
 );
 
-export const H2: React.FC<Omit<TypographyProps, 'variant'>> = (props) => (
+export const H2: React.FC<Omit<TypographyProps<'h2'>, 'variant'>> = (props) => (
   <Typography as="h2" variant="h2" {...props} />
 );
 
-export const H3: React.FC<Omit<TypographyProps, 'variant'>> = (props) => (
+export const H3: React.FC<Omit<TypographyProps<'h3'>, 'variant'>> = (props) => (
   <Typography as="h3" variant="h3" {...props} />
 );
 
-export const Body: React.FC<Omit<TypographyProps, 'variant'>> = (props) => (
+export const Body: React.FC<Omit<TypographyProps<'p'>, 'variant'>> = (props) => (
   <Typography as="p" variant="body" {...props} />
 );
 
-export const Small: React.FC<Omit<TypographyProps, 'variant'>> = (props) => (
+export const Small: React.FC<Omit<TypographyProps<'span'>, 'variant'>> = (props) => (
   <Typography as="span" variant="small" {...props} />
 );
 
-export const DisplayLarge: React.FC<Omit<TypographyProps, 'variant'>> = (props) => (
+export const DisplayLarge: React.FC<Omit<TypographyProps<'h1'>, 'variant'>> = (props) => (
   <Typography as="h1" variant="display-lg" {...props} />
 );
 
-export const DisplayMedium: React.FC<Omit<TypographyProps, 'variant'>> = (props) => (
+export const DisplayMedium: React.FC<Omit<TypographyProps<'h1'>, 'variant'>> = (props) => (
   <Typography as="h1" variant="display-md" {...props} />
 );
 
-export const Caption: React.FC<Omit<TypographyProps, 'variant'>> = (props) => (
+export const Caption: React.FC<Omit<TypographyProps<'span'>, 'variant'>> = (props) => (
   <Typography as="span" variant="caption" {...props} />
 );
 
-export const Overline: React.FC<Omit<TypographyProps, 'variant'>> = (props) => (
+export const Overline: React.FC<Omit<TypographyProps<'span'>, 'variant'>> = (props) => (
   <Typography as="span" variant="overline" {...props} />
 );
 

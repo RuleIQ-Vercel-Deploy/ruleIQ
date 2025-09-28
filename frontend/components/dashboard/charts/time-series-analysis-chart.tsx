@@ -79,7 +79,7 @@ export function TimeSeriesAnalysisChart({
             {data.some((item) => item.target) && (
               <ReferenceLine
                 y={data[0]?.target || 90}
-                stroke={silver.DEFAULT}
+                stroke={silver.primary}
                 strokeDasharray="5 5"
                 label={{ value: 'Target', position: 'top' }}
               />

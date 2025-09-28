@@ -28,7 +28,7 @@ class PolicyService {
     page?: number;
     page_size?: number;
   }): Promise<{ policies: Policy[] }> {
-    const response = await apiClient.get<{ policies: Policy[] }>('/policies', params ? { params } : {});
+    const response = await apiClient.get<{ policies: Policy[] }>('/policies', { params });
     return response;
   }
 
@@ -123,7 +123,7 @@ class PolicyService {
     }>;
   }> {
     const params = frameworkId ? { framework_id: frameworkId } : undefined;
-    const response = await apiClient.get<any>('/policies/templates', params ? { params } : {});
+    const response = await apiClient.get<any>('/policies/templates', { params });
     return response;
   }
 

@@ -42,7 +42,7 @@ export function useErrorHandler(options: UseErrorHandlerOptions = {}) {
         const message = error && typeof error === 'object' && 'message' in error 
           ? (error as any).message 
           : 'An unexpected error occurred';
-        processedError = new APIError(message, 0, error as { error: string; message: string; code?: string; details?: Record<string, unknown>; timestamp?: string; request_id?: string; statusCode?: number; });
+        processedError = new APIError(message, 0, error);
       }
 
       setError(processedError);

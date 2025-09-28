@@ -281,7 +281,7 @@ export default function AssessmentPage() {
         <div className="mx-auto max-w-4xl">
           <AssessmentWizard
             framework={framework}
-            assessmentId={token!}  // Pass the token as assessmentId for proper API calls - token is guaranteed to exist due to early return
+            assessmentId={token}  // Pass the token as assessmentId for proper API calls
             businessProfileId={sessionData.session_id}  // Note: freemium start response has no lead_id; trend linking uses lead_id at results time.
             enableIncrementalSubmissions={false}  // Disable for freemium unless mapping layer is provided
             onComplete={handleAssessmentComplete}

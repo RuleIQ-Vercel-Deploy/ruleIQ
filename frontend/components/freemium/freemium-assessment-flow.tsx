@@ -64,13 +64,14 @@ export function FreemiumAssessmentFlow({
       setSessionProgress(progress);
 
       // If there's a current question in the session, use it
-      if (progress.question_id) {
+      if (progress.current_question_id) {
         // The session response should contain the current question data
+        // For now, create a placeholder question since the API doesn't return question details
         const question: AssessmentQuestion = {
-          question_id: progress.question_id,
-          question_text: progress.question_text || 'Please describe your compliance needs',
-          question_type: progress.question_type || 'text',
-          ...(progress.answer_options && { answer_options: progress.answer_options }),
+          question_id: progress.current_question_id,
+          question_text: 'Please describe your compliance needs',
+          question_type: 'text',
+          answer_options: undefined,
         };
         setCurrentQuestion(question);
       } else {
@@ -113,15 +114,14 @@ export function FreemiumAssessmentFlow({
     setIsSubmitting(true);
     try {
       const response = await freemiumService.submitAnswer(token, {
-        session_token: token,
         question_id: currentQuestion.question_id,
         answer: currentAnswer.toString(),
-        confidence_level: 0.7, // medium confidence as a number
+        answer_confidence: 'medium',
         time_spent_seconds: 30,
       });
 
       // Check response for next question or completion
-      if (response.is_complete) {
+      if (response.assessment_complete || response.redirect_to_results) {
         // Assessment is complete, redirect to results
         if (onComplete) {
           onComplete();
@@ -135,7 +135,7 @@ export function FreemiumAssessmentFlow({
           question_id: response.next_question_id,
           question_text: response.next_question_text || 'Please provide your answer',
           question_type: response.next_question_type || 'text',
-          ...(response.next_answer_options && { answer_options: response.next_answer_options }),
+          answer_options: response.next_answer_options,
         };
         setCurrentQuestion(nextQuestion);
 
@@ -218,7 +218,7 @@ export function FreemiumAssessmentFlow({
             <div className="px-3">
               <Slider
                 value={[Number(currentAnswer) || 1]}
-                onValueChange={(values) => handleAnswerChange(values[0] ?? 1)}
+                onValueChange={(values) => handleAnswerChange(values[0])}
                 max={10}
                 min={1}
                 step={1}

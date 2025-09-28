@@ -31,7 +31,7 @@ class AssessmentService {
     page_size?: number;
   }): Promise<{ items: Assessment[]; total: number }> {
     const response = await apiClient.get<{ items: Assessment[]; total: number }>('/assessments', {
-      ...(params && { params }),
+      params,
     });
     return response;
   }

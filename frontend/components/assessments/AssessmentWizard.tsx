@@ -125,7 +125,6 @@ export function AssessmentWizard({
       // Clean up any pending progress submission
       if (progressSubmissionTimeout.current) {
         clearTimeout(progressSubmissionTimeout.current);
-        progressSubmissionTimeout.current = null;
       }
       // Clean up loading timeout
       if (loadingTimeoutRef.current) {
@@ -136,7 +135,7 @@ export function AssessmentWizard({
   }, [framework, assessmentId, businessProfileId, onSave, toast]);
 
   // Ref for debouncing progress submission
-  const progressSubmissionTimeout = useRef<NodeJS.Timeout | null>(null);
+  const progressSubmissionTimeout = useRef<NodeJS.Timeout>();
 
   const handleAnswer = useCallback(
     async (value: any) => {
@@ -151,7 +150,6 @@ export function AssessmentWizard({
       // Debounce incremental progress submission (500ms delay)
       if (progressSubmissionTimeout.current) {
         clearTimeout(progressSubmissionTimeout.current);
-        progressSubmissionTimeout.current = null;
       }
       
       progressSubmissionTimeout.current = setTimeout(async () => {
@@ -170,20 +168,11 @@ export function AssessmentWizard({
                   fileTypes: value.map(f => f.type || 'unknown')
                 }
               };
-            } else if (value instanceof File) {
+            } else if (value instanceof File || value instanceof Blob) {
               answerValue = {
                 value: 'file_placeholder',
                 metadata: {
                   fileName: value.name || 'unknown',
-                  fileSize: value.size || 0,
-                  fileType: value.type || 'unknown'
-                }
-              };
-            } else if (value instanceof Blob) {
-              answerValue = {
-                value: 'file_placeholder',
-                metadata: {
-                  fileName: 'unknown',
                   fileSize: value.size || 0,
                   fileType: value.type || 'unknown'
                 }
@@ -199,13 +188,12 @@ export function AssessmentWizard({
               question_id: currentQuestion.id,
               answer: answerValue,
               // Include optional timing and confidence data if available
-              // Note: Timing and confidence features not yet implemented in engine
-              // ...(currentQuestion.metadata?.estimated_time && {
-              //   time_spent_seconds: Math.floor((Date.now() - questionStartTime) / 1000)
-              // }),
-              // ...(engine.getAnswerConfidence?.(currentQuestion.id) && {
-              //   confidence_level: engine.getAnswerConfidence(currentQuestion.id)
-              // })
+              ...(currentQuestion.metadata?.estimated_time && {
+                time_spent_seconds: Math.floor((Date.now() - (engine.getQuestionStartTime?.() || Date.now())) / 1000)
+              }),
+              ...(engine.getAnswerConfidence?.(currentQuestion.id) && {
+                confidence_level: engine.getAnswerConfidence(currentQuestion.id)
+              })
             });
           }
         } catch (error) {
@@ -223,7 +211,7 @@ export function AssessmentWizard({
     // Clear any pending progress submission timer before proceeding
     if (progressSubmissionTimeout.current) {
       clearTimeout(progressSubmissionTimeout.current);
-      progressSubmissionTimeout.current = null;
+      progressSubmissionTimeout.current = undefined;
     }
 
     try {
@@ -489,7 +477,7 @@ export function AssessmentWizard({
                       <AIGuidancePanel
                         question={currentQuestion}
                         frameworkId={framework.id}
-                        sectionId={currentSection?.id || ''}
+                        sectionId={currentSection?.id}
                         userContext={{
                           ...(businessProfileId && { business_profile: { id: businessProfileId } }),
                           current_answers: Object.fromEntries(

@@ -213,11 +213,6 @@ export function CustomizableDashboard({ data, onLayoutChange }: CustomizableDash
     debounce(async (layouts: any, widgets: WidgetConfig[]) => {
       try {
         const userId = getCurrentUserId();
-        if (!userId) {
-          console.warn('No user ID available, skipping layout save');
-          return;
-        }
-        
         const layoutData = {
           id: `layout-${userId}`,
           userId,

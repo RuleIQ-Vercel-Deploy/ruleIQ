@@ -128,25 +128,13 @@ export function DetailedResultsDashboard({
   }));
 
   // Transform recommendations for display
-  const displayRecommendations = recommendations.map(rec => {
-    let priority: "High" | "Medium" | "Low";
-    switch (rec.priority) {
-      case 'immediate':
-      case 'short_term':
-        priority = 'High';
-        break;
-      case 'medium_term':
-        priority = 'Medium';
-        break;
-      default:
-        priority = 'Low';
-    }
-    return {
-      id: rec.id,
-      text: rec.description,
-      priority
-    };
-  });
+  const displayRecommendations = recommendations.map(rec => ({
+    id: rec.id,
+    text: rec.description,
+    priority: rec.priority === 'immediate' ? 'High' : 
+             rec.priority === 'short_term' ? 'High' :
+             rec.priority === 'medium_term' ? 'Medium' : 'Low'
+  }));
 
   return (
     <div className={`space-y-6 ${className}`}>
@@ -314,15 +302,14 @@ export function DetailedResultsDashboard({
             </div>
           )}
           <div className="space-y-6">
-            {sectionsToDisplay.map((section, index) => {
+            {sectionsToDisplay.map((section) => {
               // Transform section data to SectionScorecard format
               const scorecardData = {
                 section: {
                   id: section.sectionId,
                   title: section.sectionName,
                   description: section.sectionDescription || `Assessment section covering ${section.sectionName.toLowerCase()} compliance requirements`,
-                  questions: [],
-                  order: index
+                  questions: []
                 },
                 score: section.score,
                 maxScore: section.maxScore || 100,
@@ -333,47 +320,6 @@ export function DetailedResultsDashboard({
                 strengths: section.strengths,
                 improvements: section.weaknesses,
                 questionDetails: [],
-                // Add missing required properties with defaults
-                answeredQuestions: section.answeredQuestions || 0,
-                skippedQuestions: Math.max(0, (section.totalQuestions || 0) - (section.answeredQuestions || 0)),
-                weaknesses: section.weaknesses || [],
-                keyFindings: section.keyFindings || [],
-                compliancePercentage: Math.round((section.score / (section.maxScore || 100)) * 100),
-                criticalGaps: gaps.filter(gap => {
-                  const normalizedGapSection = gap.section ? normalizeSectionId(gap.section) : '';
-                  const normalizedGapCategory = gap.category ? normalizeSectionId(gap.category) : '';
-                  const normalizedSectionId = normalizeSectionId(section.sectionId);
-                  const normalizedSectionName = normalizeSectionId(section.sectionName);
-                  return (normalizedGapSection === normalizedSectionId || 
-                         normalizedGapCategory === normalizedSectionId ||
-                         normalizedGapCategory === normalizedSectionName) && gap.severity === 'critical';
-                }).length,
-                recommendations: recommendations.filter(rec => {
-                  const normalizedRecCategory = rec.category ? normalizeSectionId(rec.category) : '';
-                  const normalizedSectionId = normalizeSectionId(section.sectionId);
-                  const normalizedSectionName = normalizeSectionId(section.sectionName);
-                  return normalizedRecCategory === normalizedSectionId || 
-                         normalizedRecCategory === normalizedSectionName;
-                }).slice(0, 3), // Limit to top 3 recommendations
-                // Add final missing required properties
-                questionBreakdown: section.questionBreakdown || [],
-                sectionRecommendations: recommendations.filter(rec => {
-                  const normalizedRecCategory = rec.category ? normalizeSectionId(rec.category) : '';
-                  const normalizedSectionId = normalizeSectionId(section.sectionId);
-                  const normalizedSectionName = normalizeSectionId(section.sectionName);
-                  return normalizedRecCategory === normalizedSectionId || 
-                         normalizedRecCategory === normalizedSectionName;
-                }),
-                sectionGaps: gaps.filter(gap => {
-                  const normalizedGapSection = gap.section ? normalizeSectionId(gap.section) : '';
-                  const normalizedGapCategory = gap.category ? normalizeSectionId(gap.category) : '';
-                  const normalizedSectionId = normalizeSectionId(section.sectionId);
-                  const normalizedSectionName = normalizeSectionId(section.sectionName);
-                  return normalizedGapSection === normalizedSectionId || 
-                         normalizedGapCategory === normalizedSectionId ||
-                         normalizedGapCategory === normalizedSectionName;
-                }),
-                historicalScores: section.historicalScores || [],
                 relatedGaps: gaps.filter(gap => {
                   const normalizedGapSection = gap.section ? normalizeSectionId(gap.section) : '';
                   const normalizedGapCategory = gap.category ? normalizeSectionId(gap.category) : '';

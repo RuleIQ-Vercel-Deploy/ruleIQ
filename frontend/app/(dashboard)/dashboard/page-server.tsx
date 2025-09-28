@@ -126,7 +126,7 @@ async function getFrameworkBreakdownData() {
   await new Promise((resolve) => setTimeout(resolve, 300));
 
   return [
-    { framework: 'ISO 27001', score: 92, color: '#8B5CF6' },
+    { framework: 'ISO 27001', score: 92, color: '#17255A' },
     { framework: 'GDPR', score: 87, color: '#A78BFA' },
     { framework: 'SOC 2', score: 78, color: '#34FEF7' },
     { framework: 'NIST', score: 65, color: '#D0D5E3' },

@@ -107,7 +107,7 @@ export function usePusher(options: UsePusherOptions = {}): UsePusherReturn {
       if (!pusherService.isEnabled()) {
         setConnectionState('disconnected');
         onError?.(new Error('Pusher is not configured. Set NEXT_PUBLIC_PUSHER_KEY to enable real-time features.'));
-        return () => {};
+        return;
       }
 
       setConnectionState('connecting');
@@ -153,7 +153,6 @@ export function usePusher(options: UsePusherOptions = {}): UsePusherReturn {
         clearTimeout(connectionTimeout);
       };
     }
-    return () => {};
   }, [autoConnect, onConnect, onDisconnect, onError]);
 
   // Subscribe to channel if provided
@@ -179,7 +178,6 @@ export function usePusher(options: UsePusherOptions = {}): UsePusherReturn {
         }
       };
     }
-    return () => {};
   }, [channel, events, connectionState]);
 
   // Cleanup on unmount

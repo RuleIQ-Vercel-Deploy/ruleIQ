@@ -1,6 +1,6 @@
 import { 
   BusinessProfileSchema,
-  FreemiumAssessmentStartResponseSchema,
+  FreemiumAssessmentResponseSchema,
   ChatMessageSchema,
   EvidenceItemSchema,
   PolicyDocumentSchema,
@@ -9,7 +9,8 @@ import {
   IntegrationSchema,
   AlertSchema,
   AIHelpResponseSchema,
-  APIErrorResponseSchema,
+  AIAnalysisResponseSchema,
+  AIErrorResponseSchema,
   ApiResponseSchema,
   LeadCaptureRequestSchema,
   AssessmentStartRequestSchema,
@@ -39,7 +40,7 @@ export function isAssessmentData(value: unknown): boolean {
 // ===========================
 
 export function isFreemiumAssessmentResponse(value: unknown): boolean {
-  const result = FreemiumAssessmentStartResponseSchema.safeParse(value);
+  const result = FreemiumAssessmentResponseSchema.safeParse(value);
   return result.success;
 }
 
@@ -129,7 +130,7 @@ export function isAIAnalysisResponse(response: unknown): boolean {
 }
 
 export function isAIErrorResponse(response: unknown): boolean {
-  const result = APIErrorResponseSchema.safeParse(response);
+  const result = AIErrorResponseSchema.safeParse(response);
   return result.success;
 }
 
@@ -138,13 +139,8 @@ export function isAIErrorResponse(response: unknown): boolean {
 // ===========================
 
 export function isApiResponse(value: unknown): boolean {
-  // ApiResponseSchema is a function, not a schema, so we need a different approach
-  return (
-    typeof value === 'object' &&
-    value !== null &&
-    'success' in value &&
-    typeof (value as any).success === 'boolean'
-  );
+  const result = ApiResponseSchema.safeParse(value);
+  return result.success;
 }
 
 export function isSuccessResponse(value: unknown): boolean {
@@ -297,5 +293,6 @@ export function isEnum<T extends string>(
 
 import type { 
   BusinessProfile,
-  ChatMessage
+  ChatMessage,
+  ApiResponse 
 } from '../validation/zod-schemas';

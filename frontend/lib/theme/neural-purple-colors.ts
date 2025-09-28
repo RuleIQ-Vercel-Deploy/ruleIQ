@@ -58,16 +58,8 @@ export const neuralPurple = {
     quaternary: '#A78BFA',
     quinary: '#6D28D9',
     senary: '#5B21B6',
-  },
-
-  // Additional properties for compatibility
-  dark: '#6D28D9', // Alias for primaryDark
-  light: '#C084FC', // Alias for primaryLight
-  subtle: '#F3E8FF', // Light background variant
+  }
 };
-
-// Export chart colors separately for backwards compatibility
-export const chartColors = neuralPurple.chart;
 
 // Legacy color mappings for migration
 export const legacyToNeuralPurpleMap = {
@@ -167,8 +159,7 @@ export const silver = {
   900: '#18181B',
   light: '#E4E4E7',
   DEFAULT: '#71717A',
-  dark: '#27272A',
-  primary: '#71717A' // Add primary property
+  dark: '#27272A'
 };
 
 // Semantic colors for status

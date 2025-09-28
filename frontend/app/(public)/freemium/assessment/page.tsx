@@ -104,13 +104,7 @@ function AssessmentContent() {
 
       {/* Assessment Content */}
       <div className="container mx-auto px-4 py-8">
-        {currentToken ? (
-          <FreemiumAssessmentFlow token={currentToken} />
-        ) : (
-          <div className="flex items-center justify-center py-8">
-            <Loader2 className="h-8 w-8 animate-spin text-purple-600" />
-          </div>
-        )}
+        <FreemiumAssessmentFlow token={currentToken || undefined} />
       </div>
 
       {/* Footer */}

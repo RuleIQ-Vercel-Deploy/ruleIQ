@@ -101,26 +101,9 @@ export function QuickActionsWidget() {
       <CardContent>
         <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-5">
           {actions.map((item, index) => {
+            const Icon = item.icon;
             const isDisabled = item.requiresProfile && !hasProfile;
             const isFeatured = index === 0; // First item (Compliance Wizard) is featured
-
-            // Render icon based on item.label instead of dynamic Icon component
-            const renderIcon = () => {
-              switch (item.label) {
-                case 'Compliance Wizard':
-                  return <Bot className="h-6 w-6" />;
-                case 'New Assessment':
-                  return <Shield className="h-6 w-6" />;
-                case 'Generate Policy':
-                  return <FileText className="h-6 w-6" />;
-                case 'Upload Evidence':
-                  return <Upload className="h-6 w-6" />;
-                case 'Ask IQ':
-                  return <MessageSquare className="h-6 w-6" />;
-                default:
-                  return <Bot className="h-6 w-6" />;
-              }
-            };
 
             return (
               <button
@@ -139,7 +122,7 @@ export function QuickActionsWidget() {
               >
                 <div className="flex flex-col items-center space-y-2 text-center">
                   <div className={cn('rounded-lg p-3 transition-colors', item.color)}>
-                    {renderIcon()}
+                    <Icon className="h-6 w-6" />
                   </div>
                   <div>
                     <p className="text-sm font-medium text-foreground">{item.label}</p>

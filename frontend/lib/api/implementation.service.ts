@@ -73,7 +73,7 @@ class ImplementationService {
   }): Promise<{ plans: ImplementationPlan[]; total: number }> {
     const response = await apiClient.get<{ plans: ImplementationPlan[]; total: number }>(
       '/implementation/plans',
-      params ? { params } : {},
+      { params },
     );
     return response;
   }

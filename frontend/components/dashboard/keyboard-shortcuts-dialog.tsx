@@ -11,37 +11,11 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
-// Static shortcuts data for display
-const staticShortcuts = [
-  { key: 'Z', ctrlKey: true, description: 'Undo last action' },
-  { key: 'Z', ctrlKey: true, shiftKey: true, description: 'Redo last action' },
-  { key: 'Y', ctrlKey: true, description: 'Redo last action' },
-  { key: 'R', ctrlKey: true, altKey: true, description: 'Reset layout to default' },
-  { key: '?', shiftKey: true, description: 'Show keyboard shortcuts' },
-  { key: 'Escape', description: 'Cancel current operation' },
-];
-
-// Helper function to display shortcuts
-const getShortcutDisplay = (shortcut: any): string => {
-  const parts = [];
-  
-  if (shortcut.ctrlKey || shortcut.metaKey) {
-    parts.push(typeof window !== 'undefined' && navigator.platform.includes('Mac') ? '⌘' : 'Ctrl');
-  }
-  if (shortcut.altKey) {
-    parts.push(typeof window !== 'undefined' && navigator.platform.includes('Mac') ? '⌥' : 'Alt');
-  }
-  if (shortcut.shiftKey) {
-    parts.push('⇧');
-  }
-  
-  parts.push(shortcut.key.toUpperCase());
-  
-  return parts.join(' + ');
-};
+import { useKeyboardShortcuts, getShortcutDisplay } from '@/hooks/use-keyboard-shortcuts';
 
 export function KeyboardShortcutsDialog() {
   const [open, setOpen] = useState(false);
+  const shortcuts = useKeyboardShortcuts();
 
   useEffect(() => {
     const handleShowShortcuts = () => setOpen(true);
@@ -49,9 +23,8 @@ export function KeyboardShortcutsDialog() {
     return () => document.removeEventListener('showKeyboardShortcuts', handleShowShortcuts);
   }, []);
 
-  // Use static shortcuts for now
-  const globalShortcuts = staticShortcuts;
-  const profileShortcuts: typeof staticShortcuts = []; // Empty for now
+  const globalShortcuts = shortcuts.filter((s) => !s.requiresProfile);
+  const profileShortcuts = shortcuts.filter((s) => s.requiresProfile);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

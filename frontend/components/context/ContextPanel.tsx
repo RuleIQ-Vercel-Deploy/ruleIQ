@@ -90,7 +90,7 @@ export function ContextPanel({
   // Group items by type
   const groupedItems = filteredItems.reduce((acc, item) => {
     if (!acc[item.type]) acc[item.type] = [];
-    acc[item.type]!.push(item);
+    acc[item.type].push(item);
     return acc;
   }, {} as Record<string, ContextItem[]>);
 

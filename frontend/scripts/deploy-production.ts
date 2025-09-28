@@ -61,9 +61,9 @@ class ProductionDeployment {
         await this.buildApplication();
       }
 
-      // Step 4: Deploy to Google Cloud Run
+      // Step 4: Deploy to Vercel
       if (!this.config.dryRun) {
-        await this.deployToCloudRun();
+        await this.deployToVercel();
       }
 
       // Step 5: Run smoke tests
@@ -111,8 +111,9 @@ class ProductionDeployment {
       'NEXT_PUBLIC_PUSHER_CLUSTER',
       'PUSHER_APP_ID',
       'PUSHER_SECRET',
-      'GOOGLE_CLOUD_PROJECT',
-      'GOOGLE_CLOUD_REGION',
+      'VERCEL_TOKEN',
+      'VERCEL_PROJECT_ID',
+      'VERCEL_ORG_ID',
     ];
 
     const missing: string[] = [];
@@ -193,76 +194,36 @@ class ProductionDeployment {
   }
 
   /**
-   * Deploy to Google Cloud Run
+   * Deploy to Vercel
    */
-  private async deployToCloudRun() {
+  private async deployToVercel() {
     console.log('');
-    console.log(chalk.blue('☁️  Deploying to Google Cloud Run...'));
+    console.log(chalk.blue('☁️  Deploying to Vercel...'));
 
-    // Get current service URL for rollback
+    // Get current deployment for rollback
     try {
-      const serviceName = this.config.environment === 'production' ? 'ruleiq-frontend' : 'ruleiq-frontend-staging';
-      const region = process.env.GOOGLE_CLOUD_REGION || 'europe-west2';
-      
-      const currentDeployment = execSync(
-        `gcloud run services describe ${serviceName} --region=${region} --format="value(status.url)"`,
-        { encoding: 'utf-8' }
-      );
-      
-      if (currentDeployment.trim()) {
-        this.previousDeploymentUrl = currentDeployment.trim();
+      const currentDeployment = execSync('vercel inspect --token=$VERCEL_TOKEN', {
+        encoding: 'utf-8',
+      });
+      const urlMatch = currentDeployment.match(/https:\/\/[^\s]+\.vercel\.app/);
+      if (urlMatch) {
+        this.previousDeploymentUrl = urlMatch[0];
       }
     } catch (error) {
       console.warn(chalk.yellow('⚠️  Could not get current deployment URL'));
     }
 
     try {
-      const serviceName = this.config.environment === 'production' ? 'ruleiq-frontend' : 'ruleiq-frontend-staging';
-      const region = process.env.GOOGLE_CLOUD_REGION || 'europe-west2';
-      const projectId = process.env.GOOGLE_CLOUD_PROJECT;
-      
-      if (!projectId) {
-        throw new Error('GOOGLE_CLOUD_PROJECT environment variable is required');
-      }
+      const command = this.config.environment === 'production'
+        ? `vercel --prod --yes --token=${process.env.VERCEL_TOKEN}`
+        : `vercel --yes --token=${process.env.VERCEL_TOKEN}`;
 
-      // Build and push Docker image
-      const imageTag = `gcr.io/${projectId}/${serviceName}:${Date.now()}`;
-      
-      console.log(chalk.gray('   Building Docker image...'));
-      execSync(`docker build -t ${imageTag} .`, { stdio: 'inherit' });
-      
-      console.log(chalk.gray('   Pushing Docker image...'));
-      execSync(`docker push ${imageTag}`, { stdio: 'inherit' });
+      const output = execSync(command, { encoding: 'utf-8', stdio: 'pipe' });
 
-      // Deploy to Cloud Run
-      console.log(chalk.gray('   Deploying to Cloud Run...'));
-      const deployCommand = [
-        `gcloud run deploy ${serviceName}`,
-        `--image=${imageTag}`,
-        `--region=${region}`,
-        '--platform=managed',
-        '--allow-unauthenticated',
-        '--memory=1Gi',
-        '--cpu=1',
-        '--timeout=300',
-        '--max-instances=10',
-        '--port=3000',
-        '--set-env-vars="NODE_ENV=production,NEXT_TELEMETRY_DISABLED=1"'
-      ].join(' ');
-
-      const output = execSync(deployCommand, { encoding: 'utf-8', stdio: 'pipe' });
-      
       // Extract deployment URL
-      const urlMatch = output.match(/Service URL: (https:\/\/[^\s]+)/);
+      const urlMatch = output.match(/https:\/\/[^\s]+\.vercel\.app/);
       if (urlMatch) {
-        this.deploymentUrl = urlMatch[1];
-      } else {
-        // Fallback: get service URL
-        const serviceUrl = execSync(
-          `gcloud run services describe ${serviceName} --region=${region} --format="value(status.url)"`,
-          { encoding: 'utf-8' }
-        ).trim();
-        this.deploymentUrl = serviceUrl;
+        this.deploymentUrl = urlMatch[0];
       }
 
       console.log(chalk.green('✅ Deployment initiated'));
@@ -365,25 +326,10 @@ class ProductionDeployment {
     }
 
     try {
-      const serviceName = this.config.environment === 'production' ? 'ruleiq-frontend' : 'ruleiq-frontend-staging';
-      const region = process.env.GOOGLE_CLOUD_REGION || 'europe-west2';
-      
-      // Get previous revision
-      const revisions = execSync(
-        `gcloud run revisions list --service=${serviceName} --region=${region} --format="value(name)" --limit=2`,
-        { encoding: 'utf-8' }
-      ).trim().split('\n');
-      
-      if (revisions.length > 1) {
-        const previousRevision = revisions[1];
-        execSync(
-          `gcloud run services update-traffic ${serviceName} --region=${region} --to-revisions=${previousRevision}=100`,
-          { stdio: 'inherit' }
-        );
-        console.log(chalk.green('✅ Rollback completed'));
-      } else {
-        console.error(chalk.red('❌ No previous revision found'));
-      }
+      execSync(`vercel rollback ${this.previousDeploymentUrl} --yes`, {
+        stdio: 'inherit',
+      });
+      console.log(chalk.green('✅ Rollback completed'));
     } catch (error) {
       console.error(chalk.red('❌ Rollback failed'));
     }

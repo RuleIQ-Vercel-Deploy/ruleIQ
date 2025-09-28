@@ -23,61 +23,15 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { 
-  IQComplianceQueryResponse
+  ComplianceQueryResponse, 
+  Evidence, 
+  ActionPlan, 
+  RiskAssessment,
+  GraphAnalysis 
 } from '@/types/iq-agent';
 
-// Component-specific types to match expected UI structure
-interface Evidence {
-  title: string;
-  type: string;
-  relevance_score: number;
-  summary: string;
-  source_url?: string;
-}
-
-interface ActionPlan {
-  immediate_actions: Array<{
-    title: string;
-    description: string;
-    priority: string;
-    estimated_effort: string;
-  }>;
-  long_term_strategy?: string;
-}
-
-interface RiskAssessment {
-  overall_risk_level: string;
-  identified_risks: Array<{
-    title: string;
-    description: string;
-    severity: string;
-    impact: string;
-  }>;
-}
-
-interface GraphAnalysis {
-  nodes_accessed: number;
-  relationships_traversed: number;
-  relevant_frameworks: string[];
-  confidence_factors?: {
-    data_completeness: number;
-  };
-}
-
-// Extended response type for the component
-interface ExtendedIQResponse extends IQComplianceQueryResponse {
-  summary: string;
-  trust_level: string;
-  confidence_score: number;
-  response_time_ms: number;
-  evidence?: Evidence[];
-  action_plan?: ActionPlan;
-  risk_assessment?: RiskAssessment;
-  graph_analysis?: GraphAnalysis;
-}
-
 interface IQComplianceResponseProps {
-  response: ExtendedIQResponse;
+  response: ComplianceQueryResponse;
   className?: string;
 }
 
@@ -167,7 +121,7 @@ export function IQComplianceResponse({ response, className }: IQComplianceRespon
       {response.evidence && response.evidence.length > 0 && (
         <Card>
           <Collapsible 
-            open={expandedSections.evidence || false}
+            open={expandedSections.evidence}
             onOpenChange={() => toggleSection('evidence')}
           >
             <CollapsibleTrigger asChild>
@@ -222,7 +176,7 @@ export function IQComplianceResponse({ response, className }: IQComplianceRespon
       {response.action_plan && (
         <Card>
           <Collapsible 
-            open={expandedSections.actions || false}
+            open={expandedSections.actions}
             onOpenChange={() => toggleSection('actions')}
           >
             <CollapsibleTrigger asChild>
@@ -295,7 +249,7 @@ export function IQComplianceResponse({ response, className }: IQComplianceRespon
       {response.risk_assessment && (
         <Card>
           <Collapsible 
-            open={expandedSections.risks || false}
+            open={expandedSections.risks}
             onOpenChange={() => toggleSection('risks')}
           >
             <CollapsibleTrigger asChild>
@@ -347,7 +301,7 @@ export function IQComplianceResponse({ response, className }: IQComplianceRespon
       {response.graph_analysis && (
         <Card>
           <Collapsible 
-            open={expandedSections.graph || false}
+            open={expandedSections.graph}
             onOpenChange={() => toggleSection('graph')}
           >
             <CollapsibleTrigger asChild>

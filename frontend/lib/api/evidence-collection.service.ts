@@ -66,10 +66,9 @@ class EvidenceCollectionService {
     framework?: string;
     status?: string;
   }): Promise<CollectionPlanSummary[]> {
-    const response = await apiClient.get<CollectionPlanSummary[]>(
-      '/evidence-collection/plans',
-      params ? { params } : {},
-    );
+    const response = await apiClient.get<CollectionPlanSummary[]>('/evidence-collection/plans', {
+      params,
+    });
     return response;
   }
 

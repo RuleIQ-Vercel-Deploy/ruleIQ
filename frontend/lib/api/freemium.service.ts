@@ -167,7 +167,7 @@ class FreemiumService {
     }
 
     const responseData = await response.json();
-    return validateApiResponse(responseData, LeadResponseSchema) as LeadResponse;
+    return validateApiResponse(responseData, LeadResponseSchema);
   }
 
   /**
@@ -191,7 +191,7 @@ class FreemiumService {
     }
 
     const responseData = await response.json();
-    return validateApiResponse(responseData, FreemiumAssessmentStartResponseSchema) as FreemiumAssessmentStartResponse;
+    return validateApiResponse(responseData, FreemiumAssessmentStartResponseSchema);
   }
 
   /**
@@ -208,7 +208,7 @@ class FreemiumService {
     }
 
     const responseData = await response.json();
-    return validateApiResponse(responseData, FreemiumAssessmentStartResponseSchema) as FreemiumAssessmentStartResponse;
+    return validateApiResponse(responseData, FreemiumAssessmentStartResponseSchema);
   }
 
   /**
@@ -232,7 +232,7 @@ class FreemiumService {
     }
 
     const responseData = await response.json();
-    return validateApiResponse(responseData, AssessmentQuestionResponseSchema) as AssessmentQuestionResponse;
+    return validateApiResponse(responseData, AssessmentQuestionResponseSchema);
   }
 
   /**
@@ -249,7 +249,7 @@ class FreemiumService {
     }
 
     const json = await response.json();
-    return validateApiResponse(json, AssessmentResultsResponseSchema) as unknown as AssessmentResultsResponse;
+    return validateApiResponse(json, AssessmentResultsResponseSchema);
   }
 
   /**
@@ -265,7 +265,7 @@ class FreemiumService {
     }
 
     const responseData = await response.json();
-    return validateApiResponse(responseData, HealthStatusSchema) as HealthStatus;
+    return validateApiResponse(responseData, HealthStatusSchema);
   }
 
   /**
@@ -340,7 +340,7 @@ class FreemiumService {
     }
 
     const responseData = await response.json();
-    return validateApiResponse(responseData, AssessmentResultsResponseSchema) as unknown as AssessmentResultsResponse;
+    return validateApiResponse(responseData, AssessmentResultsResponseSchema);
   }
 
   /**
@@ -413,11 +413,11 @@ class FreemiumService {
 
     // Validate each item in the response array
     if (Array.isArray(responseData)) {
-      return responseData.map(item => validateApiResponse(item, AssessmentResultsResponseSchema) as unknown as AssessmentResultsResponse);
+      return responseData.map(item => validateApiResponse(item, AssessmentResultsResponseSchema));
     }
 
     // If single item returned, wrap in array
-    return [validateApiResponse(responseData, AssessmentResultsResponseSchema) as unknown as AssessmentResultsResponse];
+    return [validateApiResponse(responseData, AssessmentResultsResponseSchema)];
   }
 }
 
@@ -432,7 +432,7 @@ export const captureEmail = (
 ): Promise<FreemiumEmailCaptureResponse> => freemiumService.captureEmail(data);
 
 export const startAssessment = (token: string): Promise<FreemiumAssessmentStartResponse> =>
-  freemiumService.startAssessment({ lead_id: token, business_type: 'default' });
+  freemiumService.startAssessment({ lead_email: token, business_type: 'default' });
 
 export const answerQuestion = (
   token: string,

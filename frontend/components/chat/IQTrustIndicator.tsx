@@ -114,6 +114,7 @@ export function IQTrustIndicator({
   const [isUpgrading, setIsUpgrading] = useState(false);
   const [displayConfidence, setDisplayConfidence] = useState(0);
   const config = trustLevelConfig[trustLevel];
+  const Icon = config.icon;
 
   // Animate confidence score
   useEffect(() => {
@@ -130,8 +131,6 @@ export function IQTrustIndicator({
       const timer = setTimeout(() => setIsUpgrading(false), 1000);
       return () => clearTimeout(timer);
     }
-    // Return cleanup function even if condition is false
-    return () => {};
   }, [confidenceScore, trustLevel]);
 
   const sizeClasses = {
@@ -170,19 +169,7 @@ export function IQTrustIndicator({
               )}
             >
               <Shield className={cn(iconSizes[size], config.color)} />
-              {(() => {
-                const iconClass = cn(iconSizes[size], config.color);
-                switch (trustLevel) {
-                  case 'helper':
-                    return <HandHeart className={iconClass} />;
-                  case 'advisor':
-                    return <UserCheck className={iconClass} />;
-                  case 'partner':
-                    return <Handshake className={iconClass} />;
-                  default:
-                    return <HandHeart className={iconClass} />;
-                }
-              })()}
+              <Icon className={cn(iconSizes[size], config.color)} />
               <span className={cn('font-medium', config.color)}>
                 {config.label}
               </span>
@@ -232,19 +219,7 @@ export function IQTrustIndicator({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className={cn('p-2 rounded-lg', config.bgColor)}>
-              {(() => {
-                const iconClass = cn(iconSizes[size], config.color);
-                switch (trustLevel) {
-                  case 'helper':
-                    return <HandHeart className={iconClass} />;
-                  case 'advisor':
-                    return <UserCheck className={iconClass} />;
-                  case 'partner':
-                    return <Handshake className={iconClass} />;
-                  default:
-                    return <HandHeart className={iconClass} />;
-                }
-              })()}
+              <Icon className={cn(iconSizes[size], config.color)} />
             </div>
             <div>
               <div className="flex items-center gap-2">

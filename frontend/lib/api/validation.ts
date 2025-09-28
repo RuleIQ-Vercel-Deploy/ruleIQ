@@ -1,5 +1,5 @@
 import { z, ZodError, ZodSchema } from 'zod';
-import { apiClient } from './client';
+import type { APIClient } from './client';
 import { ApiResponseSchema, APIErrorResponseSchema } from '../validation/zod-schemas';
 
 // Custom error class for validation failures
@@ -87,16 +87,16 @@ export function formatValidationError(error: ZodError): string {
 /**
  * Creates a validated API client that automatically validates responses
  */
-export class ValidatedAPIClient {
+export class ValidatedAPIClient extends APIClient {
   /**
    * Makes a GET request with response validation
    */
   async getValidated<T>(
     url: string,
     schema: ZodSchema<T>,
-    options?: { params?: Record<string, string | number | boolean | null | undefined> }
+    options?: RequestInit
   ): Promise<T> {
-    const response = await apiClient.get(url, options);
+    const response = await this.get(url, options);
     return validateApiResponse(response, schema);
   }
 
@@ -115,7 +115,7 @@ export class ValidatedAPIClient {
       ? validateApiResponse(data, requestSchema)
       : data;
 
-    const response = await apiClient.post(url, validatedData);
+    const response = await this.post(url, validatedData, options);
     return validateApiResponse(response, responseSchema);
   }
 
@@ -134,7 +134,7 @@ export class ValidatedAPIClient {
       ? validateApiResponse(data, requestSchema)
       : data;
 
-    const response = await apiClient.put(url, validatedData);
+    const response = await this.put(url, validatedData, options);
     return validateApiResponse(response, responseSchema);
   }
 
@@ -153,7 +153,7 @@ export class ValidatedAPIClient {
       ? validateApiResponse(data, requestSchema)
       : data;
 
-    const response = await apiClient.patch(url, validatedData);
+    const response = await this.patch(url, validatedData, options);
     return validateApiResponse(response, responseSchema);
   }
 
@@ -165,7 +165,7 @@ export class ValidatedAPIClient {
     schema: ZodSchema<T>,
     options?: RequestInit
   ): Promise<T> {
-    const response = await apiClient.delete(url);
+    const response = await this.delete(url, options);
     return validateApiResponse(response, schema);
   }
 }
@@ -173,7 +173,7 @@ export class ValidatedAPIClient {
 /**
  * Creates a validated wrapper for API client methods
  */
-export function createValidatedApiClient() {
+export function createValidatedApiClient(apiClient: APIClient) {
   return new ValidatedAPIClient();
 }
 
@@ -226,7 +226,7 @@ export function createTypedEndpoint<
 
     switch (method) {
       case 'GET':
-        return client.getValidated(url, responseSchema, options as { params?: Record<string, string | number | boolean | null | undefined> });
+        return client.getValidated(url, responseSchema, options);
       
       case 'POST':
         if (data === undefined) {

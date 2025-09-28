@@ -38,9 +38,9 @@ export const MatrixRainVisualization = ({ data = [] }: { data?: number[] }) => {
       ctx.font = `${fontSize}px monospace`;
       
       for (let i = 0; i < drops.length; i++) {
-        const text = chars[Math.floor(Math.random() * chars.length)] ?? '0';
+        const text = chars[Math.floor(Math.random() * chars.length)];
         const x = i * fontSize;
-        const y = (drops[i] ?? 0) * fontSize;
+        const y = drops[i] * fontSize;
         // Color gradient based on position
         const gradient = ctx.createLinearGradient(0, y - fontSize * 10, 0, y);
         gradient.addColorStop(0, 'rgba(139, 92, 246, 0)');
@@ -53,7 +53,7 @@ export const MatrixRainVisualization = ({ data = [] }: { data?: number[] }) => {
         if (y > canvas.height && Math.random() > 0.975) {
           drops[i] = 0;
         }
-        drops[i] = (drops[i] ?? 0) + 1;
+        drops[i]++;
       }
     };
 

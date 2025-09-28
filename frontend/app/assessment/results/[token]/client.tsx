@@ -57,14 +57,11 @@ export default function AssessmentResultsClient({ token }: AssessmentResultsClie
       setResults(data);
 
       // Load historical data for trend analysis using consistent key resolution
-      const businessKeyParams: { session_id: string; session_token: string; lead_id?: string } = {
+      const businessKey = assessmentResultsService.getBusinessProfileKey({
+        lead_id: data.lead_id,
         session_id: data.session_id,
         session_token: token
-      };
-      if (data.lead_id) {
-        businessKeyParams.lead_id = data.lead_id;
-      }
-      const businessKey = assessmentResultsService.getBusinessProfileKey(businessKeyParams);
+      });
       await loadTrendData(businessKey);
 
     } catch (err) {
@@ -88,14 +85,11 @@ export default function AssessmentResultsClient({ token }: AssessmentResultsClie
           });
 
           // Load historical data for trend analysis using consistent key resolution
-          const businessKeyParams: { session_id: string; session_token: string; lead_id?: string } = {
+          const businessKey = assessmentResultsService.getBusinessProfileKey({
+            lead_id: parsedData.lead_id,
             session_id: parsedData.session_id,
             session_token: token
-          };
-          if (parsedData.lead_id) {
-            businessKeyParams.lead_id = parsedData.lead_id;
-          }
-          const businessKey = assessmentResultsService.getBusinessProfileKey(businessKeyParams);
+          });
           await loadTrendData(businessKey);
           return;
         }
@@ -297,7 +291,7 @@ export default function AssessmentResultsClient({ token }: AssessmentResultsClie
               sectionDetails={
                 'compliance_score' in results
                   ? assessmentResultsService.generateSectionDetails(results)
-                  : []
+                  : undefined
               }
               trendData={trendData?.dataPoints || []}
               className="mb-8"

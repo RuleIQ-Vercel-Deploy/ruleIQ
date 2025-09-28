@@ -82,16 +82,13 @@ export function FreemiumEmailCapture({
     const utm_campaign = urlParams.get('utm_campaign') || undefined;
 
     try {
-      const payload: any = {
+      const response = await emailCaptureMutation.mutateAsync({
         email: email.trim(),
-        marketing_consent: consentMarketing,
-      };
-      
-      // Only include UTM parameters if they exist
-      if (utm_source) payload.utm_source = utm_source;
-      if (utm_campaign) payload.utm_campaign = utm_campaign;
-      
-      const response = await emailCaptureMutation.mutateAsync(payload);
+        utm_source,
+        utm_campaign,
+        consent_marketing: consentMarketing,
+        consent_terms: consentTerms,
+      });
       // Update store with token if returned
       if (response?.token) {
         setToken(response.token);
@@ -292,9 +289,10 @@ export function FreemiumEmailCaptureInline({ className = '' }: { className?: str
     try {
       const response = await emailCaptureMutation.mutateAsync({
         email: email.trim(),
-        ...(utm_source && { utm_source }),
-        ...(utm_campaign && { utm_campaign }),
-        marketing_consent: consentMarketing,
+        utm_source,
+        utm_campaign,
+        consent_marketing: consentMarketing,
+        consent_terms: true, // Inline version assumes terms acceptance
       });
       // Update store with token if returned
       if (response?.token) {

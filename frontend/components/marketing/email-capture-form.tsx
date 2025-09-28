@@ -32,6 +32,7 @@ export function EmailCaptureForm({
     first_name: '',
     last_name: '',
     company_name: '',
+    company_size: undefined,
     industry: '',
     marketing_consent: false,
     newsletter_subscribed: true,
@@ -200,7 +201,7 @@ export function EmailCaptureForm({
       <div className="flex items-start space-x-2">
         <Checkbox
           id="newsletter"
-          checked={formData.newsletter_subscribed ?? true}
+          checked={formData.newsletter_subscribed}
           onCheckedChange={(checked) => updateFormData('newsletter_subscribed', !!checked)}
         />
         <Label htmlFor="newsletter" className="text-sm leading-5">
@@ -211,7 +212,7 @@ export function EmailCaptureForm({
       <div className="flex items-start space-x-2">
         <Checkbox
           id="marketing_consent"
-          checked={formData.marketing_consent ?? false}
+          checked={formData.marketing_consent}
           onCheckedChange={(checked) => updateFormData('marketing_consent', !!checked)}
         />
         <Label htmlFor="marketing_consent" className="text-sm leading-5">

@@ -179,20 +179,12 @@ export function ChatContainer({ agent, session, onSessionEnd }: ChatContainerPro
             content: wsMessage.payload.content || '',
             role: wsMessage.payload.metadata?.role || 'agent',
             timestamp: new Date(wsMessage.timestamp),
+            agentId: wsMessage.payload.metadata?.agentId,
+            sessionId: wsMessage.payload.metadata?.sessionId,
+            trustLevel: wsMessage.payload.metadata?.trustLevel,
             status: 'delivered',
             isStreaming: false
           };
-          
-          // Only add optional properties if they have defined values
-          if (wsMessage.payload.metadata?.agentId) {
-            chatMessage.agentId = wsMessage.payload.metadata.agentId;
-          }
-          if (wsMessage.payload.metadata?.sessionId) {
-            chatMessage.sessionId = wsMessage.payload.metadata.sessionId;
-          }
-          if (wsMessage.payload.metadata?.trustLevel !== undefined) {
-            chatMessage.trustLevel = wsMessage.payload.metadata.trustLevel;
-          }
 
           addMessage(chatMessage);
         }
@@ -340,6 +332,7 @@ export function ChatContainer({ agent, session, onSessionEnd }: ChatContainerPro
       <div className="border-t p-4">
         <ChatInput
           onSendMessage={handleSendMessage}
+          onTyping={handleTypingStart}
           disabled={!connectionState.connected}
           placeholder={
             connectionState.connected

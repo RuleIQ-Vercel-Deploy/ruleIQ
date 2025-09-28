@@ -49,10 +49,9 @@ class EvidenceService {
   async getEvidence(
     params?: EvidenceSearchParams,
   ): Promise<{ items: EvidenceItem[]; total: number }> {
-    const response = await apiClient.get<{ items: EvidenceItem[]; total: number }>(
-      '/evidence',
-      params ? { params: params as Record<string, string | number | boolean | null | undefined> } : {},
-    );
+    const response = await apiClient.get<{ items: EvidenceItem[]; total: number }>('/evidence', {
+      params,
+    });
     return response;
   }
 
@@ -111,10 +110,10 @@ class EvidenceService {
     file: File,
     onProgress?: (progress: number) => void,
   ): Promise<EvidenceItem> {
-    // Note: onProgress callback is not currently supported by the API client
     const response = await apiClient.upload<EvidenceItem>(
       `/evidence/${id}/upload`,
       file,
+      onProgress,
     );
     return response;
   }

@@ -158,33 +158,26 @@ export const BudgetAlertPanel: React.FC<BudgetAlertPanelProps> = ({
         )}
 
         <div className="space-y-3">
-          {displayAlerts.slice(0, maxAlerts).map((alert, index) => {
-            const alertId = 'id' in alert ? alert.id : `alert-${index}`;
-            const alertLevel = 'level' in alert ? alert.level : ('type' in alert ? alert.type : 'info');
-            const alertType = 'type' in alert ? alert.type : alertLevel;
-            const alertTitle = 'title' in alert ? alert.title : 'Alert';
-            const alertMessage = 'message' in alert ? alert.message : 'No message available';
-            const alertTimestamp = 'timestamp' in alert ? alert.timestamp : new Date().toISOString();
-            return (
+          {displayAlerts.slice(0, maxAlerts).map((alert) => (
             <Alert
-              key={alertId}
-              variant={getAlertVariant(String(alertLevel))}
-              className={acknowledgedAlerts.has(alertId) ? 'opacity-60' : ''}
+              key={alert.id}
+              variant={getAlertVariant(alert.level || alert.type)}
+              className={acknowledgedAlerts.has(alert.id) ? 'opacity-60' : ''}
             >
               <div className="flex items-start justify-between">
                 <div className="flex gap-2">
-                  {getAlertIcon(String(alertLevel))}
+                  {getAlertIcon(alert.level || alert.type)}
                   <div className="space-y-1">
-                    <AlertTitle className="text-sm font-medium">{alertTitle}</AlertTitle>
-                    <AlertDescription className="text-xs">{alertMessage}</AlertDescription>
+                    <AlertTitle className="text-sm font-medium">{alert.title}</AlertTitle>
+                    <AlertDescription className="text-xs">{alert.message}</AlertDescription>
                     <div className="mt-2 flex items-center gap-2">
                       <Badge variant="outline" className="text-xs">
-                        {String(alertLevel)}
+                        {alert.level || alert.type}
                       </Badge>
                       <span className="text-xs text-muted-foreground">
-                        {new Date(alertTimestamp).toLocaleTimeString()}
+                        {new Date(alert.timestamp).toLocaleTimeString()}
                       </span>
-                      {!acknowledgedAlerts.has(alertId) && (
+                      {!acknowledgedAlerts.has(alert.id) && (
                         <Badge variant="default" className="text-xs">
                           New
                         </Badge>
@@ -193,12 +186,12 @@ export const BudgetAlertPanel: React.FC<BudgetAlertPanelProps> = ({
                   </div>
                 </div>
                 <div className="flex gap-1">
-                  {!acknowledgedAlerts.has(alertId) && (
+                  {!acknowledgedAlerts.has(alert.id) && (
                     <Button
                       variant="ghost"
                       size="sm"
                       className="h-6 px-2"
-                      onClick={() => handleAcknowledge(alertId)}
+                      onClick={() => handleAcknowledge(alert.id)}
                     >
                       Mark Read
                     </Button>
@@ -207,15 +200,14 @@ export const BudgetAlertPanel: React.FC<BudgetAlertPanelProps> = ({
                     variant="ghost"
                     size="sm"
                     className="h-6 w-6 p-0"
-                    onClick={() => handleDismiss(alertId)}
+                    onClick={() => handleDismiss(alert.id)}
                   >
                     <X className="h-3 w-3" />
                   </Button>
                 </div>
               </div>
             </Alert>
-            );
-          })}
+          ))}
 
           {displayAlerts.length === 0 && (
             <div className="py-8 text-center">

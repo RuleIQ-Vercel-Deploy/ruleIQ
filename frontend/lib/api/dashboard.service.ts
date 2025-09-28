@@ -141,7 +141,7 @@ class DashboardService {
     unread_count: number;
     total: number;
   }> {
-    const response = await apiClient.get<any>('/dashboard/notifications', params ? { params } : {});
+    const response = await apiClient.get<any>('/dashboard/notifications', { params });
     return response;
   }
 

@@ -457,7 +457,7 @@ class AISelfReviewService {
    */
   private getReviewFocusForType(
     type: 'guidance' | 'analysis' | 'recommendations',
-  ): 'comprehensive' | 'accuracy' | 'completeness' | 'clarity' | 'relevance' {
+  ): SelfReviewRequest['review_focus'] {
     switch (type) {
       case 'guidance':
         return 'clarity';

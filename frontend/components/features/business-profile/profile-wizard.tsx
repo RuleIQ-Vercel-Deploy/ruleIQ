@@ -467,10 +467,7 @@ export function ProfileWizard({ onComplete, initialData }: ProfileWizardProps) {
                   <Label htmlFor="annual_revenue">Annual Revenue</Label>
                   <Select
                     onValueChange={(value) => setValue('annual_revenue', value)}
-                    {...((() => {
-                      const value = getValues('annual_revenue');
-                      return value && value !== '' ? { defaultValue: value } : {};
-                    })())}
+                    defaultValue={getValues('annual_revenue') ?? undefined}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select revenue range" />

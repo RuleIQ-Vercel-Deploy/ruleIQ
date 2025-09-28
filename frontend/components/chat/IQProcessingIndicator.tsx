@@ -93,6 +93,7 @@ export function IQProcessingIndicator({
   const [displayProgress, setDisplayProgress] = useState(0);
   const [elapsedTime, setElapsedTime] = useState(0);
   const config = stageConfig[stage];
+  const Icon = config.icon;
 
   // Animate progress
   useEffect(() => {
@@ -146,30 +147,13 @@ export function IQProcessingIndicator({
           {/* Current Stage Header */}
           <div className="flex items-center gap-3">
             <div className={cn('p-2 rounded-lg', config.bgColor)}>
-              {(() => {
-                const iconClass = cn(
-                  'w-5 h-5', 
-                  config.color,
-                  stage !== 'error' && stage !== 'completed' && 'animate-pulse'
-                );
-                
-                switch (stage) {
-                  case 'analyzing':
-                    return <Brain className={iconClass} />;
-                  case 'searching_graph':
-                    return <Network className={iconClass} />;
-                  case 'evaluating_evidence':
-                    return <Search className={iconClass} />;
-                  case 'generating_response':
-                    return <Zap className={iconClass} />;
-                  case 'completed':
-                    return <CheckCircle className={iconClass} />;
-                  case 'error':
-                    return <AlertCircle className={iconClass} />;
-                  default:
-                    return <Brain className={iconClass} />;
-                }
-              })()}
+              {stage === 'error' ? (
+                <Icon className={cn('w-5 h-5', config.color)} />
+              ) : stage === 'completed' ? (
+                <Icon className={cn('w-5 h-5', config.color)} />
+              ) : (
+                <Icon className={cn('w-5 h-5 animate-pulse', config.color)} />
+              )}
             </div>
             <div className="flex-1">
               <div className="flex items-center gap-2">
@@ -214,6 +198,7 @@ export function IQProcessingIndicator({
           {/* Stage Steps */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {getProgressSteps().map((step, index) => {
+              const StepIcon = step.icon;
               return (
                 <div 
                   key={index}
@@ -233,14 +218,7 @@ export function IQProcessingIndicator({
                     {step.isCompleted ? (
                       <CheckCircle className="w-4 h-4 text-green-600" />
                     ) : step.isActive ? (
-                      (() => {
-                        const iconClass = cn('w-4 h-4 animate-pulse', step.color);
-                        if (step.icon === Brain) return <Brain className={iconClass} />;
-                        if (step.icon === Network) return <Network className={iconClass} />;
-                        if (step.icon === Search) return <Search className={iconClass} />;
-                        if (step.icon === Zap) return <Zap className={iconClass} />;
-                        return <Brain className={iconClass} />;
-                      })()
+                      <StepIcon className={cn('w-4 h-4 animate-pulse', step.color)} />
                     ) : (
                       <span className="text-xs font-medium text-gray-500">{step.step}</span>
                     )}

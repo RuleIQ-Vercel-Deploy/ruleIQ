@@ -74,7 +74,7 @@ export function EnhancedSidebar({
   const [isCollapsed, setIsCollapsed] = useState(defaultCollapsed);
   const [focusedIndex, setFocusedIndex] = useState(0);
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
-  const menuRef = useRef<HTMLUListElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLAnchorElement | null)[]>([]);
 
   // Handle collapse state change
@@ -255,7 +255,7 @@ export function EnhancedSidebar({
                     >
                       <Link
                         href={item.href}
-                        ref={(el) => { itemRefs.current[index] = el; }}
+                        ref={(el) => (itemRefs.current[index] = el)}
                         role="menuitem"
                         aria-current={active ? 'page' : undefined}
                         aria-label={item.label}
