@@ -1,8 +1,6 @@
 import { Metadata } from 'next';
 
-export async function generateMetadata({ params }: { params: Promise<{ token: string }> }): Promise<Metadata> {
-  // Await params for Next.js 15 compatibility
-  const { token } = await params;
+export async function generateMetadata({ params }: { params: { token: string } }): Promise<Metadata> {
   // For freemium assessments, we can't fetch dynamic data server-side without an API endpoint
   // Use minimal, stable metadata
   return {

@@ -30,12 +30,7 @@ import { cn } from '@/lib/utils';
 import { Header } from '@/components/ui/header';
 
 // Feature Card Component
-function FeatureCard({ icon: Icon, title, description, delay = 0 }: {
-  icon: React.ComponentType<any>;
-  title: string;
-  description: string;
-  delay?: number;
-}) {
+function FeatureCard({ icon: Icon, title, description, delay = 0 }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -65,11 +60,7 @@ function FeatureCard({ icon: Icon, title, description, delay = 0 }: {
 }
 
 // Metric Card Component
-function MetricCard({ value, label, icon: Icon }: {
-  value: string;
-  label: string;
-  icon: React.ComponentType<any>;
-}) {
+function MetricCard({ value, label, icon: Icon }) {
   return (
     <div className="text-center group">
       <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl 
