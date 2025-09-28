@@ -34,9 +34,9 @@ class ReportService {
     page?: number;
     page_size?: number;
   }): Promise<{ items: Report[]; total: number }> {
-    const response = await apiClient.get<{ items: Report[]; total: number }>('/reports/history', {
-      params,
-    });
+    const response = await apiClient.get<{ items: Report[]; total: number }>('/reports/history', 
+      params ? { params } : {}
+    );
     return response;
   }
 
@@ -131,8 +131,7 @@ class ReportService {
       preview_url?: string;
     }>;
   }> {
-    const params = reportType ? { report_type: reportType } : undefined;
-    const response = await apiClient.get<any>('/reports/templates', { params });
+    const response = await apiClient.get<any>('/reports/templates', reportType ? { params: { report_type: reportType } } : {});
     return response;
   }
 

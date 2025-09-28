@@ -94,9 +94,9 @@ export function useValidatedQuery<TData>(
   };
 
   const query = useQuery({
-    queryKey,
     queryFn: validatedQueryFn,
     ...queryOptions,
+    queryKey,
   });
 
   return {
@@ -217,7 +217,7 @@ export function useFormValidation<T>(schema: ZodSchema<T>) {
     (fieldName: string, value: unknown): string | undefined => {
       try {
         const partialData = { [fieldName]: value };
-        schema.partial().parse(partialData);
+        (schema as any).partial().parse(partialData);
         
         setErrors(prev => {
           const next = { ...prev };
@@ -274,7 +274,7 @@ export function useRealtimeValidation<T>(
 
   const validateData = useCallback(
     (newData: Partial<T>) => {
-      const result = safeValidateApiResponse(newData, schema.partial());
+      const result = safeValidateApiResponse(newData, (schema as any).partial());
       
       if (result.success) {
         setErrors({});

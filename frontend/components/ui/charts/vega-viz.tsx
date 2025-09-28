@@ -1,8 +1,17 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { VegaLite } from 'react-vega';
+import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
+
+// Dynamically import VegaEmbed to avoid SSR issues
+const VegaEmbed = dynamic(
+  () => import('react-vega').then((mod) => ({ default: mod.VegaEmbed })),
+  {
+    ssr: false,
+    loading: () => <div className="text-purple-400">Loading chart...</div>,
+  }
+);
 
 export const VegaLiteVisualization = () => {
   const [spec, setSpec] = useState<any>(null);
@@ -50,7 +59,8 @@ export const VegaLiteVisualization = () => {
             field: 'size',
             type: 'quantitative',
             legend: { title: 'Volume' }
-          },          color: {
+          },
+          color: {
             field: 'category',
             type: 'nominal',
             scale: {
@@ -103,7 +113,7 @@ export const VegaLiteVisualization = () => {
         </div>
       ) : spec ? (
         <div className="w-full">
-          <VegaLite spec={spec} actions={false} />
+          <VegaEmbed spec={spec} />
         </div>
       ) : (
         <div className="h-[400px] flex items-center justify-center">

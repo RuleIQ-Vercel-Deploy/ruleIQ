@@ -102,7 +102,7 @@ class BusinessProfileService {
   async getProfile(): Promise<BusinessProfile | null> {
     try {
       const profiles = await this.getBusinessProfiles();
-      return profiles.length > 0 ? profiles[0] : null;
+      return profiles.length > 0 ? profiles[0] ?? null : null;
     } catch (error) {
       // TODO: Replace with proper logging
 

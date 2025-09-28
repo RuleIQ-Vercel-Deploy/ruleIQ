@@ -188,8 +188,7 @@ export function validateRuleOrder(
           }))
         );
       }
-  return true;
-    });
+    }
   });
 
   // Check for duplicate rule IDs

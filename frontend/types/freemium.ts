@@ -445,6 +445,17 @@ export interface ValidationError {
 }
 
 // ============================================================================
+// HEALTH STATUS TYPE
+// ============================================================================
+
+export interface HealthStatus {
+  status: 'healthy' | 'unhealthy' | 'degraded';
+  timestamp: string;
+  version?: string;
+  dependencies?: Record<string, 'healthy' | 'unhealthy' | 'degraded'>;
+}
+
+// ============================================================================
 // EXPORT ALL TYPES
 // ============================================================================
 

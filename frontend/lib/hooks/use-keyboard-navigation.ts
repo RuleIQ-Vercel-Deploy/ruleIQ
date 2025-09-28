@@ -39,7 +39,7 @@ export function useKeyboardNavigation({
   const [focusedIndex, setFocusedIndex] = useState(0);
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
   const [searchBuffer, setSearchBuffer] = useState('');
-  const searchTimeoutRef = useRef<NodeJS.Timeout>();
+  const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const itemRefs = useRef<(HTMLElement | null)[]>([]);
 
   // Get the next valid index based on direction
@@ -121,15 +121,17 @@ export function useKeyboardNavigation({
           break;
 
         case collapseKey:
-          if (isNested && expandedItems.has(items[focusedIndex]?.id)) {
+          if (isNested && items[focusedIndex] && expandedItems.has(items[focusedIndex].id)) {
             event.preventDefault();
             const item = items[focusedIndex];
-            setExpandedItems((prev) => {
-              const next = new Set(prev);
-              next.delete(item.id);
-              return next;
-            });
-            onExpand?.(item, false);
+            if (item) {
+              setExpandedItems((prev) => {
+                const next = new Set(prev);
+                next.delete(item.id);
+                return next;
+              });
+              onExpand?.(item, false);
+            }
           }
           break;
 
@@ -203,7 +205,7 @@ export function useKeyboardNavigation({
   // Handle typeahead search
   const handleTypeahead = useCallback(
     (key: string) => {
-      clearTimeout(searchTimeoutRef.current);
+      if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
       
       const newSearchBuffer = searchBuffer + key.toLowerCase();
       setSearchBuffer(newSearchBuffer);
@@ -213,7 +215,7 @@ export function useKeyboardNavigation({
         item.label.toLowerCase().startsWith(newSearchBuffer)
       );
       
-      if (matchingIndex !== -1 && (!skipDisabled || !items[matchingIndex].disabled)) {
+      if (matchingIndex !== -1 && items[matchingIndex] && (!skipDisabled || !items[matchingIndex].disabled)) {
         setFocusedIndex(matchingIndex);
       }
       
@@ -232,7 +234,7 @@ export function useKeyboardNavigation({
     document.addEventListener('keydown', handleKeyDown);
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
-      clearTimeout(searchTimeoutRef.current);
+      if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
     };
   }, [handleKeyDown]);
 

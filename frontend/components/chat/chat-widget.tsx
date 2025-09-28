@@ -112,7 +112,7 @@ export function ChatWidget({
   // Handle send message
   const handleSendMessage = async () => {
     if (message.trim() && isConnected) {
-      await sendMessage(message, { source: 'widget', voiceInput: isVoiceActive });
+      await sendMessage(message, { source: 'widget' });
       setMessage('');
       setIsVoiceActive(false);
     }
@@ -144,11 +144,13 @@ export function ChatWidget({
       endVoiceCall();
       setIsVoiceCall(false);
     } else {
-      startVoiceCall({
-        conversationId: widgetConversationId || undefined,
-        ...voiceConfig,
-      });
-      setIsVoiceCall(true);
+      if (widgetConversationId) {
+        startVoiceCall({
+          conversationId: widgetConversationId,
+          ...voiceConfig,
+        });
+        setIsVoiceCall(true);
+      }
     }
   }, [
     isVoiceCall,

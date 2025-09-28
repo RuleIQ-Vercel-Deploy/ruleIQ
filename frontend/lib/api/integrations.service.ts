@@ -137,7 +137,7 @@ class IntegrationService {
     }>;
     total: number;
   }> {
-    const response = await apiClient.get<any>(`/integrations/${integrationId}/logs`, { params });
+    const response = await apiClient.get<any>(`/integrations/${integrationId}/logs`, params ? { params } : {});
     return response;
   }
 

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
 import { useLayoutStore } from '@/lib/stores/layout.store';
-import { toast } from '@/hooks/use-toast';
+import { toast } from '@/components/ui/use-toast';
 
 interface KeyboardShortcut {
   key: string;
@@ -367,15 +367,7 @@ function showShortcutsHelp(): void {
   // You could show this in a modal or toast
   toast({
     title: 'Keyboard Shortcuts',
-    description: (
-      <div className="space-y-1 mt-2">>;
-        {formattedShortcuts.map((shortcut, index) => (
-          <div key={index} className="text-sm font-mono">
-            {shortcut}
-          </div>
-        ))}
-      </div>
-    ),
+    description: formattedShortcuts.join('\n'),
     duration: 10000,
   });
 }

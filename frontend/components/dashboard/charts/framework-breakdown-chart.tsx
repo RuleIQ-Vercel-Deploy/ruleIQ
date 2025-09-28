@@ -29,12 +29,12 @@ interface FrameworkBreakdownChartProps {
 }
 
 const COLORS = {
-  'ISO 27001': chartColors.categorical[0], // neural purple primary
-  GDPR: chartColors.categorical[1], // semantic success
-  'Cyber Essentials': chartColors.categorical[2], // semantic warning
-  'PCI DSS': chartColors.categorical[3], // semantic info
-  'SOC 2': chartColors.categorical[4], // silver primary
-  HIPAA: chartColors.categorical[5], // neural purple light
+  'ISO 27001': chartColors.primary, // neural purple primary
+  GDPR: semantic.success, // semantic success
+  'Cyber Essentials': semantic.warning, // semantic warning
+  'PCI DSS': semantic.info, // semantic info
+  'SOC 2': silver.DEFAULT, // silver default
+  HIPAA: chartColors.tertiary, // neural purple light
 };
 
 export function FrameworkBreakdownChart({
@@ -97,7 +97,7 @@ export function FrameworkBreakdownChart({
               <Radar
                 name="Score"
                 dataKey="score"
-                stroke={neuralPurple.dark}
+                stroke={neuralPurple.primaryDark}
                 fill={neuralPurple.primary}
                 fillOpacity={0.6}
                 strokeWidth={2}

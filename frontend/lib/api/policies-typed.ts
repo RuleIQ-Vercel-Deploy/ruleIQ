@@ -69,7 +69,7 @@ export class PoliciesService {
    */
   async listPolicies(params?: PolicyQueryParams): Promise<PaginatedResponse<Policy>> {
     try {
-      const response = await apiClient.get<any>(`${this.basePath}/`, { params });
+    const response = await apiClient.get<any>(`${this.basePath}/`, params ? { params: params as Record<string, string | number | boolean | null | undefined> } : {});
       
       // Validate response with Zod
       const validated = PaginatedPoliciesSchema.parse(response);

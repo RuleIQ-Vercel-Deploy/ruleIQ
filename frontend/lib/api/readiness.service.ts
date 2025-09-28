@@ -54,9 +54,9 @@ class ReadinessService {
    */
   async getGapAnalysis(businessProfileId: string, frameworkId?: string): Promise<GapAnalysis> {
     const params = frameworkId ? { framework_id: frameworkId } : undefined;
-    const response = await apiClient.get<GapAnalysis>(`/readiness/gaps/${businessProfileId}`, {
-      params,
-    });
+    const response = await apiClient.get<GapAnalysis>(`/readiness/gaps/${businessProfileId}`, 
+      params ? { params } : {}
+    );
     return response;
   }
 

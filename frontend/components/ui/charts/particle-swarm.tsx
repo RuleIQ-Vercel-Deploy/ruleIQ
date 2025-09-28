@@ -1,19 +1,10 @@
 'use client';
 
-import React, { useCallback } from 'react';
+import React from 'react';
 import Particles from '@tsparticles/react';
-import { loadSlim } from 'tsparticles-slim';
-import type { Container, Engine } from '@tsparticles/engine';
 
 // PARTICLE SWARM DATA VISUALIZATION
 export const ParticleSwarmChart = () => {
-  const particlesInit = useCallback(async (engine: Engine) => {
-    await loadSlim(engine);
-  }, []);
-
-  const particlesLoaded = useCallback(async (container: Container | undefined) => {
-    console.log('Particles loaded', container);
-  }, []);
 
   return (
     <div className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-2xl p-6 border border-purple-800/20 h-[400px] overflow-hidden">
@@ -21,8 +12,6 @@ export const ParticleSwarmChart = () => {
       <Particles
         className="absolute inset-0"
         id="tsparticles"
-        init={particlesInit}
-        loaded={particlesLoaded}
         options={{
           background: {
             color: {
@@ -39,7 +28,8 @@ export const ParticleSwarmChart = () => {
               resize: {
                 enable: true,
               },
-            },            modes: {
+            },
+            modes: {
               grab: {
                 distance: 140,
                 links: {
@@ -80,24 +70,12 @@ export const ParticleSwarmChart = () => {
             },
             opacity: {
               value: 0.8,
-              animation: {
-                enable: true,
-                speed: 1,
-                minimumValue: 0.3,
-                sync: false,
-              },
             },
             shape: {
               type: 'circle',
             },
             size: {
               value: { min: 1, max: 5 },
-              animation: {
-                enable: true,
-                speed: 3,
-                minimumValue: 1,
-                sync: false,
-              },
             },
           },
           detectRetina: true,

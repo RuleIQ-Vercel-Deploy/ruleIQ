@@ -220,7 +220,7 @@ export default function DashboardPage() {
     console.log('Opening settings for widget:', widgetId);
   };
 
-  const handleRuleOrderChange = (newRules: typeof rules) => {
+  const handleRuleOrderChange = (newRules: any[]) => {
     setRules(newRules);
   };
 

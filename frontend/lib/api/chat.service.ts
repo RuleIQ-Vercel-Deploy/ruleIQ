@@ -41,7 +41,7 @@ class ChatService {
   }): Promise<{ items: ChatConversation[]; total: number }> {
     const response = await apiClient.get<{ items: ChatConversation[]; total: number }>(
       '/chat/conversations',
-      { params },
+      { ...(params && { params }) },
     );
     return response;
   }

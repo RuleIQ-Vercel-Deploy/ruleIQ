@@ -58,8 +58,16 @@ export const neuralPurple = {
     quaternary: '#A78BFA',
     quinary: '#6D28D9',
     senary: '#5B21B6',
-  }
+  },
+
+  // Additional properties for compatibility
+  dark: '#6D28D9', // Alias for primaryDark
+  light: '#C084FC', // Alias for primaryLight
+  subtle: '#F3E8FF', // Light background variant
 };
+
+// Export chart colors separately for backwards compatibility
+export const chartColors = neuralPurple.chart;
 
 // Legacy color mappings for migration
 export const legacyToNeuralPurpleMap = {
@@ -143,6 +151,59 @@ export const tailwindColorMap = {
   'hover:text-teal-700': 'hover:text-purple-700',
   'hover:text-teal-800': 'hover:text-purple-800',
   'hover:text-teal-900': 'hover:text-purple-900',
+};
+
+// Silver color palette
+export const silver = {
+  50: '#FAFAFA',
+  100: '#F4F4F5',
+  200: '#E4E4E7',
+  300: '#D4D4D8',
+  400: '#A1A1AA',
+  500: '#71717A',
+  600: '#52525B',
+  700: '#3F3F46',
+  800: '#27272A',
+  900: '#18181B',
+  light: '#E4E4E7',
+  DEFAULT: '#71717A',
+  dark: '#27272A',
+  primary: '#71717A' // Add primary property
+};
+
+// Semantic colors for status
+export const semantic = {
+  success: '#10B981',
+  successLight: '#34D399',
+  successDark: '#059669',
+  warning: '#F59E0B',
+  warningLight: '#FCD34D',
+  warningDark: '#D97706',
+  error: '#EF4444',
+  errorLight: '#F87171',
+  errorDark: '#DC2626',
+  info: '#3B82F6',
+  infoLight: '#60A5FA',
+  infoDark: '#2563EB'
+};
+
+// Neutral colors
+export const neutral = {
+  white: '#FFFFFF',
+  black: '#000000',
+  gray: {
+    50: '#F9FAFB',
+    100: '#F3F4F6',
+    200: '#E5E7EB',
+    300: '#D1D5DB',
+    400: '#9CA3AF',
+    500: '#6B7280',
+    600: '#4B5563',
+    700: '#374151',
+    800: '#1F2937',
+    900: '#111827',
+    950: '#030712'
+  }
 };
 
 export default neuralPurple;

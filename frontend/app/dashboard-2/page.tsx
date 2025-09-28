@@ -14,7 +14,7 @@ import {
   Layers,
   Grid3x3,
 } from 'lucide-react';
-import { AuroraBackground } from '@/components/ui/backgrounds/aurora-background';
+// Using neural theme instead of aurora background
 import { ParticleSwarmChart } from '@/components/ui/charts/particle-swarm';
 import { ThreeDDataOrb } from '@/components/ui/charts/3d-orb';
 import { WaveDataVisualization } from '@/components/ui/charts/wave-viz';
@@ -56,9 +56,9 @@ export default function ExtraordinaryDashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-950">
-      {/* Background Effect */}
-      <AuroraBackground className="fixed inset-0 opacity-20" />
+    <div className="min-h-screen bg-black">
+      {/* Neural network background gradient */}
+      <div className="fixed inset-0 bg-gradient-to-br from-neural-purple-900/10 via-black to-black" />
       
       <div className="relative z-10">
         {/* Header */}

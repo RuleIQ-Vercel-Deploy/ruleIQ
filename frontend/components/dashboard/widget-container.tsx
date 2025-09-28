@@ -413,7 +413,7 @@ export function WidgetContainer({
             // when the layout store updates
           }
 
-          if (showAccessibilityAnnouncements) {
+          if (showAccessibilityAnnouncements && widget) {
             addAnnouncement({
               message: `Moved ${widget.title} to position ${newIndex + 1}`,
               severity: 'success',
@@ -465,10 +465,13 @@ export function WidgetContainer({
         return next;
       });
 
-      toast({
+      const toastConfig: any = {
         title: 'Widget removed',
         description: `${widget.title} has been removed`,
-        action: enableUndoRedo ? (
+      };
+
+      if (enableUndoRedo) {
+        toastConfig.action = (
           <Button
             variant="outline"
             size="sm"
@@ -483,8 +486,10 @@ export function WidgetContainer({
           >
             Undo
           </Button>
-        ) : undefined,
-      });
+        );
+      }
+
+      toast(toastConfig);
     },
     [widgets, removeWidget, onWidgetRemove, enableUndoRedo, undo]
   );
@@ -546,7 +551,6 @@ export function WidgetContainer({
         onDragCancel={handleDragCancel}
         measuring={measuringConfig}
         modifiers={[restrictToWindowEdges]}
-        announcements={announcements}
       >
         <SortableContext items={widgets.map((w) => w.id)} strategy={rectSortingStrategy}>
           <div

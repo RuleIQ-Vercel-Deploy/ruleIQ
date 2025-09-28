@@ -46,7 +46,7 @@ export function AppSidebar() {
   const router = useRouter();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState(0);
-  const menuRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLUListElement>(null);
   const itemRefs = useRef(menuItems.map(() => createRef<HTMLAnchorElement>()));
 
   // Focus management for roving tabindex
