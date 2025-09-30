@@ -10,8 +10,10 @@
 ![Tests](https://img.shields.io/badge/Tests-1884+-brightgreen)
 ![AI Agents](https://img.shields.io/badge/AI_Agents-IQ_Agent_+_RAG-2C7A7B)
 
-[![CI Pipeline](https://github.com/yourusername/ruleiq/workflows/CI%20Pipeline/badge.svg)](https://github.com/yourusername/ruleiq/actions/workflows/ci.yml)
-[![Security Scan](https://github.com/yourusername/ruleiq/workflows/Security%20and%20Dependency%20Scanning/badge.svg)](https://github.com/yourusername/ruleiq/actions/workflows/security.yml)
+[![Backend Tests](https://github.com/yourusername/ruleiq/workflows/Backend%20Tests/badge.svg)](https://github.com/yourusername/ruleiq/actions/workflows/backend-tests.yml)
+[![Frontend Tests](https://github.com/yourusername/ruleiq/workflows/Frontend%20Tests/badge.svg)](https://github.com/yourusername/ruleiq/actions/workflows/frontend-tests.yml)
+[![Coverage Report](https://github.com/yourusername/ruleiq/workflows/Coverage%20Report/badge.svg)](https://github.com/yourusername/ruleiq/actions/workflows/coverage-report.yml)
+[![Flaky Test Detection](https://github.com/yourusername/ruleiq/workflows/Flaky%20Test%20Detection/badge.svg)](https://github.com/yourusername/ruleiq/actions/workflows/flaky-test-detection.yml)
 
 </div>
 
@@ -261,50 +263,74 @@ All API endpoints now follow a consistent `/api/v1/` pattern:
 
 See [API Documentation](docs/API_ENDPOINTS_DOCUMENTATION.md) for complete endpoint reference.
 
-## 🧪 Testing
+## 🧪 Testing & Coverage
 
-### Backend Tests (1884+ passing)
+### Current Coverage Baseline
 
+| Component | Coverage | Target (12 months) | Status |
+|-----------|----------|-------------------|--------|
+| **Backend** | 0.02% | 80% | 🔴 Critical |
+| **Frontend** | 0.00% | 80% | 🔴 Critical |
+| **Combined** | 0.02% | 80% | 🔴 Critical |
+
+**Quality Gates:** Backend coverage must not drop below 0.02% baseline. PRs decreasing coverage by >2% require justification.
+
+**Documentation:**
+- 📊 [Coverage Baseline Details](docs/COVERAGE_BASELINE.md) - Current metrics and improvement targets
+- 🧪 [Testing Guide](docs/TESTING_GUIDE.md) - Comprehensive testing strategies
+- 🔄 [CI/CD Guide](docs/CI_CD_GUIDE.md) - Automated testing workflows
+
+### Quick Test Commands
+
+**Backend (1884+ tests):**
 ```bash
 # Quick unit tests (2-5 minutes)
 make test-fast
 
-# AI agent tests
-pytest -m ai -v
+# With coverage report
+pytest --cov=services --cov=api --cov=core --cov=utils --cov=models \
+       --cov-report=html --cov-report=xml --cov-branch
 
-# RAG system tests
-pytest tests/test_rag_self_critic.py -v
+# Open coverage report
+open htmlcov/index.html
 
-# Integration tests (5-10 minutes)
-make test-integration
+# Independent test groups (parallel execution)
+make test-groups-parallel  # All groups (~20 min)
+make test-group-unit       # Unit tests only (2-3 min)
+make test-group-ai         # AI core tests (3-4 min)
+make test-group-api        # API tests (4-5 min)
 
-# Full test suite including agentic systems
+# Full test suite with agentic systems
 make test-full
-
-# Test specific component
-pytest tests/unit/services/test_iq_agent.py -v
 ```
 
-### Frontend Tests
-
+**Frontend:**
 ```bash
 cd frontend
 
-# Unit tests
-pnpm test
+# Unit tests with coverage
+pnpm test:coverage
 
-# Test with new teal theme
-NEXT_PUBLIC_USE_NEW_THEME=true pnpm test
+# Open coverage report
+open coverage/index.html
 
-# E2E tests with Playwright
+# E2E tests (Playwright)
 pnpm test:e2e
 
 # Visual regression tests
 pnpm test:visual
-
-# Test coverage
-pnpm test:coverage
 ```
+
+### CI/CD Automated Testing
+
+All tests run automatically on push/PR via GitHub Actions:
+
+- **[Backend Tests](https://github.com/yourusername/ruleiq/actions/workflows/backend-tests.yml)** - pytest across multiple test groups with service containers
+- **[Frontend Tests](https://github.com/yourusername/ruleiq/actions/workflows/frontend-tests.yml)** - Vitest unit tests + Playwright E2E
+- **[Coverage Report](https://github.com/yourusername/ruleiq/actions/workflows/coverage-report.yml)** - Combined coverage with quality gate enforcement
+- **[Flaky Test Detection](https://github.com/yourusername/ruleiq/actions/workflows/flaky-test-detection.yml)** - Nightly detection of unstable tests
+
+Coverage reports are automatically posted as PR comments. See [CI/CD Guide](docs/CI_CD_GUIDE.md) for details.
 
 ### Agentic System Testing
 
