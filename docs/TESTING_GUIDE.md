@@ -345,10 +345,10 @@ pnpm test:e2e       # E2E tests
 - Downloads coverage artifacts from both test workflows
 - Parses backend (coverage.xml/json) and frontend (lcov.info) data
 - Calculates combined project coverage
-- Enforces quality gates (0.02% baseline, -2% tolerance)
+- Enforces quality gates (3.13% baseline, -2% tolerance)
 - Posts comprehensive coverage summary to PRs
 
-**Quality Gate:** Fails if backend coverage drops below baseline threshold.
+**Quality Gate:** Fails if backend coverage drops below 3.13% baseline threshold.
 
 ```bash
 # Local coverage generation
@@ -379,12 +379,12 @@ python scripts/detect_flaky_tests.py --runs 10 --markers unit
 
 | Component | Coverage | Target | Status |
 |-----------|----------|--------|--------|
-| Backend   | 0.02%    | 80%    | 🔴 Critical |
+| Backend   | 3.13%    | 80%    | 🔴 Critical |
 | Frontend  | 0.00%    | 80%    | 🔴 Critical |
-| Combined  | 0.02%    | 80%    | 🔴 Critical |
+| Combined  | 3.13%    | 80%    | 🔴 Critical |
 
 **Quality Gates:**
-- Backend minimum: 0.02% (current baseline)
+- Backend minimum: 3.13% (current baseline)
 - PR requirement: No >2% coverage decrease without justification
 - See [Coverage Baseline](./COVERAGE_BASELINE.md) for detailed metrics
 

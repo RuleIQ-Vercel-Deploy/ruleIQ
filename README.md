@@ -269,11 +269,11 @@ See [API Documentation](docs/API_ENDPOINTS_DOCUMENTATION.md) for complete endpoi
 
 | Component | Coverage | Target (12 months) | Status |
 |-----------|----------|-------------------|--------|
-| **Backend** | 0.02% | 80% | 🔴 Critical |
+| **Backend** | 3.13% | 80% | 🔴 Critical |
 | **Frontend** | 0.00% | 80% | 🔴 Critical |
-| **Combined** | 0.02% | 80% | 🔴 Critical |
+| **Combined** | 3.13% | 80% | 🔴 Critical |
 
-**Quality Gates:** Backend coverage must not drop below 0.02% baseline. PRs decreasing coverage by >2% require justification.
+**Quality Gates:** Backend coverage must not drop below 3.13% baseline. PRs decreasing coverage by >2% require justification.
 
 **Documentation:**
 - 📊 [Coverage Baseline Details](docs/COVERAGE_BASELINE.md) - Current metrics and improvement targets

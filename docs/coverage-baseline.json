@@ -1,0 +1,136 @@
+{
+  "generated": "2025-09-30T08:39:24.528698",
+  "backend_coverage": {
+    "overall_line": 3.127,
+    "overall_branch": 0.0,
+    "packages": {
+      ".": {
+        "line_coverage": 7.828,
+        "branch_coverage": 0.0,
+        "lines_valid": 0,
+        "branches_valid": 0
+      },
+      "agents": {
+        "line_coverage": 0.0,
+        "branch_coverage": 0.0,
+        "lines_valid": 0,
+        "branches_valid": 0
+      },
+      "ai": {
+        "line_coverage": 0.0,
+        "branch_coverage": 0.0,
+        "lines_valid": 0,
+        "branches_valid": 0
+      },
+      "ai.evaluation": {
+        "line_coverage": 0.0,
+        "branch_coverage": 0.0,
+        "lines_valid": 0,
+        "branches_valid": 0
+      },
+      "ai.evaluation.golden_datasets": {
+        "line_coverage": 0.0,
+        "branch_coverage": 0.0,
+        "lines_valid": 0,
+        "branches_valid": 0
+      },
+      "ai.evaluation.infrastructure": {
+        "line_coverage": 0.0,
+        "branch_coverage": 0.0,
+        "lines_valid": 0,
+        "branches_valid": 0
+      },
+      "ai.evaluation.metrics": {
+        "line_coverage": 0.0,
+        "branch_coverage": 0.0,
+        "lines_valid": 0,
+        "branches_valid": 0
+      },
+      "ai.evaluation.schemas": {
+        "line_coverage": 0.0,
+        "branch_coverage": 0.0,
+        "lines_valid": 0,
+        "branches_valid": 0
+      },
+      "ai.evaluation.tools": {
+        "line_coverage": 0.0,
+        "branch_coverage": 0.0,
+        "lines_valid": 0,
+        "branches_valid": 0
+      },
+      "automation": {
+        "line_coverage": 0.0,
+        "branch_coverage": 0.0,
+        "lines_valid": 0,
+        "branches_valid": 0
+      },
+      "caching": {
+        "line_coverage": 0.0,
+        "branch_coverage": 0.0,
+        "lines_valid": 0,
+        "branches_valid": 0
+      },
+      "clients": {
+        "line_coverage": 0.0,
+        "branch_coverage": 0.0,
+        "lines_valid": 0,
+        "branches_valid": 0
+      },
+      "integrations": {
+        "line_coverage": 0.0,
+        "branch_coverage": 0.0,
+        "lines_valid": 0,
+        "branches_valid": 0
+      },
+      "integrations.base": {
+        "line_coverage": 0.0,
+        "branch_coverage": 100.0,
+        "lines_valid": 0,
+        "branches_valid": 0
+      },
+      "knowledge_graph": {
+        "line_coverage": 0.0,
+        "branch_coverage": 0.0,
+        "lines_valid": 0,
+        "branches_valid": 0
+      },
+      "models": {
+        "line_coverage": 100.0,
+        "branch_coverage": 100.0,
+        "lines_valid": 0,
+        "branches_valid": 0
+      },
+      "monitoring": {
+        "line_coverage": 0.0,
+        "branch_coverage": 0.0,
+        "lines_valid": 0,
+        "branches_valid": 0
+      },
+      "realtime": {
+        "line_coverage": 0.0,
+        "branch_coverage": 0.0,
+        "lines_valid": 0,
+        "branches_valid": 0
+      },
+      "reporting": {
+        "line_coverage": 0.0,
+        "branch_coverage": 0.0,
+        "lines_valid": 0,
+        "branches_valid": 0
+      },
+      "schemas": {
+        "line_coverage": 0.0,
+        "branch_coverage": 0.0,
+        "lines_valid": 0,
+        "branches_valid": 0
+      },
+      "services": {
+        "line_coverage": 0.0,
+        "branch_coverage": 0.0,
+        "lines_valid": 0,
+        "branches_valid": 0
+      }
+    }
+  },
+  "frontend_coverage": {}
+}
