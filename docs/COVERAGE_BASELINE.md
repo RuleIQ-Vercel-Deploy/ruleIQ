@@ -1,6 +1,6 @@
 # Coverage Baseline Report
 
-**Generated**: 2025-09-30 08:39:24
+**Generated**: 2025-09-30 08:45:13
 **Project**: RuleIQ Compliance Automation Platform
 **Purpose**: Establish test coverage baseline for quality gate enforcement
 
@@ -20,7 +20,7 @@
 
 - 🔴 **Critical**: Overall coverage is below 50% - urgent action required
 
-- Current baseline established as of 2025-09-30 08:39:24
+- Current baseline established as of 2025-09-30 08:45:13
 - Coverage data collected from pytest-cov (backend) and vitest (frontend)
 - Quality gates will enforce maintenance of this baseline
 
