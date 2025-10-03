@@ -335,7 +335,6 @@ export function getContextualErrorMessage(error: EnhancedApiError, context?: str
 export function logError(error: EnhancedApiError, additionalContext?: any): void {
   // Handle cases where error might be undefined or empty
   if (!error) {
-    // TODO: Replace with proper logging
     return;
   }
 
@@ -354,11 +353,7 @@ export function logError(error: EnhancedApiError, additionalContext?: any): void
   // In production, send to error monitoring service
   if (process.env.NODE_ENV === 'production') {
     // TODO: Send to Sentry or similar service
-    // TODO: Replace with proper logging
-    // // TODO: Replace with proper logging
   } else {
-    // TODO: Replace with proper logging
-    // // TODO: Replace with proper logging
   }
 }
 

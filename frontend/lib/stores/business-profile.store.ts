@@ -647,7 +647,6 @@ export const useBusinessProfileStore = create<BusinessProfileState>()(
             );
           } catch (error: unknown) {
             // Don't set error for recommendations - they're not critical
-            // TODO: Replace with proper logging
             set(
               {
                 recommendations: [],

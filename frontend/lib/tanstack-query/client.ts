@@ -45,8 +45,6 @@ export const queryClient = new QueryClient({
 
       // Show error notifications by default
       onError: (_error: unknown) => {
-        // TODO: Replace with proper logging
-        // // TODO: Replace with proper logging
         // TODO: Integrate with toast notification system
       },
     },
@@ -61,7 +59,6 @@ const safeStorage = {
         return window.localStorage.getItem(key);
       }
     } catch (error) {
-      // TODO: Replace with proper logging
     }
     return null;
   },
@@ -71,7 +68,6 @@ const safeStorage = {
         window.localStorage.setItem(key, value);
       }
     } catch (error) {
-      // TODO: Replace with proper logging
     }
   },
   removeItem: (key: string): void => {
@@ -80,7 +76,6 @@ const safeStorage = {
         window.localStorage.removeItem(key);
       }
     } catch (error) {
-      // TODO: Replace with proper logging
     }
   },
 };
@@ -104,7 +99,6 @@ if (typeof window !== 'undefined') {
     //   maxAge: 1000 * 60 * 60 * 24, // 24 hours
     // });
   } catch (error) {
-    // TODO: Replace with proper logging
   }
 }
 */

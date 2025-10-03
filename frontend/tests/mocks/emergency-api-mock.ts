@@ -3,7 +3,6 @@ import { vi } from 'vitest';
 // Emergency comprehensive API mock
 export const createEmergencyApiClient = () => ({
   get: vi.fn().mockImplementation(async (url: string, options = {}) => {
-    // TODO: Replace with proper logging
     // Handle all possible endpoints with proper responses
     if (url.includes('/auth/me')) {
       return {
@@ -33,7 +32,6 @@ export const createEmergencyApiClient = () => ({
   }),
 
   post: vi.fn().mockImplementation(async (url: string, data: unknown, options = {}) => {
-    // TODO: Replace with proper logging
     if (url.includes('/auth/login')) {
       const loginData = data as { email: string; password: string };
       if (loginData.email === 'invalid@example.com') {

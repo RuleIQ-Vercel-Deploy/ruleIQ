@@ -6,14 +6,14 @@ import { motion } from 'framer-motion';
 
 // Purple theme for ECharts
 const purpleTheme = {
-  color: ['#8B5CF6', '#A855F7', '#C084FC', '#E9D5FF', '#C0C0C0'],
+  color: ['var(--purple-500)', 'var(--purple-500)', 'var(--purple-400)', 'var(--purple-50)', 'var(--silver-400)'],
   backgroundColor: 'transparent',
   textStyle: {
-    color: '#9CA3AF'
+    color: 'var(--silver-500)'
   },
   title: {
     textStyle: {
-      color: '#F3F4F6'
+      color: 'var(--purple-50)'
     }
   },
   line: {
@@ -30,46 +30,46 @@ const purpleTheme = {
     axisLine: {
       show: true,
       lineStyle: {
-        color: '#374151'
+        color: 'var(--silver-500)'
       }
     },
     axisTick: {
       show: true,
       lineStyle: {
-        color: '#374151'
+        color: 'var(--silver-500)'
       }
     },
     axisLabel: {
       show: true,
-      color: '#9CA3AF'
+      color: 'var(--silver-500)'
     },
     splitLine: {
       show: true,
       lineStyle: {
-        color: ['#1F2937']
+        color: ['var(--black)']
       }
     }
   },  valueAxis: {
     axisLine: {
       show: true,
       lineStyle: {
-        color: '#374151'
+        color: 'var(--silver-500)'
       }
     },
     axisTick: {
       show: true,
       lineStyle: {
-        color: '#374151'
+        color: 'var(--silver-500)'
       }
     },
     axisLabel: {
       show: true,
-      color: '#9CA3AF'
+      color: 'var(--silver-500)'
     },
     splitLine: {
       show: true,
       lineStyle: {
-        color: ['#1F2937']
+        color: ['var(--black)']
       }
     }
   }
@@ -108,23 +108,23 @@ export const EChartsTimeSeries = () => {
       title: {
         text: 'Real-Time Metrics Stream',
         textStyle: {
-          color: '#F3F4F6',
+          color: 'var(--purple-50)',
           fontSize: 18
         }
       },
       tooltip: {
         trigger: 'axis',
-        backgroundColor: '#1F2937',
-        borderColor: '#8B5CF6',
+        backgroundColor: 'var(--black)',
+        borderColor: 'var(--purple-500)',
         borderWidth: 1,
         textStyle: {
-          color: '#F3F4F6'
+          color: 'var(--purple-50)'
         }
       },
       legend: {
         data: data.series.map((s: any) => s.name),
         textStyle: {
-          color: '#9CA3AF'
+          color: 'var(--silver-500)'
         }
       },
       grid: {
@@ -222,22 +222,22 @@ export const EChartsCandlestick = () => {
       title: {
         text: 'RULE/IQ Trading Data',
         textStyle: {
-          color: '#F3F4F6',
+          color: 'var(--purple-50)',
           fontSize: 18
         }
       },
       tooltip: {
         trigger: 'axis',
-        backgroundColor: '#1F2937',
-        borderColor: '#8B5CF6',
+        backgroundColor: 'var(--black)',
+        borderColor: 'var(--purple-500)',
         borderWidth: 1,
         textStyle: {
-          color: '#F3F4F6'
+          color: 'var(--purple-50)'
         }
       },      legend: {
         data: ['Candlestick', 'MA5', 'MA20', 'Volume'],
         textStyle: {
-          color: '#9CA3AF'
+          color: 'var(--silver-500)'
         }
       },
       grid: [
@@ -258,8 +258,8 @@ export const EChartsCandlestick = () => {
           type: 'category',
           data: dates,
           boundaryGap: false,
-          axisLine: { lineStyle: { color: '#374151' } },
-          axisLabel: { color: '#9CA3AF' },
+          axisLine: { lineStyle: { color: 'var(--silver-500)' } },
+          axisLabel: { color: 'var(--silver-500)' },
           splitLine: { show: false }
         },
         {
@@ -267,7 +267,7 @@ export const EChartsCandlestick = () => {
           gridIndex: 1,
           data: dates,
           boundaryGap: false,
-          axisLine: { lineStyle: { color: '#374151' } },
+          axisLine: { lineStyle: { color: 'var(--silver-500)' } },
           axisLabel: { show: false },
           splitLine: { show: false }
         }
@@ -275,16 +275,16 @@ export const EChartsCandlestick = () => {
       yAxis: [
         {
           scale: true,
-          axisLine: { lineStyle: { color: '#374151' } },
-          axisLabel: { color: '#9CA3AF' },
-          splitLine: { lineStyle: { color: '#1F2937' } }
+          axisLine: { lineStyle: { color: 'var(--silver-500)' } },
+          axisLabel: { color: 'var(--silver-500)' },
+          splitLine: { lineStyle: { color: 'var(--black)' } }
         },
         {
           scale: true,
           gridIndex: 1,
-          axisLine: { lineStyle: { color: '#374151' } },
-          axisLabel: { color: '#9CA3AF' },
-          splitLine: { lineStyle: { color: '#1F2937' } }
+          axisLine: { lineStyle: { color: 'var(--silver-500)' } },
+          axisLabel: { color: 'var(--silver-500)' },
+          splitLine: { lineStyle: { color: 'var(--black)' } }
         }
       ],      series: [
         {
@@ -292,10 +292,10 @@ export const EChartsCandlestick = () => {
           type: 'candlestick',
           data: ohlcData,
           itemStyle: {
-            color: '#10B981',
-            color0: '#EF4444',
-            borderColor: '#10B981',
-            borderColor0: '#EF4444'
+            color: 'var(--purple-400)',
+            color0: 'var(--purple-500)',
+            borderColor: 'var(--purple-400)',
+            borderColor0: 'var(--purple-500)'
           }
         },
         {
@@ -305,7 +305,7 @@ export const EChartsCandlestick = () => {
           smooth: true,
           lineStyle: {
             width: 1,
-            color: '#8B5CF6'
+            color: 'var(--purple-500)'
           }
         },
         {
@@ -315,7 +315,7 @@ export const EChartsCandlestick = () => {
           smooth: true,
           lineStyle: {
             width: 1,
-            color: '#C0C0C0'
+            color: 'var(--silver-400)'
           }
         },
         {
@@ -325,7 +325,7 @@ export const EChartsCandlestick = () => {
           yAxisIndex: 1,
           data: volumes,
           itemStyle: {
-            color: '#8B5CF640'
+            color: 'var(--purple-500)40'
           }
         }
       ]

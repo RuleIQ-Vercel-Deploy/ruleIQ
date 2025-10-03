@@ -34,8 +34,6 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
 
   override componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     // Log error to error reporting service
-    // TODO: Replace with proper logging
-    // // TODO: Replace with proper logging
     // In production, you would send this to your error tracking service
     // Example: Sentry.captureException(error, { contexts: { react: { componentStack: errorInfo.componentStack } } })
   }

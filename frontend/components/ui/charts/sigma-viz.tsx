@@ -55,7 +55,7 @@ export const SigmaNetworkGraph = () => {
         x: Math.random() * 100 - 50,
         y: Math.random() * 100 - 50,
         size: Math.random() * 10 + 5,
-        color: ['#8B5CF6', '#A855F7', '#C084FC'][Math.floor(Math.random() * 3)]
+        color: ['var(--purple-500)', 'var(--purple-500)', 'var(--purple-400)'][Math.floor(Math.random() * 3)]
       });
     }
     
@@ -66,7 +66,7 @@ export const SigmaNetworkGraph = () => {
           id: `edge_${i}`,
           source,
           target,
-          color: '#8B5CF640'
+          color: 'var(--purple-500)40'
         });
       }
     }
@@ -95,7 +95,7 @@ export const SigmaNetworkGraph = () => {
     graphData.edges.forEach((edge: any) => {
       try {
         graph.addEdge(edge.source, edge.target, {
-          color: edge.color || '#8B5CF640',
+          color: edge.color || 'var(--purple-500)40',
           size: edge.weight || 1
         });
       } catch (e) {
@@ -126,19 +126,19 @@ export const SigmaNetworkGraph = () => {
 
     sigmaRef.current = new Sigma(graph, containerRef.current, {
       renderEdgeLabels: false,
-      defaultNodeColor: '#8B5CF6',
-      defaultEdgeColor: '#8B5CF640',
+      defaultNodeColor: 'var(--purple-500)',
+      defaultEdgeColor: 'var(--purple-500)40',
       nodeReducer: (node, data) => {
         const res = { ...data };
         if (data.highlighted) {
-          res.color = '#F59E0B';
+          res.color = 'var(--purple-600)';
         }
         return res;
       },
       edgeReducer: (edge, data) => {
         const res = { ...data };
         if (data.highlighted) {
-          res.color = '#F59E0B';
+          res.color = 'var(--purple-600)';
         }
         return res;
       }

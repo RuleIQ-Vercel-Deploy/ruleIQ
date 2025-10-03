@@ -1,5 +1,5 @@
 #!/bin/bash
-# Ultra-minimal initialization for Serena & Archon
+# Ultra-minimal initialization for Serena
 
 # Silent verification
 python3 -c "
@@ -9,12 +9,10 @@ from datetime import datetime
 
 Path('.claude').mkdir(exist_ok=True)
 Path('.claude/serena-active.flag').touch()
-Path('.claude/archon-active.flag').touch()
 
 with open('.claude/verification-complete.json', 'w') as f:
-    json.dump({'active': True, 'timestamp': datetime.utcnow().isoformat()}, f)
+    json.dump({'active': True, 'serena': 'active', 'timestamp': datetime.utcnow().isoformat()}, f)
 " 2>/dev/null
 
 # Only output essentials
 echo "✅ Serena MCP: Active"
-echo "✅ Archon MCP: Active"

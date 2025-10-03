@@ -296,7 +296,6 @@ export function validateFieldMappings(): void {
   if (process.env.NODE_ENV === 'development') {
     const validation = BusinessProfileFieldMapper.validateMappings();
     if (!validation.isValid) {
-      // TODO: Replace with proper logging
     }
   }
 }

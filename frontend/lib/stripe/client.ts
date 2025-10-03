@@ -4,7 +4,6 @@ import { loadStripe, type Stripe } from '@stripe/stripe-js';
 const stripePublishableKey = process.env['NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY'];
 
 if (!stripePublishableKey) {
-  // TODO: Replace with proper logging
 }
 
 // Singleton pattern for Stripe instance

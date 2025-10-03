@@ -52,7 +52,7 @@ export function EnhancedStatsCard({
             <MiniChart
               data={chartData}
               type={chartType}
-              color={trend?.isPositive ? '#10B981' : '#F59E0B'}
+              color={trend?.isPositive ? '#8b5cf6981' : '#8b5cf6E0B'}
               height={32}
             />
           </div>

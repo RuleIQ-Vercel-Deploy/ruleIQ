@@ -57,9 +57,14 @@ const nextConfig = {
   webpack: (config, { isServer }) => {
     // Handle canvas module in client-side builds
     if (!isServer) {
-      config.resolve.fallback = {
+config.resolve.fallback = {
         ...config.resolve.fallback,
         canvas: false,
+      };
+      // Skip native vega-canvas bindings in browser bundle
+      config.resolve.alias = {
+        ...(config.resolve.alias || {}),
+        'vega-canvas': false,
       };
     }
 

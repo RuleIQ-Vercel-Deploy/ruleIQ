@@ -36,7 +36,7 @@ export function TopHeader({ onMobileMenuToggle }: TopHeaderProps) {
     <header
       className="supports-[backdrop-filter]:bg-oxford-blue/95 sticky top-0 z-50 w-full border-b backdrop-blur"
       style={{
-        backgroundColor: '#161e3a',
+        backgroundColor: 'var(--black)',
         borderBottomColor: 'rgba(233, 236, 239, 0.2)',
       }}
     >
@@ -47,7 +47,7 @@ export function TopHeader({ onMobileMenuToggle }: TopHeaderProps) {
           size="icon"
           className="mr-2 hover:bg-white/10 md:hidden"
           onClick={handleMobileMenuClick}
-          style={{ color: '#F0EAD6' }}
+          style={{ color: 'var(--purple-50)' }}
         >
           <Menu className="h-5 w-5" />
           <span className="sr-only">Toggle navigation menu</span>
@@ -57,10 +57,10 @@ export function TopHeader({ onMobileMenuToggle }: TopHeaderProps) {
         <div className="mr-6 flex items-center space-x-2">
           <Link href="/" className="flex items-center space-x-1">
             <div className="flex items-center space-x-1">
-              <span className="text-xl font-bold" style={{ color: '#F0EAD6' }}>
+              <span className="text-xl font-bold" style={{ color: 'var(--purple-50)' }}>
                 rule
               </span>
-              <span className="text-xl font-bold" style={{ color: '#FFD700' }}>
+              <span className="text-xl font-bold" style={{ color: 'var(--purple-400)' }}>
                 IQ
               </span>
             </div>
@@ -72,35 +72,35 @@ export function TopHeader({ onMobileMenuToggle }: TopHeaderProps) {
           <Link
             href="/"
             className="transition-colors hover:text-white"
-            style={{ color: '#F0EAD6' }}
+            style={{ color: 'var(--purple-50)' }}
           >
             Dashboard
           </Link>
           <Link
             href="/assessments"
             className="transition-colors hover:text-white"
-            style={{ color: '#6C757D' }}
+            style={{ color: 'var(--silver-500)' }}
           >
             Assessments
           </Link>
           <Link
             href="/evidence"
             className="transition-colors hover:text-white"
-            style={{ color: '#6C757D' }}
+            style={{ color: 'var(--silver-500)' }}
           >
             Evidence
           </Link>
           <Link
             href="/policies"
             className="transition-colors hover:text-white"
-            style={{ color: '#6C757D' }}
+            style={{ color: 'var(--silver-500)' }}
           >
             Policies
           </Link>
           <Link
             href="/reports"
             className="transition-colors hover:text-white"
-            style={{ color: '#6C757D' }}
+            style={{ color: 'var(--silver-500)' }}
           >
             Reports
           </Link>
@@ -112,7 +112,7 @@ export function TopHeader({ onMobileMenuToggle }: TopHeaderProps) {
             <div className="relative">
               <Search
                 className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2"
-                style={{ color: '#6C757D' }}
+                style={{ color: 'var(--silver-500)' }}
               />
               <Input
                 type="search"
@@ -120,7 +120,7 @@ export function TopHeader({ onMobileMenuToggle }: TopHeaderProps) {
                 className="w-full border-0 py-2 pl-10 pr-4 text-sm focus-visible:ring-1 focus-visible:ring-offset-0"
                 style={{
                   backgroundColor: 'rgba(240, 234, 214, 0.1)',
-                  color: '#F0EAD6',
+                  color: 'var(--purple-50)',
                   borderColor: 'rgba(233, 236, 239, 0.2)',
                 }}
                 value={searchValue}
@@ -139,15 +139,15 @@ export function TopHeader({ onMobileMenuToggle }: TopHeaderProps) {
                 variant="ghost"
                 size="icon"
                 className="relative hover:bg-white/10"
-                style={{ color: '#F0EAD6' }}
+                style={{ color: 'var(--purple-50)' }}
               >
                 <Bell className="h-5 w-5" />
                 {/* Notification Badge */}
                 <Badge
                   className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full p-0 text-xs"
                   style={{
-                    backgroundColor: '#FF6F61',
-                    color: '#FFFFFF',
+                    backgroundColor: 'var(--purple-500)',
+                    color: 'var(--white)',
                   }}
                 >
                   3
@@ -159,28 +159,28 @@ export function TopHeader({ onMobileMenuToggle }: TopHeaderProps) {
               align="end"
               className="w-80"
               style={{
-                backgroundColor: '#F0EAD6',
+                backgroundColor: 'var(--purple-50)',
                 borderColor: 'rgba(233, 236, 239, 0.2)',
               }}
             >
-              <DropdownMenuLabel style={{ color: '#002147' }}>Notifications</DropdownMenuLabel>
+              <DropdownMenuLabel style={{ color: 'var(--black)' }}>Notifications</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <div className="space-y-1">
-                <div className="p-3 text-sm" style={{ color: '#002147' }}>
+                <div className="p-3 text-sm" style={{ color: 'var(--black)' }}>
                   <div className="font-medium">GDPR Assessment Due</div>
-                  <div className="text-xs" style={{ color: '#6C757D' }}>
+                  <div className="text-xs" style={{ color: 'var(--silver-500)' }}>
                     Complete by March 15, 2024
                   </div>
                 </div>
-                <div className="p-3 text-sm" style={{ color: '#002147' }}>
+                <div className="p-3 text-sm" style={{ color: 'var(--black)' }}>
                   <div className="font-medium">New Policy Update</div>
-                  <div className="text-xs" style={{ color: '#6C757D' }}>
+                  <div className="text-xs" style={{ color: 'var(--silver-500)' }}>
                     Financial reporting policy updated
                   </div>
                 </div>
-                <div className="p-3 text-sm" style={{ color: '#002147' }}>
+                <div className="p-3 text-sm" style={{ color: 'var(--black)' }}>
                   <div className="font-medium">Compliance Score Improved</div>
-                  <div className="text-xs" style={{ color: '#6C757D' }}>
+                  <div className="text-xs" style={{ color: 'var(--silver-500)' }}>
                     Your score increased to 98%
                   </div>
                 </div>
@@ -198,7 +198,7 @@ export function TopHeader({ onMobileMenuToggle }: TopHeaderProps) {
                   backgroundColor: 'rgba(255, 215, 0, 0.2)',
                 }}
               >
-                <User className="h-4 w-4" style={{ color: '#FFD700' }} />
+                <User className="h-4 w-4" style={{ color: 'var(--purple-400)' }} />
                 <span className="sr-only">Open user menu</span>
               </Button>
             </DropdownMenuTrigger>
@@ -207,34 +207,34 @@ export function TopHeader({ onMobileMenuToggle }: TopHeaderProps) {
               align="end"
               forceMount
               style={{
-                backgroundColor: '#F0EAD6',
+                backgroundColor: 'var(--purple-50)',
                 borderColor: 'rgba(233, 236, 239, 0.2)',
               }}
             >
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium leading-none" style={{ color: '#002147' }}>
+                  <p className="text-sm font-medium leading-none" style={{ color: 'var(--black)' }}>
                     John Doe
                   </p>
-                  <p className="text-xs leading-none" style={{ color: '#6C757D' }}>
+                  <p className="text-xs leading-none" style={{ color: 'var(--silver-500)' }}>
                     john.doe@company.com
                   </p>
-                  <p className="text-xs leading-none" style={{ color: '#6C757D' }}>
+                  <p className="text-xs leading-none" style={{ color: 'var(--silver-500)' }}>
                     Compliance Manager
                   </p>
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem style={{ color: '#002147' }}>
+              <DropdownMenuItem style={{ color: 'var(--black)' }}>
                 <User className="mr-2 h-4 w-4" />
                 <span>Profile</span>
               </DropdownMenuItem>
-              <DropdownMenuItem style={{ color: '#002147' }}>
+              <DropdownMenuItem style={{ color: 'var(--black)' }}>
                 <Settings className="mr-2 h-4 w-4" />
                 <span>Settings</span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem style={{ color: '#002147' }}>
+              <DropdownMenuItem style={{ color: 'var(--black)' }}>
                 <LogOut className="mr-2 h-4 w-4" />
                 <span>Log out</span>
               </DropdownMenuItem>

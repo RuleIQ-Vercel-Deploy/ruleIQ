@@ -142,7 +142,6 @@ const initialState: Omit<VoiceStore, keyof ReturnType<typeof createActions>> = {
 const createActions = (set: any, get: any) => ({
   // Recognition Actions
   startListening: async (config?: Partial<VoiceConfig>) => {
-    // TODO: Replace with proper logging
     // Check if voice is supported
     const capabilities = await get().checkCapabilities();
     if (!capabilities.speechRecognition) {
@@ -173,23 +172,19 @@ const createActions = (set: any, get: any) => ({
   },
 
   stopListening: () => {
-    // TODO: Replace with proper logging
     set({ isListening: false, isProcessing: false });
   },
 
   pauseListening: () => {
-    // TODO: Replace with proper logging
     set({ isListening: false });
   },
 
   resumeListening: () => {
-    // TODO: Replace with proper logging
     set({ isListening: true });
   },
 
   // Synthesis Actions
   speakResponse: async (text: string, options?: Partial<VoiceConfig>) => {
-    // TODO: Replace with proper logging
     // Check if synthesis is supported
     const capabilities = await get().checkCapabilities();
     if (!capabilities.speechSynthesis) {
@@ -214,23 +209,19 @@ const createActions = (set: any, get: any) => ({
   },
 
   stopSpeaking: () => {
-    // TODO: Replace with proper logging
     set({ isSpeaking: false });
   },
 
   pauseSpeaking: () => {
-    // TODO: Replace with proper logging
     // Future implementation
   },
 
   resumeSpeaking: () => {
-    // TODO: Replace with proper logging
     // Future implementation
   },
 
   // Calling Actions
   startVoiceCall: async (config: VoiceCallConfig) => {
-    // TODO: Replace with proper logging
     // Check if calling is supported
     const capabilities = await get().checkCapabilities();
     if (!capabilities.calling || !capabilities.webRTC) {
@@ -257,40 +248,33 @@ const createActions = (set: any, get: any) => ({
   },
 
   endVoiceCall: () => {
-    // TODO: Replace with proper logging
     set({ isInCall: false, callDuration: 0, callParticipants: [] });
   },
 
   toggleMute: () => {
     const currentMuted = get().isMuted;
-    // TODO: Replace with proper logging
     set({ isMuted: !currentMuted });
   },
 
   adjustVolume: (volume: number) => {
-    // TODO: Replace with proper logging
     set({ volume: Math.max(0, Math.min(1, volume)) });
   },
 
   // Command Actions
   registerCommand: (_command: VoiceCommand) => {
-    // TODO: Replace with proper logging
     // Future implementation - store commands
   },
 
   unregisterCommand: (trigger: string) => {
-    // TODO: Replace with proper logging
     // Future implementation
   },
 
   executeCommand: async (_command: string) => {
-    // TODO: Replace with proper logging
     // Future implementation - parse and execute commands
   },
 
   // Configuration Actions
   setLanguage: (language: string) => {
-    // TODO: Replace with proper logging
     set({
       language,
       config: { ...get().config, language },
@@ -298,14 +282,12 @@ const createActions = (set: any, get: any) => ({
   },
 
   setVoiceType: (voiceType: 'male' | 'female' | 'neutral') => {
-    // TODO: Replace with proper logging
     set({
       config: { ...get().config, voiceType },
     });
   },
 
   updateConfig: (config: Partial<VoiceConfig>) => {
-    // TODO: Replace with proper logging
     set({
       config: { ...get().config, ...config },
     });
@@ -313,7 +295,6 @@ const createActions = (set: any, get: any) => ({
 
   // Utility Actions
   checkCapabilities: async (): Promise<VoiceCapabilities> => {
-    // TODO: Replace with proper logging
     // In the future, this will actually check browser capabilities
     // For now, return mock capabilities
     const capabilities = mockCapabilities;
@@ -326,7 +307,6 @@ const createActions = (set: any, get: any) => ({
   },
 
   requestPermissions: async (): Promise<boolean> => {
-    // TODO: Replace with proper logging
     try {
       if (typeof window !== 'undefined' && navigator.mediaDevices) {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -335,9 +315,7 @@ const createActions = (set: any, get: any) => ({
         return true;
       }
     } catch (error) {
-      // TODO: Replace with proper logging
 
-      // // TODO: Replace with proper logging
       const voiceError: VoiceError = {
         code: 'PERMISSION_DENIED' as VoiceErrorCode,
         message: 'Microphone permission denied',
@@ -350,7 +328,6 @@ const createActions = (set: any, get: any) => ({
   },
 
   testMicrophone: async (): Promise<boolean> => {
-    // TODO: Replace with proper logging
     try {
       if (typeof window !== 'undefined' && navigator.mediaDevices) {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -365,20 +342,16 @@ const createActions = (set: any, get: any) => ({
         return hasAudio;
       }
     } catch (error) {
-      // TODO: Replace with proper logging
-      // // TODO: Replace with proper logging
     }
 
     return false;
   },
 
   clearTranscript: () => {
-    // TODO: Replace with proper logging
     set({ transcript: '', interimTranscript: '', confidence: 0 });
   },
 
   reset: () => {
-    // TODO: Replace with proper logging
     set(initialState);
   },
 });

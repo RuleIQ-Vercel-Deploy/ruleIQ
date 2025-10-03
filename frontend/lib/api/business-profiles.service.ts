@@ -104,9 +104,7 @@ class BusinessProfileService {
       const profiles = await this.getBusinessProfiles();
       return profiles.length > 0 ? profiles[0] ?? null : null;
     } catch (error) {
-      // TODO: Replace with proper logging
 
-      // // TODO: Replace with proper logging
       throw error;
     }
   }
@@ -135,9 +133,7 @@ class BusinessProfileService {
         return transformed;
       }
     } catch (error) {
-      // TODO: Replace with proper logging
 
-      // // TODO: Replace with proper logging
       throw error;
     }
   }
@@ -168,9 +164,7 @@ class BusinessProfileService {
         await this.deleteBusinessProfile(profile.id);
       }
     } catch (error) {
-      // TODO: Replace with proper logging
 
-      // // TODO: Replace with proper logging
       throw error;
     }
   }
@@ -185,9 +179,7 @@ class BusinessProfileService {
       );
       return response;
     } catch (error) {
-      // TODO: Replace with proper logging
 
-      // // TODO: Replace with proper logging
       // Return empty array if recommendations fail
       return [];
     }

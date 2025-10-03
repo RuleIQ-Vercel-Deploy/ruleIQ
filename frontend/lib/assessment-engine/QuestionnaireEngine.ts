@@ -521,14 +521,12 @@ export class QuestionnaireEngine {
     // Check cache first
     const cached = this.getCachedAIResponse(cacheKey);
     if (cached) {
-      // TODO: Replace with proper logging
       return cached;
     }
 
     try {
       // Use AI service if enabled, otherwise fall back to mock generation
       if (this.config.enableAI !== false) {
-        // TODO: Replace with proper logging
         const recommendations = await this.callAIServiceWithTimeout(
           () =>
             assessmentAIService.getPersonalizedRecommendations({
@@ -565,9 +563,7 @@ export class QuestionnaireEngine {
       }
     } catch (error) {
       // Log error but don't break the assessment
-      // TODO: Replace with proper logging
 
-      // // TODO: Replace with proper logging
 
       // Use mock recommendations as fallback
       if (this.config.useMockAIOnError) {
@@ -1031,9 +1027,7 @@ export class QuestionnaireEngine {
       }
     } catch (error) {
       // Log error but don't break the assessment
-      // TODO: Replace with proper logging
 
-      // // TODO: Replace with proper logging
 
       // Optionally use mock questions as fallback
       if (this.config.useMockAIOnError) {

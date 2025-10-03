@@ -190,9 +190,7 @@ export function createSecureApiRoute<T = any>(
       // Call the actual handler
       return await handler(request, context);
     } catch (error) {
-      // TODO: Replace with proper logging
 
-      // // TODO: Replace with proper logging
 
       if (error instanceof ApiSecurityError) {
         return NextResponse.json(

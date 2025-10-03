@@ -235,3 +235,5 @@ railway.json
 debug-suite.html
 debug_*.py
 *_debug.json
+# MCP Configuration (contains API keys)
+.mcp.json

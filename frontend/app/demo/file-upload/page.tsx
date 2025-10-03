@@ -11,7 +11,6 @@ export default function FileUploadDemoPage() {
   void addNotification;
 
   const handleFileUpload = async (files: File[]) => {
-    // TODO: Replace with proper logging
     // Simulate API upload
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
@@ -22,12 +21,10 @@ export default function FileUploadDemoPage() {
   };
 
   const handleSingleFileUpload = async (files: File[]) => {
-    // TODO: Replace with proper logging
     await new Promise((resolve) => setTimeout(resolve, 1000));
   };
 
   const handleImageUpload = async (files: File[]) => {
-    // TODO: Replace with proper logging
     await new Promise((resolve) => setTimeout(resolve, 1500));
   };
 

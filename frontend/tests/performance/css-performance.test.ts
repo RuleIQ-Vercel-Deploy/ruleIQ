@@ -23,7 +23,6 @@ test.describe('CSS Performance Tests', () => {
     // Check CSS load times
     for (const [url, duration] of Object.entries(cssLoadTimes)) {
       expect(duration).toBeLessThan(500); // CSS should load in under 500ms
-      // TODO: Replace with proper logging
     }
 
     // Verify critical CSS is inlined or loaded first
@@ -82,13 +81,11 @@ test.describe('CSS Performance Tests', () => {
     }
 
     const usagePercent = (usedBytes / totalBytes) * 100;
-    // TODO: Replace with proper logging
     // At least 60% of CSS should be used
     expect(usagePercent).toBeGreaterThan(60);
 
     // Log sample of unused selectors for optimization
     if (unusedSelectors.length > 0) {
-      // TODO: Replace with proper logging
     }
   });
 
@@ -231,7 +228,6 @@ test.describe('CSS Performance Tests', () => {
     expect(specificityAnalysis.overlySpecific.length).toBeLessThan(20);
 
     if (specificityAnalysis.deeplyNested.length > 0) {
-      // TODO: Replace with proper logging
     }
   });
 
@@ -276,7 +272,6 @@ test.describe('CSS Performance Tests', () => {
     expect(animationMetrics.willChange).toBeLessThan(10); // Limited use of will-change
 
     // Log findings
-    // TODO: Replace with proper logging
   });
 
   test('Critical rendering path optimization', async ({ page }) => {
@@ -357,7 +352,6 @@ test.describe('CSS Performance Tests', () => {
     });
 
     // Log layout usage
-    // TODO: Replace with proper logging
     // Verify no overly complex layouts
     expect(layoutMetrics.complexLayouts.length).toBeLessThan(5);
     expect(layoutMetrics.nestedGrids).toBeLessThan(3);

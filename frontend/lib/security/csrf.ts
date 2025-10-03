@@ -17,7 +17,6 @@ export function verifyCsrfToken(request: NextRequest): boolean {
     const token = request.headers.get('x-csrf-token') || request.headers.get('csrf-token');
 
     if (!token) {
-      // TODO: Replace with proper logging
       return false;
     }
 
@@ -25,7 +24,6 @@ export function verifyCsrfToken(request: NextRequest): boolean {
     const storedHash = request.cookies.get('csrf-token-hash')?.value;
 
     if (!storedHash) {
-      // TODO: Replace with proper logging
       return false;
     }
 
@@ -36,15 +34,12 @@ export function verifyCsrfToken(request: NextRequest): boolean {
       .digest('hex');
 
     if (storedHash !== expectedHash) {
-      // TODO: Replace with proper logging
       return false;
     }
 
     return true;
   } catch (error) {
-    // TODO: Replace with proper logging
 
-    // // TODO: Replace with proper logging
     return false;
   }
 }
@@ -95,7 +90,6 @@ export async function verifyCsrfFromFormData(request: NextRequest): Promise<bool
   const token = await extractCsrfFromFormData(request);
 
   if (!token) {
-    // TODO: Replace with proper logging
     return false;
   }
 

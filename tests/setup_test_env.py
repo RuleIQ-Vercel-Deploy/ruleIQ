@@ -44,12 +44,21 @@ def setup_test_database_urls():
     # Load from Doppler first
     doppler_loaded = load_doppler_env()
 
-    # Set test-specific overrides
-    # Always use the Docker test database configuration
-    test_db_url = "postgresql://test_user:test_password@localhost:5433/ruleiq_test"
-    os.environ["TEST_DATABASE_URL"] = test_db_url
-    os.environ["DATABASE_URL"] = test_db_url
-    print(f"✓ Using test database: {test_db_url}")
+    # Check if DATABASE_URL is already set (e.g., from .env.test with Neon)
+    # If set and contains 'neon.tech', use it; otherwise use local Docker
+    existing_db_url = os.environ.get("DATABASE_URL", "")
+
+    if existing_db_url and 'neon.tech' in existing_db_url:
+        # Use existing Neon database URL from environment
+        test_db_url = existing_db_url
+        os.environ["TEST_DATABASE_URL"] = test_db_url
+        print(f"✓ Using Neon test database: {test_db_url.split('@')[-1].split('?')[0]}")
+    else:
+        # Default to local Docker test database
+        test_db_url = "postgresql://test_user:test_password@localhost:5433/ruleiq_test"
+        os.environ["TEST_DATABASE_URL"] = test_db_url
+        os.environ["DATABASE_URL"] = test_db_url
+        print(f"✓ Using test database: {test_db_url}")
 
     # Set Redis URL for tests - always use test Redis on port 6380
     os.environ["REDIS_URL"] = "redis://localhost:6380/0"

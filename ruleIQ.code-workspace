@@ -36,6 +36,8 @@
       }
     },
     "svg.preview.background": "custom",
-    "claudeCodeChat.permissions.yoloMode": true
+    "claudeCodeChat.permissions.yoloMode": true,
+    "python.defaultInterpreterPath": "./.venv/bin/python",
+    "python.pythonPath": "./.venv/bin/python"
   }
 }

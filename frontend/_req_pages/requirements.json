@@ -1,0 +1,14 @@
+[
+  {
+    "key": "create-wireframe",
+    "title": "Create Wireframe",
+    "status": "planned",
+    "priority": "P1",
+    "owner": "UI Guild",
+    "notes": [
+      "High-level wireframe view rendered with vetted layout primitives.",
+      "Zero business logic; interaction stubs only.",
+      "Demonstrate grid, typography scale, spacing tokens from globals.css."
+    ]
+  }
+]

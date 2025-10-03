@@ -14,6 +14,8 @@ import subprocess
 from pathlib import Path
 from typing import Iterable, List, Tuple
 
+# Detect default password/secret parameters in os.getenv() calls
+# These are dangerous because they allow code to run with insecure defaults
 RE_PATTERNS: Tuple[Tuple[str, re.Pattern[str]], ...] = (
     ("stack-key", re.compile(r"pck_[A-Za-z0-9]{10,}")),
     ("stack-secret", re.compile(r"ssk_[A-Za-z0-9]{10,}")),
@@ -22,6 +24,13 @@ RE_PATTERNS: Tuple[Tuple[str, re.Pattern[str]], ...] = (
     ("neon-connection", re.compile(r"npg_[A-Za-z0-9]{8,}")),
     ("jwt", re.compile(r"eyJ[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+")),
     ("generic-secret", re.compile(r"(?i)(?:secret|api_key|token|password)\s*[:=]\s*['\"][A-Za-z0-9+/=_-]{16,}['\"]")),
+    ("default-password-param", re.compile(
+        r"os\.getenv\([^)]*,\s*['\"](?:password|secret|key|token|credential)[^'\"]*['\"]",
+        re.IGNORECASE
+    )),
+    ("neo4j-default-password", re.compile(
+        r"os\.getenv\(['\"]NEO4J_PASSWORD['\"],\s*['\"][^'\"]+['\"]"
+    )),
 )
 
 BINARY_EXTENSIONS = {
@@ -135,6 +144,16 @@ def should_ignore_match(match_name: str, token: str, path: Path) -> bool:
             if "token" in lowered_value and not any(ch.isdigit() for ch in value):
                 return True
 
+    if match_name in ("default-password-param", "neo4j-default-password"):
+        # Check if this is in a test file
+        if "tests" in path.parts or "test_" in path.name:
+            return True
+        # Check if the default value is obviously a placeholder
+        if any(snippet in lowered_value for snippet in ("test", "mock", "dummy", "example", "changeme")):
+            return True
+        # Otherwise, this is a real violation
+        return False
+
     return False
 
 
@@ -169,6 +188,9 @@ def main() -> None:
         print("Potential secrets detected:\n")
         for kind, path, token in suspicious:
             print(f"- {kind}: {path} :: {token}")
+            if kind in ("default-password-param", "neo4j-default-password"):
+                print(f"  ⚠️  CRITICAL: Default password parameter detected!")
+                print(f"     Remove the default value and require the environment variable.")
         print("\nIf this is a false positive, add an allowlist to the scanner or redact the value.")
         raise SystemExit(1)
 

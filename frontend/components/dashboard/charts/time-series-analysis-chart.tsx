@@ -66,10 +66,10 @@ export function TimeSeriesAnalysisChart({
                 `${value}${name.includes('Score') || name.includes('Target') ? '%' : ''}`,
                 name,
               ]}
-              labelStyle={{ color: '#333' }}
+              labelStyle={{ color: '#8b5cf6' }}
               contentStyle={{
                 backgroundColor: 'white',
-                border: '1px solid #ccc',
+                border: '1px solid #c0c0c0',
                 borderRadius: '4px',
               }}
             />

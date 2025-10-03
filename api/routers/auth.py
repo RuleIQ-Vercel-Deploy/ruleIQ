@@ -12,9 +12,6 @@ from api.dependencies.auth import ACCESS_TOKEN_EXPIRE_MINUTES, create_access_tok
 from api.middleware.rate_limiter import auth_rate_limit
 from api.schemas.models import Token, UserCreate, UserResponse
 from api.dependencies.security_validation import (
-import logging
-
-logger = logging.getLogger(__name__)
     validate_request
 )
 from api.utils.security_validation import SecurityValidator
@@ -26,6 +23,7 @@ from services.auth_service import auth_service
 from services.rbac_service import RBACService
 from services.security_alerts import SecurityAlertService
 from config.logging_config import get_logger
+
 logger = get_logger(__name__)
 
 

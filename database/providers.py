@@ -266,10 +266,16 @@ class Neo4jProvider(DatabaseProvider):
 
             # Get Neo4j configuration from environment
             import os
-            uri = os.getenv('NEO4J_URI', 'neo4j+s://12e71bc4.databases.neo4j.io')
-            username = os.getenv('NEO4J_USERNAME', 'neo4j')
-            password = os.getenv('NEO4J_PASSWORD', 'ruleiq123')
-            os.getenv('NEO4J_DATABASE', 'neo4j')
+            uri = os.getenv('NEO4J_URI')
+            username = os.getenv('NEO4J_USERNAME')
+            password = os.getenv('NEO4J_PASSWORD')
+            database = os.getenv('NEO4J_DATABASE', 'neo4j')
+
+            if not uri or not username or not password:
+                raise ValueError(
+                    "Neo4j credentials required: NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD. "
+                    "Set via Doppler or environment."
+                )
 
             # Create Neo4j driver with optimized settings
             self.driver = GraphDatabase.driver(

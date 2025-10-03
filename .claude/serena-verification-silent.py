@@ -18,8 +18,7 @@ def verify() -> None:
             'last_verification': datetime.now().isoformat(),
             'python_env_ok': True,
             'project_structure_ok': True,
-            'serena_active': True,
-            'archon_checked': True
+            'serena_active': True
         }
         status_file.write_text(json.dumps(status, indent=2))
     except (OSError, ValueError, TypeError):

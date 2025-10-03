@@ -145,7 +145,6 @@ export function showErrorToast(error: AppError) {
           label: 'Retry',
           onClick: () => {
             // This should be handled by the calling component
-            // TODO: Replace with proper logging
           },
         }
       : undefined,
@@ -175,9 +174,7 @@ export function useErrorHandler() {
     const appError = createAppError(error, context);
 
     // Log error for debugging
-    // TODO: Replace with proper logging
 
-    // // TODO: Replace with proper logging
 
     // Show user-friendly toast
     showErrorToast(appError);

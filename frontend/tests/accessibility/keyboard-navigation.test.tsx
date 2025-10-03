@@ -107,7 +107,6 @@ test.describe('Keyboard Navigation Tests', () => {
       });
 
       // Log for debugging
-      // TODO: Replace with proper logging
     }
   });
 
@@ -445,7 +444,6 @@ test.describe('Keyboard Navigation Tests', () => {
 
     if (gridNavTest.gridFound && gridNavTest.cellCount > 1) {
       // Grid navigation is optional but good to have
-      // TODO: Replace with proper logging
     }
   });
 

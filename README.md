@@ -9,11 +9,58 @@
 ![Next.js](https://img.shields.io/badge/Next.js-15_+_Turbopack-black)
 ![Tests](https://img.shields.io/badge/Tests-1884+-brightgreen)
 ![AI Agents](https://img.shields.io/badge/AI_Agents-IQ_Agent_+_RAG-2C7A7B)
+![TODO Policy](https://img.shields.io/badge/TODO-Policy%20Enforced-success)
 
-[![CI Pipeline](https://github.com/yourusername/ruleiq/workflows/CI%20Pipeline/badge.svg)](https://github.com/yourusername/ruleiq/actions/workflows/ci.yml)
-[![Security Scan](https://github.com/yourusername/ruleiq/workflows/Security%20and%20Dependency%20Scanning/badge.svg)](https://github.com/yourusername/ruleiq/actions/workflows/security.yml)
+[![Backend Tests](https://github.com/yourusername/ruleiq/workflows/Backend%20Tests/badge.svg)](https://github.com/yourusername/ruleiq/actions/workflows/backend-tests.yml)
+[![Frontend Tests](https://github.com/yourusername/ruleiq/workflows/Frontend%20Tests/badge.svg)](https://github.com/yourusername/ruleiq/actions/workflows/frontend-tests.yml)
+[![Coverage Report](https://github.com/yourusername/ruleiq/workflows/Coverage%20Report/badge.svg)](https://github.com/yourusername/ruleiq/actions/workflows/coverage-report.yml)
+[![Flaky Test Detection](https://github.com/yourusername/ruleiq/workflows/Flaky%20Test%20Detection/badge.svg)](https://github.com/yourusername/ruleiq/actions/workflows/flaky-test-detection.yml)
 
 </div>
+
+## 🔒 Security & Environment Setup
+
+**⚠️ IMPORTANT: This application requires proper environment configuration and will not start with default credentials.**
+
+### Quick Setup
+
+1. **Copy the environment template:**
+   ```bash
+   cp env.template .env.local
+   ```
+
+2. **Configure your credentials:**
+   - Edit `.env.local` with your actual credentials
+   - **NEVER use default passwords** (e.g., 'password', 'ruleiq123')
+   - See [Environment Setup Guide](docs/ENVIRONMENT_SETUP.md) for detailed instructions
+
+3. **Validate your configuration:**
+   ```bash
+   python scripts/validate_required_env_vars.py
+   ```
+
+4. **Run the application:**
+   ```bash
+   # Option 1: Using Doppler (recommended for teams)
+   doppler run -- python main.py
+
+   # Option 2: Using .env.local
+   python main.py
+   ```
+
+### Required Credentials
+
+- **Database**: PostgreSQL, Redis, Neo4j (AuraDB)
+- **Authentication**: JWT secrets, encryption keys
+- **AI Services**: OpenAI API key (required), Anthropic/Google AI (optional)
+
+See [docs/ENVIRONMENT_SETUP.md](docs/ENVIRONMENT_SETUP.md) for complete setup instructions.
+
+### Security Resources
+
+- 📖 [Secret Handling Guide](docs/security/SECRET_HANDLING_GUIDE.md)
+- 🔄 [Secret Rotation Plan](docs/security/SECRET_ROTATION_PLAN.md)
+- ✅ [Environment Validation Script](scripts/validate_required_env_vars.py)
 
 ## 🚀 Overview
 
@@ -190,6 +237,8 @@ The start script will:
 
 #### Backend Setup
 
+**Prerequisites:** Complete the [Security & Environment Setup](#-security--environment-setup) section above before proceeding.
+
 ```bash
 # Create virtual environment
 python -m venv .venv
@@ -198,14 +247,14 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 # Install dependencies (auto-detects missing packages)
 pip install -r requirements.txt
 
-# Set up environment variables
-# 🔐 SECRETS MANAGEMENT (PRODUCTION-READY)
+# Set up environment variables (see Security & Environment Setup above)
+# ⚠️ Required: Configure .env.local or use Doppler before running
+
 # Option 1: Doppler (Recommended for production)
 doppler run -- uvicorn api.main:app --host 0.0.0.0 --port 8000    # All secrets auto-injected from Doppler
 
-# Option 2: Local development with .env
-cp .env.template .env
-# Edit .env with your configuration including:
+# Option 2: Local development with .env.local
+# Already configured in Security & Environment Setup section
 # - DATABASE_URL (Neon PostgreSQL)
 # - NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD
 # - GOOGLE_AI_API_KEY (for Gemini AI)
@@ -261,50 +310,74 @@ All API endpoints now follow a consistent `/api/v1/` pattern:
 
 See [API Documentation](docs/API_ENDPOINTS_DOCUMENTATION.md) for complete endpoint reference.
 
-## 🧪 Testing
+## 🧪 Testing & Coverage
 
-### Backend Tests (1884+ passing)
+### Current Coverage Baseline
 
+| Component | Coverage | Target (12 months) | Status |
+|-----------|----------|-------------------|--------|
+| **Backend** | 3.13% | 80% | 🔴 Critical |
+| **Frontend** | 0.00% | 80% | 🔴 Critical |
+| **Combined** | 3.13% | 80% | 🔴 Critical |
+
+**Quality Gates:** Backend coverage must not drop below 3.13% baseline. PRs decreasing coverage by >2% require justification.
+
+**Documentation:**
+- 📊 [Coverage Baseline Details](docs/COVERAGE_BASELINE.md) - Current metrics and improvement targets
+- 🧪 [Testing Guide](docs/TESTING_GUIDE.md) - Comprehensive testing strategies
+- 🔄 [CI/CD Guide](docs/CI_CD_GUIDE.md) - Automated testing workflows
+
+### Quick Test Commands
+
+**Backend (1884+ tests):**
 ```bash
 # Quick unit tests (2-5 minutes)
 make test-fast
 
-# AI agent tests
-pytest -m ai -v
+# With coverage report
+pytest --cov=services --cov=api --cov=core --cov=utils --cov=models \
+       --cov-report=html --cov-report=xml --cov-branch
 
-# RAG system tests
-pytest tests/test_rag_self_critic.py -v
+# Open coverage report
+open htmlcov/index.html
 
-# Integration tests (5-10 minutes)
-make test-integration
+# Independent test groups (parallel execution)
+make test-groups-parallel  # All groups (~20 min)
+make test-group-unit       # Unit tests only (2-3 min)
+make test-group-ai         # AI core tests (3-4 min)
+make test-group-api        # API tests (4-5 min)
 
-# Full test suite including agentic systems
+# Full test suite with agentic systems
 make test-full
-
-# Test specific component
-pytest tests/unit/services/test_iq_agent.py -v
 ```
 
-### Frontend Tests
-
+**Frontend:**
 ```bash
 cd frontend
 
-# Unit tests
-pnpm test
+# Unit tests with coverage
+pnpm test:coverage
 
-# Test with new teal theme
-NEXT_PUBLIC_USE_NEW_THEME=true pnpm test
+# Open coverage report
+open coverage/index.html
 
-# E2E tests with Playwright
+# E2E tests (Playwright)
 pnpm test:e2e
 
 # Visual regression tests
 pnpm test:visual
-
-# Test coverage
-pnpm test:coverage
 ```
+
+### CI/CD Automated Testing
+
+All tests run automatically on push/PR via GitHub Actions:
+
+- **[Backend Tests](https://github.com/yourusername/ruleiq/actions/workflows/backend-tests.yml)** - pytest across multiple test groups with service containers
+- **[Frontend Tests](https://github.com/yourusername/ruleiq/actions/workflows/frontend-tests.yml)** - Vitest unit tests + Playwright E2E
+- **[Coverage Report](https://github.com/yourusername/ruleiq/actions/workflows/coverage-report.yml)** - Combined coverage with quality gate enforcement
+- **[Flaky Test Detection](https://github.com/yourusername/ruleiq/actions/workflows/flaky-test-detection.yml)** - Nightly detection of unstable tests
+
+Coverage reports are automatically posted as PR comments. See [CI/CD Guide](docs/CI_CD_GUIDE.md) for details.
 
 ### Agentic System Testing
 
@@ -327,6 +400,8 @@ python services/rag_self_critic.py critique --query "Complex compliance scenario
 - [API Documentation](http://localhost:8000/docs) - Interactive API documentation
 - [Testing Guide](docs/TESTING_GUIDE.md) - Comprehensive testing strategies
 - [Security Setup](docs/SECURITY_PERFORMANCE_SETUP.md) - Security best practices
+- [**TODO Management Guide**](docs/TODO_MANAGEMENT_GUIDE.md) - Technical debt tracking and policy
+- [Contributing Guidelines](CONTRIBUTING.md) - How to contribute
 
 ### Frontend Documentation
 
@@ -425,6 +500,37 @@ NEXT_PUBLIC_USE_NEW_THEME=true pnpm dev
 ## 🤝 Contributing
 
 We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+
+### Quick Guidelines
+
+- Follow code style guidelines (PEP 8 for Python, Airbnb for TypeScript)
+- Write tests for new features
+- Maintain or improve test coverage (target: 80%+)
+- **All TODOs must reference GitHub issues**: `TODO(#123): Description`
+- Run pre-commit hooks: `pre-commit install`
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
+
+### Security Requirements
+
+- Never commit `.env` files or real credentials
+- Run `python scripts/ci/scan_secrets.py` before committing
+- Pre-commit hooks will automatically scan for secrets
+- All PRs must pass security scans (blocking)
+
+### TODO Policy
+
+All TODO/FIXME/HACK comments must reference GitHub issues to track technical debt:
+
+```python
+# ✅ GOOD: References an issue
+# TODO(#123): Implement caching for this endpoint
+
+# ❌ BAD: No issue reference
+# TODO: Implement caching
+```
+
+Pre-commit hooks enforce this policy for CRITICAL and HIGH severity markers. See [TODO Management Guide](docs/TODO_MANAGEMENT_GUIDE.md) for details.
 
 ### Development Workflow
 

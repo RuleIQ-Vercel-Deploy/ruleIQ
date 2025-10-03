@@ -6,7 +6,6 @@ import { test, expect } from '@playwright/test';
  */
 test.describe('Browser Automation Setup', () => {
   test('should launch browser and navigate successfully', async ({ page, browserName }) => {
-    // TODO: Replace with proper logging
     // Navigate to the home page
     await page.goto('/');
 
@@ -16,7 +15,6 @@ test.describe('Browser Automation Setup', () => {
     // Verify the page loaded
     const title = await page.title();
     expect(title).toBeTruthy();
-    // TODO: Replace with proper logging
     // Check that JavaScript is working
     const jsEnabled = await page.evaluate(() => {
       return typeof window !== 'undefined' && typeof document !== 'undefined';
@@ -57,7 +55,6 @@ test.describe('Browser Automation Setup', () => {
           !text.includes('ResizeObserver')
         ) {
           hasErrors = true;
-          // TODO: Replace with proper logging
         }
       }
     });
@@ -65,7 +62,6 @@ test.describe('Browser Automation Setup', () => {
     // Listen for page errors
     page.on('pageerror', (err) => {
       hasErrors = true;
-      // TODO: Replace with proper logging
     });
 
     // Navigate to the page
@@ -91,7 +87,6 @@ test.describe('Browser Automation Setup', () => {
       // Verify page renders at different sizes
       const bodyVisible = await page.isVisible('body');
       expect(bodyVisible).toBe(true);
-      // TODO: Replace with proper logging
     }
   });
 
@@ -105,7 +100,6 @@ test.describe('Browser Automation Setup', () => {
       expect(page.url()).toBeTruthy();
     } catch (error) {
       // If timeout occurs, verify it's handled gracefully
-      // TODO: Replace with proper logging
       expect(error).toBeDefined();
     }
   });

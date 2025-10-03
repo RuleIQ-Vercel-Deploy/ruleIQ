@@ -53,8 +53,6 @@ export function PricingCard({
         router.push(`/checkout?plan=${planId}`);
       }
     } catch (error) {
-      // TODO: Replace with proper logging
-      // // TODO: Replace with proper logging
     } finally {
       setIsLoading(false);
     }

@@ -107,8 +107,6 @@ export function AIHelpTooltip({
         duration: 2000,
       });
     } catch (err) {
-      // TODO: Replace with proper logging
-      // // TODO: Replace with proper logging
     }
   };
 

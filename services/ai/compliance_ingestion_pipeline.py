@@ -928,10 +928,18 @@ if __name__ == "__main__":
     async def test_ingestion():
         """Test the ingestion pipeline"""
 
-        # Get credentials from environment
-        neo4j_uri = os.getenv("NEO4J_URI", "bolt://localhost:7687")
-        neo4j_user = os.getenv("NEO4J_USER", "neo4j")
-        neo4j_password = os.getenv("NEO4J_PASSWORD", "password")
+        # Example usage - requires Neo4j credentials in environment
+        # For production use, integrate with your application's config management
+        neo4j_uri = os.getenv("NEO4J_URI")
+        neo4j_user = os.getenv("NEO4J_USER")
+        neo4j_password = os.getenv("NEO4J_PASSWORD")
+
+        # Validate required environment variables
+        if not neo4j_uri or not neo4j_user or not neo4j_password:
+            raise ValueError(
+                "Required environment variables missing: NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD. \n"
+                "Set them in your environment or use: doppler run -- python -m services.ai.compliance_ingestion_pipeline"
+            )
 
         # Initialize pipeline
         async with Neo4jComplianceIngestion(

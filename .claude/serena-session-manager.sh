@@ -35,14 +35,29 @@ is_claude_active() {
 # Start Serena session
 start_session() {
     echo "🚀 Starting Serena session for Claude Code..."
-    
+
+    # Check for existing instances and clean them up
+    local existing_count=$(pgrep -fc "serena start-mcp-server.*ruleIQ" 2>/dev/null || echo 0)
+    if [ "$existing_count" -gt 0 ]; then
+        echo "⚠️  Found $existing_count existing Serena instance(s), cleaning up..."
+        pkill -f "serena start-mcp-server.*ruleIQ" 2>/dev/null || true
+        sleep 2
+    fi
+
+    # Clean up zombie processes
+    local zombies=$(ps aux | grep -E "serena.*<defunct>" | grep -v grep | awk '{print $2}')
+    if [ -n "$zombies" ]; then
+        echo "🧹 Cleaning up zombie processes..."
+        echo "$zombies" | xargs kill -9 2>/dev/null || true
+    fi
+
     # Mark session as active
     echo "$(date +%s)" > "$SESSION_FILE"
     echo "$$" > "$PID_FILE"
-    
+
     # Activate Serena
     cd "$PROJECT_PATH" || exit 1
-    
+
     # Source environment
     if [ -f "$CLAUDE_DIR/serena-env.sh" ]; then
         source "$CLAUDE_DIR/serena-env.sh"
@@ -60,7 +75,6 @@ status = {
     'python_env_ok': True,
     'project_structure_ok': True,
     'serena_active': True,
-    'archon_checked': True,
     'session_based': True,
     'session_start': datetime.now().isoformat()
 }
@@ -115,6 +129,24 @@ except:
 monitor_session() {
     while true; do
         if is_claude_active; then
+            # Check for multiple instances
+            local instance_count=$(pgrep -fc "serena start-mcp-server.*ruleIQ" 2>/dev/null || echo 0)
+            if [ "$instance_count" -gt 1 ]; then
+                echo "⚠️ Multiple Serena instances detected ($instance_count), cleaning up..."
+                # Keep only the most recent instance
+                pgrep -f "serena start-mcp-server.*ruleIQ" 2>/dev/null | head -n -1 | while read pid; do
+                    kill "$pid" 2>/dev/null
+                    echo "Killed duplicate instance: $pid"
+                done
+            fi
+
+            # Clean up zombie processes periodically
+            local zombies=$(ps aux | grep -E "serena.*<defunct>" | grep -v grep | awk '{print $2}')
+            if [ -n "$zombies" ]; then
+                echo "🧹 Cleaning up zombie processes..."
+                echo "$zombies" | xargs kill -9 2>/dev/null || true
+            fi
+
             # Keep session alive
             touch "$SESSION_FILE"
             touch "$CLAUDE_DIR/serena-active.flag"
@@ -125,13 +157,29 @@ monitor_session() {
             stop_session
             exit 0
         fi
-        
+
         sleep 30
     done
 }
 
-# Handle termination signals
-trap stop_session EXIT SIGTERM SIGINT
+# Handle termination signals and cleanup children
+cleanup_all() {
+    echo "🧹 Cleaning up Serena session and all child processes..."
+
+    # Kill all Serena instances
+    pkill -f "serena start-mcp-server.*ruleIQ" 2>/dev/null || true
+
+    # Kill any zombie processes
+    local zombies=$(ps aux | grep -E "serena.*<defunct>" | grep -v grep | awk '{print $2}')
+    if [ -n "$zombies" ]; then
+        echo "$zombies" | xargs kill -9 2>/dev/null || true
+    fi
+
+    # Call normal stop
+    stop_session
+}
+
+trap cleanup_all EXIT SIGTERM SIGINT
 
 # Main execution
 case "${1:-start}" in

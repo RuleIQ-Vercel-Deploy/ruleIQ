@@ -229,7 +229,6 @@ describe('Authentication Flow - Memory Leak Detection', () => {
 
       // Get detailed report
       const report = leakDetector.getReport();
-      // TODO: Replace with proper logging
       // Cleanup
       leakDetector.teardown();
     });

@@ -189,7 +189,6 @@ describe('AutoSaveIndicator - Memory Leak Detection', () => {
 
     // Detailed check
     const report = leakDetector.getReport();
-    // TODO: Replace with proper logging
     leakDetector.teardown();
   });
 });

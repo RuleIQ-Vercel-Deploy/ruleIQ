@@ -232,7 +232,6 @@ describe('Memory Leak Detection Tests', () => {
       const LeakyComponent = () => {
         React.useEffect(() => {
           const handler = () =>
-    // TODO: Replace with proper logging
           // Intentionally not cleaning up to test detection
           document.addEventListener('click', handler);
           // Missing: return () => document.removeEventListener('click', handler);
@@ -259,7 +258,6 @@ describe('Memory Leak Detection Tests', () => {
         React.useEffect(() => {
           // Intentionally not cleaning up to test detection
           setTimeout(() => {
-            // TODO: Replace with proper logging
             // Missing: return () => clearTimeout(timer);
           }, 1000);
         }, []);

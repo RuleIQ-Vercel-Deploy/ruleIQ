@@ -159,7 +159,6 @@ export default function CustomDashboardPage() {
 
   const handleLayoutChange = (layouts: Layouts) => {
     // Save to localStorage or backend
-    // TODO: Replace with proper logging
   };
 
   const handleRefresh = () => {

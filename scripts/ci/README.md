@@ -4,6 +4,103 @@ This directory contains utility scripts for continuous integration (CI) validati
 
 ## Scripts Overview
 
+### TODO Management Scripts
+
+#### 1. `scan_todos.py`
+
+**Purpose**: Scans the codebase for TODO/FIXME/HACK/XXX markers and generates reports.
+
+**Features**:
+- Scans all git-tracked files
+- Categorizes TODOs by severity (CRITICAL, HIGH, MEDIUM, LOW)
+- Detects issue references: `TODO(#123): Description`
+- Generates reports in multiple formats (markdown, JSON, CSV)
+- Enforces policy in CI/CD
+
+**Usage**:
+```bash
+# Generate markdown report
+python scripts/ci/scan_todos.py --format markdown --output TODO_INVENTORY.md
+
+# Generate JSON report
+python scripts/ci/scan_todos.py --format json --output TODO_INVENTORY.json
+
+# Enforce policy (fail if non-compliant TODOs found)
+python scripts/ci/scan_todos.py --enforce --severity CRITICAL --severity HIGH
+
+# Show statistics only
+python scripts/ci/scan_todos.py --stats-only
+
+# Filter by severity
+python scripts/ci/scan_todos.py --severity CRITICAL
+```
+
+**Exit codes**:
+- `0`: No policy violations or successful scan
+- `1`: Non-compliant TODOs found (when using `--enforce`)
+
+#### 2. `create_todo_issues.py`
+
+**Purpose**: Automatically creates GitHub issues for TODOs without issue references.
+
+**Features**:
+- Creates GitHub issues via API
+- Groups similar TODOs to reduce issue count
+- Assigns appropriate labels (severity, area, type)
+- Checks for existing issues to avoid duplicates
+- Generates mapping file for update script
+
+**Usage**:
+```bash
+# Dry run (show what would be created)
+python scripts/ci/create_todo_issues.py --token $GITHUB_TOKEN --repo OmarA1-Bakri/ruleIQ --dry-run
+
+# Create issues for CRITICAL severity
+python scripts/ci/create_todo_issues.py --token $GITHUB_TOKEN --repo OmarA1-Bakri/ruleIQ --severity CRITICAL
+
+# Batch similar TODOs into single issues
+python scripts/ci/create_todo_issues.py --token $GITHUB_TOKEN --repo OmarA1-Bakri/ruleIQ --batch-similar
+```
+
+**Environment variables**:
+- `GITHUB_TOKEN`: GitHub personal access token (required)
+
+**Exit codes**:
+- `0`: All operations successful
+- `1`: Failed to create one or more issues
+
+#### 3. `update_todo_references.py`
+
+**Purpose**: Updates TODO comments in source files to include GitHub issue references.
+
+**Features**:
+- Updates TODO comments in place
+- Supports multiple comment styles (#, //, /* */, <!-- -->)
+- Batch update from mapping file
+- Interactive mode for manual review
+- Dry run mode for safety
+
+**Usage**:
+```bash
+# Batch update from mapping file
+python scripts/ci/update_todo_references.py --mapping issues.json
+
+# Interactive mode
+python scripts/ci/update_todo_references.py --interactive
+
+# Update specific TODO
+python scripts/ci/update_todo_references.py --file services/ai/assistant.py --line 234 --issue 567
+
+# Dry run
+python scripts/ci/update_todo_references.py --mapping issues.json --dry-run
+```
+
+**Exit codes**:
+- `0`: All updates successful
+- `1`: One or more updates failed
+
+### CI Validation Scripts
+
 ### 1. `validate_ci_dependencies.py`
 
 **Purpose**: Validates that all required dependencies for CI are properly installed and configured.
@@ -140,6 +237,34 @@ VERBOSE=true python database_health_check.py
 **Exit codes**:
 - `0`: All database checks passed
 - `1`: One or more database checks failed
+
+## TODO Management Workflow Integration
+
+The TODO management scripts are integrated into development workflows:
+
+### Pre-commit Hooks (`.pre-commit-config.yaml`):
+```yaml
+- id: enforce-todo-policy
+  name: Enforce TODO policy (require issue references)
+  entry: python scripts/ci/scan_todos.py --enforce --severity CRITICAL --severity HIGH
+  language: system
+  pass_filenames: false
+  always_run: true
+
+- id: validate-todo-format
+  name: Validate TODO format
+  entry: bash -c 'if git diff --cached --name-only | xargs grep -nE "(TODO|FIXME|HACK|XXX)(?!\(#\d+\))" 2>/dev/null | grep -v "tests/" | grep -v "\.md"; then echo "ERROR: Found TODO without issue reference. Format: TODO(#123): Description"; exit 1; fi || exit 0'
+  language: system
+  pass_filenames: false
+```
+
+### GitHub Actions (`.github/workflows/todo-enforcement.yml`):
+- Runs on every push and pull request
+- Generates weekly TODO inventory reports (Mondays at 9 AM UTC)
+- Posts helpful comments on PRs with violations
+- Creates automated weekly report issues
+
+See [TODO Management Guide](../../docs/TODO_MANAGEMENT_GUIDE.md) for complete documentation.
 
 ## CI Workflow Integration
 

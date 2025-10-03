@@ -8,10 +8,10 @@ export const PieChart3D = () => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   
   const data = [
-    { label: 'Compliance', value: 35, color: '#8B5CF6' },
-    { label: 'Security', value: 25, color: '#A855F7' },
-    { label: 'Performance', value: 20, color: '#C084FC' },
-    { label: 'Infrastructure', value: 20, color: '#E9D5FF' },
+    { label: 'Compliance', value: 35, color: 'var(--purple-500)' },
+    { label: 'Security', value: 25, color: 'var(--purple-500)' },
+    { label: 'Performance', value: 20, color: 'var(--purple-400)' },
+    { label: 'Infrastructure', value: 20, color: 'var(--purple-50)' },
   ];
 
   let startAngle = -90;

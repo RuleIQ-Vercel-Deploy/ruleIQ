@@ -1,4 +1,4 @@
-"""Golden Dataset ingestion tool for Neo4j - Fixed version."""
+"""Golden Dataset ingestion tool for Neo4j - Requires NEO4J_* environment variables."""
 from __future__ import annotations
 
 import logging
@@ -6,12 +6,6 @@ import os
 
 logger = logging.getLogger(__name__)
 
-if not os.getenv('NEO4J_URI'):
-    os.environ['NEO4J_URI'] = 'bolt://localhost:7688'
-if not os.getenv('NEO4J_USER'):
-    os.environ['NEO4J_USER'] = 'neo4j'
-if not os.getenv('NEO4J_PASSWORD'):
-    os.environ['NEO4J_PASSWORD'] = 'ruleiq123'
 from typing import List, Dict, Any
 import json
 from datetime import datetime
@@ -57,7 +51,11 @@ class MockSession:
 
 
 class Neo4jConnectionFixed:
-    """Fixed Neo4j connection with proper error handling."""
+    """Fixed Neo4j connection with proper error handling.
+
+    Requires NEO4J_URI, NEO4J_USER, and NEO4J_PASSWORD environment variables.
+    Falls back to mock driver for testing if credentials are not provided.
+    """
 
     def __init__(self) -> None:
         self._driver = None
@@ -67,9 +65,21 @@ class Neo4jConnectionFixed:
         if self._driver is None:
             try:
                 from neo4j import GraphDatabase
-                self.uri = 'bolt://localhost:7688'
-                self.user = 'neo4j'
-                self.password = 'ruleiq123'
+                self.uri = os.getenv('NEO4J_URI')
+                self.user = os.getenv('NEO4J_USER')
+                self.password = os.getenv('NEO4J_PASSWORD')
+
+                # Validate required environment variables
+                if not self.uri or not self.user or not self.password:
+                    logger.error(
+                        "Neo4j credentials not found in environment. "
+                        "Required: NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD"
+                    )
+                    # Fall back to mock driver for testing without credentials
+                    logger.info('Using mock Neo4j driver (no credentials provided)')
+                    self._driver = MockNeo4jDriver()
+                    return
+
                 logger.info('[Neo4jConnectionFixed] Connecting to: %s' % self.uri)
                 self._driver = GraphDatabase.driver(self.uri, auth=(self.user, self.password))
             except (ImportError, ModuleNotFoundError):

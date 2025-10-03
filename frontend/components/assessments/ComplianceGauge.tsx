@@ -31,7 +31,7 @@ export function ComplianceGauge({ score, size = 200 }: ComplianceGaugeProps) {
     // Draw background arc
     ctx.beginPath();
     ctx.arc(centerX, centerY, radius, startAngle, endAngle);
-    ctx.strokeStyle = '#D0D5E3';
+    ctx.strokeStyle = '#8b5cf65E3';
     ctx.lineWidth = 20;
     ctx.lineCap = 'round';
     ctx.stroke();
@@ -43,14 +43,14 @@ export function ComplianceGauge({ score, size = 200 }: ComplianceGaugeProps) {
     // Gradient based on score
     const gradient = ctx.createLinearGradient(0, 0, size, 0);
     if (score >= 80) {
-      gradient.addColorStop(0, '#28A745');
-      gradient.addColorStop(1, '#1F8C3B');
+      gradient.addColorStop(0, '#8b5cf6745');
+      gradient.addColorStop(1, '#8b5cf6C3B');
     } else if (score >= 60) {
-      gradient.addColorStop(0, '#A78BFA');
-      gradient.addColorStop(1, '#8B5CF6');
+      gradient.addColorStop(0, '#8b5cf6BFA');
+      gradient.addColorStop(1, '#8b5cf6CF6');
     } else {
-      gradient.addColorStop(0, '#DC3545');
-      gradient.addColorStop(1, '#B42D3B');
+      gradient.addColorStop(0, '#8b5cf6545');
+      gradient.addColorStop(1, '#8b5cf6D3B');
     }
 
     ctx.strokeStyle = gradient;
