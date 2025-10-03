@@ -217,6 +217,15 @@ export interface ChatMessage {
     confidence?: number;
     evidence_references?: string[];
     control_mappings?: string[];
+    // IQ Agent specific metadata
+    source?: 'iq_agent' | 'regular_chat';
+    confidence_score?: number;
+    trust_level?: 'helper' | 'advisor' | 'partner';
+    evidence_count?: number;
+    graph_nodes?: number;
+    response_time?: number;
+    is_processing?: boolean;
+    status?: 'sending' | 'sent' | 'delivered' | 'failed';
   };
   created_at: string;
   is_edited?: boolean;

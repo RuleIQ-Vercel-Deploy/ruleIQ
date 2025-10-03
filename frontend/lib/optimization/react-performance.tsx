@@ -8,6 +8,13 @@ import dynamic from 'next/dynamic';
 import { FixedSizeList as List } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
 
+// Simple loading spinner component
+const LoadingSpinner = () => (
+  <div className="flex items-center justify-center p-4">
+    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-900"></div>
+  </div>
+);
+
 // ============================================
 // Code Splitting & Lazy Loading
 // ============================================
@@ -34,7 +41,7 @@ export function lazyLoadComponent<T extends ComponentType<any>>(
 export function dynamicImport<P = {}>(
   importFunc: () => Promise<{ default: ComponentType<P> }>,
   options?: {
-    loading?: () => JSX.Element;
+    loading?: () => React.JSX.Element;
     ssr?: boolean;
   }
 ) {
@@ -46,20 +53,20 @@ export function dynamicImport<P = {}>(
 
 // Lazy load heavy components
 export const LazyAssessmentWizard = lazyLoadComponent(
-  () => import('@/components/assessments/AssessmentWizard')
+  () => import('@/components/assessments/AssessmentWizard').then(module => ({ default: module.AssessmentWizard }))
 );
 
-export const LazyDashboard = lazyLoadComponent(
-  () => import('@/components/dashboard/Dashboard')
-);
+// export const LazyDashboard = lazyLoadComponent(
+//   () => import('@/components/dashboard/Dashboard')
+// );
 
-export const LazyReportGenerator = lazyLoadComponent(
-  () => import('@/components/reports/ReportGenerator')
-);
+// export const LazyReportGenerator = lazyLoadComponent(
+//   () => import('@/components/reports/ReportGenerator')
+// );
 
-export const LazyEvidenceManager = lazyLoadComponent(
-  () => import('@/components/evidence/EvidenceManager')
-);
+// export const LazyEvidenceManager = lazyLoadComponent(
+//   () => import('@/components/evidence/EvidenceManager')
+// );
 
 // ============================================
 // Memoization Utilities

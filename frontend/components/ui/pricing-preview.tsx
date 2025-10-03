@@ -75,7 +75,13 @@ const pricingPlans = [
   }
 ];
 
-function PricingCard({ plan, index, isPopular }) {
+interface PricingCardProps {
+  plan: typeof pricingPlans[0];
+  index: number;
+  isPopular: boolean;
+}
+
+function PricingCard({ plan, index, isPopular }: PricingCardProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}

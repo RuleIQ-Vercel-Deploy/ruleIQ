@@ -180,8 +180,8 @@ function createExportHistoryItem(
     filename: result.filename,
     fileSize: result.size || 0,
     success: result.success,
-    error: result.error,
-    downloadUrl: result.downloadUrl,
+    ...(result.error && { error: result.error }),
+    ...(result.downloadUrl && { downloadUrl: result.downloadUrl }),
     expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
   };
 }
@@ -300,7 +300,7 @@ export function useAssessmentExport(
       currentStep: message,
       estimatedTimeRemaining: progress > 0 ? 
         ((Date.now() - (prev as any).startTime) / progress) * (100 - progress) : 
-        undefined
+        0
     }));
     
     config.onProgressUpdate?.(progress, message);
@@ -547,8 +547,7 @@ export function useAssessmentExport(
         const batchPromises = batch.map(async (assessment, index) => {
           const options = createExportOptions(format, {
             ...config.defaultExportOptions,
-            reportTitle: `Assessment Report ${i + index + 1}`,
-            fileName: `assessment-${i + index + 1}-${Date.now()}`
+            reportTitle: `Assessment Report ${i + index + 1}`
           });
 
           return exportAssessment(assessment, options, (progress, message) => {

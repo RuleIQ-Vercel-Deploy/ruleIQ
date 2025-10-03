@@ -85,6 +85,16 @@ const decompressLayout = (data: string): DashboardLayout => {
   return JSON.parse(data);
 };
 
+// Get current user ID from auth context or storage
+export const getCurrentUserId = (): string | null => {
+  // In production, this would get the user ID from your auth system
+  // For now, return a placeholder or get from localStorage/session
+  if (typeof window !== 'undefined') {
+    return localStorage.getItem('userId') || sessionStorage.getItem('userId');
+  }
+  return null;
+};
+
 export const layoutsService = {
   // Save layout with retry logic
   async saveLayout(userId: string, layout: DashboardLayout, retries = 3): Promise<void> {
@@ -213,10 +223,9 @@ export const layoutsService = {
   ): Promise<Blob> {
     const response = await apiClient.post(
       `/layouts/${userId}/export`,
-      { layoutId, ...options },
-      { responseType: 'blob' }
+      { layoutId, ...options }
     );
-    return response;
+    return response as unknown as Blob;
   },
 
   // Import layout from file
@@ -238,12 +247,7 @@ export const layoutsService = {
 
     const response = await apiClient.post<LayoutImportResult>(
       `/layouts/${userId}/import`,
-      formData,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      }
+      formData
     );
 
     return response;

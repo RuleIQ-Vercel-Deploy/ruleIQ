@@ -36,7 +36,11 @@ export function FreemiumResults({ token, className = '' }: FreemiumResultsProps)
 
   // Track results page view (once)
   if (results && !hasTrackedView) {
-    trackEvent('page_view', { page: 'results' });
+    trackEvent('page_view', {
+      timestamp: new Date().toISOString(),
+      page_url: window.location.href,
+      custom_properties: { page: 'results' }
+    });
     setHasTrackedView(true);
   }
 
@@ -45,7 +49,11 @@ export function FreemiumResults({ token, className = '' }: FreemiumResultsProps)
 
     // Track conversion click
     trackEvent('cta_click', {
-      cta_text: conversionCta.cta_button_text,
+      timestamp: new Date().toISOString(),
+      page_url: window.location.href,
+      custom_properties: {
+        cta_text: conversionCta.cta_button_text,
+      },
     });
 
     // For now, redirect to main signup/contact page since we don't have payment_link
@@ -65,7 +73,11 @@ export function FreemiumResults({ token, className = '' }: FreemiumResultsProps)
     window.location.href = mailtoLink;
 
     // Track email share
-    trackEvent('email_shared', { method: 'mailto' });
+    trackEvent('email_shared', {
+      timestamp: new Date().toISOString(),
+      page_url: window.location.href,
+      custom_properties: { method: 'mailto' },
+    });
   };
 
   // Loading state

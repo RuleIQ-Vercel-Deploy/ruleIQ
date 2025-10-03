@@ -1,0 +1,36 @@
+{
+  "hooks": {
+    "session-start": {
+      "enabled": true,
+      "script": ".claude/hooks/session-start.sh",
+      "description": "Automatically starts Serena when Claude Code session begins"
+    },
+    "user-prompt-submit": {
+      "enabled": true,
+      "script": ".claude/hooks/user-prompt-submit.sh",
+      "description": "Verifies Serena before processing any user prompt"
+    },
+    "tool-call-pre": {
+      "enabled": true,
+      "script": ".claude/hooks/tool-call-pre.sh",
+      "description": "Verifies Serena before any tool execution"
+    },
+    "pre-action": {
+      "enabled": true,
+      "script": ".claude/hooks/pre-action-serena-check.sh",
+      "description": "General pre-action verification"
+    },
+    "continuous-monitor": {
+      "enabled": true,
+      "script": ".claude/hooks/continuous-monitor.sh",
+      "description": "Background monitoring of Serena status"
+    }
+  },
+  "settings": {
+    "verification_interval_seconds": 30,
+    "auto_restart_on_failure": true,
+    "log_directory": "/tmp/serena-hooks",
+    "max_restart_attempts": 3,
+    "alert_on_failure": true
+  }
+}

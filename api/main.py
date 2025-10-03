@@ -33,6 +33,7 @@ except Exception as e:
 
 # Local application imports
 from api.routers import (
+    health,  # Add health check router
     ai_assessments,
     ai_cost_monitoring,
     ai_cost_websocket,
@@ -279,6 +280,8 @@ app.middleware('http')(error_handler_middleware)
 app.middleware('http')(rate_limit_middleware)
 
 # Include routers
+# Add health check router first (no prefix for root health checks)
+app.include_router(health.router)
 app.include_router(auth.router, prefix='/api/v1/auth', tags=['authentication'])
 app.include_router(users.router, prefix='/api/v1/users', tags=['users'])
 app.include_router(assessments.router, prefix='/api/v1/assessments', tags=['assessments'])

@@ -1,10 +1,22 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import Graph from 'graphology';
-import Sigma from 'sigma';
 import { motion } from 'framer-motion';
-import forceAtlas2 from 'graphology-layout-forceatlas2';
+
+// Only import sigma dependencies on client side
+let Graph: any;
+let Sigma: any;
+let forceAtlas2: any;
+
+if (typeof window !== 'undefined') {
+  try {
+    Graph = require('graphology');
+    Sigma = require('sigma').default;
+    forceAtlas2 = require('graphology-layout-forceatlas2').default;
+  } catch (error) {
+    console.warn('Graph libraries not available:', error);
+  }
+}
 
 export const SigmaNetworkGraph = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -63,7 +75,7 @@ export const SigmaNetworkGraph = () => {
   };
 
   useEffect(() => {
-    if (!containerRef.current || !graphData || loading) return;
+    if (!containerRef.current || !graphData || loading || typeof window === 'undefined' || !Graph || !Sigma || !forceAtlas2) return;
 
     // Create a new graph instance
     const graph = new Graph();

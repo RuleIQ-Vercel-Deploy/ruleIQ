@@ -47,7 +47,7 @@ export const useLayoutPersistence = (options: UseLayoutPersistenceOptions = {}) 
 
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [lastSyncedVersion, setLastSyncedVersion] = useState<number>(0);
-  const saveTimeoutRef = useRef<NodeJS.Timeout>();
+  const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const conflictResolverRef = useRef<((layout: DashboardLayout) => void) | null>(null);
 
   // Query for loading layout
@@ -132,7 +132,7 @@ export const useLayoutPersistence = (options: UseLayoutPersistenceOptions = {}) 
   const debouncedSave = useCallback(() => {
     if (!currentLayout || !isDirty || !autoSave) return;
 
-    clearTimeout(saveTimeoutRef.current);
+    if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
 
     saveTimeoutRef.current = setTimeout(() => {
       saveMutation.mutate(currentLayout);
@@ -161,6 +161,7 @@ export const useLayoutPersistence = (options: UseLayoutPersistenceOptions = {}) 
         e.returnValue = message;
         return message;
       }
+      return undefined;
     };
 
     window.addEventListener('beforeunload', handleBeforeUnload);
@@ -171,7 +172,7 @@ export const useLayoutPersistence = (options: UseLayoutPersistenceOptions = {}) 
   const saveNow = useCallback(async () => {
     if (!currentLayout) return;
 
-    clearTimeout(saveTimeoutRef.current);
+    if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
     await saveMutation.mutateAsync(currentLayout);
   }, [currentLayout, saveMutation]);
 
@@ -286,7 +287,7 @@ export const useLayoutPersistence = (options: UseLayoutPersistenceOptions = {}) 
 
       const snapshot = await layoutsService.saveSnapshot(userId, {
         name,
-        description,
+        ...(description && { description }),
         layout: currentLayout,
       });
 

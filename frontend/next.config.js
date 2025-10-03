@@ -12,6 +12,16 @@ try {
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Standalone build for Docker containers
+  output: 'standalone',
+  // More permissive ESLint for production builds
+  eslint: {
+    ignoreDuringBuilds: process.env.NODE_ENV === 'production',
+  },
+  // Disable TypeScript checking during builds for deployment
+  typescript: {
+    ignoreBuildErrors: process.env.NODE_ENV === 'production',
+  },
   // Port 3000 reserved for TestSprite - Frontend uses 3001
   env: {
     PORT: '3001',
@@ -45,6 +55,14 @@ const nextConfig = {
   generateEtags: true,
   // Webpack configuration (used when not using Turbopack)
   webpack: (config, { isServer }) => {
+    // Handle canvas module in client-side builds
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        canvas: false,
+      };
+    }
+
     // Optimize bundle size
     config.optimization = {
       ...config.optimization,

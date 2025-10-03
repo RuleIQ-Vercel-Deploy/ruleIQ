@@ -1,0 +1,34 @@
+{
+  "mcpServers": {
+    "desktop-commander": {
+      "command": "/home/omar/.config/nvm/versions/node/v22.14.0/bin/node",
+      "args": [
+        "/home/omar/DesktopCommanderMCP/dist/index.js"
+      ]
+    },
+    "serena": {
+      "command": "/home/omar/.local/bin/uv",
+      "args": [
+        "run",
+        "--directory",
+        "/home/omar/serena",
+        "serena",
+        "start-mcp-server"
+      ]
+    },
+    "fetch": {
+      "command": "/home/omar/.config/nvm/versions/node/v22.14.0/bin/npx",
+      "args": [
+        "-y",
+        "@smithery/cli@latest",
+        "run",
+        "@smithery-ai/fetch",
+        "--key",
+        "95e83c85-9a18-4524-9549-6a2c0f194f69",
+        "--profile",
+        "hungry-lemming-s64fT3"
+      ]
+    }
+  },
+  "isUsingBuiltInNodeForMcp": true
+}

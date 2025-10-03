@@ -7,7 +7,9 @@ export class ValidationError extends Error {
   constructor(questionId: string, message: string, field?: string) {
     super(message);
     this.questionId = questionId;
-    this.field = field;
+    if (field !== undefined) {
+      this.field = field;
+    }
     this.name = 'ValidationError';
   }
 }

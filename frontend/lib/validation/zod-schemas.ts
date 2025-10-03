@@ -377,7 +377,7 @@ export const ChatMessageMetadataSchema = z.object({
 export type ChatMessageMetadata = z.infer<typeof ChatMessageMetadataSchema>;
 
 // Additional Freemium Response Schemas
-export const LeadResponseSchema = z.object({
+export const FreemiumLeadResponseSchema = z.object({
   id: z.string().uuid(),
   email: z.string().email(),
   company_name: z.string().optional(),
@@ -391,7 +391,7 @@ export const LeadResponseSchema = z.object({
   session_id: z.string().uuid().optional(),
 });
 
-export const FreemiumAssessmentStartResponseSchema = z.object({
+export const AdvancedAssessmentStartResponseSchema = z.object({
   session_id: z.string().uuid(),
   lead_id: z.string().uuid(),
   assessment_type: z.string(),
@@ -402,7 +402,7 @@ export const FreemiumAssessmentStartResponseSchema = z.object({
   created_at: z.string().datetime(),
 });
 
-export const AssessmentQuestionResponseSchema = z.object({
+export const AdvancedQuestionResponseSchema = z.object({
   question: z.lazy(() => AssessmentQuestionSchema),
   next_question_index: z.number().int().nonnegative().optional(),
   is_last_question: z.boolean(),
@@ -625,7 +625,7 @@ export const PaginatedResponseSchema = <T extends z.ZodType>(itemSchema: T) => z
 // HEALTH CHECK SCHEMA
 // ============================================================================
 
-export const HealthStatusSchema = z.object({
+export const DetailedHealthStatusSchema = z.object({
   status: z.enum(['healthy', 'degraded', 'unhealthy']),
   version: z.string().optional(),
   timestamp: z.string(),
@@ -636,7 +636,7 @@ export const HealthStatusSchema = z.object({
   })).optional(),
 });
 
-export type HealthStatus = z.infer<typeof HealthStatusSchema>;
+export type DetailedHealthStatus = z.infer<typeof DetailedHealthStatusSchema>;
 
 // ============================================================================
 // Additional Types from existing schemas
@@ -740,6 +740,7 @@ export type CompleteAssessmentRequest = z.infer<typeof CompleteAssessmentRequest
 export type FreemiumAssessmentResponse = z.infer<typeof FreemiumAssessmentStartResponseSchema>;
 export type AssessmentQuestionResponse = z.infer<typeof AssessmentQuestionResponseSchema>;
 export type LeadResponse = z.infer<typeof LeadResponseSchema>;
+export type FreemiumLeadResponse = z.infer<typeof FreemiumLeadResponseSchema>;
 export type UserContext = z.infer<typeof UserContextSchema>;
 export type AIError = z.infer<typeof AIErrorSchema>;
 export type BaseAIResponse = z.infer<typeof BaseAIResponseSchema>;

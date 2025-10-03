@@ -1,5 +1,5 @@
 import { z, ZodError, ZodSchema } from 'zod';
-import type { APIClient } from './client';
+import { apiClient } from './client';
 import { ApiResponseSchema, APIErrorResponseSchema } from '../validation/zod-schemas';
 
 // Custom error class for validation failures
@@ -87,16 +87,16 @@ export function formatValidationError(error: ZodError): string {
 /**
  * Creates a validated API client that automatically validates responses
  */
-export class ValidatedAPIClient extends APIClient {
+export class ValidatedAPIClient {
   /**
    * Makes a GET request with response validation
    */
   async getValidated<T>(
     url: string,
     schema: ZodSchema<T>,
-    options?: RequestInit
+    options?: { params?: Record<string, string | number | boolean | null | undefined> }
   ): Promise<T> {
-    const response = await this.get(url, options);
+    const response = await apiClient.get(url, options);
     return validateApiResponse(response, schema);
   }
 
@@ -115,7 +115,7 @@ export class ValidatedAPIClient extends APIClient {
       ? validateApiResponse(data, requestSchema)
       : data;
 
-    const response = await this.post(url, validatedData, options);
+    const response = await apiClient.post(url, validatedData);
     return validateApiResponse(response, responseSchema);
   }
 
@@ -134,7 +134,7 @@ export class ValidatedAPIClient extends APIClient {
       ? validateApiResponse(data, requestSchema)
       : data;
 
-    const response = await this.put(url, validatedData, options);
+    const response = await apiClient.put(url, validatedData);
     return validateApiResponse(response, responseSchema);
   }
 
@@ -153,7 +153,7 @@ export class ValidatedAPIClient extends APIClient {
       ? validateApiResponse(data, requestSchema)
       : data;
 
-    const response = await this.patch(url, validatedData, options);
+    const response = await apiClient.patch(url, validatedData);
     return validateApiResponse(response, responseSchema);
   }
 
@@ -165,7 +165,7 @@ export class ValidatedAPIClient extends APIClient {
     schema: ZodSchema<T>,
     options?: RequestInit
   ): Promise<T> {
-    const response = await this.delete(url, options);
+    const response = await apiClient.delete(url);
     return validateApiResponse(response, schema);
   }
 }
@@ -173,7 +173,7 @@ export class ValidatedAPIClient extends APIClient {
 /**
  * Creates a validated wrapper for API client methods
  */
-export function createValidatedApiClient(apiClient: APIClient) {
+export function createValidatedApiClient() {
   return new ValidatedAPIClient();
 }
 
@@ -226,7 +226,7 @@ export function createTypedEndpoint<
 
     switch (method) {
       case 'GET':
-        return client.getValidated(url, responseSchema, options);
+        return client.getValidated(url, responseSchema, options as { params?: Record<string, string | number | boolean | null | undefined> });
       
       case 'POST':
         if (data === undefined) {

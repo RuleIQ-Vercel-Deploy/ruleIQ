@@ -542,10 +542,10 @@ export const RuleList: React.FC<RuleListProps> = ({
                 rule={rule}
                 isSelected={selectedRules.has(rule.id)}
                 onToggleSelect={toggleRuleSelection}
-                onRuleClick={onRuleClick}
-                onRuleEdit={onRuleEdit}
-                onRuleDelete={onRuleDelete}
-                onRuleDuplicate={onRuleDuplicate}
+                {...(onRuleClick && { onRuleClick })}
+                {...(onRuleEdit && { onRuleEdit })}
+                {...(onRuleDelete && { onRuleDelete })}
+                {...(onRuleDuplicate && { onRuleDuplicate })}
                 showMetadata={showMetadata}
                 enableReordering={enableReordering}
               />

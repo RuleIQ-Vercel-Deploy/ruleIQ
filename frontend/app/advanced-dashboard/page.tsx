@@ -13,7 +13,7 @@ import {
   Download,
   Settings,
 } from 'lucide-react';
-import { AuroraBackground } from '@/components/ui/backgrounds/aurora-background';
+// Using neural theme instead of aurora background
 import { EChartsTimeSeries, EChartsCandlestick } from '@/components/ui/charts/echarts-viz';
 import { VegaLiteVisualization } from '@/components/ui/charts/vega-viz';
 import { SigmaNetworkGraph } from '@/components/ui/charts/sigma-viz';
@@ -53,8 +53,9 @@ export default function AdvancedDashboard() {
     { id: 'analysis', label: 'Analysis', icon: Layers },
   ];
   return (
-    <div className="min-h-screen bg-gray-950">
-      <AuroraBackground className="fixed inset-0 opacity-10" />
+    <div className="min-h-screen bg-black">
+      {/* Neural network background gradient */}
+      <div className="fixed inset-0 bg-gradient-to-br from-neural-purple-900/10 via-black to-black" />
       
       <div className="relative z-10">
         {/* Header */}

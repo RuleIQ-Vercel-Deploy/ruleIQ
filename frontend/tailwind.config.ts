@@ -1,5 +1,5 @@
 import type { Config } from 'tailwindcss';
-import { neuralPurple, silver, semantic, neutral } from './lib/theme/neural-purple-colors';
+import { purpleColors, silverColors, semanticColors, neutralColors, brandColors } from './lib/theme/colors';
 
 const config = {
   darkMode: ['class'],
@@ -21,38 +21,38 @@ const config = {
     extend: {
       colors: {
         // Neural Purple Theme Colors from centralized module
-        purple: neuralPurple,
-        silver,
+        purple: purpleColors,
+        silver: silverColors,
 
         // DISTINCTIVE ruleIQ Brand Colors
         brand: {
-          primary: neuralPurple.primary,
-          secondary: neuralPurple.light,
-          tertiary: neuralPurple['300'],
-          dark: neuralPurple.dark,
-          light: neuralPurple.subtle,
-          accent: silver.light,
-          'accent-light': neutral.gray['50'],
-          'accent-dark': silver.dark,
-          glow: neuralPurple['200'],
+          primary: brandColors.primary,
+          secondary: brandColors.primaryLight,
+          tertiary: purpleColors['300'],
+          dark: brandColors.primaryDark,
+          light: brandColors.accentLight,
+          accent: silverColors.light,
+          'accent-light': neutralColors.gray['50'],
+          'accent-dark': silverColors.dark,
+          glow: purpleColors['200'],
         },
 
         // Semantic colors
-        success: semantic.success,
-        'success-light': semantic.successLight,
-        'success-dark': semantic.successDark,
-        error: semantic.error,
-        'error-light': semantic.errorLight,
-        'error-dark': semantic.errorDark,
-        warning: semantic.warning,
-        'warning-light': semantic.warningLight,
-        'warning-dark': semantic.warningDark,
-        info: semantic.info,
-        'info-light': semantic.infoLight,
-        'info-dark': semantic.infoDark,
+        success: semanticColors.success,
+        'success-light': semanticColors.successLight,
+        'success-dark': semanticColors.successDark,
+        error: semanticColors.error,
+        'error-light': semanticColors.errorLight,
+        'error-dark': semanticColors.errorDark,
+        warning: semanticColors.warning,
+        'warning-light': semanticColors.warningLight,
+        'warning-dark': semanticColors.warningDark,
+        info: semanticColors.info,
+        'info-light': semanticColors.infoLight,
+        'info-dark': semanticColors.infoDark,
 
         // Neutral colors
-        gray: neutral.gray,
+        gray: neutralColors.gray,
         primary: {
           DEFAULT: 'hsl(var(--primary))',
           foreground: 'hsl(var(--primary-foreground))',

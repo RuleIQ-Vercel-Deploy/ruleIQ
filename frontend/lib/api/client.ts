@@ -157,21 +157,21 @@ class APIClient {
   async post<TResponse, TRequest = unknown>(endpoint: string, data?: TRequest): Promise<TResponse> {
     return this.request<TResponse>(endpoint, {
       method: 'POST',
-      body: data ? JSON.stringify(data) : undefined,
+      body: data ? JSON.stringify(data) : null,
     });
   }
 
   async put<TResponse, TRequest = unknown>(endpoint: string, data?: TRequest): Promise<TResponse> {
     return this.request<TResponse>(endpoint, {
       method: 'PUT',
-      body: data ? JSON.stringify(data) : undefined,
+      body: data ? JSON.stringify(data) : null,
     });
   }
 
   async patch<TResponse, TRequest = unknown>(endpoint: string, data?: TRequest): Promise<TResponse> {
     return this.request<TResponse>(endpoint, {
       method: 'PATCH',
-      body: data ? JSON.stringify(data) : undefined,
+      body: data ? JSON.stringify(data) : null,
     });
   }
 
@@ -293,7 +293,7 @@ class APIClient {
   async publicPost<TResponse, TRequest = unknown>(endpoint: string, data?: TRequest): Promise<TResponse> {
     return this.publicRequest<TResponse>(endpoint, {
       method: 'POST',
-      body: data ? JSON.stringify(data) : undefined,
+      body: data ? JSON.stringify(data) : null,
     });
   }
 }

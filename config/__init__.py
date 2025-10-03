@@ -34,6 +34,11 @@ def get_config(environment: Optional[str]=None) ->BaseConfig:
     Raises:
         ConfigurationError: If environment is invalid
     """
+    # Check if running on Cloud Run
+    if os.getenv('K_SERVICE'):  # Cloud Run sets K_SERVICE env var
+        from config.cloud_run import CloudRunConfig
+        return CloudRunConfig()
+
     env = environment or os.getenv('ENVIRONMENT', 'development')
     env = env.lower()
     config_map = {'development': DevelopmentConfig, 'dev':
@@ -68,8 +73,12 @@ def validate_config(config: BaseConfig) ->bool:
         ConfigurationError: If configuration is invalid
     """
     errors = []
-    required_fields = ['SECRET_KEY', 'JWT_SECRET_KEY', 'DATABASE_URL',
-        'REDIS_URL', 'NEO4J_URI', 'NEO4J_USERNAME', 'NEO4J_PASSWORD']
+    # Minimal validation for Cloud Run
+    if os.getenv('K_SERVICE'):  # Cloud Run environment
+        required_fields = ['SECRET_KEY', 'JWT_SECRET_KEY', 'DATABASE_URL']
+    else:
+        required_fields = ['SECRET_KEY', 'JWT_SECRET_KEY', 'DATABASE_URL',
+            'REDIS_URL', 'NEO4J_URI', 'NEO4J_USERNAME', 'NEO4J_PASSWORD']
     for field in required_fields:
         if not getattr(config, field, None):
             errors.append(f'Missing required field: {field}')

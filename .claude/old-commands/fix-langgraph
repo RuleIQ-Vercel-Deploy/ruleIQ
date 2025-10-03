@@ -1,0 +1,80 @@
+#!/bin/bash
+# Fix LangGraph state management issues
+
+cat << 'EOF'
+═══════════════════════════════════════════════════════════════
+ISSUE #1: Underutilized LangGraph Features
+═══════════════════════════════════════════════════════════════
+
+PROBLEM: Not using TypedDict with Annotated, conditional edges, error nodes, or checkpointing
+
+FILES TO CHECK:
+- langgraph_agent/graph/
+- langgraph_agent/agents/
+- Any file with "State" or "state" in the name
+
+REPLACE ANY BASIC STATE WITH THIS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+from typing import TypedDict, Annotated, List, Dict, Optional, Any
+from operator import add
+
+class GraphState(TypedDict):
+    """Proper LangGraph state with automatic merging."""
+    messages: Annotated[List[Dict[str, Any]], add]  # Auto-accumulates
+    documents: Annotated[List[Dict], add]
+    errors: Annotated[List[str], add]
+    metadata: Annotated[Dict[str, Any], lambda x, y: {**x, **y}]
+    
+    current_step: str
+    thread_id: str
+    checkpoint_id: Optional[str]
+    retry_count: int
+    error_count: int
+
+ADD ERROR HANDLER NODE:
+━━━━━━━━━━━━━━━━━━━━━━
+def error_handler(state: GraphState) -> GraphState:
+    """Centralized error handling."""
+    error_count = state.get("error_count", 0)
+    
+    if error_count >= 3:
+        state["current_step"] = "failed"
+    else:
+        state["error_count"] = error_count + 1
+        state["retry_count"] = state.get("retry_count", 0) + 1
+        state["current_step"] = "retry"
+    
+    return state
+
+graph.add_node("error_handler", error_handler)
+
+REPLACE IF/ELSE WITH CONDITIONAL EDGES:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Instead of:
+if condition:
+    next_node = "node1"
+else:
+    next_node = "node2"
+
+# Use:
+graph.add_conditional_edges(
+    "current_node",
+    lambda x: "error_handler" if x.get("errors") else "next_node",
+    {
+        "error_handler": "error_handler",
+        "next_node": "next_node",
+        "retry": "current_node"
+    }
+)
+
+ADD CHECKPOINTING:
+━━━━━━━━━━━━━━━━━
+from langgraph.checkpoint.sqlite import SqliteSaver
+
+checkpointer = SqliteSaver.from_conn_string("checkpoints.db")
+graph = graph.compile(checkpointer=checkpointer)
+
+# When invoking:
+config = {"configurable": {"thread_id": f"session_{user_id}"}}
+result = graph.invoke(input_data, config)
+EOF

@@ -409,6 +409,10 @@ def get_async_session_maker():
     
     return _ASYNC_SESSION_LOCAL
 
-# For backward compatibility - but make it lazy to prevent eager initialization
-# This will be None initially and only populated when get_async_session_maker() is called
-async_session_maker = None
+# For backward compatibility - use a callable that does lazy initialization
+def async_session_maker():
+    """Lazy initialization wrapper for async session maker."""
+    session_maker = get_async_session_maker()
+    if session_maker is None:
+        return None
+    return session_maker()

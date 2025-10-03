@@ -1,0 +1,48 @@
+{
+  "refactoring_rules": {
+    "max_files_without_approval": 5,
+    "max_lines_without_approval": 100,
+    "require_backup": true,
+    "require_syntax_check": true,
+    "require_test_after_change": true,
+    "forbidden_operations": [
+      "fix-all",
+      "bulk-refactor",
+      "mass-update",
+      "clean-all",
+      "auto-format-all"
+    ]
+  },
+  "approval_required_for": [
+    "Moving code between files",
+    "Renaming modules or packages",
+    "Changing import structures",
+    "Deleting any file",
+    "Modifying more than 5 files",
+    "Running automated scripts",
+    "Applying formatting to entire codebase"
+  ],
+  "auto_backup": {
+    "enabled": true,
+    "keep_days": 30,
+    "backup_before_refactoring": true
+  },
+  "testing_requirements": {
+    "test_syntax_before": true,
+    "test_syntax_after": true,
+    "test_imports": true,
+    "stop_on_first_error": true
+  },
+  "rollback_triggers": [
+    "syntax_error",
+    "import_error",
+    "more_than_10_errors",
+    "application_wont_start"
+  ],
+  "logging": {
+    "log_all_refactoring": true,
+    "log_file": ".claude/refactoring-log.json",
+    "include_timestamps": true,
+    "include_file_backups": true
+  }
+}

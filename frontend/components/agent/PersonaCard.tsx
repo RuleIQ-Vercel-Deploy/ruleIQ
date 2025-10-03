@@ -124,7 +124,7 @@ export function PersonaCard({
   onConfigure,
   showDetails = false,
 }: PersonaCardProps) {
-  const Icon = personaIcons[agent.personaType] || Bot;
+  const Icon: React.ElementType = personaIcons[agent.personaType] || Bot;
   const trustConfig = agent.currentTrustLevel !== undefined
     ? trustLevelConfig[agent.currentTrustLevel]
     : null;
@@ -166,7 +166,7 @@ export function PersonaCard({
                 ? "bg-gradient-to-br from-blue-500 to-purple-600 text-white shadow-lg"
                 : "bg-muted text-muted-foreground"
             )}>
-              <Icon className="w-6 h-6" />
+              {React.createElement(Icon, { className: "w-6 h-6" })}
             </div>
             <div>
               <h4 className="font-semibold">{agent.name}</h4>
@@ -267,7 +267,7 @@ export function PersonaCard({
             <DialogContent className="max-w-2xl">
               <DialogHeader>
                 <DialogTitle className="flex items-center gap-2">
-                  <Icon className="w-5 h-5" />
+                  {React.createElement(Icon, { className: "w-5 h-5" })}
                   {agent.name}
                 </DialogTitle>
                 <DialogDescription>

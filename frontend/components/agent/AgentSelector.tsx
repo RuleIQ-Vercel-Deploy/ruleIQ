@@ -261,15 +261,18 @@ export function AgentSelector({
             </div>
           ) : viewMode === 'grid' ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {filteredAgents.map((agent) => (
-                <PersonaCard
-                  key={agent.id}
-                  agent={agent}
-                  isSelected={agent.id === selectedAgentId}
-                  onSelect={() => onSelectAgent(agent.id)}
-                  onConfigure={onConfigureAgent}
-                />
-              ))}
+              {filteredAgents.map((agent) => {
+                const props: any = {
+                  key: agent.id,
+                  agent,
+                  isSelected: agent.id === selectedAgentId,
+                  onSelect: () => onSelectAgent(agent.id),
+                };
+                if (onConfigureAgent) {
+                  props.onConfigure = onConfigureAgent;
+                }
+                return <PersonaCard {...props} />;
+              })}
             </div>
           ) : (
             <div className="space-y-4">
@@ -280,7 +283,7 @@ export function AgentSelector({
                   </h4>
                   <div className="space-y-2">
                     {categoryAgents.map((agent) => {
-                      const Icon = personaIcons[agent.personaType] || Bot;
+                      const Icon: React.ElementType = personaIcons[agent.personaType] || Bot;
                       const isSelected = agent.id === selectedAgentId;
                       
                       return (
@@ -300,7 +303,7 @@ export function AgentSelector({
                                   ? "bg-gradient-to-br from-blue-500 to-purple-600 text-white"
                                   : "bg-muted text-muted-foreground"
                               )}>
-                                <Icon className="w-5 h-5" />
+                                {React.createElement(Icon, { className: "w-5 h-5" })}
                               </div>
                               <div>
                                 <div className="font-medium">{agent.name}</div>

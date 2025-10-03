@@ -5,7 +5,6 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import Pusher from 'pusher';
-import { getServerSession } from 'next-auth';
 import jwt from 'jsonwebtoken';
 import { kv } from '@vercel/kv';
 
@@ -120,36 +119,22 @@ function sanitizeEventData(data: any): any {
  */
 export async function POST(req: NextRequest) {
   try {
-    // Try to import NextAuth options, fallback to JWT-only mode if not available
-    let session = null;
-    try {
-      const { authOptions } = await import('../../auth/[...nextauth]/route');
-      session = await getServerSession(authOptions);
-    } catch (error) {
-      // NextAuth not configured, will use JWT-only mode
-      console.log('NextAuth not configured, using JWT-only authentication');
-    }
+    // Use JWT-only authentication (NextAuth removed from project)
+    console.log('Using JWT-only authentication');
 
-    // Alternative: Validate JWT token from Authorization header
+    // Validate JWT token from Authorization header
     let userId: string | null = null;
     let userRole: string = 'viewer';
 
-    if (session?.user) {
-      // Use session data
-      userId = session.user.id || session.user.email || null;
-      userRole = (session.user as any).role || 'viewer';
-    } else {
-      // Try JWT token
-      const authHeader = req.headers.get('authorization');
-      if (authHeader?.startsWith('Bearer ')) {
-        const token = authHeader.substring(7);
-        try {
-          const decoded = jwt.verify(token, process.env.JWT_SECRET || 'default-secret-change-in-production') as any;
-          userId = decoded.userId || decoded.sub;
-          userRole = decoded.role || 'viewer';
-        } catch (error) {
-          console.error('JWT validation failed:', error);
-        }
+    const authHeader = req.headers.get('authorization');
+    if (authHeader?.startsWith('Bearer ')) {
+      const token = authHeader.substring(7);
+      try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'default-secret-change-in-production') as any;
+        userId = decoded.userId || decoded.sub;
+        userRole = decoded.role || 'viewer';
+      } catch (error) {
+        console.error('JWT validation failed:', error);
       }
     }
 

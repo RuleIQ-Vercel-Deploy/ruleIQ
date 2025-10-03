@@ -86,7 +86,7 @@ class ComplianceService {
   }): Promise<{ tasks: ComplianceTask[]; total: number }> {
     const response = await apiClient.get<{ tasks: ComplianceTask[]; total: number }>(
       '/compliance/tasks',
-      { params },
+      params ? { params } : {},
     );
     return response;
   }
@@ -123,7 +123,7 @@ class ComplianceService {
   }): Promise<{ risks: ComplianceRisk[]; total: number }> {
     const response = await apiClient.get<{ risks: ComplianceRisk[]; total: number }>(
       '/compliance/risks',
-      { params },
+      params ? { params } : {},
     );
     return response;
   }

@@ -87,7 +87,7 @@ export function TrendAnalysisChart({ data, className }: TrendAnalysisChartProps)
   const [dimensions, setDimensions] = useState({ width: 800, height: 400 });
   const [tooltipDimensions, setTooltipDimensions] = useState({ width: 250, height: 150 });
   const containerRef = useRef<HTMLDivElement>(null);
-  const chartRef = useRef<SVGElement>(null);
+  const chartRef = useRef<SVGSVGElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
 
   // Filter data based on selected time period
@@ -179,7 +179,7 @@ export function TrendAnalysisChart({ data, className }: TrendAnalysisChartProps)
     let currentSegment: string[] = [];
 
     scores.forEach((score, index) => {
-      if (score !== undefined && score !== null) {
+      if (score !== undefined && score !== null && filteredData[index]) {
         const x = xScale.scale(new Date(filteredData[index].date).getTime());
         const y = yScale.scale(score);
         currentSegment.push(`${x},${y}`);
@@ -292,8 +292,8 @@ export function TrendAnalysisChart({ data, className }: TrendAnalysisChartProps)
       case ' ':
         event.preventDefault();
         // Announce the current point details
-        if (chartRef.current) {
-          const point = filteredData[newFocusedPoint];
+        if (chartRef.current && filteredData[newFocusedPoint]) {
+          const point = filteredData[newFocusedPoint]!; // Safe because we check above
           const announcement = `Date: ${formatDate(point.date)}, Overall Score: ${point.overallScore}%`;
           // Create a screen reader announcement
           const ariaLive = document.createElement('div');
@@ -311,16 +311,17 @@ export function TrendAnalysisChart({ data, className }: TrendAnalysisChartProps)
 
     setFocusedPoint(newFocusedPoint);
     // Show tooltip for focused point
-    if (chartRef.current) {
+    if (chartRef.current && filteredData[newFocusedPoint]) {
       const relativeContainer = chartRef.current.parentElement;
       if (!relativeContainer) return;
       
       const relativeRect = relativeContainer.getBoundingClientRect();
       const chartRect = chartRef.current.getBoundingClientRect();
       
+      const point = filteredData[newFocusedPoint]!;
       // Calculate point position in SVG coordinate space
-      const pointX = xScale.scale(new Date(filteredData[newFocusedPoint].date).getTime());
-      const pointY = yScale.scale(filteredData[newFocusedPoint].overallScore);
+      const pointX = xScale.scale(new Date(point.date).getTime());
+      const pointY = yScale.scale(point.overallScore);
       
       // Convert to tooltip position relative to the positioned container
       const tooltipX = (chartRect.left - relativeRect.left) + padding.left + pointX;
@@ -553,7 +554,7 @@ export function TrendAnalysisChart({ data, className }: TrendAnalysisChartProps)
             </svg>
 
             {/* Tooltip */}
-            {hoveredPoint && (
+            {hoveredPoint && filteredData[hoveredPoint.dataIndex] && (
               <div
                 ref={tooltipRef}
                 className="pointer-events-none absolute z-10 rounded-lg border bg-white p-3 shadow-lg"
@@ -564,75 +565,79 @@ export function TrendAnalysisChart({ data, className }: TrendAnalysisChartProps)
                   maxWidth: typeof window !== 'undefined' && window.innerWidth < 480 ? '200px' : '300px'
                 }}
               >
-                <div className="space-y-2">
-                  <div className="text-sm font-semibold">
-                    {formatDate(filteredData[hoveredPoint.dataIndex].date)}
-                  </div>
-                  <div className="space-y-1">
-                    <div className="flex items-center justify-between gap-4">
-                      <span className="text-sm">Overall Score:</span>
-                      <span className="font-semibold" style={{ color: COLORS.primary }}>
-                        {filteredData[hoveredPoint.dataIndex].overallScore}%
-                      </span>
-                    </div>
-                    {hoveredPoint.dataIndex > 0 && (
-                      <div className="text-xs text-neutral-500">
-                        {(() => {
-                          const change = calculateChange(
-                            filteredData[hoveredPoint.dataIndex].overallScore,
-                            filteredData[hoveredPoint.dataIndex - 1].overallScore
-                          );
-                          return (
+                {(() => {
+                  const tooltipPoint = filteredData[hoveredPoint.dataIndex]!;
+                  const previousPoint = hoveredPoint.dataIndex > 0 && filteredData[hoveredPoint.dataIndex - 1] 
+                    ? filteredData[hoveredPoint.dataIndex - 1]! 
+                    : null;
+                  const change = previousPoint 
+                    ? calculateChange(tooltipPoint.overallScore, previousPoint.overallScore)
+                    : 0;
+
+                  return (
+                    <div className="space-y-2">
+                      <div className="text-sm font-semibold">
+                        {formatDate(tooltipPoint.date)}
+                      </div>
+                      <div className="space-y-1">
+                        <div className="flex items-center justify-between gap-4">
+                          <span className="text-sm">Overall Score:</span>
+                          <span className="font-semibold" style={{ color: COLORS.primary }}>
+                            {tooltipPoint.overallScore}%
+                          </span>
+                        </div>
+                        {previousPoint && (
+                          <div className="text-xs text-neutral-500">
                             <span className={change >= 0 ? 'text-green-600' : 'text-red-600'}>
                               {change >= 0 ? '+' : ''}{change.toFixed(1)}% from previous
                             </span>
-                          );
-                        })()}
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
-                  {sectionNames.slice(0, 3).map((section) => {
-                    const score = filteredData[hoveredPoint.dataIndex].sectionScores[section];
-                    if (score === undefined) return null;
-                    return (
-                      <div key={section} className="flex items-center justify-between gap-4">
-                        <span className="text-xs text-neutral-600">{section}:</span>
-                        <span className="text-xs font-medium">{score}%</span>
-                      </div>
-                    );
-                  })}
-                </div>
+                      {sectionNames.slice(0, 3).map((section) => {
+                        const score = tooltipPoint.sectionScores[section];
+                        if (score === undefined) return null;
+                        return (
+                          <div key={section} className="flex items-center justify-between gap-4">
+                            <span className="text-xs text-neutral-600">{section}:</span>
+                            <span className="text-xs font-medium">{score}%</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  );
+                })()}
               </div>
             )}
           </div>
 
           {/* Summary stats */}
-          {filteredData.length > 1 && (
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-              <div className="rounded-lg bg-neutral-50 p-3">
-                <div className="text-xs text-neutral-500">Latest Score</div>
-                <div className="text-lg font-semibold" style={{ color: COLORS.primary }}>
-                  {filteredData[filteredData.length - 1].overallScore}%
+          {filteredData.length > 1 && (() => {
+            const lastPoint = filteredData[filteredData.length - 1];
+            const firstPoint = filteredData[0];
+            if (!lastPoint || !firstPoint) return null;
+            
+            const overallChange = calculateChange(
+              lastPoint.overallScore,
+              firstPoint.overallScore
+            );
+            return (
+              <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+                <div className="rounded-lg bg-neutral-50 p-3">
+                  <div className="text-xs text-neutral-500">Latest Score</div>
+                  <div className="text-lg font-semibold" style={{ color: COLORS.primary }}>
+                    {lastPoint.overallScore}%
+                  </div>
                 </div>
-              </div>
-              <div className="rounded-lg bg-neutral-50 p-3">
-                <div className="text-xs text-neutral-500">Change</div>
-                <div className={cn(
-                  "text-lg font-semibold",
-                  calculateChange(
-                    filteredData[filteredData.length - 1].overallScore,
-                    filteredData[0].overallScore
-                  ) >= 0 ? "text-green-600" : "text-red-600"
-                )}>
-                  {(() => {
-                    const change = calculateChange(
-                      filteredData[filteredData.length - 1].overallScore,
-                      filteredData[0].overallScore
-                    );
-                    return `${change >= 0 ? '+' : ''}${change.toFixed(1)}%`;
-                  })()}
+                <div className="rounded-lg bg-neutral-50 p-3">
+                  <div className="text-xs text-neutral-500">Change</div>
+                  <div className={cn(
+                    "text-lg font-semibold",
+                    overallChange >= 0 ? "text-green-600" : "text-red-600"
+                  )}>
+                    {overallChange >= 0 ? '+' : ''}{overallChange.toFixed(1)}%
+                  </div>
                 </div>
-              </div>
               <div className="rounded-lg bg-neutral-50 p-3">
                 <div className="text-xs text-neutral-500">Best Score</div>
                 <div className="text-lg font-semibold text-green-600">
@@ -646,7 +651,8 @@ export function TrendAnalysisChart({ data, className }: TrendAnalysisChartProps)
                 </div>
               </div>
             </div>
-          )}
+            );
+          })()}
         </div>
       </CardContent>
     </Card>

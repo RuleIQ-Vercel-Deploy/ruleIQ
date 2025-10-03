@@ -465,7 +465,7 @@ export class QuestionnaireEngine {
       s.questions.some((q) => q.id === question.id),
     );
 
-    return {
+    const gap: Gap = {
       id: `gap_${question.id}`,
       questionId: question.id,
       questionText: question.text,
@@ -477,8 +477,14 @@ export class QuestionnaireEngine {
       currentState: answer ? `Score: ${Math.round(score * 100)}%` : 'Not answered',
       targetState: '100% compliance',
       expectedAnswer: this.getExpectedAnswer(question),
-      actualAnswer: answer?.value ? String(answer.value) : undefined,
     };
+    
+    // Only set actualAnswer if we have a value to avoid exactOptionalPropertyTypes issues
+    if (answer?.value) {
+      gap.actualAnswer = String(answer.value);
+    }
+    
+    return gap;
   }
 
   private getExpectedAnswer(question: Question): string {

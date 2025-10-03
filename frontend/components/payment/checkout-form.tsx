@@ -15,9 +15,9 @@ import { getStripe, PRICING_PLANS, type PricingPlan, formatPrice } from '@/lib/s
 
 interface CheckoutFormProps {
   planId: PricingPlan;
-  customerEmail?: string | undefined;
-  onSuccess?: (sessionId: string) => void | undefined;
-  onError?: (error: string) => void | undefined;
+  customerEmail?: string;
+  onSuccess?: (sessionId: string) => void;
+  onError?: (error: string) => void;
 }
 
 // Inner form component that uses Stripe hooks
@@ -237,9 +237,9 @@ export function CheckoutForm({ planId, customerEmail, onSuccess, onError }: Chec
         <Elements stripe={stripePromise} options={stripeOptions}>
           <CheckoutFormInner
             planId={planId}
-            customerEmail={customerEmail}
-            onSuccess={onSuccess}
-            onError={onError}
+            {...(customerEmail && { customerEmail })}
+            {...(onSuccess && { onSuccess })}
+            {...(onError && { onError })}
           />
         </Elements>
       </CardContent>

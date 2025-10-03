@@ -234,39 +234,197 @@ export const useChatStore = create<ChatState>()(
               data: { content: message, metadata },
             });
           } else {
-            // Check if IQ Agent is available and use it
+            // Import IQ Agent service for compliance queries
+            const { iqAgentService } = await import('@/lib/api/iq-agent.service');
+            const { useIQAgentStore } = await import('@/lib/stores/iq-agent.store');
+            
             let response;
+            let isIQQuery = false;
+            
             try {
-              // First check IQ Agent status
-              const iqStatus = await chatService.getIQAgentStatus();
-              if (iqStatus.iq_agent_available && iqStatus.neo4j_connected) {
-                // Use IQ Agent for enhanced GraphRAG responses
-                response = await chatService.sendIQMessage(conversationId, {
-                  content: message,
-                });
+              // Check if message is a compliance query
+              isIQQuery = iqAgentService.isComplianceQuery(message);
+              
+              if (isIQQuery) {
+                try {
+                  // Set initial processing state via IQ Agent store
+                  const iqStore = useIQAgentStore.getState();
+                  iqStore.clearError();
+                  
+                  // Note: The actual processing will be handled by queryCompliance below
+                  
+                  // Add processing indicator message
+                  const processingMessage: ChatMessage = {
+                    id: `processing-${Date.now()}`,
+                    conversation_id: conversationId,
+                    role: 'assistant',
+                    content: 'Analyzing your compliance question with GraphRAG...',
+                    sequence_number: (state.messages[conversationId]?.length || 0) + 2,
+                    created_at: new Date().toISOString(),
+                    metadata: {
+                      source: 'iq_agent',
+                      is_processing: true
+                    }
+                  };
+                  
+                  set((state) => ({
+                    messages: {
+                      ...state.messages,
+                      [conversationId]: [...(state.messages[conversationId] || []), processingMessage],
+                    },
+                  }));
+                  
+                  // Check IQ Agent health first
+                  const healthStatus = await iqAgentService.getHealth();
+                  
+                  if (healthStatus.status === 'healthy' && healthStatus.neo4j_connected) {
+                    // Use IQ Agent store's queryCompliance method which handles the full PPALE loop
+                    const context = iqAgentService.extractContext(message);
+                    
+                    await iqStore.queryCompliance(message, { context });
+                    
+                    // Get the response from the IQ Agent store
+                    const iqResponse = useIQAgentStore.getState().currentResponse;
+                    
+                    if (iqResponse) {
+                      // Convert IQ response to chat message format
+                      response = {
+                        id: `iq-${Date.now()}`,
+                        conversation_id: conversationId,
+                        role: 'assistant' as const,
+                        content: iqResponse.summary,
+                        sequence_number: (state.messages[conversationId]?.length || 0) + 2,
+                        created_at: new Date().toISOString(),
+                        metadata: {
+                          source: 'iq_agent',
+                          confidence_score: iqResponse.confidence_score,
+                          trust_level: iqResponse.trust_level,
+                          evidence_count: iqResponse.evidence?.length || 0,
+                          graph_nodes: iqResponse.graph_analysis?.nodes_accessed,
+                          response_time: iqResponse.response_time_ms
+                        }
+                      };
+                    } else {
+                      throw new Error('IQ Agent processing completed but no response received');
+                    }
+                    
+                    // Remove processing message and add actual response
+                    set((state) => ({
+                      messages: {
+                        ...state.messages,
+                        [conversationId]: [
+                          ...state.messages[conversationId].filter(msg => msg.id !== processingMessage.id),
+                          response
+                        ],
+                      },
+                    }));
+                    
+                    // Don't set response variable since we've already updated the state
+                    response = null;
+                    
+                  } else {
+                    // Remove processing message first
+                    set((state) => ({
+                      messages: {
+                        ...state.messages,
+                        [conversationId]: state.messages[conversationId].filter(msg => msg.id !== processingMessage.id),
+                      },
+                    }));
+                    
+                    // IQ Agent unavailable, show warning and fallback to regular chat
+                    iqStore.reportError({
+                      error_type: 'service_unavailable',
+                      message: 'IQ Agent is temporarily unavailable. Using regular chat.',
+                      correlation_id: `health-${Date.now()}`
+                    });
+                    
+                    response = await chatService.sendMessage(conversationId, {
+                      content: message,
+                    });
+                  }
+                  
+                } catch (iqError) {
+                  console.error('IQ Agent error:', iqError);
+                  
+                  // Remove processing message
+                  set((state) => ({
+                    messages: {
+                      ...state.messages,
+                      [conversationId]: state.messages[conversationId].filter(msg => !msg.metadata?.is_processing),
+                    },
+                  }));
+                  
+                  // Update IQ Agent store with error
+                  iqStore.reportError({
+                    error_type: 'processing_error',
+                    message: iqError instanceof Error ? iqError.message : 'IQ Agent query failed',
+                    correlation_id: `processing-${Date.now()}`
+                  });
+                  
+                  // Fallback to regular chat
+                  response = await chatService.sendMessage(conversationId, {
+                    content: message,
+                  });
+                }
               } else {
-                // Fallback to regular chat
+                // Not a compliance query, use regular chat
                 response = await chatService.sendMessage(conversationId, {
                   content: message,
                 });
               }
             } catch (error) {
-              // If IQ status check fails, fallback to regular chat
-              response = await chatService.sendMessage(conversationId, {
-                content: message,
-              });
+              // If this was an IQ query that failed, make sure we clean up properly
+              if (isIQQuery) {
+                console.error('IQ Agent processing failed:', error);
+                
+                // Clean up any processing messages
+                set((state) => ({
+                  messages: {
+                    ...state.messages,
+                    [conversationId]: state.messages[conversationId]?.filter(msg => !msg.metadata?.is_processing) || [],
+                  },
+                }));
+                
+                // Update IQ Agent store with error
+                useIQAgentStore.getState().reportError({
+                  error_type: 'chat_integration_error',
+                  message: error instanceof Error ? error.message : 'IQ Agent query failed',
+                  correlation_id: `chat-${Date.now()}`
+                });
+              }
+              
+              // Try fallback to regular chat
+              try {
+                response = await chatService.sendMessage(conversationId, {
+                  content: message,
+                });
+              } catch (fallbackError) {
+                console.error('Fallback chat also failed:', fallbackError);
+                throw fallbackError;
+              }
             }
 
-            // Replace temp message with real one
-            set((state) => ({
-              messages: {
-                ...state.messages,
-                [conversationId]:
-                  state.messages[conversationId]?.map((msg) =>
-                    msg.id === tempMessage.id ? response : msg,
-                  ) || [],
-              },
-            }));
+            // Replace temp message with real one (only if response is not null)
+            if (response) {
+              set((state) => ({
+                messages: {
+                  ...state.messages,
+                  [conversationId]:
+                    state.messages[conversationId]?.map((msg) =>
+                      msg.id === tempMessage.id ? response : msg,
+                    ) || [],
+                },
+              }));
+            } else {
+              // If response is null (IQ Agent handled state internally), just remove temp message
+              set((state) => ({
+                messages: {
+                  ...state.messages,
+                  [conversationId]:
+                    state.messages[conversationId]?.filter(msg => msg.id !== tempMessage.id) || [],
+                },
+              }));
+            }
           }
 
           set({ isSendingMessage: false });

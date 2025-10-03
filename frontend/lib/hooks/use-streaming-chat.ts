@@ -76,7 +76,7 @@ export function useStreamingChat(props?: UseStreamingChatProps) {
           role: 'agent',
           timestamp: new Date(),
           isStreaming: !isFinal,
-          trustLevel,
+          ...(trustLevel && { trustLevel }),
           status: isFinal ? 'delivered' : 'sending'
         };
         return [...prevMessages, newMessage];

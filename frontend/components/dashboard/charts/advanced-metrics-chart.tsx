@@ -71,7 +71,7 @@ export function AdvancedMetricsChart({
             <Legend />
             <Bar dataKey="value" fill={neuralPurple.primary} name="Current Value" radius={[4, 4, 0, 0]} />
             {data.some((item) => item.target) && (
-              <Bar dataKey="target" fill={silver.primary} name="Target" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="target" fill={silver.DEFAULT} name="Target" radius={[4, 4, 0, 0]} />
             )}
           </BarChart>
         </ResponsiveContainer>

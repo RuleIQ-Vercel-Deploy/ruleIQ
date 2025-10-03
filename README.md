@@ -177,14 +177,14 @@ git clone https://github.com/yourusername/ruleiq.git
 cd ruleiq
 
 # Start full development environment
-./start
+./start.sh
 ```
 
 The start script will:
-- Set up Python virtual environment
-- Install backend dependencies automatically
-- Install frontend dependencies
-- Start both backend (localhost:8000) and frontend (localhost:3000)
+- Set up environment variables (PORT defaults to 8080)
+- Configure database URL if not set
+- Start the backend API with uvicorn
+- Enable Cloud Run optimizations if deployed there
 
 ### Manual Setup
 
