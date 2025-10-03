@@ -170,7 +170,7 @@ function ShaderBackground() {
             depth: true,
             failIfMajorPerformanceCaveat: true
           }}
-          style={{ width: '100%', height: '100%', background: '#000' }}
+          style={{ width: '100%', height: '100%', background: 'var(--black)' }}
           onCreated={({ gl }) => {
             // Gracefully handle context loss → drop to fallback
             const handleLoss = (e: Event) => {

@@ -46,7 +46,7 @@ export function FrameworkBreakdownChart({
 }: FrameworkBreakdownChartProps) {
   const enhancedData = data.map((item) => ({
     ...item,
-    color: item.color || COLORS[item.framework as keyof typeof COLORS] || '#6B7280',
+    color: item.color || COLORS[item.framework as keyof typeof COLORS] || '#8b5cf6280',
   }));
 
   const CustomTooltip = ({ active, payload }: any) => {
@@ -80,7 +80,7 @@ export function FrameworkBreakdownChart({
                 labelLine={false}
                 label={({ framework, score }) => `${framework}: ${score}%`}
                 outerRadius={80}
-                fill="#8884d8"
+                fill="#8b5cf64d8"
                 dataKey="score"
               >
                 {enhancedData.map((entry, index) => (

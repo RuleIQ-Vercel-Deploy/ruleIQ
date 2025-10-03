@@ -44,8 +44,6 @@ export default function CheckoutPage() {
   };
 
   const handleError = (error: string) => {
-    // TODO: Replace with proper logging
-    // // TODO: Replace with proper logging
   };
 
   return (

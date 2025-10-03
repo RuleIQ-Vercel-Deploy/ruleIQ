@@ -402,7 +402,6 @@ export const useAssessmentStore = create<AssessmentState>()(
             // For now, we'll trust the input data and just set it
             set({ assessments }, false, 'setAssessments');
           } catch (error) {
-            // TODO: Replace with proper logging
             set({ assessments }, false, 'setAssessments');
           }
         },
@@ -418,7 +417,6 @@ export const useAssessmentStore = create<AssessmentState>()(
               'addAssessment',
             );
           } catch (error) {
-            // TODO: Replace with proper logging
             set(
               (state) => ({
                 assessments: [assessment, ...state.assessments],
@@ -434,7 +432,6 @@ export const useAssessmentStore = create<AssessmentState>()(
             safeValidate(LoadingStateSchema, loading, 'setLoading');
             set({ isLoading: loading }, false, 'setLoading');
           } catch (error) {
-            // TODO: Replace with proper logging
             set({ isLoading: loading }, false, 'setLoading');
           }
         },
@@ -443,9 +440,7 @@ export const useAssessmentStore = create<AssessmentState>()(
           try {
             safeValidate(FrameworksArraySchema, frameworks, 'setFrameworks');
             // Note: frameworks are not part of this store, but adding for test compatibility
-            // TODO: Replace with proper logging
           } catch (error) {
-            // TODO: Replace with proper logging
           }
         },
 

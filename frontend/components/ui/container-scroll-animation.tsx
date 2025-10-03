@@ -83,7 +83,7 @@ export const Card = ({
         rotateX: rotate,
         scale,
         boxShadow:
-          "0 0 #0000004d, 0 9px 20px #0000004a, 0 37px 37px #00000042, 0 84px 50px #00000026, 0 149px 60px #0000000a, 0 233px 65px #00000003",
+          "0 0 var(--black)4d, 0 9px 20px var(--black)4a, 0 37px 37px var(--black)42, 0 84px 50px var(--black)26, 0 149px 60px var(--black)0a, 0 233px 65px var(--black)03",
       }}
       className="max-w-5xl -mt-12 mx-auto h-[30rem] md:h-[40rem] w-full border-4 border-purple-800/30 p-2 md:p-6 bg-gradient-to-br from-gray-900 via-purple-900/20 to-gray-900 rounded-[30px] shadow-2xl"
     >

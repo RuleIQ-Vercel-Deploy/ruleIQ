@@ -1,0 +1,59 @@
+{
+  "status": "FAIL",
+  "findings": [
+    {
+      "file": "/home/omar/Documents/ruleIQ/frontend/app/(requirements)/layout.tsx",
+      "rule": "no-untokenized-hex",
+      "message": "Found inline color #faf not in style_rules.json",
+      "severity": "FAIL"
+    },
+    {
+      "file": "/home/omar/Documents/ruleIQ/frontend/app/(requirements)/layout.tsx",
+      "rule": "no-untokenized-hex",
+      "message": "Found inline color #a78 not in style_rules.json",
+      "severity": "FAIL"
+    },
+    {
+      "file": "/home/omar/Documents/ruleIQ/frontend/app/(requirements)/layout.tsx",
+      "rule": "no-untokenized-hex",
+      "message": "Found inline color #8b5 not in style_rules.json",
+      "severity": "FAIL"
+    },
+    {
+      "file": "/home/omar/Documents/ruleIQ/frontend/app/(requirements)/layout.tsx",
+      "rule": "no-untokenized-hex",
+      "message": "Found inline color #7c3 not in style_rules.json",
+      "severity": "FAIL"
+    },
+    {
+      "file": "/home/omar/Documents/ruleIQ/frontend/app/(requirements)/layout.tsx",
+      "rule": "no-untokenized-hex",
+      "message": "Found inline color #c0c not in style_rules.json",
+      "severity": "FAIL"
+    },
+    {
+      "file": "/home/omar/Documents/ruleIQ/frontend/app/(requirements)/layout.tsx",
+      "rule": "no-untokenized-hex",
+      "message": "Found inline color #9ca not in style_rules.json",
+      "severity": "FAIL"
+    },
+    {
+      "file": "/home/omar/Documents/ruleIQ/frontend/app/(requirements)/layout.tsx",
+      "rule": "no-untokenized-hex",
+      "message": "Found inline color #e5e not in style_rules.json",
+      "severity": "FAIL"
+    },
+    {
+      "file": "/home/omar/Documents/ruleIQ/frontend/app/(requirements)/layout.tsx",
+      "rule": "no-untokenized-hex",
+      "message": "Found inline color #fff not in style_rules.json",
+      "severity": "FAIL"
+    },
+    {
+      "file": "/home/omar/Documents/ruleIQ/frontend/app/(requirements)/layout.tsx",
+      "rule": "no-untokenized-hex",
+      "message": "Found inline color #000 not in style_rules.json",
+      "severity": "FAIL"
+    }
+  ]
+}

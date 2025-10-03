@@ -308,9 +308,7 @@ class AISelfReviewService {
         original_response: request.original_response,
       };
     } catch (error) {
-      // TODO: Replace with proper logging
 
-      // // TODO: Replace with proper logging
       throw new Error('Unable to perform self-review at this time. Please try again later.');
     }
   }
@@ -371,9 +369,7 @@ class AISelfReviewService {
         recommendation: 'use_as_is',
       };
     } catch (error) {
-      // TODO: Replace with proper logging
 
-      // // TODO: Replace with proper logging
       return {
         confidence_score: 7.0,
         confidence_factors: ['Unable to verify at this time'],
@@ -415,9 +411,7 @@ class AISelfReviewService {
         user_satisfaction_with_reviews: 8.4,
       };
     } catch (error) {
-      // TODO: Replace with proper logging
 
-      // // TODO: Replace with proper logging
       throw new Error('Unable to retrieve self-review metrics at this time.');
     }
   }
@@ -443,11 +437,8 @@ class AISelfReviewService {
           ...feedback,
         });
       } else {
-        // TODO: Replace with proper logging
       }
     } catch (error) {
-      // TODO: Replace with proper logging
-      // // TODO: Replace with proper logging
       // Non-blocking - don't throw error for feedback submission
     }
   }

@@ -42,16 +42,16 @@ import type { AssessmentResultsResponse } from '@/types/freemium';
 
 // Neural Purple theme colors
 const THEME_COLORS = {
-  primary: '#6366f1',
-  secondary: '#8b5cf6',
-  accent: '#a855f7',
-  success: '#10b981',
-  warning: '#f59e0b',
-  danger: '#ef4444',
-  text: '#1e293b',
-  textLight: '#64748b',
-  background: '#f8fafc',
-  white: '#ffffff'
+  primary: '#8b5cf66f1',
+  secondary: '#8b5cf6cf6',
+  accent: '#8b5cf65f7',
+  success: '#8b5cf6981',
+  warning: '#8b5cf6e0b',
+  danger: '#8b5cf6444',
+  text: '#8b5cf693b',
+  textLight: '#8b5cf648b',
+  background: '#8b5cf6afc',
+  white: '#fffffffff'
 };
 
 // Type-safe UI option interface to clearly separate UI concerns from export concerns

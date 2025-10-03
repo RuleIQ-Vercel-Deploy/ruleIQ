@@ -18,15 +18,39 @@ logger = logging.getLogger(__name__)
 class Neo4jGraphRAGService:
     """
     Production-ready Neo4j service for compliance intelligence with GraphRAG capabilities
+
+    All Neo4j credentials must be provided via environment variables (NEO4J_URI, NEO4J_USERNAME,
+    NEO4J_PASSWORD). The service will fail to initialize if required credentials are not set.
+    Use Doppler for production: doppler run -- python main.py
     """
 
     def __init__(self) ->None:
         self.driver: Optional[Driver] = None
-        self.uri = os.getenv('NEO4J_URI', 'neo4j+s://12e71bc4.databases.neo4j.io')
-        self.username = os.getenv('NEO4J_USERNAME', 'neo4j')
-        self.password = os.getenv('NEO4J_PASSWORD', 'ruleiq123')
+        self.uri = os.getenv('NEO4J_URI')
+        self.username = os.getenv('NEO4J_USERNAME')
+        self.password = os.getenv('NEO4J_PASSWORD')
         self.database = os.getenv('NEO4J_DATABASE', 'neo4j')
         self.executor = ThreadPoolExecutor(max_workers=10)
+
+        # Validate required environment variables
+        if not self.uri:
+            raise ValueError(
+                "NEO4J_URI environment variable is required. "
+                "Set it in your environment or use Doppler: doppler run -- python main.py"
+            )
+        if not self.username:
+            raise ValueError(
+                "NEO4J_USERNAME environment variable is required. "
+                "Set it in your environment or use Doppler: doppler run -- python main.py"
+            )
+        if not self.password:
+            raise ValueError(
+                "NEO4J_PASSWORD environment variable is required. "
+                "Set it in your environment or use Doppler: doppler run -- python main.py. "
+                "NEVER use default passwords in production."
+            )
+
+        logger.info(f"Neo4j service initialized with URI: {self.uri}")
 
     async def initialize(self) ->bool:
         """Initialize Neo4j connection and verify schema"""

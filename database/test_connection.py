@@ -102,6 +102,11 @@ class TestDatabaseManager:
         """Ensure the test database exists."""
         db_url = self.get_test_db_url()
 
+        # Skip database creation for Neon (managed service)
+        if 'neon.tech' in db_url:
+            logger.info("✓ Using Neon managed database - skipping database creation check")
+            return True
+
         # Parse connection parameters
         if 'postgresql' in db_url:
             # Extract components from URL

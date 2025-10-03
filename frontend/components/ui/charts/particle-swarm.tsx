@@ -34,17 +34,17 @@ export const ParticleSwarmChart = () => {
                 distance: 140,
                 links: {
                   opacity: 0.5,
-                  color: '#C0C0C0',
+                  color: 'var(--silver-400)',
                 },
               },
             },
           },
           particles: {
             color: {
-              value: ['#8B5CF6', '#A855F7', '#C084FC', '#C0C0C0'],
+              value: ['var(--purple-500)', 'var(--purple-500)', 'var(--purple-400)', 'var(--silver-400)'],
             },
             links: {
-              color: '#8B5CF6',
+              color: 'var(--purple-500)',
               distance: 150,
               enable: true,
               opacity: 0.3,

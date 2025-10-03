@@ -3,7 +3,6 @@ import { mockApiResponses, createErrorResponse } from './api-responses';
 
 export const createUltimateApiClient = () => ({
   get: vi.fn().mockImplementation(async (url: string, options = {}) => {
-    // TODO: Replace with proper logging
     // Handle authentication endpoints
     if (url.includes('/auth/me')) {
       return mockApiResponses.login;
@@ -37,7 +36,6 @@ export const createUltimateApiClient = () => ({
   }),
 
   post: vi.fn().mockImplementation(async (url: string, data: unknown, options = {}) => {
-    // TODO: Replace with proper logging
     // Handle login
     if (url.includes('/auth/login')) {
       const loginData = data as { email: string; password: string };
@@ -114,7 +112,6 @@ export const createUltimateApiClient = () => ({
   }),
 
   put: vi.fn().mockImplementation(async (url: string, data: unknown, options = {}) => {
-    // TODO: Replace with proper logging
     // Handle specific assessment updates
     if (url.includes('/assessments/assess-123')) {
       return mockApiResponses.assessment('assess-123');
@@ -124,7 +121,6 @@ export const createUltimateApiClient = () => ({
   }),
 
   patch: vi.fn().mockImplementation(async (url: string, data: unknown, options = {}) => {
-    // TODO: Replace with proper logging
     // Handle evidence updates
     if (url.includes('/evidence/')) {
       const evidenceUpdateData = data as { status?: string; [key: string]: any };
@@ -141,7 +137,6 @@ export const createUltimateApiClient = () => ({
   }),
 
   delete: vi.fn().mockImplementation(async (url: string, options = {}) => {
-    // TODO: Replace with proper logging
     return { data: { success: true } };
   }),
 

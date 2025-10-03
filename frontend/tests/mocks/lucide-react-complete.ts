@@ -139,7 +139,6 @@ export const LucideProxy = new Proxy(LucideIconMocks, {
       return target[prop as keyof typeof target];
     }
     // Create a mock for any missing icon on the fly
-    // TODO: Replace with proper logging
     return createIconMock(String(prop));
   },
 });

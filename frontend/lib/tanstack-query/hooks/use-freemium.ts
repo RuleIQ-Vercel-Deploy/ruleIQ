@@ -27,8 +27,6 @@ export const useFreemiumEmailCapture = () => {
       router.push(`/freemium/assessment?token=${response.token}`);
     },
     onError: () => {
-      // TODO: Replace with proper logging
-      // // TODO: Replace with proper logging
     },
   });
 };
@@ -92,9 +90,7 @@ export const useFreemiumAnswerQuestion = () => {
       });
     },
     onError: (error: any) => {
-      // TODO: Replace with proper logging
 
-      // // TODO: Replace with proper logging
 
       // Handle session expiration
       if (error?.message?.includes('expired')) {
@@ -150,7 +146,6 @@ export const useFreemiumConversionTracking = () => {
     },
     onError: () => {
       // Conversion tracking failures should not break UX
-      // TODO: Replace with proper logging
     },
     // Don't show loading states for tracking
     mutationKey: ['freemium-tracking'],

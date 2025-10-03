@@ -1,24 +1,88 @@
 # Secret Handling Guardrails
 
-This document explains the day-to-day guardrails that keep `the-bmad-experiment` free from
-credential leaks after the cleanup.
+This document explains the day-to-day guardrails that keep RuleIQ free from
+credential leaks and security vulnerabilities.
+
+## Required Environment Variables
+
+The following environment variables are **REQUIRED** and the application will fail to start if they are not set:
+
+### Database Credentials
+- `DATABASE_URL` - PostgreSQL connection string
+- `REDIS_URL` - Redis connection string
+- `NEO4J_URI` - Neo4j database URI
+- `NEO4J_USERNAME` - Neo4j username
+- `NEO4J_PASSWORD` - Neo4j password ⚠️ **NEVER use default passwords**
+
+### Authentication & Encryption
+- `JWT_SECRET` - JWT token signing key
+- `SECRET_KEY` - Application secret key
+- `FERNET_KEY` - Encryption key for sensitive data
+
+### AI Services (at least one required)
+- `OPENAI_API_KEY` - OpenAI API key
+- `ANTHROPIC_API_KEY` - Anthropic API key (optional)
+- `GOOGLE_AI_API_KEY` - Google AI API key (optional)
+
+### Validation
+Run `python scripts/validate_required_env_vars.py` to check your configuration.
 
 ## Local Development
 - Install pre-commit once by running `pip install pre-commit && pre-commit install`.
 - Commit workflows automatically run `scripts/ci/scan_secrets.py`. You can run it on demand via
   `python3 scripts/ci/scan_secrets.py`.
-- Store real secrets in Doppler, environment managers, or local `.env` files that are **never**
-  committed. Use the provided templates (`env.template`, `env.comprehensive.template`) with
-  placeholder values only.
+- Store real secrets in Doppler, environment managers, or local `.env.local` files that are **never**
+  committed. Use the provided templates (`env.template`) with placeholder values only.
 - Replace any static tokens in tests/fixtures with obvious placeholders (e.g., `mock-access`,
   `dummy-refresh`). If a test genuinely requires a long-lived credential, fetch it from the runtime
   environment inside the test setup instead of hard coding it.
 
 ## CI Expectations
-- The GitHub Actions workflow executes the same scanner early in the job to prevent accidental
-  leaks from reaching deploy stages.
-- Failing scans must be remediated by redacting the value or documenting intentional placeholders
-  in the scanner.
+- The GitHub Actions workflow (`.github/workflows/security.yml`) executes multiple security scans:
+  - **Custom Secret Scanner** (`scripts/ci/scan_secrets.py`) - **BLOCKING**
+  - **Gitleaks** - Detects secrets in git history - **BLOCKING**
+  - **Default Password Detection** - Checks for `os.getenv()` with password defaults - **BLOCKING**
+- These scans will **FAIL THE BUILD** if violations are detected
+- No code with hardcoded secrets or default passwords can be merged
+- Pre-commit hooks run the same scanner locally to catch issues before push
+
+## Common Violations and Fixes
+
+### ❌ Default Password in os.getenv()
+```python
+# BAD - Application runs with insecure default
+password = os.getenv('NEO4J_PASSWORD', 'ruleiq123')
+```
+
+```python
+# GOOD - Application fails fast with clear error
+password = os.getenv('NEO4J_PASSWORD')
+if not password:
+    raise ValueError(
+        "NEO4J_PASSWORD environment variable is required. "
+        "Set it via Doppler or environment: doppler run -- python main.py"
+    )
+```
+
+### ❌ Hardcoded Credentials
+```python
+# BAD
+self.password = 'ruleiq123'
+```
+
+```python
+# GOOD
+self.password = os.getenv('NEO4J_PASSWORD')
+if not self.password:
+    raise ValueError("NEO4J_PASSWORD is required")
+```
+
+### ✅ Test Files Exception
+Test files (in `tests/` directory) are allowed to have hardcoded credentials:
+```python
+# ACCEPTABLE in tests/test_something.py
+test_password = "test_password_123"
+```
 
 ## Responding to Findings
 1. Investigate the file/location reported by the scanner.
@@ -31,10 +95,38 @@ credential leaks after the cleanup.
      repository.
 4. Re-run `python3 scripts/ci/scan_secrets.py` to confirm a clean result before committing.
 
-## Future Remediation & History Rewrite
-- After all rotations are complete, use the forthcoming `scripts/tools/purge_secrets.sh` (or the
-  documented `git filter-repo` commands) to rewrite history and excise leaked blobs before
-  force-pushing `the-bmad-experiment`.
-- Capture the new secret material in Doppler/infra managers and share updates with downstream teams.
+## Doppler Setup (Recommended)
 
-_Last updated: $(date +%Y-%m-%d)_
+Doppler is the recommended way to manage secrets for RuleIQ.
+
+### Installation
+```bash
+# macOS
+brew install doppler
+
+# Linux
+curl -Ls https://cli.doppler.com/install.sh | sh
+```
+
+### Configuration
+```bash
+# Login to Doppler
+doppler login
+
+# Setup project
+doppler setup
+
+# Run application with Doppler
+doppler run -- python main.py
+```
+
+### Verify Configuration
+```bash
+# Check what secrets Doppler will provide
+doppler secrets
+
+# Validate all required variables are set
+doppler run -- python scripts/validate_required_env_vars.py
+```
+
+_Last updated: 2025-09-30_

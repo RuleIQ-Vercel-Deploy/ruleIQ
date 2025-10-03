@@ -34,9 +34,7 @@ export default function AssessmentsPage() {
       });
       setAssessments(response.items);
     } catch (err) {
-      // TODO: Replace with proper logging
 
-      // // TODO: Replace with proper logging
       setError(err instanceof Error ? err.message : 'Failed to load assessments');
     } finally {
       setLoading(false);

@@ -28,15 +28,16 @@ class Neo4jConnection:
         if not hasattr(self, '_initialized'):
             logger.info('[Neo4jConnection] Fresh initialization...')
             logger.info('[Neo4jConnection] Getting env vars...')
-            logger.info('[Neo4jConnection] NEO4J_URI from env: %s' % os.
-                getenv('NEO4J_URI'))
-            logger.info('[Neo4jConnection] NEO4J_USER from env: %s' % os.
-                getenv('NEO4J_USER'))
-            logger.info('[Neo4jConnection] NEO4J_PASSWORD from env: %s' %
-                os.getenv('NEO4J_PASSWORD'))
-            self.uri = os.getenv('NEO4J_URI', 'bolt://localhost:7688')
-            self.user = os.getenv('NEO4J_USER', 'neo4j')
-            self.password = os.getenv('NEO4J_PASSWORD', 'ruleiq123')
+            self.uri = os.getenv('NEO4J_URI')
+            self.user = os.getenv('NEO4J_USER')
+            self.password = os.getenv('NEO4J_PASSWORD')
+
+            if not self.uri or not self.user or not self.password:
+                logger.error("Neo4j credentials not found. Required: NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD")
+                logger.error("This is a test/evaluation tool - will use mock driver")
+                self._driver = None
+                self._initialized = True
+                return
             logger.info('[Neo4jConnection] After assignment:')
             logger.info('[Neo4jConnection]   self.uri = %s' % self.uri)
             logger.info('[Neo4jConnection]   self.user = %s' % self.user)
@@ -100,9 +101,14 @@ def setup_neo4j_container() ->docker.models.containers.Container:
 
 def wait_for_neo4j(max_retries: int=30) ->bool:
     """Wait for Neo4j to be ready."""
-    uri = os.getenv('NEO4J_URI', 'bolt://localhost:7688')
-    user = os.getenv('NEO4J_USER', 'neo4j')
-    password = os.getenv('NEO4J_PASSWORD', 'ruleiq123')
+    uri = os.getenv('NEO4J_URI')
+    user = os.getenv('NEO4J_USER')
+    password = os.getenv('NEO4J_PASSWORD')
+
+    if not uri or not user or not password:
+        logger.error("Neo4j credentials not configured. Cannot wait for Neo4j.")
+        return False
+
     for i in range(max_retries):
         try:
             driver = GraphDatabase.driver(uri, auth=(user, password))

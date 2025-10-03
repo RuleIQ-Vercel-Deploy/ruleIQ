@@ -11,7 +11,7 @@ interface MiniChartProps {
 export function MiniChart({
   data,
   type = 'line',
-  color = '#FFD700',
+  color = 'var(--purple-400)',
   height = 40,
   className = '',
 }: MiniChartProps) {

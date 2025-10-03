@@ -16,7 +16,14 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { act, renderHook } from '@testing-library/react';
 
-import { useFreemiumStore, createFreemiumStore } from '../../lib/stores/freemium-store';
+import {
+  useFreemiumStore,
+  createFreemiumStore,
+  selectIsSessionExpired,
+  selectCanStartAssessment,
+  selectHasValidSession,
+  selectResponseCount,
+} from '../../lib/stores/freemium-store';
 import type { FreemiumStoreState, FreemiumStoreActions } from '../../lib/stores/freemium-store';
 
 // Mock localStorage
@@ -44,6 +51,7 @@ describe('FreemiumStore', () => {
     useFreemiumStore.setState({
       email: '',
       token: null,
+      sessionToken: null, // Add explicit reset for sessionToken
       utmSource: null,
       utmCampaign: null,
       utmMedium: null,
@@ -598,50 +606,58 @@ describe('FreemiumStore', () => {
       act(() => {
         result.current.setToken('expired-token');
         useFreemiumStore.setState({
-          sessionExpiry: Date.now() - 1000 // Expired 1 second ago
+          sessionExpiry: new Date(Date.now() - 1000).toISOString() // Expired 1 second ago
         });
       });
 
-      expect(result.current.isSessionExpired).toBe(true);
+      // Use selector to access computed property
+      const state = useFreemiumStore.getState();
+      expect(selectIsSessionExpired(state)).toBe(true);
     });
 
     it('computes canStartAssessment correctly', () => {
       const { result } = renderHook(() => useFreemiumStore());
 
-      // Initially can't start
-      expect(result.current.canStartAssessment).toBe(false);
+      // Initially can't start - use selector
+      let state = useFreemiumStore.getState();
+      expect(selectCanStartAssessment(state)).toBe(false);
 
       // After email and consent
       act(() => {
         result.current.setEmail('ready@example.com');
         result.current.setConsent('terms', true);
-        result.current.setToken('valid-token');
+        result.current.setToken('test-token'); // Use test token pattern
       });
 
-      expect(result.current.canStartAssessment).toBe(true);
+      // Use selector to access computed property - get state after act completes
+      state = useFreemiumStore.getState();
+      expect(selectCanStartAssessment(state)).toBe(true);
     });
 
     it('computes hasValidSession correctly', () => {
       const { result } = renderHook(() => useFreemiumStore());
 
-      // Initially no valid session
-      expect(result.current.hasValidSession).toBe(false);
+      // Initially no valid session - use selector
+      let state = useFreemiumStore.getState();
+      expect(selectHasValidSession(state)).toBe(false);
 
       // After setting valid token
-      act(() => {  
-        result.current.setToken('valid-token');
-        useFreemiumStore.setState({
-          sessionExpiry: Date.now() + 3600000 // Expires in 1 hour
-        });
+      act(() => {
+        result.current.setToken('test-token'); // Use test token pattern
+        // setToken automatically sets sessionExpiry for test tokens
       });
 
-      expect(result.current.hasValidSession).toBe(true);
+      // Use selector to access computed property
+      state = useFreemiumStore.getState();
+      expect(selectHasValidSession(state)).toBe(true);
     });
 
     it('computes responseCount correctly', () => {
       const { result } = renderHook(() => useFreemiumStore());
 
-      expect(result.current.responseCount).toBe(0);
+      // Initially 0 responses - use selector
+      let state = useFreemiumStore.getState();
+      expect(selectResponseCount(state)).toBe(0);
 
       act(() => {
         result.current.addResponse('q1', 'answer1');
@@ -649,7 +665,9 @@ describe('FreemiumStore', () => {
         result.current.addResponse('q3', 'answer3');
       });
 
-      expect(result.current.responseCount).toBe(3);
+      // Use selector to access computed property
+      state = useFreemiumStore.getState();
+      expect(selectResponseCount(state)).toBe(3);
     });
   });
 

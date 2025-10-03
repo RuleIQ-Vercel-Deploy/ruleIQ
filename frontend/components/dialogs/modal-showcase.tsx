@@ -27,13 +27,11 @@ export function ModalShowcase() {
     setTimeout(() => {
       setIsLoading(false);
       setFeedback(`User "${formState.name}" with email "${formState.email}" has been added.`);
-      // TODO: Replace with proper logging
     }, 1500);
   };
 
   const handleConfirmAction = () => {
     setFeedback('The item has been successfully deleted.');
-    // TODO: Replace with proper logging
   };
 
   return (
@@ -45,7 +43,7 @@ export function ModalShowcase() {
           style={{
             backgroundColor: 'rgba(40, 167, 69, 0.1)',
             borderColor: 'rgba(40, 167, 69, 0.3)',
-            color: '#28A745',
+            color: '#8b5cf6745',
           }}
         >
           {feedback}
@@ -55,8 +53,8 @@ export function ModalShowcase() {
       {/* Confirm Dialog Showcase */}
       <Card className="ruleiq-card">
         <CardHeader>
-          <CardTitle style={{ color: '#F0EAD6' }}>Confirm Dialog</CardTitle>
-          <CardDescription style={{ color: '#6C757D' }}>
+          <CardTitle style={{ color: '#8b5cf6AD6' }}>Confirm Dialog</CardTitle>
+          <CardDescription style={{ color: '#8b5cf657D' }}>
             For actions that require user confirmation, especially destructive ones.
           </CardDescription>
         </CardHeader>
@@ -92,8 +90,8 @@ export function ModalShowcase() {
       {/* Form Modal Showcase */}
       <Card className="ruleiq-card">
         <CardHeader>
-          <CardTitle style={{ color: '#F0EAD6' }}>Form Modal</CardTitle>
-          <CardDescription style={{ color: '#6C757D' }}>
+          <CardTitle style={{ color: '#8b5cf6AD6' }}>Form Modal</CardTitle>
+          <CardDescription style={{ color: '#8b5cf657D' }}>
             For capturing user input without navigating away from the current page.
           </CardDescription>
         </CardHeader>
@@ -137,13 +135,13 @@ export function ModalShowcase() {
       {/* Accessibility & Focus Management */}
       <Card className="ruleiq-card">
         <CardHeader>
-          <CardTitle style={{ color: '#F0EAD6' }}>Accessibility & Focus Management</CardTitle>
-          <CardDescription style={{ color: '#6C757D' }}>
+          <CardTitle style={{ color: '#8b5cf6AD6' }}>Accessibility & Focus Management</CardTitle>
+          <CardDescription style={{ color: '#8b5cf657D' }}>
             The modal system is built with accessibility in mind, ensuring a seamless user
             experience.
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-2 text-sm" style={{ color: '#F0EAD6' }}>
+        <CardContent className="space-y-2 text-sm" style={{ color: '#8b5cf6AD6' }}>
           <p>
             <strong>Focus Trapping:</strong> When a modal is opened, focus is automatically moved
             inside and contained within it. You can use the{' '}

@@ -116,9 +116,7 @@ export function safeValidate<T>(schema: z.ZodSchema<T>, data: unknown, context: 
     return schema.parse(data);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      // TODO: Replace with proper logging
 
-      // // TODO: Replace with proper logging
       // In development, throw the error. In production, you might want to handle it gracefully
       if (process.env.NODE_ENV === 'development') {
         throw new Error(

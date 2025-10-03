@@ -58,7 +58,6 @@ const mockResponses = {
 // Create mock API client
 export const createMockApiClient = () => ({
   get: vi.fn().mockImplementation((url, options = {}) => {
-    // TODO: Replace with proper logging
     // Handle different endpoints
     if (url.includes('/auth/me')) {
       return Promise.resolve(mockResponses['/auth/me']);
@@ -78,7 +77,6 @@ export const createMockApiClient = () => ({
   }),
 
   post: vi.fn().mockImplementation((url, data, options = {}) => {
-    // TODO: Replace with proper logging
     if (url.includes('/auth/login')) {
       // Check for invalid credentials
       if (data.email === 'invalid@example.com') {
@@ -108,17 +106,14 @@ export const createMockApiClient = () => ({
   }),
 
   put: vi.fn().mockImplementation((url, data, options = {}) => {
-    // TODO: Replace with proper logging
     return Promise.resolve({ success: true, ...data });
   }),
 
   delete: vi.fn().mockImplementation((url, options = {}) => {
-    // TODO: Replace with proper logging
     return Promise.resolve({ success: true });
   }),
 
   request: vi.fn().mockImplementation((method, url, options = {}) => {
-    // TODO: Replace with proper logging
     const mockClient = createMockApiClient();
     switch (method.toLowerCase()) {
       case 'get':

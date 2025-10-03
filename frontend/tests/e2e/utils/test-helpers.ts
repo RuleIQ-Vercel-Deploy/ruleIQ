@@ -122,7 +122,6 @@ export class TestHelpers {
   async checkAccessibility() {
     // This would integrate with axe-core for accessibility testing
     // Implementation depends on your accessibility testing setup
-    // TODO: Replace with proper logging
   }
 
   /**

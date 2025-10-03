@@ -9,6 +9,7 @@
 ![Next.js](https://img.shields.io/badge/Next.js-15_+_Turbopack-black)
 ![Tests](https://img.shields.io/badge/Tests-1884+-brightgreen)
 ![AI Agents](https://img.shields.io/badge/AI_Agents-IQ_Agent_+_RAG-2C7A7B)
+![TODO Policy](https://img.shields.io/badge/TODO-Policy%20Enforced-success)
 
 [![Backend Tests](https://github.com/yourusername/ruleiq/workflows/Backend%20Tests/badge.svg)](https://github.com/yourusername/ruleiq/actions/workflows/backend-tests.yml)
 [![Frontend Tests](https://github.com/yourusername/ruleiq/workflows/Frontend%20Tests/badge.svg)](https://github.com/yourusername/ruleiq/actions/workflows/frontend-tests.yml)
@@ -16,6 +17,50 @@
 [![Flaky Test Detection](https://github.com/yourusername/ruleiq/workflows/Flaky%20Test%20Detection/badge.svg)](https://github.com/yourusername/ruleiq/actions/workflows/flaky-test-detection.yml)
 
 </div>
+
+## 🔒 Security & Environment Setup
+
+**⚠️ IMPORTANT: This application requires proper environment configuration and will not start with default credentials.**
+
+### Quick Setup
+
+1. **Copy the environment template:**
+   ```bash
+   cp env.template .env.local
+   ```
+
+2. **Configure your credentials:**
+   - Edit `.env.local` with your actual credentials
+   - **NEVER use default passwords** (e.g., 'password', 'ruleiq123')
+   - See [Environment Setup Guide](docs/ENVIRONMENT_SETUP.md) for detailed instructions
+
+3. **Validate your configuration:**
+   ```bash
+   python scripts/validate_required_env_vars.py
+   ```
+
+4. **Run the application:**
+   ```bash
+   # Option 1: Using Doppler (recommended for teams)
+   doppler run -- python main.py
+
+   # Option 2: Using .env.local
+   python main.py
+   ```
+
+### Required Credentials
+
+- **Database**: PostgreSQL, Redis, Neo4j (AuraDB)
+- **Authentication**: JWT secrets, encryption keys
+- **AI Services**: OpenAI API key (required), Anthropic/Google AI (optional)
+
+See [docs/ENVIRONMENT_SETUP.md](docs/ENVIRONMENT_SETUP.md) for complete setup instructions.
+
+### Security Resources
+
+- 📖 [Secret Handling Guide](docs/security/SECRET_HANDLING_GUIDE.md)
+- 🔄 [Secret Rotation Plan](docs/security/SECRET_ROTATION_PLAN.md)
+- ✅ [Environment Validation Script](scripts/validate_required_env_vars.py)
 
 ## 🚀 Overview
 
@@ -192,6 +237,8 @@ The start script will:
 
 #### Backend Setup
 
+**Prerequisites:** Complete the [Security & Environment Setup](#-security--environment-setup) section above before proceeding.
+
 ```bash
 # Create virtual environment
 python -m venv .venv
@@ -200,14 +247,14 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 # Install dependencies (auto-detects missing packages)
 pip install -r requirements.txt
 
-# Set up environment variables
-# 🔐 SECRETS MANAGEMENT (PRODUCTION-READY)
+# Set up environment variables (see Security & Environment Setup above)
+# ⚠️ Required: Configure .env.local or use Doppler before running
+
 # Option 1: Doppler (Recommended for production)
 doppler run -- uvicorn api.main:app --host 0.0.0.0 --port 8000    # All secrets auto-injected from Doppler
 
-# Option 2: Local development with .env
-cp .env.template .env
-# Edit .env with your configuration including:
+# Option 2: Local development with .env.local
+# Already configured in Security & Environment Setup section
 # - DATABASE_URL (Neon PostgreSQL)
 # - NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD
 # - GOOGLE_AI_API_KEY (for Gemini AI)
@@ -353,6 +400,8 @@ python services/rag_self_critic.py critique --query "Complex compliance scenario
 - [API Documentation](http://localhost:8000/docs) - Interactive API documentation
 - [Testing Guide](docs/TESTING_GUIDE.md) - Comprehensive testing strategies
 - [Security Setup](docs/SECURITY_PERFORMANCE_SETUP.md) - Security best practices
+- [**TODO Management Guide**](docs/TODO_MANAGEMENT_GUIDE.md) - Technical debt tracking and policy
+- [Contributing Guidelines](CONTRIBUTING.md) - How to contribute
 
 ### Frontend Documentation
 
@@ -451,6 +500,37 @@ NEXT_PUBLIC_USE_NEW_THEME=true pnpm dev
 ## 🤝 Contributing
 
 We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+
+### Quick Guidelines
+
+- Follow code style guidelines (PEP 8 for Python, Airbnb for TypeScript)
+- Write tests for new features
+- Maintain or improve test coverage (target: 80%+)
+- **All TODOs must reference GitHub issues**: `TODO(#123): Description`
+- Run pre-commit hooks: `pre-commit install`
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
+
+### Security Requirements
+
+- Never commit `.env` files or real credentials
+- Run `python scripts/ci/scan_secrets.py` before committing
+- Pre-commit hooks will automatically scan for secrets
+- All PRs must pass security scans (blocking)
+
+### TODO Policy
+
+All TODO/FIXME/HACK comments must reference GitHub issues to track technical debt:
+
+```python
+# ✅ GOOD: References an issue
+# TODO(#123): Implement caching for this endpoint
+
+# ❌ BAD: No issue reference
+# TODO: Implement caching
+```
+
+Pre-commit hooks enforce this policy for CRITICAL and HIGH severity markers. See [TODO Management Guide](docs/TODO_MANAGEMENT_GUIDE.md) for details.
 
 ### Development Workflow
 

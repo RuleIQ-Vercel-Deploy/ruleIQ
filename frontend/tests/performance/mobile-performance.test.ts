@@ -346,7 +346,6 @@ test.describe('Mobile Performance Tests', () => {
         await page.evaluateOnNewDocument(() => {
           if ('fonts' in document) {
             (document as any).fonts.addEventListener('loadingdone', (event: any) => {
-              // TODO: Replace with proper logging
             });
           }
         });
@@ -368,7 +367,6 @@ test.describe('Mobile Performance Tests', () => {
             }
           });
         });
-        // TODO: Replace with proper logging
       });
 
       test('Mobile battery usage indicators', async ({ page }) => {

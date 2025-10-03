@@ -30,9 +30,7 @@ export function CsrfForm({
     event.preventDefault();
 
     if (!token) {
-      // TODO: Replace with proper logging
 
-      // // TODO: Replace with proper logging
       return;
     }
 
@@ -42,8 +40,6 @@ export function CsrfForm({
     try {
       await onSubmit(formData, token);
     } catch (error) {
-      // TODO: Replace with proper logging
-      // // TODO: Replace with proper logging
     }
   };
 

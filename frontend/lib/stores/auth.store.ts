@@ -346,9 +346,7 @@ export const useAuthStore = create<AuthState>()(
             throw new Error(errorData.detail || 'Password reset request failed');
           }
         } catch (error) {
-          // TODO: Replace with proper logging
 
-          // // TODO: Replace with proper logging
           throw error;
         }
       },

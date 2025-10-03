@@ -98,7 +98,6 @@ function ResultsContent() {
   const handleDownloadResults = () => {
     // This would typically generate a PDF report
     // For now, we'll just track the event
-    // TODO: Replace with proper logging
   };
 
   return (

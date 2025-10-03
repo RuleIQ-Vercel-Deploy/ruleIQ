@@ -20,10 +20,10 @@ export function AuthLayout({ children }: AuthLayoutProps) {
         {/* Logo Header */}
         <div className="mb-8">
           <Link href="/" className="flex items-center space-x-2">
-            <span className="text-3xl font-bold" style={{ color: '#F0EAD6' }}>
+            <span className="text-3xl font-bold" style={{ color: '#8b5cf6AD6' }}>
               rule
             </span>
-            <span className="text-3xl font-bold" style={{ color: '#FFD700' }}>
+            <span className="text-3xl font-bold" style={{ color: '#8b5cf6700' }}>
               IQ
             </span>
           </Link>

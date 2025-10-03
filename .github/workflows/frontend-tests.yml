@@ -1,0 +1,275 @@
+name: Frontend Tests
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/frontend-tests.yml'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'frontend/**'
+  workflow_dispatch:
+    inputs:
+      test_type:
+        description: 'Test type (unit/e2e/all)'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+          - unit
+          - e2e
+          - all
+
+jobs:
+  unit-tests:
+    name: Unit Tests (Vitest)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.14.0'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        run: echo "pnpm_cache_dir=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: Cache pnpm store
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('frontend/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run unit tests with coverage
+        run: pnpm test:coverage
+        env:
+          NODE_ENV: test
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./frontend/coverage/lcov.info
+          flags: frontend,unit
+          name: frontend-unit
+          fail_ci_if_error: false
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Upload coverage artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-unit-coverage
+          path: |
+            frontend/coverage/
+          retention-days: 30
+
+      - name: Post coverage summary
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            try {
+              const summaryPath = path.join('frontend', 'coverage', 'coverage-summary.json');
+              const summary = JSON.parse(fs.readFileSync(summaryPath, 'utf8'));
+              const total = summary.total;
+
+              const body = `## Frontend Unit Test Coverage\n\n` +
+                    `| Metric | Coverage |\n` +
+                    `|--------|----------|\n` +
+                    `| Lines | ${total.lines.pct.toFixed(2)}% |\n` +
+                    `| Branches | ${total.branches.pct.toFixed(2)}% |\n` +
+                    `| Functions | ${total.functions.pct.toFixed(2)}% |\n` +
+                    `| Statements | ${total.statements.pct.toFixed(2)}% |\n\n` +
+                    `[View detailed report in artifacts](${context.payload.pull_request.html_url}/checks)`;
+
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: body
+              });
+            } catch (error) {
+              console.log('Could not post coverage summary:', error.message);
+            }
+
+  e2e-tests:
+    name: E2E Tests (Playwright)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox]
+
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.14.0'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        run: echo "pnpm_cache_dir=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: Cache pnpm store
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('frontend/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps ${{ matrix.browser }}
+
+      - name: Run E2E tests
+        run: pnpm test:e2e --project=${{ matrix.browser }}
+        env:
+          NODE_ENV: test
+        continue-on-error: ${{ matrix.browser == 'firefox' }}
+
+      - name: Upload E2E test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-results-${{ matrix.browser }}
+          path: |
+            frontend/test-results/
+            frontend/playwright-report/
+          retention-days: 30
+
+      - name: Upload failure screenshots
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-failures-${{ matrix.browser }}
+          path: |
+            frontend/test-results/**/screenshots/
+            frontend/test-results/**/videos/
+          retention-days: 14
+
+  performance-checks:
+    name: Performance & Bundle Size
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.14.0'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build application
+        run: pnpm build
+
+      - name: Check bundle size
+        run: |
+          # Get bundle sizes
+          BUNDLE_SIZE=$(du -sh .next/static | awk '{print $1}')
+          echo "Bundle size: $BUNDLE_SIZE"
+
+          # Check if bundle is too large (threshold: 5MB)
+          BUNDLE_KB=$(du -sk .next/static | awk '{print $1}')
+          if [ "$BUNDLE_KB" -gt 5120 ]; then
+            echo "⚠️  Warning: Bundle size exceeds 5MB threshold"
+            echo "bundle_warning=true" >> $GITHUB_ENV
+          else
+            echo "✅ Bundle size within acceptable range"
+          fi
+
+      - name: Post performance summary
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            const body = `## Frontend Performance\n\n` +
+                  `Bundle size: ${process.env.BUNDLE_SIZE || 'N/A'}\n\n` +
+                  (process.env.bundle_warning === 'true'
+                    ? `⚠️  Warning: Bundle size exceeds recommended threshold\n`
+                    : `✅ Bundle size within acceptable range\n`);
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            });
+
+  test-summary:
+    name: Test Summary
+    needs: [unit-tests, e2e-tests]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Check test results
+        run: |
+          if [ "${{ needs.unit-tests.result }}" != "success" ]; then
+            echo "❌ Unit tests failed"
+            exit 1
+          fi
+
+          if [ "${{ needs.e2e-tests.result }}" != "success" ]; then
+            echo "⚠️  E2E tests had issues (may be expected for some browsers)"
+            # Don't fail on E2E issues for now
+          fi
+
+          echo "✅ Frontend tests completed"

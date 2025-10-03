@@ -92,7 +92,6 @@ class PerformanceMonitor {
       // Navigation timing
       this.observeNavigationTiming();
     } catch (error) {
-      // TODO: Replace with proper logging
     }
   }
 
@@ -108,7 +107,6 @@ class PerformanceMonitor {
       observer.observe({ entryTypes: [entryType] });
       this.observers.push(observer);
     } catch (error) {
-      // TODO: Replace with proper logging
     }
   }
 
@@ -166,7 +164,6 @@ class PerformanceMonitor {
 
     // Log performance issues
     if (metric.rating === 'poor') {
-      // TODO: Replace with proper logging
     }
   }
 
@@ -202,7 +199,6 @@ class PerformanceMonitor {
     // For example: Google Analytics, DataDog, New Relic, etc.
 
     if (process.env.NODE_ENV === 'development') {
-      // TODO: Replace with proper logging
     }
 
     // Example: Send to Google Analytics
@@ -230,8 +226,6 @@ class PerformanceMonitor {
       try {
         await fn();
       } catch (error) {
-        // TODO: Replace with proper logging
-        // // TODO: Replace with proper logging
       }
 
       const duration = performance.now() - startTime;

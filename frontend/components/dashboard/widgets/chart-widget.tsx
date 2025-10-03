@@ -36,12 +36,12 @@ interface ChartWidgetProps {
 }
 
 const defaultColors = [
-  '#8B5CF6', // purple-500 - primary
-  '#7C3AED', // purple-600 - secondary
-  '#C084FC', // purple-400 - bright
-  '#A78BFA', // purple-400 - light
-  '#6D28D9', // purple-700 - dark
-  '#5B21B6', // purple-800 - darker
+  '#8b5cf6CF6', // purple-500 - primary
+  '#8b5cf6AED', // purple-600 - secondary
+  '#8b5cf64FC', // purple-400 - bright
+  '#8b5cf6BFA', // purple-400 - light
+  '#8b5cf68D9', // purple-700 - dark
+  '#8b5cf61B6', // purple-800 - darker
 ];
 
 export function ChartWidget({
@@ -62,13 +62,13 @@ export function ChartWidget({
     };
 
     const axisProps = {
-      stroke: '#9CA3AF',
+      stroke: '#8b5cf63AF',
       fontSize: 12,
     };
 
     const gridProps = {
       strokeDasharray: '3 3',
-      stroke: '#E5E7EB',
+      stroke: '#8b5cf67EB',
     };
 
     switch (type) {
@@ -81,7 +81,7 @@ export function ChartWidget({
             <Tooltip
               contentStyle={{
                 backgroundColor: 'white',
-                border: '1px solid #E5E7EB',
+                border: '1px solid #8b5cf67EB',
                 borderRadius: '8px',
               }}
             />
@@ -106,7 +106,7 @@ export function ChartWidget({
             <Tooltip
               contentStyle={{
                 backgroundColor: 'white',
-                border: '1px solid #E5E7EB',
+                border: '1px solid #8b5cf67EB',
                 borderRadius: '8px',
               }}
             />
@@ -124,7 +124,7 @@ export function ChartWidget({
             <Tooltip
               contentStyle={{
                 backgroundColor: 'white',
-                border: '1px solid #E5E7EB',
+                border: '1px solid #8b5cf67EB',
                 borderRadius: '8px',
               }}
             />
@@ -150,7 +150,7 @@ export function ChartWidget({
               labelLine={false}
               label={(entry) => `${entry[dataKey]}%`}
               outerRadius={80}
-              fill="#8884d8"
+              fill="#8b5cf64d8"
               dataKey={dataKey}
             >
               {data.map((_entry, index) => (
@@ -160,7 +160,7 @@ export function ChartWidget({
             <Tooltip
               contentStyle={{
                 backgroundColor: 'white',
-                border: '1px solid #E5E7EB',
+                border: '1px solid #8b5cf67EB',
                 borderRadius: '8px',
               }}
             />

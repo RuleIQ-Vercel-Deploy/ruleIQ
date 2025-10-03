@@ -38,8 +38,8 @@ export function ComplianceDistributionChart({
   ]);
 
   const COLORS = {
-    compliant: '#10B981', // emerald-600 - success
-    'non-compliant': '#EF4444', // red-600 - error
+    compliant: '#8b5cf6981', // emerald-600 - success
+    'non-compliant': '#8b5cf6444', // red-600 - error
   };
 
   const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: any) => {
@@ -81,7 +81,7 @@ export function ComplianceDistributionChart({
               labelLine={false}
               label={renderCustomizedLabel}
               outerRadius={100}
-              fill="#8884d8"
+              fill="#8b5cf64d8"
               dataKey="value"
             >
               {pieData.map((entry, index) => (
@@ -90,10 +90,10 @@ export function ComplianceDistributionChart({
             </Pie>
             <Tooltip
               formatter={(value: number, name: string) => [`${value}%`, name]}
-              labelStyle={{ color: '#333' }}
+              labelStyle={{ color: '#8b5cf6' }}
               contentStyle={{
                 backgroundColor: 'white',
-                border: '1px solid #ccc',
+                border: '1px solid #c0c0c0',
                 borderRadius: '4px',
               }}
             />

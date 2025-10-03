@@ -4,7 +4,6 @@ import { vi } from 'vitest';
 export const createEnhancedApiClient = () => {
   const mockClient = {
     get: vi.fn().mockImplementation((url, options = {}) => {
-      // TODO: Replace with proper logging
       // Handle specific endpoints with proper responses
       if (url.includes('/auth/me')) {
         return Promise.resolve({
@@ -71,7 +70,6 @@ export const createEnhancedApiClient = () => {
     }),
 
     post: vi.fn().mockImplementation((url, data, options = {}) => {
-      // TODO: Replace with proper logging
       if (url.includes('/auth/login')) {
         // Handle invalid credentials
         if (data.email === 'invalid@example.com') {
@@ -145,7 +143,6 @@ export const createEnhancedApiClient = () => {
     }),
 
     put: vi.fn().mockImplementation((url, data, options = {}) => {
-      // TODO: Replace with proper logging
       // Handle specific assessment updates
       if (url.includes('assess-123')) {
         return Promise.resolve({
@@ -163,21 +160,18 @@ export const createEnhancedApiClient = () => {
     }),
 
     patch: vi.fn().mockImplementation((url, data, options = {}) => {
-      // TODO: Replace with proper logging
       return Promise.resolve({
         data: { success: true, ...data },
       });
     }),
 
     delete: vi.fn().mockImplementation((url, options = {}) => {
-      // TODO: Replace with proper logging
       return Promise.resolve({
         data: { success: true },
       });
     }),
 
     request: vi.fn().mockImplementation((method, url, options = {}) => {
-      // TODO: Replace with proper logging
       const client = createEnhancedApiClient();
       switch (method.toLowerCase()) {
         case 'get':

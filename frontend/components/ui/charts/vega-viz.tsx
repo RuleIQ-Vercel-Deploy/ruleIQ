@@ -64,7 +64,7 @@ export const VegaLiteVisualization = () => {
             field: 'category',
             type: 'nominal',
             scale: {
-              range: ['#8B5CF6', '#A855F7', '#C084FC', '#10B981', '#F59E0B']
+              range: ['var(--purple-500)', 'var(--purple-500)', 'var(--purple-400)', 'var(--purple-400)', 'var(--purple-600)']
             },
             legend: { title: 'Category' }
           },
@@ -80,15 +80,15 @@ export const VegaLiteVisualization = () => {
         background: 'transparent',
         config: {
           axis: {
-            gridColor: '#374151',
-            domainColor: '#9CA3AF',
-            tickColor: '#9CA3AF',
-            labelColor: '#9CA3AF',
-            titleColor: '#F3F4F6'
+            gridColor: 'var(--silver-500)',
+            domainColor: 'var(--silver-500)',
+            tickColor: 'var(--silver-500)',
+            labelColor: 'var(--silver-500)',
+            titleColor: 'var(--purple-50)'
           },
           legend: {
-            labelColor: '#9CA3AF',
-            titleColor: '#F3F4F6'
+            labelColor: 'var(--silver-500)',
+            titleColor: 'var(--purple-50)'
           },
           view: {
             stroke: 'transparent'
