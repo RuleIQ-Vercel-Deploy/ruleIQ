@@ -19,7 +19,9 @@ from api.dependencies.auth import (
 )
 from api.middleware.rate_limiter import auth_rate_limit
 from api.schemas.models import Token, UserCreate, UserResponse
-from api.dependencies.security_validation import validate_request
+from api.dependencies.security_validation import (
+    validate_request
+)
 from api.utils.security_validation import SecurityValidator
 from utils.input_validation import InputValidator, ValidationError as InputValidationError
 from database.db_setup import get_db, async_session_maker

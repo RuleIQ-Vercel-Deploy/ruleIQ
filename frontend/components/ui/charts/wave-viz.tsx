@@ -38,8 +38,8 @@ export const WaveDataVisualization = () => {
       <h3 className="text-xl font-semibold text-white mb-4">Data Flow Dynamics</h3>
       <div className="relative overflow-hidden"style={{ width: '100%', height: '300px' }}>
         <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none">
-          <LinearGradient id="wave-gradient" from="#8B5CF6" to="#C0C0C0" />
-          <LinearGradient id="wave-gradient-2" from="#C0C0C0" to="#8B5CF6" fromOpacity={0.8} toOpacity={0.3} />
+          <LinearGradient id="wave-gradient" from="var(--purple-500)" to="var(--silver-400)" />
+          <LinearGradient id="wave-gradient-2" from="var(--silver-400)" to="var(--purple-500)" fromOpacity={0.8} toOpacity={0.3} />
           
           {/* Multiple wave layers for depth */}
           {[0, 1, 2].map((layer) => (

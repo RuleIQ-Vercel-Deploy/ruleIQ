@@ -424,7 +424,6 @@ describe('Performance Benchmarking', () => {
     };
 
     // Log benchmarks for reference
-    // TODO: Replace with proper logging
     // Verify all benchmarks meet requirements
     expect(benchmarks.emailCapture.responseTime).toBeLessThan(200);
     expect(benchmarks.startAssessment.responseTime).toBeLessThan(200);

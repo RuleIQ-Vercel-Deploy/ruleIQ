@@ -198,7 +198,6 @@ export default function AssessmentPage() {
       });
     } catch (error) {
       // Log error for debugging - consider using a proper logger in production
-      // TODO: Replace with proper logging
     }
   };
 

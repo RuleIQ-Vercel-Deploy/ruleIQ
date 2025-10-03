@@ -1,0 +1,311 @@
+name: Flaky Test Detection
+
+on:
+  schedule:
+    - cron: '0 2 * * *'  # Daily at 2 AM UTC
+  workflow_dispatch:
+    inputs:
+      runs:
+        description: 'Number of test runs'
+        required: false
+        default: '10'
+        type: string
+      test_type:
+        description: 'Test type (backend/frontend/both)'
+        required: false
+        default: 'both'
+        type: choice
+        options:
+          - backend
+          - frontend
+          - both
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  detect-backend-flaky:
+    name: Detect Backend Flaky Tests
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.test_type != 'frontend' || github.event_name == 'schedule' }}
+    timeout-minutes: 60
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_password
+          POSTGRES_DB: ruleiq_test
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6380:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      TESTING: true
+      ENVIRONMENT: testing
+      DATABASE_URL: postgresql://test_user:test_password@localhost:5433/ruleiq_test
+      REDIS_URL: redis://localhost:6380
+      JWT_SECRET_KEY: test-secret-key-for-flaky-detection
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11.9
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11.9'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install pytest-json-report
+
+      - name: Setup test environment
+        run: |
+          python tests/setup_test_environment.py
+
+      - name: Run flaky test detection
+        run: |
+          python scripts/detect_flaky_tests.py \
+            --runs ${{ github.event.inputs.runs || '10' }} \
+            --markers unit integration \
+            --parallel \
+            --test-type backend \
+            --output both \
+            --output-dir test-reports
+
+      - name: Upload flaky test reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-flaky-test-report
+          path: test-reports/flaky-tests-backend-*.md
+          retention-days: 90
+
+      - name: Upload flaky test JSON
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-flaky-test-json
+          path: test-reports/flaky-tests-backend-*.json
+          retention-days: 90
+
+      - name: Parse flaky test results
+        id: parse-results
+        run: |
+          if [ -f test-reports/flaky-tests-backend-*.json ]; then
+            FLAKY_COUNT=$(python3 << 'PYTHON'
+          import json
+          import glob
+          files = glob.glob("test-reports/flaky-tests-backend-*.json")
+          if files:
+              with open(files[0]) as f:
+                  data = json.load(f)
+                  print(data['summary']['flaky_tests'])
+          else:
+              print(0)
+          PYTHON
+          )
+            echo "flaky_count=$FLAKY_COUNT" >> $GITHUB_OUTPUT
+            echo "Found $FLAKY_COUNT flaky tests"
+          else
+            echo "flaky_count=0" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create GitHub issues for flaky tests
+        if: steps.parse-results.outputs.flaky_count > 0
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const glob = require('glob');
+
+            const jsonFiles = glob.sync('test-reports/flaky-tests-backend-*.json');
+            if (jsonFiles.length === 0) return;
+
+            const data = JSON.parse(fs.readFileSync(jsonFiles[0], 'utf8'));
+
+            for (const test of data.flaky_tests) {
+              if (test.severity === 'always_fails' || test.severity === 'intermittent') {
+                const title = `[Flaky Test] ${test.test_name}`;
+
+                const body = `## Flaky Test Detected\n\n` +
+                  `**Test**: \`${test.test_name}\`\n` +
+                  `**Severity**: ${test.severity}\n` +
+                  `**Failure Rate**: ${test.failure_rate.toFixed(1)}%\n\n` +
+                  `### Statistics\n\n` +
+                  `- Passed: ${test.passed}\n` +
+                  `- Failed: ${test.failed}\n` +
+                  `- Skipped: ${test.skipped}\n` +
+                  `- Average Duration: ${test.avg_duration.toFixed(3)}s\n\n` +
+                  `### Error Messages\n\n\`\`\`\n${test.error_messages.join('\n\n')}\n\`\`\`\n\n` +
+                  `### Detected By\n\n` +
+                  `Flaky test detection workflow run #${context.runNumber}\n` +
+                  `[View full report](${context.payload.repository.html_url}/actions/runs/${context.runId})`;
+
+                // Check if issue already exists
+                const existingIssues = await github.rest.issues.listForRepo({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  labels: 'flaky-test',
+                  state: 'open'
+                });
+
+                const exists = existingIssues.data.some(issue =>
+                  issue.title.includes(test.test_name)
+                );
+
+                if (!exists) {
+                  await github.rest.issues.create({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    title: title,
+                    body: body,
+                    labels: ['flaky-test', 'bug', test.severity === 'always_fails' ? 'P0' : 'P1']
+                  });
+                  console.log(`Created issue for: ${test.test_name}`);
+                } else {
+                  console.log(`Issue already exists for: ${test.test_name}`);
+                }
+              }
+            }
+
+  detect-frontend-flaky:
+    name: Detect Frontend Flaky Tests
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.test_type != 'backend' || github.event_name == 'schedule' }}
+    timeout-minutes: 45
+
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.14.0'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run vitest multiple times
+        run: |
+          RUNS=${{ github.event.inputs.runs || '5' }}
+          mkdir -p ../test-reports
+
+          for i in $(seq 1 $RUNS); do
+            echo "Run $i/$RUNS"
+            pnpm test --reporter=json --outputFile="../test-reports/vitest-run-$i.json" || true
+          done
+
+      - name: Analyze flaky tests
+        run: |
+          cd ..
+          python3 << 'PYTHON' > test-reports/frontend-flaky-summary.md
+          import json
+          import glob
+          from collections import defaultdict
+
+          results = defaultdict(list)
+
+          for file in glob.glob("test-reports/vitest-run-*.json"):
+              try:
+                  with open(file) as f:
+                      data = json.load(f)
+                      # Parse vitest JSON format
+                      # (Implementation depends on vitest output format)
+              except:
+                  pass
+
+          print("# Frontend Flaky Test Analysis\n")
+          print("Analysis of vitest runs\n")
+          print(f"Total runs: {len(glob.glob('test-reports/vitest-run-*.json'))}\n")
+          PYTHON
+
+      - name: Upload frontend flaky reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-flaky-test-report
+          path: test-reports/frontend-flaky-*.md
+          retention-days: 90
+
+  summary:
+    name: Flaky Test Summary
+    needs: [detect-backend-flaky, detect-frontend-flaky]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Download all reports
+        uses: actions/download-artifact@v4
+        with:
+          path: all-reports
+
+      - name: Create summary
+        run: |
+          cat > summary.md << 'EOF'
+          # Flaky Test Detection Summary
+
+          **Run Date**: $(date '+%Y-%m-%d %H:%M:%S UTC')
+          **Run Number**: ${{ github.run_number }}
+
+          ## Results
+
+          EOF
+
+          if [ "${{ needs.detect-backend-flaky.result }}" == "success" ]; then
+            echo "✅ Backend flaky test detection completed" >> summary.md
+          else
+            echo "❌ Backend flaky test detection failed" >> summary.md
+          fi
+
+          if [ "${{ needs.detect-frontend-flaky.result }}" == "success" ]; then
+            echo "✅ Frontend flaky test detection completed" >> summary.md
+          else
+            echo "❌ Frontend flaky test detection failed" >> summary.md
+          fi
+
+          cat summary.md
+
+      - name: Post summary comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const summary = fs.readFileSync('summary.md', 'utf8');
+
+            // Create an issue with the summary
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `Flaky Test Detection Summary - ${new Date().toISOString().split('T')[0]}`,
+              body: summary + `\n\n[View workflow run](${context.payload.repository.html_url}/actions/runs/${context.runId})`,
+              labels: ['flaky-test', 'automated']
+            });
+        continue-on-error: true

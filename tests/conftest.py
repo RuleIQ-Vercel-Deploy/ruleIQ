@@ -6,6 +6,16 @@ from __future__ import annotations
 
 # Setup test environment before anything else
 import os
+
+# Load .env.test if it exists (for Neon test database configuration)
+from pathlib import Path
+from dotenv import load_dotenv
+
+env_test_path = Path(__file__).parent.parent / '.env.test'
+if env_test_path.exists():
+    load_dotenv(env_test_path, override=True)
+    print(f"✓ Loaded environment from {env_test_path}")
+
 os.environ['TESTING'] = 'true'
 os.environ['ENVIRONMENT'] = 'testing'
 

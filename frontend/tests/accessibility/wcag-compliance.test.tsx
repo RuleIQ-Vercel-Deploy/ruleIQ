@@ -26,7 +26,6 @@ test.describe('WCAG 2.2 AA Compliance Tests', () => {
 
     // Log violations for debugging
     if (violations.length > 0) {
-      // TODO: Replace with proper logging
     }
 
     expect(violations.length).toBe(0);

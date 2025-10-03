@@ -1,3 +1,17 @@
+# Pre-commit hooks for RuleIQ
+# These hooks run automatically before each commit to prevent security issues
+# and enforce code quality standards including TODO policy
+#
+# Installation:
+#   pip install pre-commit
+#   pre-commit install
+#
+# Manual run:
+#   pre-commit run --all-files
+#
+# See docs/security/SECRET_HANDLING_GUIDE.md for security details
+# See CONTRIBUTING.md for TODO policy
+
 repos:
   - repo: local
     hooks:
@@ -7,3 +21,45 @@ repos:
         language: system
         pass_filenames: false
         always_run: true
+        verbose: true
+
+      - id: no-default-passwords
+        name: Check for default password parameters
+        entry: bash -c 'grep -r "os\.getenv.*NEO4J_PASSWORD.*," --include="*.py" --exclude-dir="tests" --exclude-dir="test" services/ api/ core/ database/ middleware/ utils/ 2>/dev/null && echo "ERROR: Found os.getenv() with default password parameter. Remove the default value." && exit 1 || exit 0'
+        language: system
+        pass_filenames: false
+        always_run: true
+        verbose: true
+
+      - id: validate-env-template
+        name: Validate env.template has no real secrets
+        entry: bash -c 'if grep -E "(password|secret|key).*=.*[A-Za-z0-9]{20,}" env.template env.comprehensive.template 2>/dev/null | grep -v "your-.*-here" | grep -v "changeme" | grep -v "example"; then echo "ERROR: env.template may contain real secrets"; exit 1; fi'
+        language: system
+        files: ^env\.(template|comprehensive\.template)$
+        verbose: true
+
+      - id: enforce-todo-policy
+        name: Enforce TODO policy (require issue references)
+        entry: python scripts/ci/scan_todos.py --enforce --severity CRITICAL --severity HIGH
+        language: system
+        pass_filenames: false
+        always_run: true
+        verbose: true
+
+      - id: validate-todo-format
+        name: Validate TODO format
+        entry: bash -c 'if git diff --cached --name-only | xargs grep -nE "(TODO|FIXME|HACK|XXX)(?!\(#\d+\))" 2>/dev/null | grep -v "tests/" | grep -v "\.md"; then echo "ERROR: Found TODO without issue reference. Format: TODO(#123): Description"; exit 1; fi || exit 0'
+        language: system
+        pass_filenames: false
+        verbose: true
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+        args: ['--maxkb=1000']
+      - id: check-merge-conflict
+      - id: detect-private-key

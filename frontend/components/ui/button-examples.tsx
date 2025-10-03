@@ -35,8 +35,8 @@ export function ButtonExamples() {
       {/* Table Actions */}
       <Card className="ruleiq-card">
         <CardHeader>
-          <CardTitle style={{ color: '#F0EAD6' }}>Table Row Actions</CardTitle>
-          <CardDescription style={{ color: '#6C757D' }}>
+          <CardTitle style={{ color: 'var(--purple-50)' }}>Table Row Actions</CardTitle>
+          <CardDescription style={{ color: 'var(--silver-500)' }}>
             Action buttons typically used in data tables
           </CardDescription>
         </CardHeader>
@@ -61,8 +61,8 @@ export function ButtonExamples() {
       {/* Form Actions */}
       <Card className="ruleiq-card">
         <CardHeader>
-          <CardTitle style={{ color: '#F0EAD6' }}>Form Actions</CardTitle>
-          <CardDescription style={{ color: '#6C757D' }}>
+          <CardTitle style={{ color: 'var(--purple-50)' }}>Form Actions</CardTitle>
+          <CardDescription style={{ color: 'var(--silver-500)' }}>
             Button combinations for form submissions and actions
           </CardDescription>
         </CardHeader>
@@ -84,8 +84,8 @@ export function ButtonExamples() {
       {/* Status Actions */}
       <Card className="ruleiq-card">
         <CardHeader>
-          <CardTitle style={{ color: '#F0EAD6' }}>Status Actions</CardTitle>
-          <CardDescription style={{ color: '#6C757D' }}>
+          <CardTitle style={{ color: 'var(--purple-50)' }}>Status Actions</CardTitle>
+          <CardDescription style={{ color: 'var(--silver-500)' }}>
             Buttons for different status-based actions
           </CardDescription>
         </CardHeader>

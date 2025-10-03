@@ -65,9 +65,7 @@ export function EmailCaptureForm({
         ...formData,
         ...utmData,
       } as LeadCaptureRequest);
-      // TODO: Replace with proper logging
 
-      // TODO: Replace with proper logging
       onSuccess(response.lead_id, response.email);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to capture email');

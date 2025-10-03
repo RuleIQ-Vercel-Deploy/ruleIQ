@@ -183,8 +183,8 @@ export function FormShowcase() {
       {/* Complete Form Example */}
       <Card className="ruleiq-card">
         <CardHeader>
-          <CardTitle style={{ color: '#F0EAD6' }}>Complete Form Example</CardTitle>
-          <CardDescription style={{ color: '#6C757D' }}>
+          <CardTitle style={{ color: '#8b5cf6AD6' }}>Complete Form Example</CardTitle>
+          <CardDescription style={{ color: '#8b5cf657D' }}>
             A comprehensive form with validation states and real-time feedback
           </CardDescription>
         </CardHeader>
@@ -192,7 +192,7 @@ export function FormShowcase() {
           <form className="space-y-6">
             {/* Personal Information */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold" style={{ color: '#F0EAD6' }}>
+              <h3 className="text-lg font-semibold" style={{ color: '#8b5cf6AD6' }}>
                 Account Information
               </h3>
 
@@ -254,7 +254,7 @@ export function FormShowcase() {
 
             {/* Company Information */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold" style={{ color: '#F0EAD6' }}>
+              <h3 className="text-lg font-semibold" style={{ color: '#8b5cf6AD6' }}>
                 Company Information
               </h3>
 
@@ -316,7 +316,7 @@ export function FormShowcase() {
 
             {/* Agreements */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold" style={{ color: '#F0EAD6' }}>
+              <h3 className="text-lg font-semibold" style={{ color: '#8b5cf6AD6' }}>
                 Agreements
               </h3>
 
@@ -331,7 +331,7 @@ export function FormShowcase() {
                     <Label htmlFor="terms" className="text-sm font-medium">
                       I agree to the Terms of Service and Privacy Policy *
                     </Label>
-                    <p className="text-xs" style={{ color: '#6C757D' }}>
+                    <p className="text-xs" style={{ color: '#8b5cf657D' }}>
                       By checking this box, you agree to our terms and conditions
                     </p>
                   </div>
@@ -349,7 +349,7 @@ export function FormShowcase() {
                     <Label htmlFor="newsletter" className="text-sm font-medium">
                       Subscribe to our newsletter
                     </Label>
-                    <p className="text-xs" style={{ color: '#6C757D' }}>
+                    <p className="text-xs" style={{ color: '#8b5cf657D' }}>
                       Get updates about new features and compliance insights
                     </p>
                   </div>

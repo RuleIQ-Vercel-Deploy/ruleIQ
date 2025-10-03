@@ -48,7 +48,7 @@ export function MobileNav({ open, onOpenChange }: MobileNavProps) {
         side="left"
         className="w-[300px] p-0 sm:w-[400px]"
         style={{
-          backgroundColor: '#002147',
+          backgroundColor: 'var(--black)',
           borderRightColor: 'rgba(233, 236, 239, 0.2)',
         }}
       >
@@ -58,10 +58,10 @@ export function MobileNav({ open, onOpenChange }: MobileNavProps) {
         >
           <div className="flex items-center justify-between">
             <SheetTitle className="flex items-center space-x-1">
-              <span className="text-xl font-bold" style={{ color: '#F0EAD6' }}>
+              <span className="text-xl font-bold" style={{ color: 'var(--purple-50)' }}>
                 rule
               </span>
-              <span className="text-xl font-bold" style={{ color: '#FFD700' }}>
+              <span className="text-xl font-bold" style={{ color: 'var(--purple-400)' }}>
                 IQ
               </span>
             </SheetTitle>
@@ -70,7 +70,7 @@ export function MobileNav({ open, onOpenChange }: MobileNavProps) {
               size="icon"
               onClick={() => onOpenChange(false)}
               className="hover:bg-white/10"
-              style={{ color: '#F0EAD6' }}
+              style={{ color: 'var(--purple-50)' }}
             >
               <X className="h-5 w-5" />
             </Button>
@@ -89,14 +89,14 @@ export function MobileNav({ open, onOpenChange }: MobileNavProps) {
                   isActive ? 'shadow-sm' : 'hover:bg-white/10'
                 }`}
                 style={{
-                  backgroundColor: isActive ? '#F0EAD6' : 'transparent',
-                  color: isActive ? '#002147' : '#F0EAD6',
+                  backgroundColor: isActive ? 'var(--purple-50)' : 'transparent',
+                  color: isActive ? 'var(--black)' : 'var(--purple-50)',
                 }}
               >
                 <item.icon
                   className="h-5 w-5"
                   style={{
-                    color: isActive ? '#002147' : '#6C757D',
+                    color: isActive ? 'var(--black)' : 'var(--silver-500)',
                   }}
                 />
                 <span>{item.title}</span>

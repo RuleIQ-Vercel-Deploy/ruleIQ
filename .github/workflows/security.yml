@@ -174,7 +174,48 @@ jobs:
         uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        continue-on-error: true
+        continue-on-error: false
+
+  custom-secret-scan:
+    name: Custom Secret Pattern Detection
+    runs-on: ubuntu-latest
+    # This job uses our custom secret scanner (scripts/ci/scan_secrets.py)
+    # It is BLOCKING - the pipeline will fail if secrets are detected
+    # This prevents hardcoded secrets from reaching production
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5.3.0
+        with:
+          python-version: '3.11'
+
+      - name: Run custom secret scanner
+        run: |
+          python3 scripts/ci/scan_secrets.py
+        # NOTE: This job does NOT use continue-on-error
+        # It will BLOCK the pipeline if secrets are detected
+
+      - name: Validate no default passwords in production code
+        run: |
+          echo "Checking for default password parameters in os.getenv() calls..."
+
+          # Search for os.getenv with default password parameters
+          # Exclude test files and allow them to have defaults
+          if grep -r "os\.getenv.*NEO4J_PASSWORD.*," \
+               --include="*.py" \
+               --exclude-dir="tests" \
+               --exclude-dir="test" \
+               services/ api/ core/ database/ middleware/ utils/ 2>/dev/null; then
+            echo "❌ ERROR: Found os.getenv() calls with default password parameters!"
+            echo "Remove the default value and require the environment variable."
+            echo "See docs/security/SECRET_HANDLING_GUIDE.md for guidance."
+            exit 1
+          fi
+
+          echo "✅ No default password parameters found in production code."
 
   dependency-check:
     name: OWASP Dependency Check
@@ -267,7 +308,7 @@ jobs:
   security-summary:
     name: Security Summary
     runs-on: ubuntu-latest
-    needs: [codeql-analysis, python-security, javascript-security, secret-scanning, dependency-check, codacy-analysis]
+    needs: [codeql-analysis, python-security, javascript-security, secret-scanning, custom-secret-scan, dependency-check, codacy-analysis]
     if: always()
     steps:
       - name: Security scan summary
@@ -280,5 +321,6 @@ jobs:
           echo "| Python Security | ${{ needs.python-security.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| JavaScript Security | ${{ needs.javascript-security.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Secret Scanning | ${{ needs.secret-scanning.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Custom Secret Scan | ${{ needs.custom-secret-scan.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Dependency Check | ${{ needs.dependency-check.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Codacy Analysis | ${{ needs.codacy-analysis.result }} |" >> $GITHUB_STEP_SUMMARY

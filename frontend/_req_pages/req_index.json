@@ -1,0 +1,11 @@
+[
+  {
+    "key": "create-wireframe",
+    "route": "/requirements/create-wireframe",
+    "title": "Create Wireframe",
+    "last_commit_iso": "2025-09-29T05:01:29Z",
+    "screenshot": "_req_pages/screenshots/create-wireframe.png",
+    "wireframe": "_req_pages/wireframes/create-wireframe.png",
+    "conformance": { "status": "PASS", "notes": ["Composed from PASS primitives"] }
+  }
+]

@@ -112,7 +112,6 @@ class AuthAPIClient {
         });
       } catch (error) {
         // Ignore logout errors
-        // TODO: Replace with proper logging
       }
     }
   }

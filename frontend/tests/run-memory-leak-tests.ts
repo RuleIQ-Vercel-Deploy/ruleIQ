@@ -155,16 +155,12 @@ Generated: ${new Date().toISOString()}
 
   const reportPath = path.join(__dirname, '..', 'memory-leak-test-report.md');
   await fs.writeFile(reportPath, report);
-  // TODO: Replace with proper logging
   return report;
 }
 
 async function main() {
-  // TODO: Replace with proper logging
   const testFiles = await findMemoryLeakTests();
-  // TODO: Replace with proper logging
 
-  // TODO: Replace with proper logging
   const results: TestResult[] = [];
 
   for (const testFile of testFiles) {
@@ -173,11 +169,8 @@ async function main() {
 
     const result = await runTest(testFile);
     results.push(result);
-    // TODO: Replace with proper logging
   }
-  // TODO: Replace with proper logging
   const report = await generateReport(results);
-  // TODO: Replace with proper logging
   // Exit with error code if any tests failed
   process.exit(results.some((r) => !r.passed) ? 1 : 0);
 }

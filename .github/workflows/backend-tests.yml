@@ -1,0 +1,246 @@
+name: Backend Tests
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+    inputs:
+      test_mode:
+        description: 'Test mode (fast/full/markers)'
+        required: false
+        default: 'fast'
+        type: choice
+        options:
+          - fast
+          - full
+          - unit
+          - integration
+          - ai
+          - security
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    strategy:
+      fail-fast: false
+      matrix:
+        test-group: [unit, integration, ai, api, security]
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_password
+          POSTGRES_DB: ruleiq_test
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6380:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      neo4j:
+        image: neo4j:5-community
+        env:
+          NEO4J_AUTH: neo4j/test_password_123
+          NEO4J_PLUGINS: '["apoc"]'
+        ports:
+          - 7688:7687
+          - 7475:7474
+        options: >-
+          --health-cmd "cypher-shell -u neo4j -p test_password_123 'RETURN 1'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      TESTING: true
+      ENVIRONMENT: testing
+      DATABASE_URL: postgresql://test_user:test_password@localhost:5433/ruleiq_test
+      REDIS_URL: redis://localhost:6380
+      NEO4J_URI: bolt://localhost:7688
+      NEO4J_USER: neo4j
+      NEO4J_PASSWORD: test_password_123
+      JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY || 'test-secret-key-for-ci-only-do-not-use-in-production' }}
+      JWT_ALGORITHM: HS256
+      ACCESS_TOKEN_EXPIRE_MINUTES: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11.9
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11.9'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Wait for services to be healthy
+        run: |
+          echo "Waiting for PostgreSQL..."
+          for i in {1..30}; do
+            if pg_isready -h localhost -p 5433 -U test_user; then
+              echo "PostgreSQL is ready!"
+              break
+            fi
+            sleep 1
+          done
+
+          echo "Waiting for Redis..."
+          for i in {1..30}; do
+            if redis-cli -h localhost -p 6380 ping > /dev/null 2>&1; then
+              echo "Redis is ready!"
+              break
+            fi
+            sleep 1
+          done
+
+          echo "Waiting for Neo4j..."
+          sleep 10
+
+      - name: Setup test environment
+        run: |
+          python tests/setup_test_environment.py
+
+      - name: Run tests - ${{ matrix.test-group }}
+        run: |
+          pytest \
+            -m "${{ matrix.test-group }}" \
+            --cov=services \
+            --cov=api \
+            --cov=core \
+            --cov=utils \
+            --cov=models \
+            --cov-report=xml \
+            --cov-report=html \
+            --cov-report=json \
+            --cov-report=term-missing \
+            --cov-branch \
+            --junitxml=test-results-${{ matrix.test-group }}.xml \
+            --verbose \
+            -n 4
+        continue-on-error: ${{ matrix.test-group == 'ai' || matrix.test-group == 'security' }}
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./coverage.xml
+          flags: backend,${{ matrix.test-group }}
+          name: backend-${{ matrix.test-group }}
+          fail_ci_if_error: false
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Upload coverage artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-coverage-${{ matrix.test-group }}
+          path: |
+            coverage.xml
+            coverage.json
+            htmlcov/
+            test-results-${{ matrix.test-group }}.xml
+          retention-days: 30
+
+      - name: Upload test logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-test-logs-${{ matrix.test-group }}
+          path: |
+            logs/
+            pytest-*.log
+          retention-days: 14
+
+      - name: Post coverage summary
+        if: github.event_name == 'pull_request' && matrix.test-group == 'unit'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const coverage = JSON.parse(fs.readFileSync('coverage.json', 'utf8'));
+            const percent = coverage.totals.percent_covered.toFixed(2);
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## Backend Coverage (${{ matrix.test-group }})\n\n` +
+                    `📊 **Line Coverage**: ${percent}%\n\n` +
+                    `[View detailed report in artifacts](${context.payload.pull_request.html_url}/checks)`
+            });
+
+  coverage-check:
+    needs: test
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download all coverage artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: backend-coverage-*
+          path: coverage-artifacts
+
+      - name: Set up Python 3.11.9
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11.9'
+
+      - name: Install coverage tools
+        run: pip install coverage
+
+      - name: Combine coverage reports
+        run: |
+          coverage combine coverage-artifacts/*/coverage.json || true
+          coverage report --format=markdown > coverage-summary.md
+          coverage report
+
+      - name: Check coverage threshold
+        run: |
+          # Get current coverage percentage
+          COVERAGE=$(coverage report | tail -1 | awk '{print $NF}' | sed 's/%//')
+
+          echo "Current coverage: $COVERAGE%"
+          echo "Baseline threshold: 27.73%"
+
+          # Compare with baseline (27.73%)
+          if (( $(echo "$COVERAGE < 25.73" | bc -l) )); then
+            echo "❌ Coverage dropped below acceptable threshold (27.73% - 2% tolerance)"
+            exit 1
+          else
+            echo "✅ Coverage meets baseline requirement"
+          fi
+
+      - name: Upload combined coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-coverage-combined
+          path: |
+            coverage-summary.md
+            .coverage
+          retention-days: 90

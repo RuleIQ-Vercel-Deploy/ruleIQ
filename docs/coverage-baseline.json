@@ -1,0 +1,136 @@
+{
+  "generated": "2025-09-30T08:45:15.529709",
+  "backend_coverage": {
+    "overall_line": 3.127,
+    "overall_branch": 0.0,
+    "packages": {
+      ".": {
+        "line_coverage": 7.828,
+        "branch_coverage": 0.0,
+        "lines_valid": 9277,
+        "branches_valid": 2166
+      },
+      "agents": {
+        "line_coverage": 0.0,
+        "branch_coverage": 0.0,
+        "lines_valid": 1996,
+        "branches_valid": 562
+      },
+      "ai": {
+        "line_coverage": 0.0,
+        "branch_coverage": 0.0,
+        "lines_valid": 8673,
+        "branches_valid": 2492
+      },
+      "ai.evaluation": {
+        "line_coverage": 0.0,
+        "branch_coverage": 0.0,
+        "lines_valid": 449,
+        "branches_valid": 140
+      },
+      "ai.evaluation.golden_datasets": {
+        "line_coverage": 0.0,
+        "branch_coverage": 0.0,
+        "lines_valid": 663,
+        "branches_valid": 274
+      },
+      "ai.evaluation.infrastructure": {
+        "line_coverage": 0.0,
+        "branch_coverage": 0.0,
+        "lines_valid": 87,
+        "branches_valid": 22
+      },
+      "ai.evaluation.metrics": {
+        "line_coverage": 0.0,
+        "branch_coverage": 0.0,
+        "lines_valid": 54,
+        "branches_valid": 32
+      },
+      "ai.evaluation.schemas": {
+        "line_coverage": 0.0,
+        "branch_coverage": 0.0,
+        "lines_valid": 135,
+        "branches_valid": 10
+      },
+      "ai.evaluation.tools": {
+        "line_coverage": 0.0,
+        "branch_coverage": 0.0,
+        "lines_valid": 861,
+        "branches_valid": 236
+      },
+      "automation": {
+        "line_coverage": 0.0,
+        "branch_coverage": 0.0,
+        "lines_valid": 581,
+        "branches_valid": 202
+      },
+      "caching": {
+        "line_coverage": 0.0,
+        "branch_coverage": 0.0,
+        "lines_valid": 775,
+        "branches_valid": 182
+      },
+      "clients": {
+        "line_coverage": 0.0,
+        "branch_coverage": 0.0,
+        "lines_valid": 1207,
+        "branches_valid": 330
+      },
+      "integrations": {
+        "line_coverage": 0.0,
+        "branch_coverage": 0.0,
+        "lines_valid": 129,
+        "branches_valid": 20
+      },
+      "integrations.base": {
+        "line_coverage": 0.0,
+        "branch_coverage": 100.0,
+        "lines_valid": 70,
+        "branches_valid": 0
+      },
+      "knowledge_graph": {
+        "line_coverage": 0.0,
+        "branch_coverage": 0.0,
+        "lines_valid": 100,
+        "branches_valid": 16
+      },
+      "models": {
+        "line_coverage": 100.0,
+        "branch_coverage": 100.0,
+        "lines_valid": 125,
+        "branches_valid": 0
+      },
+      "monitoring": {
+        "line_coverage": 0.0,
+        "branch_coverage": 0.0,
+        "lines_valid": 135,
+        "branches_valid": 20
+      },
+      "realtime": {
+        "line_coverage": 0.0,
+        "branch_coverage": 0.0,
+        "lines_valid": 90,
+        "branches_valid": 20
+      },
+      "reporting": {
+        "line_coverage": 0.0,
+        "branch_coverage": 0.0,
+        "lines_valid": 393,
+        "branches_valid": 102
+      },
+      "schemas": {
+        "line_coverage": 0.0,
+        "branch_coverage": 0.0,
+        "lines_valid": 1243,
+        "branches_valid": 26
+      },
+      "services": {
+        "line_coverage": 0.0,
+        "branch_coverage": 0.0,
+        "lines_valid": 216,
+        "branches_valid": 36
+      }
+    }
+  },
+  "frontend_coverage": {}
+}

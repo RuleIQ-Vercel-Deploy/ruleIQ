@@ -79,7 +79,7 @@ export function DashboardHeader() {
           <div className="relative max-w-md">
             <Search
               className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2"
-              style={{ color: '#6C757D' }}
+              style={{ color: '#8b5cf657D' }}
             />
             <Input
               type="search"
@@ -87,7 +87,7 @@ export function DashboardHeader() {
               className="w-full border-0 py-2 pl-10 pr-4 text-sm focus-visible:ring-1 focus-visible:ring-offset-0"
               style={{
                 backgroundColor: 'rgba(240, 234, 214, 0.1)',
-                color: '#F0EAD6',
+                color: '#8b5cf6AD6',
                 borderColor: 'rgba(233, 236, 239, 0.2)',
               }}
               value={searchValue}
@@ -107,7 +107,7 @@ export function DashboardHeader() {
               <span className="font-semibold">{formatTime(timeUntilAudit.hours)}h</span>
               <span className="text-neutral-400">:</span>
               <span className="font-semibold">{formatTime(timeUntilAudit.minutes)}m</span>
-              <span style={{ color: '#6C757D' }}>:</span>
+              <span style={{ color: '#8b5cf657D' }}>:</span>
               <span className="font-semibold">{formatTime(timeUntilAudit.seconds)}s</span>
             </div>
           </div>
@@ -170,14 +170,14 @@ export function DashboardHeader() {
                 variant="ghost"
                 size="icon"
                 className="relative hover:bg-white/10"
-                style={{ color: '#F0EAD6' }}
+                style={{ color: '#8b5cf6AD6' }}
               >
                 <Bell className="h-5 w-5" />
                 <Badge
                   className="absolute -right-1 -top-1 flex h-5 w-5 animate-pulse items-center justify-center rounded-full p-0 text-xs"
                   style={{
-                    backgroundColor: '#FF6F61',
-                    color: '#FFFFFF',
+                    backgroundColor: '#8b5cf6F61',
+                    color: '#ffffffFFF',
                   }}
                 >
                   5
@@ -189,19 +189,19 @@ export function DashboardHeader() {
               align="end"
               className="w-96"
               style={{
-                backgroundColor: '#F0EAD6',
+                backgroundColor: '#8b5cf6AD6',
                 borderColor: 'rgba(233, 236, 239, 0.2)',
               }}
             >
               <DropdownMenuLabel
                 className="flex items-center justify-between"
-                style={{ color: '#002147' }}
+                style={{ color: '#8b5cf6147' }}
               >
                 <span>Alerts & Notifications</span>
                 <Badge
                   variant="secondary"
                   className="text-xs"
-                  style={{ backgroundColor: '#FF6F61', color: '#FFFFFF' }}
+                  style={{ backgroundColor: '#8b5cf6F61', color: '#ffffffFFF' }}
                 >
                   5 new
                 </Badge>
@@ -211,16 +211,16 @@ export function DashboardHeader() {
                 <div className="space-y-1">
                   <div className="hover:bg-grey-300/20 rounded-sm p-3">
                     <div className="flex items-start space-x-3">
-                      <AlertTriangle className="mt-0.5 h-4 w-4" style={{ color: '#FFC107' }} />
+                      <AlertTriangle className="mt-0.5 h-4 w-4" style={{ color: '#8b5cf6107' }} />
                       <div className="flex-1 space-y-1">
-                        <div className="text-sm font-medium" style={{ color: '#002147' }}>
+                        <div className="text-sm font-medium" style={{ color: '#8b5cf6147' }}>
                           GDPR Assessment Overdue
                         </div>
-                        <div className="text-xs" style={{ color: '#6C757D' }}>
+                        <div className="text-xs" style={{ color: '#8b5cf657D' }}>
                           The quarterly GDPR assessment was due 2 days ago. Please complete
                           immediately.
                         </div>
-                        <div className="text-xs" style={{ color: '#6C757D' }}>
+                        <div className="text-xs" style={{ color: '#8b5cf657D' }}>
                           2 hours ago
                         </div>
                       </div>

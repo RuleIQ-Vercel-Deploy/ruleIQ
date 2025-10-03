@@ -11,35 +11,35 @@ const purpleTheme = {
   background: 'transparent',
   text: {
     fontSize: 11,
-    fill: '#9CA3AF',
+    fill: 'var(--silver-500)',
   },
   axis: {
     domain: {
       line: {
-        stroke: '#4B5563',
+        stroke: 'var(--silver-500)',
         strokeWidth: 1,
       },
     },
     legend: {
       text: {
         fontSize: 12,
-        fill: '#9CA3AF',
+        fill: 'var(--silver-500)',
       },
     },
     ticks: {
       line: {
-        stroke: '#4B5563',
+        stroke: 'var(--silver-500)',
         strokeWidth: 1,
       },
       text: {
         fontSize: 11,
-        fill: '#9CA3AF',
+        fill: 'var(--silver-500)',
       },
     },
   },
   grid: {
     line: {
-      stroke: '#374151',
+      stroke: 'var(--silver-500)',
       strokeWidth: 0.5,
     },
   },
@@ -47,22 +47,22 @@ const purpleTheme = {
     title: {
       text: {
         fontSize: 11,
-        fill: '#9CA3AF',
+        fill: 'var(--silver-500)',
       },
     },
     text: {
       fontSize: 11,
-      fill: '#9CA3AF',
+      fill: 'var(--silver-500)',
     },
   },
   tooltip: {
     wrapper: {},
     container: {
-      background: '#1F2937',
-      color: '#F3F4F6',
+      background: 'var(--black)',
+      color: 'var(--purple-50)',
       fontSize: 12,
       borderRadius: '8px',
-      border: '1px solid #8B5CF6',
+      border: '1px solid var(--purple-500)',
     },
   },
 };
@@ -71,7 +71,7 @@ export const NivoAnimatedLine = () => {
   const data = [
     {
       id: 'Compliance',
-      color: '#8B5CF6',
+      color: 'var(--purple-500)',
       data: [
         { x: 'Jan', y: 87 },
         { x: 'Feb', y: 89 },
@@ -83,7 +83,7 @@ export const NivoAnimatedLine = () => {
     },
     {
       id: 'Security',
-      color: '#C0C0C0',
+      color: 'var(--silver-400)',
       data: [
         { x: 'Jan', y: 92 },
         { x: 'Feb', y: 88 },

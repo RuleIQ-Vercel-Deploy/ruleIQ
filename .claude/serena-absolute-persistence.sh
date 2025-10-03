@@ -132,8 +132,7 @@ status = {
     'last_verification': datetime.now().isoformat(),
     'python_env_ok': True,
     'project_structure_ok': True,
-    'serena_active': True,
-    'archon_checked': True
+    'serena_active': True
 }
 
 with open('$STATUS_FILE', 'w') as f:

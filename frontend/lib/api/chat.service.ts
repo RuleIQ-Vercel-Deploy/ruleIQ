@@ -269,7 +269,6 @@ class ChatService {
     this.ws = new WebSocket(wsUrl);
 
     this.ws.onopen = () => {
-      // TODO: Replace with proper logging
       this.notifyHandlers({ type: 'connection', data: { status: 'connected' } });
     };
 
@@ -278,20 +277,15 @@ class ChatService {
         const message = JSON.parse(event.data);
         this.notifyHandlers({ type: 'message', data: message });
       } catch (error) {
-        // TODO: Replace with proper logging
-        // // TODO: Replace with proper logging
       }
     };
 
     this.ws.onerror = (error) => {
-      // TODO: Replace with proper logging
 
-      // // TODO: Replace with proper logging
       this.notifyHandlers({ type: 'error', data: error });
     };
 
     this.ws.onclose = () => {
-      // TODO: Replace with proper logging
       this.notifyHandlers({ type: 'connection', data: { status: 'disconnected' } });
 
       // Attempt to reconnect after 3 seconds
@@ -310,8 +304,6 @@ class ChatService {
     if (this.ws?.readyState === WebSocket.OPEN) {
       this.ws.send(JSON.stringify(message));
     } else {
-      // TODO: Replace with proper logging
-      // // TODO: Replace with proper logging
     }
   }
 

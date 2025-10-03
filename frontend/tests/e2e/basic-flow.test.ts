@@ -179,7 +179,6 @@ test.describe('Basic Application Flow', () => {
 
     // Log any critical errors for debugging
     if (criticalErrors.length > 0) {
-      // TODO: Replace with proper logging
     }
 
     expect(criticalErrors).toHaveLength(0);

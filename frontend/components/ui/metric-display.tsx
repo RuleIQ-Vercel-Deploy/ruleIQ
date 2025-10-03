@@ -18,13 +18,13 @@ export function MetricDisplay({ label, value, change, icon, className = '' }: Me
   return (
     <div className={`space-y-2 ${className}`}>
       <div className="flex items-center justify-between">
-        <span className="text-sm font-medium" style={{ color: '#6C757D' }}>
+        <span className="text-sm font-medium" style={{ color: 'var(--silver-500)' }}>
           {label}
         </span>
-        {icon && <div style={{ color: '#6C757D' }}>{icon}</div>}
+        {icon && <div style={{ color: 'var(--silver-500)' }}>{icon}</div>}
       </div>
       <div className="flex items-end justify-between">
-        <span className="text-2xl font-bold" style={{ color: '#F0EAD6' }}>
+        <span className="text-2xl font-bold" style={{ color: 'var(--purple-50)' }}>
           {value}
         </span>
         {change && (

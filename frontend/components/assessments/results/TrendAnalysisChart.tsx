@@ -52,16 +52,16 @@ const TIME_PERIODS: { value: TimePeriod; label: string; days: number }[] = [
 
 // Neural Purple theme colors
 const COLORS = {
-  primary: '#6C2BD9',
-  secondary: '#06B6D4',
-  accent: '#F59E0B',
-  success: '#10B981',
-  magenta: '#F472B6',
-  indigo: '#818CF8',
-  lime: '#A3E635',
-  danger: '#EF4444',
-  neuralPurple: '#8B5CF6',
-  purple: '#C084FC',
+  primary: '#8b5cf6BD9',
+  secondary: '#8b5cf66D4',
+  accent: '#8b5cf6E0B',
+  success: '#8b5cf6981',
+  magenta: '#8b5cf62B6',
+  indigo: '#8b5cf6CF8',
+  lime: '#8b5cf6635',
+  danger: '#8b5cf6444',
+  neuralPurple: '#8b5cf6CF6',
+  purple: '#8b5cf64FC',
 };
 
 const CHART_COLORS = [
@@ -438,7 +438,7 @@ export function TrendAnalysisChart({ data, className }: TrendAnalysisChartProps)
               {/* Grid lines */}
               <defs>
                 <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                  <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#E1E4EA" strokeWidth="1" opacity="0.3"/>
+                  <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#8b5cf64EA" strokeWidth="1" opacity="0.3"/>
                 </pattern>
               </defs>
               <rect 
@@ -465,7 +465,7 @@ export function TrendAnalysisChart({ data, className }: TrendAnalysisChartProps)
                     y1={padding.top + yScale.scale(score)}
                     x2={padding.left + innerWidth}
                     y2={padding.top + yScale.scale(score)}
-                    stroke="#E1E4EA"
+                    stroke="#8b5cf64EA"
                     strokeWidth="1"
                     opacity="0.5"
                   />

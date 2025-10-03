@@ -33,7 +33,6 @@ except Exception as e:
 
 # Local application imports
 from api.routers import (
-    health,  # Add health check router
     ai_assessments,
     ai_cost_monitoring,
     ai_cost_websocket,

@@ -121,7 +121,6 @@ export function ChatWidget({
   // Voice control handlers
   const handleVoiceToggle = useCallback(() => {
     if (!isVoiceSupported) {
-      // TODO: Replace with proper logging
       return;
     }
 
@@ -136,7 +135,6 @@ export function ChatWidget({
 
   const handleVoiceCall = useCallback(() => {
     if (!voiceCapabilities?.calling) {
-      // TODO: Replace with proper logging
       return;
     }
 

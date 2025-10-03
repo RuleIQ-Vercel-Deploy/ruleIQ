@@ -61,10 +61,10 @@ export function AdvancedMetricsChart({
                 formatValue(value, props?.payload?.unit),
                 name,
               ]}
-              labelStyle={{ color: '#333' }}
+              labelStyle={{ color: '#8b5cf6' }}
               contentStyle={{
                 backgroundColor: 'white',
-                border: '1px solid #ccc',
+                border: '1px solid #c0c0c0',
                 borderRadius: '4px',
               }}
             />

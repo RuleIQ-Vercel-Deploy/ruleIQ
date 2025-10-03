@@ -33,7 +33,7 @@ export function RadarChart({ data, size = 300 }: RadarChartProps) {
     for (let i = 1; i <= 5; i++) {
       ctx.beginPath();
       ctx.arc(centerX, centerY, (radius / 5) * i, 0, 2 * Math.PI);
-      ctx.strokeStyle = '#D0D5E3';
+      ctx.strokeStyle = '#8b5cf65E3';
       ctx.lineWidth = 1;
       ctx.stroke();
     }
@@ -47,7 +47,7 @@ export function RadarChart({ data, size = 300 }: RadarChartProps) {
       ctx.beginPath();
       ctx.moveTo(centerX, centerY);
       ctx.lineTo(x, y);
-      ctx.strokeStyle = '#D0D5E3';
+      ctx.strokeStyle = '#8b5cf65E3';
       ctx.lineWidth = 1;
       ctx.stroke();
     });
@@ -75,7 +75,7 @@ export function RadarChart({ data, size = 300 }: RadarChartProps) {
     ctx.fillStyle = gradient;
     ctx.fill();
 
-    ctx.strokeStyle = '#A78BFA';
+    ctx.strokeStyle = '#8b5cf6BFA';
     ctx.lineWidth = 2;
     ctx.stroke();
 
@@ -88,9 +88,9 @@ export function RadarChart({ data, size = 300 }: RadarChartProps) {
 
       ctx.beginPath();
       ctx.arc(x, y, 4, 0, 2 * Math.PI);
-      ctx.fillStyle = '#A78BFA';
+      ctx.fillStyle = '#8b5cf6BFA';
       ctx.fill();
-      ctx.strokeStyle = '#17255A';
+      ctx.strokeStyle = '#8b5cf655A';
       ctx.lineWidth = 2;
       ctx.stroke();
     });
@@ -99,7 +99,7 @@ export function RadarChart({ data, size = 300 }: RadarChartProps) {
     ctx.font = '12px Inter';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillStyle = '#17255A';
+    ctx.fillStyle = '#8b5cf655A';
 
     data.forEach((item, index) => {
       const angle = index * angleStep - Math.PI / 2;

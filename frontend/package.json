@@ -73,7 +73,7 @@
     "chromatic": "chromatic --project-token=chpt_your_token_here",
     "analyze:bundle": "node scripts/bundle-analyzer.js",
     "analyze:bundle:ci": "pnpm build && pnpm analyze:bundle",
-    "prepare": "husky install",
+    "prepare": "husky",
     "ci": "pnpm lint && pnpm typecheck && pnpm test --run && pnpm build",
     "preview": "pnpm build && pnpm start"
   },

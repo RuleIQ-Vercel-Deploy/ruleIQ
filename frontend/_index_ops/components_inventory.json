@@ -1,0 +1,17 @@
+[
+  {"name":"Button","importPath":"components/ui/button.tsx","usages":["app/advanced-dashboard/page.tsx","app/(dashboard)/analytics/page.tsx","components/navigation/top-navigation.tsx"],"status":"keep","replacement":"","notes":["Core CTA primitive; normalize to globals.css tokens only."]},
+  {"name":"Card","importPath":"components/ui/card.tsx","usages":["components/ui/button-showcase.tsx","components/marketing/hero-section.tsx"],"status":"keep","replacement":"","notes":["Keep; maps elevation to --shadow-purple-* tokens."]},
+  {"name":"Input","importPath":"components/ui/input.tsx","usages":["components/payment/checkout-form.tsx","components/theme-demo.tsx"],"status":"keep","replacement":"","notes":["Keep; enforces dark mode and focus ring tokens."]},
+  {"name":"Textarea","importPath":"components/ui/textarea.tsx","usages":["components/chat/ChatInput.tsx","components/forms/form-showcase.tsx"],"status":"keep","replacement":"","notes":["Keep; tokenized border + background per globals.css."]},
+  {"name":"Select","importPath":"components/ui/select.tsx","usages":["components/forms/form-showcase.tsx","components/marketing/email-capture-form.tsx"],"status":"keep","replacement":"","notes":["Keep; radix wrapper already present."]},
+  {"name":"Table","importPath":"components/ui/table.tsx","usages":["components/ui/data-table.tsx","components/ui/data-table-with-export.tsx"],"status":"keep","replacement":"","notes":["Keep; ensure zebra/hover use tokenized colors."]},
+  {"name":"Badge","importPath":"components/ui/badge.tsx","usages":["components/navigation/top-header.tsx","components/chat/IQTrustIndicator.tsx"],"status":"keep","replacement":"","notes":["Keep; no inline hex; use purple tokens."]},
+  {"name":"Alert","importPath":"components/ui/alert.tsx","usages":["components/payment/checkout-form.tsx","components/theme-demo.tsx"],"status":"keep","replacement":"","notes":["Keep; a11y roles + tokens."]},
+  {"name":"Sheet","importPath":"components/ui/sheet.tsx","usages":["components/navigation/mobile-nav.tsx","components/ui/sidebar.tsx"],"status":"keep","replacement":"","notes":["Keep; dark overlay tokenized."]},
+  {"name":"Drawer","importPath":"components/ui/drawer.tsx","usages":["components/ui/drawer.tsx"],"status":"keep","replacement":"","notes":["Keep; same gating as Sheet."]},
+  {"name":"Dialog","importPath":"components/ui/dialog.tsx","usages":["components/dialogs/form-dialog.tsx","components/dialogs/confirm-dialog.tsx"],"status":"keep","replacement":"","notes":["Keep; focus trap + reduced motion."]},
+  {"name":"Tabs","importPath":"components/ui/tabs.tsx","usages":["components/editor/right-panel.tsx","components/context/ContextPanel.tsx"],"status":"keep","replacement":"","notes":["Keep; indicator uses purple tokens."]},
+  {"name":"Tooltip","importPath":"components/ui/tooltip.tsx","usages":["components/navigation/top-navigation.tsx","components/editor/action-bar.tsx"],"status":"keep","replacement":"","notes":["Keep; content/text colors from tokens."]},
+  {"name":"Sidebar","importPath":"components/ui/sidebar.tsx","usages":["components/navigation/app-sidebar.tsx","components/navigation/enhanced-sidebar.tsx"],"status":"keep","replacement":"","notes":["Keep; layout primitives + keyboard nav."]},
+  {"name":"Navbar","importPath":"components/navigation/navbar.tsx","usages":["components/navigation/navbar.tsx"],"status":"keep","replacement":"","notes":["Keep; ensure theming aligns with globals.css."]}
+]

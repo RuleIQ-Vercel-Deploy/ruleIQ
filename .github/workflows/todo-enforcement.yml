@@ -1,0 +1,121 @@
+name: TODO Policy Enforcement
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  schedule:
+    # Run weekly on Mondays at 9 AM UTC for TODO inventory
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+    inputs:
+      generate_report:
+        description: 'Generate full TODO inventory report'
+        required: false
+        default: 'false'
+
+jobs:
+  enforce-todo-policy:
+    name: Enforce TODO Policy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for comprehensive scan
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install requests
+
+      - name: Scan for non-compliant TODOs
+        id: scan
+        run: |
+          python scripts/ci/scan_todos.py --enforce --severity CRITICAL --severity HIGH
+        continue-on-error: true
+
+      - name: Generate TODO inventory report
+        if: github.event_name == 'schedule' || github.event.inputs.generate_report == 'true'
+        run: |
+          python scripts/ci/scan_todos.py --format markdown --output TODO_INVENTORY.md
+          python scripts/ci/scan_todos.py --format json --output TODO_INVENTORY.json
+          python scripts/ci/scan_todos.py --format csv --output TODO_INVENTORY.csv
+
+      - name: Upload TODO inventory
+        if: github.event_name == 'schedule' || github.event.inputs.generate_report == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: todo-inventory
+          path: |
+            TODO_INVENTORY.md
+            TODO_INVENTORY.json
+            TODO_INVENTORY.csv
+          retention-days: 90
+
+      - name: Comment PR with TODO summary
+        if: github.event_name == 'pull_request' && steps.scan.outcome == 'failure'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const { execSync } = require('child_process');
+
+            // Generate summary for PR
+            const summary = execSync('python scripts/ci/scan_todos.py --stats-only').toString();
+
+            const comment = `## ⚠️ TODO Policy Violation\n\n${summary}\n\n**Policy**: CRITICAL and HIGH severity TODOs must reference a GitHub issue.\n\n**Format**: \`TODO(#123): Description\`\n\n**Fix**:\n1. Create a GitHub issue for the TODO\n2. Update the TODO comment: \`TODO(#123): Your description\`\n\nSee [CONTRIBUTING.md](../blob/main/CONTRIBUTING.md#todo-policy) for details.`;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+      - name: Fail if policy violated
+        if: steps.scan.outcome == 'failure'
+        run: |
+          echo "❌ TODO policy violations detected. See logs above for details."
+          exit 1
+
+  generate-weekly-report:
+    name: Generate Weekly TODO Report
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Generate comprehensive report
+        run: |
+          python scripts/ci/scan_todos.py --format markdown --output TODO_WEEKLY_REPORT.md
+
+      - name: Create issue for weekly report
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('TODO_WEEKLY_REPORT.md', 'utf8');
+
+            const date = new Date().toISOString().split('T')[0];
+
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `📊 Weekly TODO Inventory Report - ${date}`,
+              body: report,
+              labels: ['technical-debt', 'report', 'automated']
+            });

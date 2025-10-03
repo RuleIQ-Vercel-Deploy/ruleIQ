@@ -80,9 +80,18 @@ class AgenticRAGSystem:
             decode_responses=True)
         self.neo4j_driver = None
         if os.getenv('NEO4J_URI'):
-            self.neo4j_driver = GraphDatabase.driver(os.getenv('NEO4J_URI',
-                'bolt://localhost:7687'), auth=(os.getenv('NEO4J_USER',
-                'neo4j'), os.getenv('NEO4J_PASSWORD', 'password')))
+            neo4j_uri = os.getenv('NEO4J_URI')
+            neo4j_user = os.getenv('NEO4J_USER')
+            neo4j_password = os.getenv('NEO4J_PASSWORD')
+
+            if not neo4j_uri or not neo4j_user or not neo4j_password:
+                logger.warning("Neo4j credentials not configured. Neo4j features disabled.")
+                self.neo4j_driver = None
+            else:
+                self.neo4j_driver = GraphDatabase.driver(
+                    neo4j_uri,
+                    auth=(neo4j_user, neo4j_password)
+                )
         mistral_api_key = os.getenv('MISTRAL_API_KEY')
         if mistral_api_key:
             self.mistral_client = Mistral(api_key=mistral_api_key)

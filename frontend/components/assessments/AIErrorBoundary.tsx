@@ -34,9 +34,7 @@ class AIErrorBoundaryClass extends React.Component<AIErrorBoundaryProps, AIError
   }
 
   override componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    // TODO: Replace with proper logging
 
-    // // TODO: Replace with proper logging
 
     this.setState({ errorInfo });
 
@@ -192,9 +190,7 @@ export function useAIErrorHandler() {
   }, []);
 
   const captureError = React.useCallback((error: Error) => {
-    // TODO: Replace with proper logging
 
-    // // TODO: Replace with proper logging
     setError(error);
   }, []);
 

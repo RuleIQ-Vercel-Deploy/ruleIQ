@@ -117,7 +117,6 @@ test.describe('Core Web Vitals Performance Tests', () => {
     expect(totalSize).toBeLessThan(THRESHOLDS.BUNDLE_SIZE);
 
     // Log bundle sizes for monitoring
-    // TODO: Replace with proper logging
   });
 
   test('Time to Interactive (TTI) should be under 3.8s', async ({ page }) => {

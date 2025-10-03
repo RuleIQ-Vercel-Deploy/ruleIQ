@@ -101,7 +101,7 @@ export function NavigationDemo() {
                   <h4 className="font-medium">🎨 Teal Theme (Light)</h4>
                   <ul className="space-y-1 text-sm text-muted-foreground">
                     <li>• Clean white backgrounds</li>
-                    <li>• Teal brand colors (#8B5CF6)</li>
+                    <li>• Teal brand colors (#8b5cf6CF6)</li>
                     <li>• Neutral gray text hierarchy</li>
                     <li>• Light borders and subtle shadows</li>
                     <li>• High contrast for accessibility</li>
