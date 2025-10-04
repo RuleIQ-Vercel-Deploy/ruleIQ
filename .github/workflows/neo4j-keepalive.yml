@@ -1,0 +1,58 @@
+name: Neo4j Keep-Alive
+
+on:
+  schedule:
+    # Run every 12 hours to prevent Aura free tier auto-pause
+    - cron: '0 */12 * * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  ping-neo4j:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Neo4j driver
+        run: pip install neo4j
+
+      - name: Ping Neo4j instance
+        env:
+          NEO4J_URI: ${{ secrets.NEO4J_URI }}
+          NEO4J_USERNAME: ${{ secrets.NEO4J_USERNAME }}
+          NEO4J_PASSWORD: ${{ secrets.NEO4J_PASSWORD }}
+        run: |
+          python -c "
+          import os
+          from neo4j import GraphDatabase
+
+          uri = os.getenv('NEO4J_URI')
+          user = os.getenv('NEO4J_USERNAME')
+          password = os.getenv('NEO4J_PASSWORD')
+
+          driver = GraphDatabase.driver(uri, auth=(user, password))
+
+          with driver.session() as session:
+              result = session.run('MATCH (n) RETURN count(n) as count LIMIT 1')
+              count = result.single()['count']
+              print(f'✅ Neo4j keep-alive successful! Node count: {count}')
+
+          driver.close()
+          "
+
+      - name: Report status
+        if: always()
+        run: |
+          if [ $? -eq 0 ]; then
+            echo "✅ Neo4j instance is active and responding"
+          else
+            echo "❌ Neo4j instance may be paused - manual intervention needed"
+            exit 1
+          fi
